@@ -1,0 +1,259 @@
+---
+title: RAG her derde deva mı?
+description: RAG'in dört yanılma biçimi, başarının üç çarpanı (retriever × chunk × LLM) ve RAG türleri — hepsi bu günün ölçümleriyle.
+---
+import Deck from '../../../components/Deck.astro';
+import DeckFigure from '../../../components/DeckFigure.astro';
+import Step from '../../../components/Step.astro';
+import DaysQuestion from '../../../components/DaysQuestion.astro';
+import Gate from '../../../components/Gate.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Term from '../../../components/Term.astro';
+import Takeaway from '../../../components/Takeaway.astro';
+
+<DaysQuestion answer="24 iş günü [1] ✓" how="chroma · section · rerank on · sürüm 2026" />
+
+<Gate>
+Günün sorusu çözüldü; eval'da 23 sorunun 23'ünün cevabı doğru. Her şey yolunda mı? Gün boyunca pipeline'ın dört farklı yoldan yanıldığını gördük. 23/23, sınavın bu yanılmaları artık yakalamadığını söyler; RAG'in yanılmadığını değil.
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 1000 600" role="img" aria-label="RAG'in dört yanılma biçimi ve başarı formülü">
+      <text x="20" y="38" class="flbl">Gerçekçi olalım: RAG her derde deva mı?</text>
+      <g data-from="2">
+        <rect x="20" y="60" width="470" height="140" rx="12" class="fbox fbox-bad" />
+        <text x="44" y="98" class="flbl">1 · Context kötüyse cevap da kötü</text>
+        <text x="44" y="136" class="fsub">maaş sorusu, maaş chunk'ı yok (filtre)</text>
+        <text x="44" y="164" class="fsub">→ "harcırah 70 EUR, otel 155 EUR [1]"</text>
+      </g>
+      <g data-from="3">
+        <rect x="510" y="60" width="470" height="140" rx="12" class="fbox fbox-bad" />
+        <text x="534" y="98" class="flbl">2 · Halüsinasyon hâlâ var</text>
+        <text x="534" y="136" class="fsub">doğru tablo prompt'ta</text>
+        <text x="534" y="164" class="fsub">gemma3:4b yine de yanlış satırı okudu</text>
+      </g>
+      <g data-from="4">
+        <rect x="20" y="220" width="470" height="140" rx="12" class="fbox fbox-bad" />
+        <text x="44" y="258" class="flbl">3 · Kötü chunking bilgiyi dağıtır</text>
+        <text x="44" y="296" class="fsub">300 karakterlik kesim: "| 7 | 22 |" satırı</text>
+        <text x="44" y="324" class="fsub">başlığından ayrıldı → "yer almıyor"</text>
+      </g>
+      <g data-from="5">
+        <rect x="510" y="220" width="470" height="140" rx="12" class="fbox fbox-bad" />
+        <text x="534" y="258" class="flbl">4 · Context fazla uzun</text>
+        <text x="534" y="296" class="fsub">8 doküman = 11358 token, pencere 8192</text>
+        <text x="534" y="324" class="fsub">sığdırınca: 30137 ms (RAG ile 894 ms)</text>
+      </g>
+      <g data-from="6">
+        <text x="20" y="408" class="flbl">RAG'in başarısı =</text>
+        <g class="ph ph6">
+          <rect x="20" y="424" width="290" height="110" rx="12" class="fbox fbox-on" />
+          <text x="165" y="466" text-anchor="middle" class="flbl">retriever doğruluğu</text>
+          <text x="165" y="504" text-anchor="middle" class="fsub">"tatil hakkım": 5. sırada</text>
+        </g>
+        <text x="335" y="490" text-anchor="middle" class="flbl">×</text>
+        <g class="ph ph7">
+          <rect x="360" y="424" width="290" height="110" rx="12" class="fbox fbox-on" />
+          <text x="505" y="466" text-anchor="middle" class="flbl">chunk kalitesi</text>
+          <text x="505" y="504" text-anchor="middle" class="fsub">başlıksız satır bulunamadı</text>
+        </g>
+        <text x="675" y="490" text-anchor="middle" class="flbl">×</text>
+        <g class="ph ph8">
+          <rect x="700" y="424" width="280" height="110" rx="12" class="fbox fbox-frozen" />
+          <text x="840" y="466" text-anchor="middle" class="flbl">LLM'in anlaması</text>
+          <text x="840" y="504" text-anchor="middle" class="fsub">yanlış satır → 2 prompt düzeltmesi</text>
+        </g>
+      </g>
+      <g data-from="10">
+        <text x="20" y="578" class="fsub">yanlış cevapta önce prompt'a bak: hangi çarpan sıfır?</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="Gerçekçi olalım">
+    Günün sorusunu çözdük; ama RAG her derde deva değil. Bugün pipeline'ın dört farklı yoldan yanıldığını kendi loglarımızda gördük. Dördünü tek tek hatırlayalım, sonra ortak sebeplerine bakalım.
+  </Step>
+  <Step title="1 · Context kötüyse cevap da kötü">
+    Maaş sorusu, erişim filtresi açık: maaş chunk'ı prompt'a girmedi; doğrusu da buydu. Model elindeki seyahat chunk'ından "günlük harcırah 70 EUR ve otel üst limiti 155 EUR'dur [1]" yazdı: başka bir sorunun kaynaklı cevabı. Garbage in, garbage out.
+  </Step>
+  <Step title="2 · Halüsinasyon hâlâ var">
+    Context doğru olsa bile model yanlış okuyabilir. Corpus'u hazırlarken izin tablosu prompt'tayken bile gemma3:4b yanlış satırı okudu; iki prompt değişikliğiyle düzeldi. Kaynak göstermek <Term id="hallucination">uydurmayı</Term> bitirmez.
+  </Step>
+  <Step title="3 · Kötü chunking bilgiyi dağıtır">
+    300 karakterlik kesim izin tablosunu ortadan böldü: `| 7 | 22 |` satırı, tablonun başlık satırından ayrı bir chunk'a düştü. O chunk bulunmadı, model "yer almıyor" dedi. Bilgi politikadaydı; splitter sakladı.
+  </Step>
+  <Step title="4 · Context fazla uzun">
+    8 dokümanın tamamı 11358 token; varsayılan <Term id="context">pencere</Term> 8192 token, sığmıyor. Ölçmek için pencereyi 32768'e açtık: cevap doğru, ama 30137 ms sürdü; RAG ile 894 ms. Uzun context'in bedeli her soruda ödenir.
+  </Step>
+  <Step title="Özetle: bir çarpım">
+    RAG'in başarısı üç şeye bağlı: retriever doğruluğu × chunk kalitesi × LLM'in context'i anlama becerisi. Toplam değil, çarpım: biri sıfırsa sonuç sıfırdır, öteki ikisi ne kadar iyi olursa olsun.
+  </Step>
+  <Step title="Çarpan 1: retriever doğruluğu" phase="6">
+    "Tatil hakkım kaç gün, 4 yıldır çalışıyorum?" sorusunda izin tablosu vektör sırasında 5.: soru dokümanın kelimelerini kullanmıyor. Prompt'a 3 chunk girer; tablo ancak <Term id="rerank">rerank</Term> ile öne geçer. Rerank açıkken cevap doğru.
+  </Step>
+  <Step title="Çarpan 2: chunk kalitesi" phase="7">
+    Retriever kusursuz olsa da var olmayan bir chunk'ı getiremez. Fixed-300'de tablo satırı başlığını kaybetti; section kesim başlığı her chunk'ın önüne yazdı ve aynı model "22 iş günü" dedi. Eval'da hit@1: 0.474 → 0.842.
+  </Step>
+  <Step title="Çarpan 3: LLM'in anlama becerisi" phase="8">
+    Doğru chunk prompt'ta; model yine de yanlış satırı okudu. İki prompt değişikliği düzeltti: varsayılan yolda 6 denemenin 6'sı doğru. Kaynakların sırası karıştırılınca 4B bir model tablo okumada %70–90 arasında kalıyor.
+  </Step>
+  <Step title="Önce prompt'a bak">
+    Yanlış bir cevapta ilk soru: prompt'ta ne vardı? Doğru chunk yoksa suçlu retriever ya da chunking; varsa model ya da prompt. `--prompt` bayrağı bu teşhis için var.
+  </Step>
+</Deck>
+
+Dört yanılmanın logları bu sitenin sayfalarında: kötü context için [Güvenlik](/uretim/guvenlik/), chunking için [B · Chunking](/adim-adim/b-chunking/), uzun context için [Performans ve maliyet](/uretim/performans-maliyet/), retriever için [Kaliteyi ölçmek](/uretim/kaliteyi-olcmek/) (q02).
+
+**Üçüncü çarpanın hikâyesi.** Bu Mac'te, corpus ve prompt hazırlanırken ölçüldü; model baştan sona gemma3:4b.
+
+1. İzin tablosu önce kıdem aralıklarıyla yazılmıştı (`| 5 – 10 yıl | 22 |`). Model aralık satırlarını yanlış okudu.
+2. Satırlar yılları listeleyecek biçime getirilince, model cevap yerine satırın etiketini tekrarladı.
+3. Her kıdem yılı ayrı satıra yazıldı (`| 7 | 22 |`). Tablo prompt'ta olduğu hâlde model günün sorusunda yanlış satırı seçti.
+4. İki prompt değişikliği düzeltti. Kaynak çitinde artık yalnızca doküman adı var; çitteki id ve bölüm numaraları modeli yanlış satıra çekiyordu. Bir de kural eklendi: "Cevap bir tablodan geliyorsa önce kullandığın satırı aynen yaz, sonra cevabı tek cümleyle ver." Sonuç: varsayılan yolda 3 soru × 2 sürüm, 6 denemenin 6'sı doğru.
+5. Dürüst not: kaynakların sırası karıştırıldığında 4B bir model tablo okumada yaklaşık %70–90 arasında kalıyor. Model küçükse veriyi ve prompt'u ona göre biçimlendirirsiniz, ve yine de ölçersiniz.
+
+## Bir tane mi RAG var?
+
+Hepsi aynı iskelet: bul → prompt'a koy → cevaplat. Fark, "bul" adımının ne kadar akıllı ve ne kadar pahalı olduğunda.
+
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 1000 590" role="img" aria-label="Dört RAG türü dört küçük pipeline olarak">
+      <defs><marker id="rt-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker></defs>
+      <g class="ph ph1">
+        <text x="20" y="32" class="flbl">1 · Naive RAG</text>
+        <rect x="20" y="46" width="130" height="58" rx="10" class="fbox" />
+        <text x="85" y="82" text-anchor="middle" class="flbl">Soru</text>
+        <rect x="182" y="46" width="130" height="58" rx="10" class="fbox" />
+        <text x="247" y="82" text-anchor="middle" class="flbl">Embed</text>
+        <rect x="344" y="46" width="130" height="58" rx="10" class="fbox" />
+        <text x="409" y="82" text-anchor="middle" class="flbl">top-k</text>
+        <rect x="506" y="46" width="130" height="58" rx="10" class="fbox fbox-frozen" />
+        <text x="571" y="82" text-anchor="middle" class="flbl">LLM</text>
+        <rect x="668" y="46" width="130" height="58" rx="10" class="fbox" />
+        <text x="733" y="82" text-anchor="middle" class="flbl">Cevap</text>
+        <path d="M152 75 H178" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M314 75 H340" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M476 75 H502" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M638 75 H664" class="farrow" marker-end="url(#rt-h)" />
+        <text x="20" y="130" class="fsub">bugün kurduğumuz iskelet</text>
+      </g>
+      <g class="ph ph2">
+        <text x="20" y="177" class="flbl">2 · Reranker RAG</text>
+        <rect x="20" y="191" width="130" height="58" rx="10" class="fbox" />
+        <text x="85" y="227" text-anchor="middle" class="flbl">Soru</text>
+        <rect x="182" y="191" width="130" height="58" rx="10" class="fbox" />
+        <text x="247" y="227" text-anchor="middle" class="flbl">Embed</text>
+        <rect x="344" y="191" width="130" height="58" rx="10" class="fbox" />
+        <text x="409" y="227" text-anchor="middle" class="flbl">top-5</text>
+        <rect x="506" y="191" width="130" height="58" rx="10" class="fbox fbox-on" />
+        <text x="571" y="227" text-anchor="middle" class="flbl">Reranker</text>
+        <rect x="668" y="191" width="130" height="58" rx="10" class="fbox" />
+        <text x="733" y="227" text-anchor="middle" class="flbl">en iyi 3</text>
+        <rect x="830" y="191" width="130" height="58" rx="10" class="fbox fbox-frozen" />
+        <text x="895" y="227" text-anchor="middle" class="flbl">LLM</text>
+        <path d="M152 220 H178" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M314 220 H340" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M476 220 H502" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M638 220 H664" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M800 220 H826" class="farrow" marker-end="url(#rt-h)" />
+        <text x="20" y="275" class="fsub fgood-t">burada kurduk ve ölçtük · 5 LLM çağrısı, 2134 ms</text>
+      </g>
+      <g class="ph ph3">
+        <text x="20" y="322" class="flbl">3 · Multi-query RAG</text>
+        <rect x="20" y="336" width="130" height="58" rx="10" class="fbox" />
+        <text x="85" y="372" text-anchor="middle" class="flbl">Soru</text>
+        <rect x="182" y="336" width="130" height="58" rx="10" class="fbox fbox-frozen" />
+        <text x="247" y="372" text-anchor="middle" class="flbl">yeniden yaz</text>
+        <rect x="356" y="326" width="130" height="58" rx="10" class="fbox" />
+        <rect x="350" y="331" width="130" height="58" rx="10" class="fbox" />
+        <rect x="344" y="336" width="130" height="58" rx="10" class="fbox fbox-on" />
+        <text x="409" y="372" text-anchor="middle" class="flbl">3 soru</text>
+        <rect x="518" y="326" width="130" height="58" rx="10" class="fbox" />
+        <rect x="512" y="331" width="130" height="58" rx="10" class="fbox" />
+        <rect x="506" y="336" width="130" height="58" rx="10" class="fbox fbox-on" />
+        <text x="571" y="372" text-anchor="middle" class="flbl">3 arama</text>
+        <rect x="668" y="336" width="130" height="58" rx="10" class="fbox fbox-on" />
+        <text x="733" y="372" text-anchor="middle" class="flbl">birleşim</text>
+        <rect x="830" y="336" width="130" height="58" rx="10" class="fbox fbox-frozen" />
+        <text x="895" y="372" text-anchor="middle" class="flbl">LLM</text>
+        <path d="M152 365 H178" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M314 365 H340" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M488 365 H502" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M650 365 H664" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M800 365 H826" class="farrow" marker-end="url(#rt-h)" />
+        <text x="20" y="420" class="fsub fgate-t">ölçmedik</text>
+      </g>
+      <g class="ph ph4">
+        <text x="20" y="467" class="flbl">4 · RAG-fusion</text>
+        <rect x="20" y="481" width="130" height="58" rx="10" class="fbox" />
+        <text x="85" y="517" text-anchor="middle" class="flbl">Soru</text>
+        <rect x="182" y="481" width="130" height="58" rx="10" class="fbox fbox-frozen" />
+        <text x="247" y="517" text-anchor="middle" class="flbl">yeniden yaz</text>
+        <rect x="356" y="471" width="130" height="58" rx="10" class="fbox" />
+        <rect x="350" y="476" width="130" height="58" rx="10" class="fbox" />
+        <rect x="344" y="481" width="130" height="58" rx="10" class="fbox" />
+        <text x="409" y="517" text-anchor="middle" class="flbl">3 soru</text>
+        <rect x="518" y="471" width="130" height="58" rx="10" class="fbox" />
+        <rect x="512" y="476" width="130" height="58" rx="10" class="fbox" />
+        <rect x="506" y="481" width="130" height="58" rx="10" class="fbox" />
+        <text x="571" y="517" text-anchor="middle" class="flbl">3 arama</text>
+        <rect x="668" y="481" width="130" height="58" rx="10" class="fbox fbox-on" />
+        <text x="733" y="517" text-anchor="middle" class="flbl">sıra füzyonu</text>
+        <rect x="830" y="481" width="130" height="58" rx="10" class="fbox fbox-frozen" />
+        <text x="895" y="517" text-anchor="middle" class="flbl">LLM</text>
+        <path d="M152 510 H178" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M314 510 H340" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M488 510 H502" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M650 510 H664" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M800 510 H826" class="farrow" marker-end="url(#rt-h)" />
+        <text x="20" y="565" class="fsub fgate-t">ölçmedik</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="1 · Naive RAG" phase="1">
+    Soru embed edilir, en yakın k chunk gelir, soruyla birlikte modele gider, cevap çıkar. Bugün kurduğumuz iskelet bu. Aşağıdaki türlerin hepsi bu iskelete bir adım ekler; önce bunu kurup ölçün.
+  </Step>
+  <Step title="2 · Reranker RAG" phase="2">
+    Yine top-k gelir, ama modele gitmeden önce bir reranker her chunk'ı soruyla birlikte okuyup sıralar; en iyi 3'ü gider. Burada kurduk: bedeli 5 LLM çağrısı, 2134 ms. q02'de izin tablosu vektör sırasında 5.; rerank açıkken cevap doğru.
+  </Step>
+  <Step title="3 · Multi-query RAG" phase="3">
+    Model tek soruyu birkaç biçimde yeniden yazar: "Tatil hakkım kaç gün?" → "yıllık ücretli izin süresi", "kıdeme göre izin günü". Her biriyle ayrı arama yapılır, sonuçlar birleştirilir, context zenginleşir. Ölçmedik.
+  </Step>
+  <Step title="4 · RAG-fusion" phase="4">
+    Birleştirme adımına kadar multi-query ile aynı. Fark: listeler düz birleştirilmez, her chunk'ın listelerdeki sırası puanlanır (reciprocal rank fusion); birkaç listede üstlerde çıkan chunk öne geçer. Ölçmedik.
+  </Step>
+  <Step title="Sıra: ucuzdan pahalıya">
+    Dördü de bul → prompt'a koy → cevaplat. Her tür, "bul" adımına LLM çağrısı ekler: reranker 5, multi-query ve fusion en az 1 artı fazladan aramalar. Önce naive'i ölçün; eval bir hata göstermeden tür eklemeyin.
+  </Step>
+</Deck>
+
+## Tek satırda beş tür daha
+
+Hiçbirini burada ölçmedik. Her biri belirli bir hatayı düzeltir ve bir bedeli vardır:
+
+| Tür | Hangi hatayı düzeltir | Bedeli |
+|---|---|---|
+| <Term id="hybrid">Hybrid</Term> (kelime + vektör) | Birebir eşleşmesi gereken kodlar, numaralar, e-posta adresleri; embedding'in bulanıklaştırdığı kelimeler | İkinci bir indeks ve iki listeyi birleştirme. Türkçe soru İngilizce dokümanda ortak kelime bulamaz; bizim 4 TR→EN sorumuzda vektör araması tek başına hit@1 1.00 verdi. |
+| <Term id="hyde">HyDE</Term> | Soru ile doküman farklı yazılmış ("tatil hakkım" ↔ "yıllık ücretli izin"; bu soru eval'da 5. sırada) | Soru başına bir LLM çağrısı: model önce varsayımsal bir cevap yazar, arama o cevapla yapılır. Varsayımsal cevaptaki uydurma rakam aramayı yanlış yöne çekebilir. |
+| <Term id="parentchild">Parent-child</Term> | Küçük chunk iyi bulunur ama kötü okunur (başlığını kaybeden tablo satırı) | İki boyda chunk ve aralarındaki bağ; küçükle aranır, büyük olan prompt'a girer. Prompt büyür. |
+| <Term id="agentic">Agentic RAG</Term> | Birkaç dokümana yayılan, birkaç parçalı sorular | Model soruyu böler, her parça için ayrı arar, "yeterli mi?" diye sorar. Bir yerine birçok çağrı; süre tur sayısıyla çarpılır, iki koşu farklı sonuç verebilir. |
+| <Term id="graphrag">GraphRAG</Term> | Cevabın dokümanlar arasındaki bağda olduğu sorular (duyuru, Yan Haklar §2'deki tutarı günceller) ve "hepsini özetle" soruları | Ingest'te bütün corpus modelden geçer, varlık–ilişki grafı çıkarılır ve bakımı yapılır. En pahalısı. |
+
+Bu türlerin hangi durumda ve hangi sırayla eklendiğinin hikâyesi: [İlk 90 gün](/her-derde-deva/ilk-90-gun/).
+
+## Sık sorulan
+
+<FAQ q="Hangi türle başlamalı?">
+Naive RAG ve bir gold set ile. Eval'da bir soru tipi düşük çıkınca (bizde tablo ve paraphrase soruları) o hatayı düzelten türü ekleyin, sonra aynı eval'ı tekrar koşun.
+</FAQ>
+
+<FAQ q="Reranker her zaman iyileştirir mi?">
+Hayır. Günün sorusunda doğru chunk zaten 1. sıradaydı; rerank yalnızca arkadakilerin yerini değiştirdi. Maaş sorusunda ise seyahat bölümüne 10 üzerinden 10 verip onu 5. sıradan 1. sıraya taşıdı; yanlış cevap da o bölümden geldi. Aynı soruda 5 chunk'tan 3'üne aynı puanı verdi (ties 3 of 5). Reranker da bir modeldir, yanılır; `npm run eval -- --answers` ile ölçün.
+</FAQ>
+
+<FAQ q="Daha büyük bir model halüsinasyonu bitirir mi?">
+Garantisi yok; daha büyük modelleri ölçmedik. Bizde işe yarayan, veriyi ve prompt'u modelin okuyabileceği biçime getirmek oldu (yukarıdaki üçüncü çarpan hikâyesi).
+</FAQ>
+
+<Takeaway>RAG'in başarısı bir çarpım: retriever × chunk × LLM. Biri sıfırsa gerisi kurtaramaz.</Takeaway>

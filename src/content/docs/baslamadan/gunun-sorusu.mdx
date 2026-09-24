@@ -1,0 +1,118 @@
+---
+title: Günün sorusu
+description: Bütün gün aynı soru. Cevabı, pipeline büyüdükçe değişecek.
+---
+import Deck from '../../../components/Deck.astro';
+import DeckFigure from '../../../components/DeckFigure.astro';
+import Step from '../../../components/Step.astro';
+import DaysQuestion from '../../../components/DaysQuestion.astro';
+import RepoCode from '../../../components/RepoCode.astro';
+import Log from '../../../components/Log.astro';
+import YourTurn from '../../../components/YourTurn.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Takeaway from '../../../components/Takeaway.astro';
+
+<DaysQuestion />
+
+Kraken Air'de 7 yıldır çalışan biri, bu yıl kaç iş günü yıllık izin kullanabilir? Siz olsanız ne derdiniz?
+Bir sayı yazın; akşam, gün boyu çıkan cevaplarla karşılaştıracaksınız.
+
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 1000 300" role="img" aria-label="Günün sorusunun cevabı dört durakta yeniden sorulur">
+      <text x="30" y="40" class="flbl">npm run soru — dört durak, aynı soru</text>
+      <path d="M60 150 H940" class="farrow" />
+      <circle cx="120" cy="150" r="20" class="fbox fbox-on" />
+      <text x="120" y="96" text-anchor="middle" class="flbl">Başlamadan</text>
+      <text x="120" y="120" text-anchor="middle" class="fsub">model tek başına</text>
+      <circle cx="380" cy="150" r="20" class="fbox" />
+      <text x="380" y="96" text-anchor="middle" class="flbl">B · Chunking</text>
+      <text x="380" y="120" text-anchor="middle" class="fsub">chunk'lar hazır</text>
+      <circle cx="640" cy="150" r="20" class="fbox" />
+      <text x="640" y="96" text-anchor="middle" class="flbl">F · Cevap</text>
+      <text x="640" y="120" text-anchor="middle" class="fsub">bütün pipeline</text>
+      <circle cx="880" cy="150" r="20" class="fbox" />
+      <text x="880" y="96" text-anchor="middle" class="flbl">Veri değişince</text>
+      <text x="880" y="120" text-anchor="middle" class="fsub">2026 sürümü</text>
+      <g data-from="3">
+        <rect x="30" y="190" width="180" height="70" rx="10" class="fbox fbox-frozen" />
+        <text x="120" y="222" text-anchor="middle" class="flbl">50 iş günü</text>
+        <text x="120" y="247" text-anchor="middle" class="fsub">(15 + 35)</text>
+      </g>
+      <g data-from="4">
+        <rect x="290" y="190" width="180" height="70" rx="10" class="fbox" />
+        <text x="380" y="234" text-anchor="middle" class="flbl">?</text>
+        <rect x="550" y="190" width="180" height="70" rx="10" class="fbox" />
+        <text x="640" y="234" text-anchor="middle" class="flbl">?</text>
+        <rect x="790" y="190" width="180" height="70" rx="10" class="fbox" />
+        <text x="880" y="234" text-anchor="middle" class="flbl">?</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="Soru">
+    Doğru cevap için iki şey gerekir: Kraken Air'in izin politikası ve 7 yıllık kıdemin o politikada nereye düştüğü. İkisi de modelin eğitiminde yoktu.
+  </Step>
+  <Step title="Önce tahmin">
+    Bir sayı yazın. Soru gün boyunca her durakta yeniden sorulacak; akşam kendi tahmininizi bütün cevapların yanına koyacaksınız.
+  </Step>
+  <Step title="Model tek başına">
+    `npm run soru`, pipeline'da henüz hiçbir şey yokken soruyu doğrudan gemma3:4b'ye sorar. Model 50 iş günü dedi, hesabını da yaptı: 15 + 35. Doğru mu? Bir sonraki bölümde.
+  </Step>
+  <Step title="Cevap gün boyu değişecek">
+    Her durakta aynı komut. Soru aynı, model aynı; değişen yalnızca modele ne verdiğimiz. Her cevap bir deftere yazılır ve komut her seferinde defterin tamamını gösterir.
+  </Step>
+</Deck>
+
+<Log name="soru-0-bare" title="npm run soru" />
+
+`HOW` satırı cevabın nasıl üretildiğini söyler: şimdilik `bare model, no documents`. Alttaki `LEDGER` defterdir;
+her çalıştırma bir satır ekler.
+
+Soru kodda tek bir satır:
+
+<RepoCode file="src/lib/config.ts" from="dayQuestion:" to="dayQuestion" />
+
+`npm run soru` her seferinde elindeki en eksiksiz pipeline'ı seçer:
+
+<RepoCode file="src/cli/soru.ts" from="// npm run soru" to="the store is filled" />
+
+<YourTurn>
+Kendi makinenizde çalıştırın: `npm run soru`. Sonra aynı soruyu kendi kelimelerinizle, yine hiç doküman
+vermeden sorun ve sayının değişip değişmediğine bakın:
+
+```sh
+npm run step -- 0 "7 yıldır çalışıyorum, kaç gün yıllık iznim var?"
+```
+</YourTurn>
+
+## Akşam şunları yapabileceksiniz
+
+- Bu sorunun cevabının **neden** değiştiğini adım adım gösterebileceksiniz: hangi parça bulundu, modele ne gitti,
+  model ne yazdı.
+- Kurumsal bir kullanım için **uçtan uca bir RAG pipeline'ı tasarlayabileceksiniz**: veri hazırlama, chunking,
+  embedding, retrieval, rerank, cevap üretimi.
+- Kaliteyi tek bir soruyla değil, bir **soru setiyle ölçebileceksiniz**.
+- Kritik kararları dört eksende tartabileceksiniz: **doğruluk, güvenlik, performans, maliyet**.
+
+Günün bütün haritası [ana sayfada](/).
+
+## Sık sorulan
+
+<FAQ q="Neden bütün gün aynı soru?">
+Aynı soru, her adımın etkisini aynı cevapta gösterir: bir adım cevabı düzeltiyor mu, bozuyor mu, hiç
+değiştirmiyor mu? Tek soru yine de bir ölçü değildir; kaliteyi bir soru setiyle
+[Kaliteyi ölçmek](/uretim/kaliteyi-olcmek/) sayfasında ölçüyoruz.
+</FAQ>
+
+<FAQ q="Model her seferinde aynı cevabı mı verir?">
+Aynı prompt'la, bu Mac'te evet: `npm run step -- 0` ile `npm run soru` aynı cevabı kelimesi kelimesine verdi.
+Repo bunu bilerek sağlar: `temperature: 0` ve sabit bir `seed`. Farklı donanımlarda küçük farklar görülebilir;
+bunu ölçmedik.
+</FAQ>
+
+<FAQ q="Defter nerede duruyor?">
+`.cache/soru-ledger.jsonl` dosyasında, her çalıştırma bir satır. `npm run soru` son 12 satırı gösterir.
+`npm run catchup` defteri silmez.
+</FAQ>
+
+<Takeaway>Soru aynı, model aynı: değişen, modele ne verdiğimiz.</Takeaway>

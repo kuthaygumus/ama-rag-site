@@ -1,0 +1,138 @@
+---
+title: Veri değişince
+description: İzin politikasının 2026 sürümü geliyor. Yeniden eğitim yok; yeniden ingest var. Edition filtresi hangi sürümün cevap vereceğini seçiyor.
+---
+import WhereAmI from '../../../components/WhereAmI.astro';
+import DaysQuestion from '../../../components/DaysQuestion.astro';
+import Gate from '../../../components/Gate.astro';
+import Deck from '../../../components/Deck.astro';
+import DeckFigure from '../../../components/DeckFigure.astro';
+import Step from '../../../components/Step.astro';
+import Example from '../../../components/Example.astro';
+import RepoCode from '../../../components/RepoCode.astro';
+import Log from '../../../components/Log.astro';
+import YourTurn from '../../../components/YourTurn.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Takeaway from '../../../components/Takeaway.astro';
+import Term from '../../../components/Term.astro';
+
+<WhereAmI at="load clean chunk embed store" />
+
+<DaysQuestion answer="“Tablodan, 7 tam yıl kıdeminde 24 iş günü ücretli izin hakkı olduğunu görüyoruz [1].” ✓ (2026)" how="chroma store · chunker section · rerank on · filter edition 2026, access all" />
+
+<Gate>
+İK, izin politikasının 2026 sürümünü yayınladı ve günün sorusunun cevabı değişti. Bilgiyi ağırlıklarına yazmış bir model için bu yeniden eğitim demek. Bizim pipeline'da ne demek?
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 1000 340" role="img" aria-label="Depoda iki sürüm yan yana; edition filtresi yalnızca en yeni sürümü aramaya sokuyor">
+      <rect x="20" y="16" width="380" height="306" rx="12" class="fbox" />
+      <text x="210" y="50" text-anchor="middle" class="flbl">Chroma · kraken-policies</text>
+      <rect x="40" y="72" width="340" height="104" rx="8" class="fbox" />
+      <text x="210" y="112" text-anchor="middle" class="flbl">2025 · 60 kayıt</text>
+      <text x="210" y="146" text-anchor="middle" class="fsub">hr-leave@2025#3 · | 7 | 22 |</text>
+      <g data-from="2">
+        <rect x="40" y="198" width="340" height="104" rx="8" class="fbox-on" />
+        <text x="210" y="238" text-anchor="middle" class="flbl">2026 · 60 kayıt</text>
+        <text x="210" y="272" text-anchor="middle" class="fsub">hr-leave@2026#3 · | 7 | 24 |</text>
+      </g>
+      <g data-from="3">
+        <path d="M384 250 C430 250 440 180 468 172" class="farrow-on" marker-end="url(#vd-on)" />
+        <path d="M384 124 C420 124 430 150 452 150" class="farrow" />
+        <text x="452" y="140" class="flbl fbad-t">✗</text>
+        <path d="M470 120 H570 L535 176 V222 H505 V176 Z" class="fbox-gate" />
+        <text x="520" y="104" text-anchor="middle" class="fsub fgate-t">edition = en yeni</text>
+        <text x="520" y="250" text-anchor="middle" class="flbl fgate-t">2026</text>
+      </g>
+      <g data-from="4">
+        <path d="M540 172 H592" class="farrow-on" marker-end="url(#vd-on)" />
+        <rect x="600" y="112" width="380" height="120" rx="10" class="fbox-good" />
+        <text x="616" y="144" class="fsub">Tablodan, 7 tam yıl kıdeminde 24 iş günü</text>
+        <text x="616" y="170" class="fsub">ücretli izin hakkı olduğunu görüyoruz [1].</text>
+        <text x="616" y="210" class="fsub fnum">[1] = hr-leave@2026#3</text>
+      </g>
+      <g data-from="5">
+        <text x="790" y="276" text-anchor="middle" class="fsub fbad-t">filtre yoksa: 2026#3 (0.632) ve 2025#3 (0.631)</text>
+        <text x="790" y="302" text-anchor="middle" class="fsub fbad-t">ikisi birden prompt'ta — 24 ve 22 yan yana</text>
+      </g>
+      <defs>
+        <marker id="vd-on" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead-on" /></marker>
+      </defs>
+    </svg>
+  </DeckFigure>
+  <Step title="Yeni sürüm geldi">
+    `corpus/2026/`: aynı 8 doküman, `edition: "2026"`. İzin tablosunda 5–9. yıllar 22'den 24 iş gününe, 10–14. yıllar 25'ten 26'ya çıktı. Model bundan habersiz; ağırlıkları hiç değişmedi.
+  </Step>
+  <Step title="Yeniden eğitim yok, yeniden ingest var">
+    `npm run ingest -- --edition 2026`: adım 1–5, yalnızca yeni dosyalar. Depoda artık 120 kayıt var: 2025'in 60'ı ve 2026'nın 60'ı yan yana. Model dosyasına dokunulmadı.
+  </Step>
+  <Step title="Hangi sürüm cevap verecek?">
+    Adım 6'daki edition filtresi varsayılan olarak "latest": depodaki en yeni sürüm. Filtre aramanın içinde çalışıyor; 2025 kayıtları yarışa hiç girmiyor. Bu, E sayfasında adını koyduğumuz <Term id="metadata">metadata</Term> filtresi.
+  </Step>
+  <Step title="Cevap değişti">
+    `npm run soru`: "Tablodan, 7 tam yıl kıdeminde 24 iş günü …", kaynak `hr-leave@2026#3`. LEDGER, günün sorusunun sabahtan beri verdiği bütün cevapları sırayla gösteriyor.
+  </Step>
+  <Step title="Filtre olmasa?">
+    EDITION = "all": iki sürüm yarışıyor. Tablonun 2026 hâli 0.632, 2025 hâli 0.631 aldı; ikisi de prompt'a girdi, 24 ve 22 yan yana. Model bu kez 24 dedi; KAYNAK 1 2026'ydı. Sıra tersine dönerse ne olur? Ölçmedik.
+  </Step>
+  <Step title="Silmek mi, filtrelemek mi?">
+    Eski sürümü tutmak geçmişe dönük soruları ve denetimi mümkün kılar; bedeli, filtreyi her aramada doğru kurmak. Silmek de bir seçim: `replaceEdition` bir sürümü yerinde yeniler. Hangisi, bir tasarım kararı.
+  </Step>
+</Deck>
+
+<Example>
+Yeni sürümün ingest'i: adım 3 izin tablosunun 2026 hâlini gösteriyor, adım 5 depodaki kayıt sayısını ve sürümleri.
+</Example>
+
+<Log name="ingest-2026" title="npm run ingest -- --edition 2026   (adım 3'ün çıktısı)" from={47} to={68} />
+
+<Log name="ingest-2026" title="… aynı komut, adım 4 ve 5" from={74} />
+
+Adım 4 hiçbir vektörü yeniden hesaplamadı: bu metinler bu Mac'te daha önce embed edilmişti. Önbelleğin anahtarı model ile metnin kendisi; sizde de yalnızca metni değişen chunk'lar yeniden hesaplanır, gerisi `.cache/` klasöründen gelir. Adımların süreleri toplamı bir saniyenin altında.
+
+<Log name="soru-4-2026" title="npm run soru" />
+
+Filtreyi kapatınca ikisi birden geliyor:
+
+<Log name="edition-all" title='npm run soru   (EDITION = "all")' />
+
+Hangi sürümün yarışacağını adım 6'daki toggle belirliyor:
+
+<RepoCode file="src/steps/6-retrieve.ts" from="// TOGGLE edition filter" to="alternative" />
+
+"latest", depodaki sürümlerin en yenisi demek: `retrieve()` içinde `(await o.store.editions()).at(-1)`.
+
+<YourTurn>
+**1 · Yeni sürümü ekleyin.** `npm run ingest -- --edition 2026`. Log'un sonunda: `120 in the store · editions: 2025, 2026`.
+
+**2 · Günün sorusu.** `npm run soru` → 24 iş günü, kaynak `hr-leave@2026#3`. LEDGER'da sabahtan bu yana bütün cevaplar.
+
+**3 · Bruno ile bakın.** `01-chroma` → `count`: 120. `filter on metadata` içinde `"edition": "2026"` yazıp gönderin.
+
+**4 · Filtreyi kapatın.** `src/steps/6-retrieve.ts` → `TOGGLE edition filter` bloğunda `"all"; // alternative` satırını açın, varsayılanı kapatın. `npm run soru`: kaynaklarda iki sürüm yan yana mı? Toggle'ı geri alın.
+
+**5 · Başka bir değişiklik.** 2026'da bilgi güvenliği politikasında şifre değiştirme süresi de değişti. `npm run ask -- "Şifremi ne sıklıkla değiştirmem gerekiyor?"`: cevap hangi sürümden geldi, kaynak hangi dilde?
+
+Geride kaldıysanız: `npm run catchup -- 8`, ardından `npm run ingest -- --edition 2026`.
+</YourTurn>
+
+## Sık sorulan
+
+<FAQ q="Her değişiklikte bütün korpusu yeniden mi işleyeceğiz?">
+Hayır. `ingest` bir sürümü işler ve embedding önbelleği değişmeyen metinleri yeniden hesaplamaz. Gerçek sistemlerde daha ince bir yol var: değişen dokümanı bulup yalnızca onun chunk'larını silip yeniden yazmak. Bunu bu repoda ölçmedik; maliyet tarafı Performans ve maliyet sayfasında.
+</FAQ>
+
+<FAQ q="Sürüm numarası olmayan dokümanlar için?">
+Aynı fikir başka bir alanla çalışır: `docId` ve bir güncelleme tarihi. Doküman değişince o `docId`'nin kayıtları silinir ve yenileri yazılır; arama her zaman en güncel kaydı görür.
+</FAQ>
+
+<FAQ q="Fine-tune edilmiş bir modelde bu ne demek olurdu?">
+Yeni veriyle yeniden eğitim, yeniden değerlendirme, yeniden dağıtım; eski sayıyı modele unutturmak da ayrı bir iş. Burada bir klasör ekledik ve bir komut çalıştırdık. Karşılaştırmanın tamamı "RAG mı fine-tune mu?" sayfasında.
+</FAQ>
+
+<FAQ q="Kullanıcı 2025'teki hakkını sorarsa?">
+"latest" filtresiyle arama yalnızca 2026 kayıtlarını görür; 2025'teki sayı prompt'a hiç gelmez. Sorudaki yılı okuyup filtreye koymak mümkün (soru analizi) ama bu repoda yok. Eski sürümü tutmanın faydası ancak böyle bir yol açılınca ortaya çıkar.
+</FAQ>
+
+<Takeaway>Model değişmedi; dokümanlar değişti, cevap onları izledi.</Takeaway>

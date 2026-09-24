@@ -1,0 +1,164 @@
+---
+title: Kurulum sorunları
+description: Repo'nun yazabileceği her hata mesajı, kodda yazıldığı gibi, çözümüyle birlikte. Podman, Windows, OneDrive ve geride kalınca catch-up.
+---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import RepoCode from '../../components/RepoCode.astro';
+import Log from '../../components/Log.astro';
+import Takeaway from '../../components/Takeaway.astro';
+
+Önce `npm run doctor`. Her `✗` satırı sorunu ve çözümünü birlikte yazar. Sağlıklı bir makinede çıktı şöyle:
+
+<Log name="doctor" title="npm run doctor" />
+
+Aşağıdaki mesajlar repodaki kodda yazıldığı gibi; `<…>` olan yerlere sizin değeriniz gelir. Mesajlar İngilizce,
+çünkü kod İngilizce.
+
+## `npm run doctor` satırları
+
+| Satır | Ne yapmalı |
+|---|---|
+| `✗ Node.js` `found <sürüm>, need 22 or newer — https://nodejs.org` | Node.js 22 ya da üstünü kurun, terminali kapatıp açın, `node -v` ile bakın. |
+| `✗ Ollama` `not reachable at http://localhost:11434 — start the Ollama app` | Ollama uygulamasını açın. Uygulama yoksa terminalde `ollama serve`. Ollama başka bir adresteyse `.env` içine `OLLAMA_URL=…` yazın. |
+| `✗ model gemma3:4b` `not pulled — run: ollama pull gemma3:4b` | Satırdaki komutu çalıştırın. `bge-m3` için aynısı: `ollama pull bge-m3`. |
+| `✗ Chroma` `not reachable — run: podman compose up -d   (or set STORE=json in .env)` | Repo klasöründe `podman compose up -d`. Olmazsa aşağıdaki [Podman](#podman) bölümü; hiç olmazsa `.env` içine `STORE=json`. |
+| `✗ corpus/2025` `missing — run npm run doctor from the repo folder` | Komutu repo klasörünün içinden çalıştırın: `cd ama-rag-workshop`. |
+| `slow laptop: answers will take a while — that is fine, the steps still work` | Hata değil: tek bir cevap 20 saniyeden uzun sürdü. Adımlar çalışır, yalnızca beklersiniz. |
+| `<n> problem(s) — fix them before the day starts.` | Yukarıdaki `✗` satırlarının sayısı. Hepsi düzelince son satır `Ready.` olur. |
+
+## Adımların hata satırları
+
+Bir adım bilinen bir sorunla karşılaşınca tek satır yazar: `✗` ve mesaj. Bilinmeyen bir hatada bütün yığın izini
+(stack trace) basar; o zaman ilk satırı okuyun.
+
+**Ollama**
+
+| Mesaj | Ne oldu, ne yapmalı |
+|---|---|
+| `Ollama is not reachable at http://localhost:11434. Is it running? (fetch failed)` | Ollama kapalı. Uygulamayı açın ya da `ollama serve`. |
+| `Ollama /api/embed → HTTP 404: <Ollama'nın cevabı> — is the model pulled? Try: ollama pull bge-m3` | Embedding modeli yok. Satırın sonundaki komutu çalıştırın. |
+| `Ollama /api/generate → HTTP 404: <Ollama'nın cevabı> — is the model pulled? Try: ollama pull gemma3:4b` | Chat modeli yok. Satırın sonundaki komutu çalıştırın. |
+| `Ollama /api/<yol> → HTTP <kod>: <Ollama'nın cevabı>` | Başka bir Ollama hatası; ayrıntı Ollama'nın cevabında. `ollama list` çalışıyor mu, bakın. |
+
+**Chroma**
+
+| Mesaj | Ne oldu, ne yapmalı |
+|---|---|
+| `Chroma is not reachable at http://localhost:8000. Start it: podman compose up -d  (or use --store json)` | Container kapalı. `podman compose up -d`, sonra `podman compose ps` ile ayakta mı bakın. |
+
+**`data/` dosyaları** — her adım bir öncekinin dosyasını okur ve onun güncel olup olmadığını kontrol eder:
+
+| Mesaj | Ne oldu, ne yapmalı |
+|---|---|
+| `data/<n>-<ad>.json does not exist yet. Run: npm run step -- <n>` | Önceki adım hiç çalışmamış. Satırdaki komutu çalıştırın ya da `npm run catchup -- <n>`. |
+| `data/<n>-<ad>.json was made from an older data/<m>-<ad>.json. Run it again: npm run step -- <n>` | Önceki adımı yeniden çalıştırdınız, bu adımı değil. Satırdaki adımı ve ondan sonrakileri sırayla yeniden çalıştırın. |
+| `corpus/<sürüm>/ changed after step 1 ran. Run it again: npm run step -- 1` | Corpus dosyaları değişti. Adım 1'den başlayın. |
+| `The store was filled with <model> vectors, but questions would be embedded with <model>. Vectors from two models live in different spaces — run steps 4 and 5 again.` | `EMBED_MODEL` değişti. Adım 4 ve 5'i yeniden çalıştırın. |
+
+**Corpus ve ayarlar**
+
+| Mesaj | Ne oldu, ne yapmalı |
+|---|---|
+| `No folder corpus/<sürüm>. Editions live in corpus/<edition>/ — try --edition 2025` | Olmayan bir sürüm istendi. `--edition 2025` ya da `--edition 2026`. |
+| `corpus/<sürüm>/<dosya>.md: front matter is missing <alanlar>` | Bir dokümanın başındaki bilgi bloğunda alan eksik: `id`, `title`, `edition`, `department`, `access`, `lang`. |
+| `Unknown store "<ad>". Use --store chroma or --store json.` | `--store` ya da `STORE` yanlış yazılmış. Yığın iziyle gelir. |
+| `--metric must be one of: cosine, dot, l2` | `npm run similar -- --metric …` yalnızca bu üçünü tanır. Yığın iziyle gelir. |
+
+**Komut biçimi** — argüman eksik ya da yanlışsa komut nasıl kullanılacağını yazar:
+
+| Mesaj | Doğrusu |
+|---|---|
+| `usage: npm run step -- <0-8> ["question"]` | `npm run step -- 3` |
+| `usage: npm run ask -- "Yurt dışı harcırahı ne kadar?" [--prompt] [--bare] [--k 8]` | `npm run ask -- "soru"` |
+| `usage: npm run catchup -- <1-8>   (the step the room just finished)` | `npm run catchup -- 5` |
+
+## Bunlar hata değil: sıra sizde
+
+İki fonksiyon bilerek boş bırakıldı; siz yazana kadar şu mesajları verirler:
+
+| Mesaj | Ne zaman |
+|---|---|
+| `dot() is not written yet — see the YOUR TURN note above it in src/lib/similarity.ts` | `npm run similar -- --metric dot`, `dot()` yazılmadan önce |
+| `byParagraph() is homework — see the note above it in src/steps/3-chunk.ts` | `npm run check:sibling`, `byParagraph()` yazılmadan önce |
+
+`npm run check:sibling` siz yazana kadar kırmızıdır. Bitmiş hâlleri `solutions/` klasöründe.
+
+## Podman
+
+| Durum | Ne yapmalı |
+|---|---|
+| `` Cannot connect to Podman. Please verify your connection to the Linux system using `podman system connection list`, or try `podman machine init` and `podman machine start` to manage a new Linux VM `` | Podman'ın sanal makinesi kapalı: `podman machine start`. Hiç oluşturulmadıysa önce `podman machine init`. |
+| `looking up compose provider failed` | `podman compose` bir Compose aracı bulamadı. Podman Desktop'tan Compose'u kurun ya da tek satırlık komutu kullanın (aşağıda). |
+| `the container name "chroma" is already in use by <id>. You have to remove that container to be able to reuse that name: …` | Container zaten var. Başlatın: `podman start chroma`. |
+| `>>>> Executing external compose provider "…/podman-compose". Please see podman-compose(1) for how to disable this message. <<<<` | Hata değil, bilgi. Bu Mac'te `podman compose` her seferinde bunu yazıyor; ardından Chroma normal başlıyor. |
+| 8000 portu başka bir programda | Chroma'yı başka bir porta alın ve `.env`'e söyleyin (aşağıda). |
+
+Compose olmadan, aynı Chroma tek satırda (`compose.yaml`'ın başındaki yorumdan):
+
+```sh
+podman run -d --name chroma -p 8000:8000 -v chroma-data:/data docker.io/chromadb/chroma:1.5.9
+```
+
+8000 portu doluysa, 8001'e alın ve pipeline'a söyleyin:
+
+<Tabs syncKey="os">
+<TabItem label="Mac">
+```sh
+podman run -d --name chroma -p 8001:8000 -v chroma-data:/data docker.io/chromadb/chroma:1.5.9
+echo "CHROMA_URL=http://localhost:8001" >> .env
+```
+</TabItem>
+<TabItem label="Windows (PowerShell)">
+```powershell
+podman run -d --name chroma -p 8001:8000 -v chroma-data:/data docker.io/chromadb/chroma:1.5.9
+Add-Content .env "CHROMA_URL=http://localhost:8001"
+```
+</TabItem>
+</Tabs>
+
+**Hiç container yok** — `.env` içine `STORE=json`. Vektörler `data/store.json` dosyasına yazılır, `npm run doctor`
+Chroma'yı sormaz, pipeline aynı çalışır. Ayrıntısı [Kurulum](/baslamadan/kurulum/) sayfasında.
+
+**Yönetici yetkisi olmadan Podman** — Podman'ı kurmak ve sanal makinesini ilk kez açmak yönetici yetkisi
+isteyebilir; Windows'ta sanal makine WSL2 ya da Hyper-V üzerinde çalışır ve bunlar kapalıysa açmak bir kez
+yönetici yetkisi ister. Ölçmedik: yetkisiz bir dizüstünde denemedik. Olmazsa `STORE=json`: pipeline'ın her adımı
+JSON store'la da çalışır; yalnızca Chroma'nın içine bakan kısımlar (Bruno'nun `01-chroma` klasörü) çalışmaz.
+
+## Windows
+
+- **`VAR=x npm run …` çalışmaz.** Bu biçim yalnızca Mac/Linux kabuklarında var. Repo bu yüzden her ayarı ya
+  bayrakla (`npm run step -- 5 --store json`) ya da `.env` dosyasıyla alır.
+- **PowerShell'de `npm` açılmıyorsa** ve hata `running scripts is disabled on this system` diyorsa: `npm` yerine
+  `npm.cmd` yazın (`npm.cmd run doctor`) ya da, şirket politikası izin veriyorsa,
+  `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`. Ölçmedik: bu Mac'te PowerShell yok.
+- **Bir bayrak işlemiyor gibiyse** (`--store json` yok sayılıyorsa): aynı ayarı `.env` dosyasına yazın. `.env`
+  kabuktan bağımsızdır. Ölçmedik.
+- **Satır sonları** sorun değil: repo `.gitattributes` ile LF kullanır, adım 1 de `\r\n`'i `\n`'e çevirir.
+
+## OneDrive (ve iCloud)
+
+Repoyu senkronize edilen bir klasöre klonlamayın. `npm ci` binlerce küçük dosya yazar ve senkronizasyon onları
+kilitlemeye başlar: kurulum çok yavaşlar ya da `EPERM`/`EBUSY` gibi dosya erişim hatalarıyla durabilir. Ölçmedik;
+kaçınmak kolay. Windows'ta Masaüstü ve Belgeler çoğu zaman OneDrive'dadır: `$HOME\dev` gibi bir klasör kullanın.
+Mac'te iCloud'un Masaüstü ve Belgeler senkronizasyonu açıksa aynısı: `~/dev`.
+
+Zaten OneDrive'a klonladıysanız en temizi: klasörü silin, `$HOME\dev` altına yeniden klonlayın, `npm ci`.
+
+## Geride kaldıysanız: `npm run catchup -- N`
+
+Bir adımda takıldınız ya da kodu bozdunuz ve örneğin 5. adımın sonundan devam etmek istiyorsunuz. Tek komut sizi
+oraya getirir:
+
+```sh
+npm run catchup -- 5
+```
+
+<RepoCode file="src/cli/catchup.ts" from="// npm run catchup" to="Your own functions" />
+
+Yani: her `TOGGLE` bloğu varsayılan satırına döner, `data/` boşalır, N 5 ya da üstüyse vector DB de boşalır, sonra
+1'den N'ye kadar bütün adımlar çalışır. Sizin yazdığınız fonksiyonlara dokunmaz. Embedding'ler `.cache/`
+klasöründe saklı kaldığı için yeniden hesaplanmaz; catch-up hızlıdır.
+
+Yalnızca vector DB'yi sıfırlayıp dokümanları yeniden yüklemek için: `npm run ingest -- --reset`.
+
+<Takeaway>Önce `npm run doctor`: her ✗ satırı çözümünü de yazar.</Takeaway>

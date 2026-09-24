@@ -1,0 +1,12 @@
+---
+/**
+ * One deck step: a title and at most ~40 words. `phase` lights the SVG parts with class `ph phN`;
+ * `stage` picks a drawing in a multi-drawing deck. Cumulative parts use data-from in the SVG itself.
+ */
+interface Props { title: string; phase?: number | string; stage?: string }
+const { title, phase, stage } = Astro.props;
+---
+<li data-stage={stage} data-phase={phase}>
+  <h3>{title}</h3>
+  <slot />
+</li>

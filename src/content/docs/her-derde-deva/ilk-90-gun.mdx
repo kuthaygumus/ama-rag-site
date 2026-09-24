@@ -1,0 +1,240 @@
+---
+title: İlk 90 gün
+description: Pipeline canlıya çıktı, ticket'lar geliyor. Her ticket bir hata, her hata bir teknik — Kraken Air politika el kitabı üzerinde, ölçülen ve ölçülmeyen ayrı ayrı.
+---
+import Deck from '../../../components/Deck.astro';
+import DeckFigure from '../../../components/DeckFigure.astro';
+import Step from '../../../components/Step.astro';
+import DaysQuestion from '../../../components/DaysQuestion.astro';
+import Gate from '../../../components/Gate.astro';
+import Log from '../../../components/Log.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Term from '../../../components/Term.astro';
+import Takeaway from '../../../components/Takeaway.astro';
+
+<DaysQuestion answer="24 iş günü [1] ✓" how="chroma · section · rerank on · sürüm 2026" />
+
+<Gate>
+RAG türlerini gördük; hangisini ne zaman eklemeli? Bir blog yazısının ilk önerisi değil, sistemin gerçekten yaptığı bir hata karar verir. Pipeline'ı canlıya aldığımızı düşünelim ve gelen ticket'lara bakalım.
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 1000 600" role="img" aria-label="Sekiz ticket'ın tekniklerinden oluşan maliyet merdiveni">
+      <defs><marker id="nd-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker></defs>
+      <path d="M30 574 V84" class="farrow" marker-end="url(#nd-h)" />
+      <text x="30" y="62" text-anchor="middle" class="fsub">pahalı</text>
+      <text x="30" y="594" text-anchor="middle" class="fsub">ucuz</text>
+      <g class="ph ph8">
+        <rect x="60" y="520" width="880" height="52" rx="10" class="fbox fbox-good" />
+        <text x="84" y="554" class="flbl">başlıktan kes, öneki yaz</text>
+        <text x="520" y="553" class="fsub">B sayfası</text>
+        <text x="700" y="553" class="fsub">bedava</text>
+        <text x="920" y="553" text-anchor="end" class="fsub fgood-t">ölçtük</text>
+      </g>
+      <g data-from="2">
+        <g class="ph ph1">
+          <rect x="60" y="456" width="880" height="52" rx="10" class="fbox fbox-on" />
+          <text x="84" y="490" class="flbl">metadata filtresi (sürüm, kapsam)</text>
+          <text x="520" y="489" class="fsub">T1 · T2</text>
+          <text x="700" y="489" class="fsub">bedava</text>
+          <text x="920" y="489" text-anchor="end" class="fsub fgood-t">T2 ölçtük</text>
+        </g>
+      </g>
+      <g data-from="4">
+        <g class="ph ph2">
+          <rect x="60" y="392" width="880" height="52" rx="10" class="fbox fbox-on" />
+          <text x="84" y="426" class="flbl">context'i azalt, sırala</text>
+          <text x="520" y="425" class="fsub">T3</text>
+          <text x="700" y="425" class="fsub">bedava</text>
+          <text x="920" y="425" text-anchor="end" class="fsub fgood-t">ölçtük</text>
+        </g>
+      </g>
+      <g data-from="5">
+        <g class="ph ph3">
+          <rect x="60" y="328" width="880" height="52" rx="10" class="fbox" stroke-dasharray="7 6" />
+          <text x="84" y="362" class="flbl">hybrid (kelime + vektör)</text>
+          <text x="520" y="361" class="fsub">T4</text>
+          <text x="700" y="361" class="fsub">ikinci indeks</text>
+          <text x="920" y="361" text-anchor="end" class="fsub fgate-t">eklemedik: hata yok</text>
+        </g>
+      </g>
+      <g data-from="6">
+        <g class="ph ph4">
+          <rect x="60" y="264" width="880" height="52" rx="10" class="fbox fbox-on" />
+          <text x="84" y="298" class="flbl">rerank</text>
+          <text x="520" y="297" class="fsub">T5</text>
+          <text x="700" y="297" class="fsub">5 çağrı</text>
+          <text x="920" y="297" text-anchor="end" class="fsub fgood-t">ölçtük</text>
+        </g>
+      </g>
+      <g data-from="7">
+        <g class="ph ph5">
+          <rect x="60" y="200" width="880" height="52" rx="10" class="fbox" />
+          <text x="84" y="234" class="flbl">parent-child</text>
+          <text x="520" y="233" class="fsub">T6</text>
+          <text x="700" y="233" class="fsub">iki boy chunk</text>
+          <text x="920" y="233" text-anchor="end" class="fsub fgate-t">ölçmedik</text>
+        </g>
+      </g>
+      <g data-from="8">
+        <g class="ph ph6">
+          <rect x="60" y="136" width="880" height="52" rx="10" class="fbox" />
+          <text x="84" y="170" class="flbl">agentic RAG</text>
+          <text x="520" y="169" class="fsub">T7</text>
+          <text x="700" y="169" class="fsub">birçok çağrı</text>
+          <text x="920" y="169" text-anchor="end" class="fsub fgate-t">ölçmedik</text>
+        </g>
+      </g>
+      <g data-from="9">
+        <g class="ph ph7">
+          <rect x="60" y="72" width="880" height="52" rx="10" class="fbox" />
+          <text x="84" y="106" class="flbl">GraphRAG</text>
+          <text x="520" y="105" class="fsub">T8</text>
+          <text x="700" y="105" class="fsub">tüm corpus</text>
+          <text x="920" y="105" text-anchor="end" class="fsub fgate-t">ölçmedik</text>
+        </g>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="Canlıya çıktık">
+    Pipeline Kraken Air'in İK asistanı oldu; model 90 gün boyunca değişmeyecek (gemma3:4b). Pazartesi ilk ticket geldi. Ticket'lar kurgu; içlerindeki ölçümler bu günün loglarından, ölçmediklerimizde "Ölçmedik" yazıyor.
+  </Step>
+  <Step title="T1 · Londra'da yurt içi tablo önde" phase="1">
+    Eval'da Londra otel limiti sorusu (q06): yurt içi harcırah tablosu 1. sırada, yurt dışı 2. Cevap doğru; ama doğru tabloyu seçen model, ikizleri ayıran bir etiket yok. Çözüm: kapsam etiketi ve filtre. Ölçmedik.
+  </Step>
+  <Step title="T2 · Sürüm filtresi kapatıldı" phase="1">
+    Biri sürüm filtresini kapattı. Cevap hâlâ 24, ama prompt'ta 2025'in tablosu da var (22) ve ikisinde de yıl yazmıyor; model bu koşuda doğru olanı seçti. Çözüm: sürüm filtresi, bizde varsayılan. Ölçtük.
+  </Step>
+  <Step title="T3 · Hepsini prompt'a koyalım" phase="2">
+    Biri "retrieval'a ne gerek var, el kitabının tamamını koyalım" dedi. Ölçtük: 11358 token, varsayılan 8192'lik pencereye sığmıyor; pencere açılınca cevap doğru, ama 30137 ms. RAG ile 894 ms. Çözüm: az ve seçilmiş context.
+  </Step>
+  <Step title="T4 · “Hybrid ekleyelim”" phase="3">
+    IT güvenlik politikası İngilizce; ekip "Türkçe soruda kelime tutmaz, hybrid ekleyelim" dedi. Eval: 4 TR→EN sorusunun 4'ünde doğru bölüm 1. sırada. Hata yok, hybrid eklenmedi. Ortak kelime olmadığı için yardım da edemezdi.
+  </Step>
+  <Step title="T5 · “Tatil hakkım”" phase="4">
+    "Tatil hakkım kaç gün, 4 yıldır çalışıyorum?" sorusunda izin tablosu vektör sırasında 5.; prompt'a ilk 3 girer. Rerank açıkken cevap doğru. Bedeli 5 LLM çağrısı, 2134 ms. Daha ucuz aday (HyDE) ölçülmedi.
+  </Step>
+  <Step title="T6 · Başlıksız dokümanlar" phase="5">
+    İK duyuruları artık başlıksız e-posta olarak geliyor; bölüme göre kesecek başlık yok. Küçük chunk iyi bulunur ama başlığını kaybeder (fixed-300'de gördük). Çözüm: küçükle ara, büyüğü ver (parent-child). Ölçmedik.
+  </Step>
+  <Step title="T7 · Üç soru bir arada" phase="6">
+    "Eşim doğum yapacak: kaç gün izin alırım, o günlerde yemek kartı yüklenir mi, yıllık iznimi devredebilir miyim?" Cevap üç ayrı bölümde; tek arama hepsini getiremeyebilir. Çözüm: agentic RAG. Ölçmedik.
+  </Step>
+  <Step title="T8 · 330 mu, 400 mü?" phase="7">
+    Yan Haklar 330 TL diyor, asistan 400 TL dedi. Doğrusu 400: duyuru o bölümü güncelliyor ve iki chunk da prompt'taydı. Ama bu bağ yalnızca metinde yazıyor. Çözüm: dokümanlar arası ilişki (GraphRAG). Ölçmedik.
+  </Step>
+  <Step title="Sekiz ticket, bir merdiven">
+    Basamaklar maliyet sırasıyla: en ucuzdan başla, ölç, yetmezse bir üst basamak. Sekiz ticket'ta model hiç değişmedi; her teşhis prompt'a ve eval'a bakarak kondu. Hatası olmayan bir tekniği eklemek, bedelini boşuna ödemektir.
+  </Step>
+</Deck>
+
+Aşağıda her ticket'ın ayrıntısı: şikâyet (kurgu), ölçüm (log) ya da "Ölçmedik", teşhis, teknik ve bedel.
+
+## T1 · 1. hafta — Londra'da yurt içi tablo önde
+
+> **Kurgu.** Ekip eval sonuçlarını okurken fark etti: "Direktör olarak Londra'da otelde gecelik en fazla ne kadar harcayabilirim?" sorusunda kaynakların ilki yurt içi tablo.
+
+**Ölçüm.** Bu soru gold set'te var (q06). Retriever önce yurt içi harcırah bölümünü (§3), sonra yurt dışını (§4) getiriyor; cevap kontrolü ✓:
+
+<Log name="eval-answers" title="npm run eval -- --answers   (q06)" from={8} to={9} />
+
+**Teşhis.** İkiz tablolar: iki bölüm de `Unvan · Günlük harcırah · Otel üst limiti` kalıbında. Embedding için ikisi de "otel limiti". Bu koşuda model doğru tabloyu seçti; seçimi ona bırakan bir sistem, bir gün yanlışını da seçebilir.
+**Teknik.** <Term id="metadata">Metadata</Term> filtresi: chunk'a kapsam etiketi (yurt içi / yurt dışı), sorudan kapsamı çıkarıp aramada filtre.
+**Bedel.** Ingest'te bir alan. Zor kısım etiketi soru anında kimin seçeceği: soruda "Londra" yazıyor, "yurt dışı" yazmıyor. **Ölçmedik.**
+
+## T2 · 1. hafta — Sürüm filtresi kapatıldı
+
+> **Kurgu.** 2026 el kitabı yüklendi. Biri "eski sürümler de görünsün" diye sürüm filtresini kapattı.
+
+**Ölçüm.** Sürüm filtresi kapalı:
+
+<Log name="edition-all" title="npm run soru   (EDITION = all)" />
+
+**Teşhis.** İki sürümün metinleri neredeyse aynı: her chunk'ın bir ikizi var, skorları neredeyse eşit (0.632 ve 0.631). İki tablo da prompt'a girdi: 2026 (24) ve 2025 (22). Kaynak çitinde ve chunk metninde yıl yazmıyor; model bu koşuda 24'ü seçti, 22'yi seçmesini engelleyen hiçbir şey yok.
+**Teknik.** Sürüm filtresi: yalnızca en yeni sürüm yarışır. Bizde varsayılan; filtre açıkken kaynakların üçü de 2026 ([Veri değişince](/adim-adim/veri-degisince/)).
+**Bedel.** Kod tarafında yok. Asıl iş içerikte: hangi sürümün geçerli olduğu ingest'te doğru etiketlenmeli.
+
+## T3 · 2. hafta — "Hepsini prompt'a koyalım"
+
+> **Kurgu.** Biri "retrieval'a ne gerek var, el kitabının tamamını her soruda modele verelim" dedi.
+
+**Ölçüm.** El kitabının tamamı tek prompt'ta, aynı soru:
+
+<Log name="stuff-everything" title="her doküman tek prompt'ta (retrieval yok)" />
+
+**Teşhis.** Cevap doğru, ama 11358 token varsayılan 8192'lik pencereye sığmıyor; ölçmek için pencere 32768'e açıldı. RAG ile aynı cevap 1155 token ve 894 ms.
+**Teknik.** Context'i azalt ve sırala: yalnızca seçilmiş chunk'lar, en iyisi başta. RAG'in kendisi bu.
+**Bedel.** Bedava; bedeli olan, yapmamak: her soruda yaklaşık 10 kat token ve 34 kat süre. El kitabı büyüdükçe bu yol tamamen kapanır.
+
+## T4 · 1. ay — "Hybrid ekleyelim"
+
+> **Kurgu.** IT güvenlik politikası İngilizce. Ekipten biri: "Türkçe soruda kelime tutmaz; her RAG yazısı hybrid öneriyor, ekleyelim."
+
+**Ölçüm.** Gold set'te 4 TR→EN sorusu var; hepsinde doğru bölüm 1. sırada:
+
+<Log name="eval-section" title="npm run eval   (TR→EN soruları)" from={10} to={14} />
+
+**Teşhis.** Hata yok. bge-m3 Türkçe soruyu İngilizce bölümle zaten eşleştiriyor. Üstelik kelime araması Türkçe soru ile İngilizce metin arasında ortak kelime bulamaz; bu hatayı düzeltemezdi bile.
+**Teknik.** <Term id="hybrid">Hybrid</Term> arama: kod, numara, ürün adı gibi birebir aranan kelimelerde işe yarar. Burada eklemedik.
+**Bedel.** İkinci bir indeks, iki listeyi birleştirme, bakım. Hatası olmayan bir yere eklenince bu bedel boşa ödenir.
+
+## T5 · 1. ay — "Tatil hakkım"
+
+> **Kurgu.** Bir çalışan "tatil" kelimesiyle sordu; politikada bu kelime geçmiyor.
+
+**Ölçüm.** q02: "Tatil hakkım kaç gün, 4 yıldır çalışıyorum?" Doğru bölüm vektör sırasında 5. (RR 0.20); cevap ✓, rerank açıkken:
+
+<Log name="eval-answers" title="npm run eval -- --answers   (q02)" from={4} to={5} />
+
+**Teşhis.** Soru "tatil hakkım" diyor, doküman "yıllık ücretli izin". Kelime ortak değil, anlam ortak: embedding buluyor ama zar zor. Prompt'a yalnızca ilk 3 chunk girer; 5. sıradaki tablo ancak rerank ile öne geçer.
+**Teknik.** <Term id="rerank">Rerank</Term>: soruyla chunk'ı birlikte okuyan ikinci bir sıralama. Daha ucuz bir aday: soruyu dokümanın diliyle yeniden yazdırmak ya da önce varsayımsal bir cevap yazdırıp onunla aramak (<Term id="hyde">HyDE</Term>).
+**Bedel.** Rerank: 5 LLM çağrısı, günün sorusunda 2134 ms. Rerank kapalıyken q02'yi ölçmedik; HyDE'yi de ölçmedik. Rerank da yanılır: maaş sorusunda seyahat bölümüne 10 üzerinden 10 verdi ([Güvenlik](/uretim/guvenlik/)).
+
+## T6 · 2. ay — Başlıksız dokümanlar
+
+> **Kurgu.** İK duyuruları artık e-postadan dönüştürülüp corpus'a giriyor; `## 3.` gibi başlıklar yok.
+
+**Ölçüm, en yakın benzeri:** başlığını kaybeden chunk. Tablo satırları burada, tablonun başlık satırı önceki chunk'ta kaldı:
+
+<Log name="03-chunk-fixed" title="npm run step -- 3   (chunker: fixed)" from={5} to={21} />
+
+**Teşhis.** Section chunker başlık bulamazsa dokümanı en fazla 1500 karakterlik paragraf paketlerine böler ve önüne yalnızca doküman adını yazar; fixed kesim ise satırı başlığından ayırır. Küçük chunk iyi bulunur ama kötü okunur; büyük chunk iyi okunur ama kötü bulunur.
+**Teknik.** <Term id="parentchild">Parent-child</Term>: küçük chunk'larla ara, bulunanın ait olduğu büyük parçayı prompt'a koy. Başlık yoksa ingest'te modele her chunk için bir bağlam satırı yazdır.
+**Bedel.** İki boy chunk ve aralarındaki bağ; prompt büyür; gold set'teki bölüm numaraları yeniden düşünülür. **Ölçmedik.**
+
+## T7 · 3. ay — Üç soru bir arada
+
+> **Kurgu.** "Eşim doğum yapacak: kaç gün izin alırım, o günlerde yemek kartı yüklenir mi, kullanmadığım yıllık izni devredebilir miyim?"
+
+**Teşhis.** Cevap üç bölüme dağılmış: doğum izni (Yıllık İzin §5), yemek kartının hangi günlerde yüklenmediği (Yan Haklar §2), izin devri (Yıllık İzin §7). Tek arama tek bir "ortalama" soruyu arar; prompt'a 3 chunk girer.
+**Teknik.** <Term id="agentic">Agentic RAG</Term>: model soruyu parçalara böler, her parça için ayrı arar, "yeterli mi?" diye kontrol eder, sonra cevaplar.
+**Bedel.** Bir yerine birçok çağrı; süre tur sayısıyla çarpılır; iki koşu soruyu farklı bölebilir; bir tur sınırı şart. **Ölçmedik:** bu soruyu pipeline'a sormadık.
+
+## T8 · 3. ay — 330 mu, 400 mü?
+
+> **Kurgu.** "Yan Haklar politikası yemek kartına günde 330 TL diyor, asistan 400 TL dedi. Hangisi doğru?"
+
+**Ölçüm.** Yemek kartı sorusunda duyuru ve Yan Haklar §2 birlikte prompt'taydı; cevap 400 TL, kaynak duyuru:
+
+<Log name="ask-injection" title="npm run ask -- &quot;Yemek kartına günlük ne kadar yükleniyor?&quot;" from={29} />
+
+**Teşhis.** Duyuru, Yan Haklar politikasının 2. bölümündeki tutarı güncellediğini söylüyor; bu bağ yalnızca metinde yazıyor. Bu koşuda iki chunk birlikte geldi ve model doğru olanı seçti. Duyuru ilk 3'e girmeseydi modelin elinde yalnızca 330 kalırdı; bunu ölçmedik.
+**Teknik.** Dokümanlar arası ilişkiyi ingest'te çıkar ("duyuru → günceller → Yan Haklar §2"), sorguda bu bağı izle: <Term id="graphrag">GraphRAG</Term>. En basit hâli: güncellenen bölüme metadata ile "yerini aldı" etiketi.
+**Bedel.** Bütün corpus bir kez modelden geçer; ilişki yanlış çıkarılırsa arama sessizce yanlış yere gider. "Hangi durumlarda direktör onayı gerekir?" gibi, cevabı birçok bölüme dağılmış özet soruları da aynı aileden. **Ölçmedik.**
+
+## Sık sorulan
+
+<FAQ q="Bütün basamakları baştan kursak?">
+Her basamak süre, çağrı ya da bakım bedeli ekler, bazıları doğruluğu da düşürebilir: rerank bile maaş sorusunda yanlış bölümü birinci yaptı. Basamak eklemeden önce eval'da o basamağın düzelteceği hatayı görün; ekledikten sonra aynı eval'ı tekrar koşun.
+</FAQ>
+
+<FAQ q="Eval 23/23 diyorsa ticket nereden geliyor?">
+Gold set yalnızca içindeki soruları bilir. T1 ve T5 eval'dan geldi, çünkü o sorular gold set'teydi; T6, T7 ve T8 gold set'te olmayan soru türleri. Kullanımda gelen her yeni hata türü, gold set'e yeni bir satır olmalı.
+</FAQ>
+
+<FAQ q="Ticket'lar gerçek mi?">
+Şikâyetler kurgu; içlerindeki sayılar bu sitenin loglarından. Bir ticket'ın çözümünü ölçmediysek orada "Ölçmedik" yazıyor.
+</FAQ>
+
+<Takeaway>Hatası olmayan tekniği eklemeyin.</Takeaway>

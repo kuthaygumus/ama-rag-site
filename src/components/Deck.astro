@@ -1,0 +1,10 @@
+---
+/**
+ * A step deck. Put the drawing(s) in <DeckFigure slot="figure"> and the steps as <Step> children.
+ * Keys: ← → walk the steps, F toggles present mode.
+ */
+---
+<div class="deck" data-deck>
+  <div class="deck-stage"><slot name="figure" /></div>
+  <ol class="deck-list"><slot /></ol>
+</div>

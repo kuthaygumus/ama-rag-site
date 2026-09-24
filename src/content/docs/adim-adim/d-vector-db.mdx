@@ -1,0 +1,305 @@
+---
+title: D · Vector DB
+description: Vektörleri bir JSON dosyasından Chroma'ya taşımak — bir kayıtta ne saklanır, ANN araması neyi değiştirir, neyi değiştirmez. Adım 5.
+---
+import WhereAmI from '../../../components/WhereAmI.astro';
+import DaysQuestion from '../../../components/DaysQuestion.astro';
+import Gate from '../../../components/Gate.astro';
+import Deck from '../../../components/Deck.astro';
+import DeckFigure from '../../../components/DeckFigure.astro';
+import Step from '../../../components/Step.astro';
+import Example from '../../../components/Example.astro';
+import RepoCode from '../../../components/RepoCode.astro';
+import Log from '../../../components/Log.astro';
+import YourTurn from '../../../components/YourTurn.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Takeaway from '../../../components/Takeaway.astro';
+import Term from '../../../components/Term.astro';
+
+<WhereAmI at="store" />
+
+<DaysQuestion answer="“Tablodan, 7 tam yıl kıdeminde 22 iş günü ücretli izin hakkı olduğunu görüyoruz [1].” ✓" how="chroma store · chunker section · rerank on — cevap kara kutudakiyle aynı" />
+
+<Gate>
+Şimdiye kadar "veritabanı" bir JSON dosyasıydı ve her soruda soru vektörü 60 vektörün hepsiyle tek tek karşılaştırıldı. 60 için sorun değil. Bir milyon chunk'ta her soru bir milyon karşılaştırma demek.
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure" stage="r">
+    <svg viewBox="0 0 1000 330" role="img" aria-label="Chroma'da bir kayıt: id, embedding, document ve metadata">
+      <rect x="20" y="30" width="640" height="282" rx="12" class="fbox" />
+      <g class="ph ph1">
+        <rect x="28" y="90" width="624" height="56" rx="6" class="fbox-on" />
+        <text x="690" y="118" class="flbl">aramak için</text>
+        <text x="690" y="142" class="fsub">soru vektörüne en yakınlar</text>
+      </g>
+      <g class="ph ph2">
+        <rect x="28" y="154" width="624" height="72" rx="6" class="fbox-on" />
+        <text x="690" y="186" class="flbl">modele vermek için</text>
+        <text x="690" y="210" class="fsub">vektör metne geri dönmez</text>
+      </g>
+      <g class="ph ph3">
+        <rect x="28" y="234" width="624" height="70" rx="6" class="fbox-on" />
+        <text x="690" y="264" class="flbl">filtre için</text>
+        <text x="690" y="288" class="fsub">edition, access …</text>
+      </g>
+      <text x="40" y="70" class="fsub">id</text>
+      <text x="170" y="70" class="fsub fnum">hr-leave@2025#3</text>
+      <text x="40" y="124" class="fsub">embedding</text>
+      <text x="170" y="124" class="fsub">[ … 1024 sayı … ]</text>
+      <text x="40" y="186" class="fsub">document</text>
+      <text x="170" y="182" class="fsub">[Yıllık İzin Politikası › 3. Yıllık Ücretli İzin]</text>
+      <text x="170" y="208" class="fsub">Yıllık ücretli izin süresi, … | 7 | 22 | …</text>
+      <text x="40" y="264" class="fsub">metadata</text>
+      <text x="170" y="260" class="fsub">docId: hr-leave · edition: 2025 · title: Yıllık İzin Politikası</text>
+      <text x="170" y="286" class="fsub">access: all · lang: tr · sections: 3</text>
+    </svg>
+  </DeckFigure>
+  <DeckFigure slot="figure" stage="a">
+    <svg viewBox="0 0 1000 380" role="img" aria-label="Şematik: brute force her vektöre bakar; HNSW bir giriş noktasından komşudan komşuya atlayarak soruya yaklaşır">
+      <text x="240" y="30" text-anchor="middle" class="flbl">JSON · hepsine bak</text>
+      <text x="760" y="30" text-anchor="middle" class="flbl">Chroma · mahalleye bak</text>
+      <g data-from="5">
+        <path d="M240 200 L70 90" class="faxis" />
+        <path d="M240 200 L140 65" class="faxis" />
+        <path d="M240 200 L220 60" class="faxis" />
+        <path d="M240 200 L310 70" class="faxis" />
+        <path d="M240 200 L390 95" class="faxis" />
+        <path d="M240 200 L425 160" class="faxis" />
+        <path d="M240 200 L45 170" class="faxis" />
+        <path d="M240 200 L115 145" class="faxis" />
+        <path d="M240 200 L190 130" class="faxis" />
+        <path d="M240 200 L280 140" class="faxis" />
+        <path d="M240 200 L355 155" class="faxis" />
+        <path d="M240 200 L80 250" class="faxis" />
+        <path d="M240 200 L155 230" class="faxis" />
+        <path d="M240 200 L300 235" class="faxis" />
+        <path d="M240 200 L380 255" class="faxis" />
+        <path d="M240 200 L120 320" class="faxis" />
+        <path d="M240 200 L210 310" class="faxis" />
+        <path d="M240 200 L290 325" class="faxis" />
+        <path d="M240 200 L410 320" class="faxis" />
+        <path d="M240 200 L265 188" class="faxis" />
+        <path d="M240 200 L218 238" class="faxis" />
+        <circle cx="70" cy="90" r="6" class="fbox" />
+        <circle cx="140" cy="65" r="6" class="fbox" />
+        <circle cx="220" cy="60" r="6" class="fbox" />
+        <circle cx="310" cy="70" r="6" class="fbox" />
+        <circle cx="390" cy="95" r="6" class="fbox" />
+        <circle cx="425" cy="160" r="6" class="fbox" />
+        <circle cx="45" cy="170" r="6" class="fbox" />
+        <circle cx="115" cy="145" r="6" class="fbox" />
+        <circle cx="190" cy="130" r="6" class="fbox" />
+        <circle cx="280" cy="140" r="6" class="fbox" />
+        <circle cx="355" cy="155" r="6" class="fbox" />
+        <circle cx="80" cy="250" r="6" class="fbox" />
+        <circle cx="155" cy="230" r="6" class="fbox" />
+        <circle cx="300" cy="235" r="6" class="fbox" />
+        <circle cx="380" cy="255" r="6" class="fbox" />
+        <circle cx="120" cy="320" r="6" class="fbox" />
+        <circle cx="210" cy="310" r="6" class="fbox" />
+        <circle cx="290" cy="325" r="6" class="fbox" />
+        <circle cx="410" cy="320" r="6" class="fbox" />
+        <circle cx="265" cy="188" r="6" class="fbox" />
+        <circle cx="218" cy="238" r="6" class="fbox" />
+      </g>
+      <g data-from="6">
+        <path d="M590 90 L635 145" class="faxis" />
+        <path d="M590 90 L660 65" class="faxis" />
+        <path d="M590 90 L565 170" class="faxis" />
+        <path d="M660 65 L740 60" class="faxis" />
+        <path d="M660 65 L710 130" class="faxis" />
+        <path d="M740 60 L710 130" class="faxis" />
+        <path d="M740 60 L830 70" class="faxis" />
+        <path d="M830 70 L800 140" class="faxis" />
+        <path d="M830 70 L910 95" class="faxis" />
+        <path d="M910 95 L875 155" class="faxis" />
+        <path d="M910 95 L945 160" class="faxis" />
+        <path d="M945 160 L875 155" class="faxis" />
+        <path d="M945 160 L900 255" class="faxis" />
+        <path d="M565 170 L635 145" class="faxis" />
+        <path d="M565 170 L600 250" class="faxis" />
+        <path d="M635 145 L710 130" class="faxis" />
+        <path d="M800 140 L785 188" class="faxis" />
+        <path d="M800 140 L875 155" class="faxis" />
+        <path d="M600 250 L675 230" class="faxis" />
+        <path d="M600 250 L640 320" class="faxis" />
+        <path d="M675 230 L738 238" class="faxis" />
+        <path d="M635 145 L675 230" class="faxis" />
+        <path d="M820 235 L785 188" class="faxis" />
+        <path d="M820 235 L738 238" class="faxis" />
+        <path d="M820 235 L900 255" class="faxis" />
+        <path d="M900 255 L930 320" class="faxis" />
+        <path d="M875 155 L900 255" class="faxis" />
+        <path d="M640 320 L730 310" class="faxis" />
+        <path d="M675 230 L640 320" class="faxis" />
+        <path d="M730 310 L738 238" class="faxis" />
+        <path d="M730 310 L810 325" class="faxis" />
+        <path d="M820 235 L810 325" class="faxis" />
+        <path d="M810 325 L738 238" class="faxis" />
+        <path d="M810 325 L930 320" class="faxis" />
+        <path d="M820 235 L930 320" class="faxis" />
+        <path d="M785 188 L738 238" class="faxis" />
+        <path d="M710 130 L800 140" class="faxis" />
+        <circle cx="590" cy="90" r="6" class="fbox" />
+        <circle cx="660" cy="65" r="6" class="fbox" />
+        <circle cx="740" cy="60" r="6" class="fbox" />
+        <circle cx="830" cy="70" r="6" class="fbox" />
+        <circle cx="910" cy="95" r="6" class="fbox" />
+        <circle cx="945" cy="160" r="6" class="fbox" />
+        <circle cx="565" cy="170" r="6" class="fbox" />
+        <circle cx="635" cy="145" r="6" class="fbox" />
+        <circle cx="710" cy="130" r="6" class="fbox" />
+        <circle cx="800" cy="140" r="6" class="fbox" />
+        <circle cx="875" cy="155" r="6" class="fbox" />
+        <circle cx="600" cy="250" r="6" class="fbox" />
+        <circle cx="675" cy="230" r="6" class="fbox" />
+        <circle cx="820" cy="235" r="6" class="fbox" />
+        <circle cx="900" cy="255" r="6" class="fbox" />
+        <circle cx="640" cy="320" r="6" class="fbox" />
+        <circle cx="730" cy="310" r="6" class="fbox" />
+        <circle cx="810" cy="325" r="6" class="fbox" />
+        <circle cx="930" cy="320" r="6" class="fbox" />
+        <circle cx="785" cy="188" r="6" class="fbox" />
+        <circle cx="738" cy="238" r="6" class="fbox" />
+        <path d="M590 90 L635 145 L710 130 L800 140 L785 188" class="farrow-on" />
+        <circle cx="590" cy="90" r="7" class="fdot" />
+        <circle cx="635" cy="145" r="7" class="fdot" />
+        <circle cx="710" cy="130" r="7" class="fdot" />
+        <circle cx="800" cy="140" r="7" class="fdot" />
+        <circle cx="785" cy="188" r="7" class="fdot" />
+      </g>
+      <polygon points="240,183 244,194 256,194 246,201 250,213 240,206 230,213 234,201 224,194 236,194" class="farrow fgate-t" />
+      <g data-from="6">
+        <polygon points="760,183 764,194 776,194 766,201 770,213 760,206 750,213 754,201 744,194 756,194" class="farrow fgate-t" />
+        <text x="590" y="80" text-anchor="end" class="fsub fnum">giriş</text>
+      </g>
+      <g data-from="5">
+        <text x="240" y="362" text-anchor="middle" class="fsub">brute force: 60 vektör, 60 karşılaştırma · kesin</text>
+      </g>
+      <g data-from="7">
+        <text x="760" y="362" text-anchor="middle" class="fsub fnum">HNSW: birkaç atlama · yaklaşık</text>
+      </g>
+      <text x="500" y="200" text-anchor="middle" class="fsub">şematik</text>
+      <g data-from="8">
+        <text x="500" y="240" text-anchor="middle" class="fsub fgood-t">ilk 5 id: aynı ✓</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="Bir kayıtta ne var?" stage="r">
+    Adım 5 her chunk'ı Chroma'ya bir kayıt olarak yazar: id, embedding (vektör), document (metin) ve metadata. Üçünün ayrı ayrı görevi var; sırayla bakalım.
+  </Step>
+  <Step title="Vektör: aramak için" stage="r" phase="1">
+    Soru vektörüne en yakın kayıtları bulmanın tek yolu. 1024 sayı; Chroma onları kendisi üretmiyor, adım 4'ün hesapladığı vektörleri olduğu gibi alıyor.
+  </Step>
+  <Step title="Metin: modele vermek için" stage="r" phase="2">
+    1024 sayıdan cümle geri çıkmaz. Arama vektörle yapılır, prompt'a metin girer. Bu yüzden kayıt ikisini birlikte taşır: vektör bulur, metin anlatır.
+  </Step>
+  <Step title="Metadata: filtre için" stage="r" phase="3">
+    edition, access, docId … A sayfasında dokümanın üst bloğundan okuduk. Adım 6 "yalnızca 2025, yalnızca herkese açık" der; Chroma bu koşulu aramanın içinde uygular.
+  </Step>
+  <Step title="Brute force: hepsine bak" stage="a">
+    JSON deposu her soruda 60 vektörün hepsiyle cosine hesaplar ve sıralar. Sonuç kesindir; ama iş chunk sayısıyla birlikte büyür. Bu yöntemin adı <Term id="bruteforce">brute force</Term>.
+  </Step>
+  <Step title="Vector DB: mahalleye bak" stage="a">
+    Chroma bir indeks kurar: <Term id="hnsw">HNSW</Term>, vektörleri komşuluk grafiğine bağlar. Arama bir giriş noktasından başlar, soruya doğru komşudan komşuya atlar ve yalnızca yakın mahalleyi gezer.
+  </Step>
+  <Step title="Bedeli: yaklaşık" stage="a">
+    Bu aramanın adı <Term id="ann">ANN</Term>: approximate nearest neighbor. En yakınları çok büyük olasılıkla bulur ama garanti etmez. Hız için kesinlikten biraz vazgeçilir; indeksin ayarları bu dengeyi belirler.
+  </Step>
+  <Step title="Bizde sıralama değişti mi?" stage="a">
+    Aynı soru, iki depo: JSON'un ve Chroma'nın ilk 5 id'si aynı, aynı sırada. 60 kayıtta yaklaşıklık görünmüyor. Veritabanı ölçeği değiştirdi, sıralamayı değil.
+  </Step>
+</Deck>
+
+<Example>
+Günün sorusu için iki deponun ilk 5'i yan yana. Adım 5, Chroma'ya yazdıktan sonra aynı soruyu JSON deposuna da soruyor ve iki listeyi karşılaştırıyor.
+</Example>
+
+<Log name="05-store-json" title="npm run step -- 5 --store json" />
+
+<Log name="05-store-chroma" title="npm run step -- 5" />
+
+Brute force'un kendisi, JSON deposunun arama fonksiyonu: filtrele, her kayıtla cosine hesapla, sırala, ilk k'yı al.
+
+<RepoCode file="src/lib/store-json.ts" from="async query" to="^  }$" />
+
+Chroma tarafında aynı iş bir sorgu. Önce koleksiyon: Chroma'ya vektör üretmemesini (`embeddingFunction: null`) ve cosine kullanmasını söylüyoruz.
+
+<RepoCode file="src/lib/chroma.ts" from="private async collection" to="^  }$" />
+
+Kaydın dört parçası tek çağrıda gidiyor: `ids`, `embeddings`, `documents`, `metadatas`. Metadata değerleri düz metin ya da sayı olmak zorunda; bölüm listesi bu yüzden `"2,3"` gibi bir metne dönüşüyor.
+
+<RepoCode file="src/lib/chroma.ts" from="async replaceEdition" to="^  }$" />
+
+## Vector DB'nin dört işi
+
+- **Ekle / güncelle.** Chroma'da aynı id'ye yazmak (upsert) eski kaydın yerini alır. Bizim kod bunu sürüm düzeyinde yapıyor: `replaceEdition` önce o sürümün kayıtlarını siler, sonra yenilerini ekler. Adım 5'i ikinci kez çalıştırmak çift kayıt üretmez.
+- **Sil.** `where` koşuluyla: bizde `{ edition }`.
+- **Filtrele.** Aramanın içinde, yine `where` ile. `toWhere()` bizim filtremizi Chroma'nın diline çeviriyor (E sayfası).
+- **Sakla.** Container durunca veri kaybolmaz: `compose.yaml` onu bir volume'a yazıyor.
+
+## `podman compose up`, satır satır
+
+Günün başında çalıştırdığımız komutun anlattığı şey bu dosya:
+
+<RepoCode file="compose.yaml" />
+
+- `image: docker.io/chromadb/chroma:1.5.9` — sürüm sabit. Herkesin makinesinde aynı Chroma, aynı API.
+- `ports: "8000:8000"` — Chroma'nın HTTP API'si `localhost:8000`'de. Kodumuz da Bruno da buraya konuşuyor.
+- `volumes: chroma-data:/data` — kayıtlar container'ın içinde değil, adlandırılmış bir volume'da. `podman compose down` veriyi korur; `down -v` siler.
+- `ANONYMIZED_TELEMETRY: "false"` — Chroma dışarıya kullanım istatistiği göndermez.
+- `healthcheck` — her 5 saniyede `/api/v2/heartbeat` adresini yoklar. `podman compose ps` "healthy" diyorsa Chroma hazır.
+- Ollama burada yok: modeller zaten sizin makinenizde, GPU'nun yanında çalışıyor.
+
+## İçeri Bruno ile bakın
+
+Bruno'daki `01-chroma` klasörü, kodumuzun yaptığı HTTP çağrılarının aynısını elle yapıyor. Yalnızca bakıyor; hiçbir şey değiştirmiyor.
+
+<RepoCode file="bruno/01-chroma/peek.bru" from="body:json" to="^}" lang="txt" />
+
+<YourTurn>
+**1 · Chroma ayakta mı?** `podman compose ps` → `healthy`. Değilse `podman compose up -d`.
+
+**2 · Önce JSON.** `npm run step -- 5 --store json`, sonra `data/store.json`: her kayıt bir chunk ve 1024 sayılık `vector` alanı. Arama bu dosyanın tamamını her soruda okuyor.
+
+**3 · Sonra Chroma.** `npm run step -- 5` → log'da "identical ✓".
+
+**4 · Bruno ile içeri bakın** (`local` ortamını seçin, `01-chroma` klasörü, sırayla):
+
+- `heartbeat` → bir sayı dönüyorsa Chroma ayakta.
+- `collections` → `kraken-policies`; `configuration` içinde `hnsw` ve `space: cosine`.
+- `count` → 60, adım 5'in log'uyla aynı.
+- `peek at three records` → `ids`, `documents`, `metadatas`. `include` listesine `"embeddings"` ekleyip tekrar gönderin: 1024 sayı da gelir.
+- `filter on metadata` → `where` içine `{ "access": "hr-only" }` yazın. Maaş bantları geliyor. Bu isteği kim gönderebilmeli? (Güvenlik sayfası.)
+
+**5 · Kalıcılık.** `podman compose down`, sonra `podman compose up -d` ve Bruno'da `count`: kayıtlar volume'da, hâlâ 60 olmalı.
+
+Podman çalışmıyorsa: `env.example` dosyasını `.env` adıyla kopyalayıp içine `STORE=json` yazın (ya da her komuta `--store json` ekleyin); gün boyunca JSON deposuyla devam edebilirsiniz.
+
+Geride kaldıysanız: `npm run catchup -- 5`. Depo da sıfırlanıp yeniden doldurulur.
+</YourTurn>
+
+## Sık sorulan
+
+<FAQ q="Chroma mı, pgvector mı, Qdrant mı?">
+Hepsi aynı üç şeyi saklar: vektör, metin, metadata. Farklar işletmede: zaten Postgres kullanıyorsanız pgvector yeni bir sistem getirmez; ölçek, filtre gücü, hybrid arama desteği ve yönetilen servis seçenekleri değişir. Bu gün için Chroma bizim seçimimiz: tek container ve Bruno'dan okunabilen bir HTTP API.
+</FAQ>
+
+<FAQ q="Chroma embedding'i kendisi yapamaz mı?">
+Yapabilir. Biz `embeddingFunction: null` verdik ve vektörleri kendimiz Ollama ile ürettik. Böylece hangi modelin kullanıldığı tek yerde yazıyor ve ingest ile soru aynı modelden geçiyor.
+</FAQ>
+
+<FAQ q="Chroma skor değil mesafe döndürüyor, değil mi?">
+Evet. Cosine uzayında mesafe = 1 − cosine benzerliği. Kodumuz `score: 1 - distance` ile geri çeviriyor; JSON ve Chroma skorları bu yüzden aynı ölçekte ve yan yana konabiliyor.
+</FAQ>
+
+<FAQ q="HNSW'nin ayarları neyi değiştirir?">
+Her düğümün kaç komşuya bağlandığı ve aramanın kaç aday gezdiği: daha çok = daha isabetli ve daha yavaş. Bugün varsayılanları kullanıyoruz; 60 kayıtta fark görünmez. Farklı ayarları ölçmedik.
+</FAQ>
+
+<FAQ q="Vektörler de kişisel veri sayılır mı?">
+Vektörler de veridir: kaynak metin hakkında bilgi taşırlar. Üstelik her kayıt metnin kendisini de içeriyor (document). Vector DB'yi, içindeki dokümanlar kadar hassas bir veritabanı olarak korumak gerekir. Ayrıntısı Güvenlik sayfasında.
+</FAQ>
+
+<Takeaway>Embedding anlamı koordinata çevirir; vector DB o koordinatlarda hızlı arar.</Takeaway>

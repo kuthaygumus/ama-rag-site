@@ -1,0 +1,6 @@
+---
+/** One drawing of a deck. `stage` is only needed when a deck has several drawings. */
+interface Props { stage?: string }
+const { stage } = Astro.props;
+---
+<div class="deck-figure" data-stage={stage}><slot /></div>

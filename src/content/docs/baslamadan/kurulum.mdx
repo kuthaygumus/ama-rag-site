@@ -1,0 +1,164 @@
+---
+title: Kurulum
+description: Günden önce, bir kez — Node 22, git, Ollama ve iki model, Podman ile Chroma, repo ve npm run doctor.
+---
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+import RepoCode from '../../../components/RepoCode.astro';
+import Log from '../../../components/Log.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Takeaway from '../../../components/Takeaway.astro';
+
+Günden önce, bir kez. Her şey kendi dizüstünüzde çalışır: dil modelleri **Ollama**'da, vector DB (Chroma)
+**Podman**'da bir container olarak, pipeline'ın kendisi **Node.js** ile TypeScript olarak. Hiçbir veri dışarı çıkmaz.
+
+İnecekler (bu Mac'te `ollama list` ve `podman image ls` ile ölçüldü): `gemma3:4b` 3,3 GB · `bge-m3` 1,2 GB ·
+Chroma imajı 649 MB. Günden önce, iyi bir bağlantıda indirin.
+
+| Ne | Ne işe yarar | Kontrol |
+|---|---|---|
+| [Node.js](https://nodejs.org) 22 veya üstü | pipeline'ı çalıştırır | `node -v` |
+| [git](https://git-scm.com) | repoyu indirir | `git --version` |
+| [Ollama](https://ollama.com/download) | iki modeli yerelde çalıştırır | `ollama list` |
+| `gemma3:4b` | chat modeli: cevabı yazar | `ollama list` içinde |
+| `bge-m3` | embedding modeli: metni 1024 sayıya çevirir | `ollama list` içinde |
+| [Podman Desktop](https://podman-desktop.io) (ya da Docker) | Chroma'yı container'da çalıştırır | `podman --version` |
+| [Bruno](https://www.usebruno.com) (isteğe bağlı) | Chroma ve Ollama'nın içine HTTP ile bakar | — |
+
+## Adım adım
+
+<Steps>
+
+1. **Node.js, git, Ollama, Podman Desktop, Bruno** — yukarıdaki bağlantılardan kurun. Podman Desktop ilk açılışta
+   bir Podman makinesi (küçük bir Linux sanal makinesi) oluşturmayı ve Compose kurmayı önerir; ikisini de kabul
+   edin (`podman compose` o Compose aracını çağırır). Makine terminalden de açılır:
+
+   ```sh
+   podman machine init
+   podman machine start
+   ```
+
+2. **İki model ve Chroma imajı** — üçü de bir kez iner:
+
+   ```sh
+   ollama pull gemma3:4b
+   ollama pull bge-m3
+   podman pull docker.io/chromadb/chroma:1.5.9
+   ```
+
+3. **Repo** — OneDrive'ın (Mac'te iCloud'un) senkronize ettiği bir klasöre değil. Masaüstü ve Belgeler çoğu zaman
+   senkronize edilir; ev klasörünüzde yeni bir `dev` klasörü açın:
+
+   <Tabs syncKey="os">
+   <TabItem label="Mac">
+   ```sh
+   mkdir -p ~/dev && cd ~/dev
+   git clone https://github.com/kuthaygumus/ama-rag-workshop.git
+   cd ama-rag-workshop
+   npm ci
+   ```
+   </TabItem>
+   <TabItem label="Windows (PowerShell)">
+   ```powershell
+   New-Item -ItemType Directory -Force $HOME\dev
+   cd $HOME\dev
+   git clone https://github.com/kuthaygumus/ama-rag-workshop.git
+   cd ama-rag-workshop
+   npm ci
+   ```
+   </TabItem>
+   </Tabs>
+
+4. **Chroma'yı başlatın** — repo klasöründe:
+
+   ```sh
+   podman compose up -d
+   ```
+
+   Chroma artık `http://localhost:8000` adresinde. Durdurmak için `podman compose down`; kaydedilen vektörler
+   volume'da kalır.
+
+5. **Kontrol** — her parçayı bir kez dener ve bir cevabın süresini ölçer:
+
+   ```sh
+   npm run doctor
+   ```
+
+   Son satır `Ready.` olmalı.
+
+</Steps>
+
+<Log name="doctor" title="npm run doctor" />
+
+Bir satırda `✗` varsa, yanında ne yapılacağı yazar. Hepsi tek tek:
+[Kurulum sorunları](/kurulum-sorunlari/).
+
+## Podman yoksa
+
+İki yol var; pipeline ikisinde de aynı çalışır.
+
+**Tek satırlık `podman run`** — `podman compose` çalışmıyor ama Podman çalışıyorsa. `compose.yaml`'ın başındaki
+yorumda yazan satırın aynısı:
+
+```sh
+podman run -d --name chroma -p 8000:8000 -v chroma-data:/data docker.io/chromadb/chroma:1.5.9
+```
+
+**Hiç container yok: JSON store** — vektörler Chroma yerine `data/store.json` dosyasına yazılır, geri kalan her
+şey aynı çalışır. Repo klasöründe bir `.env` dosyasına tek satır ekleyin:
+
+<Tabs syncKey="os">
+<TabItem label="Mac">
+```sh
+echo "STORE=json" >> .env
+npm run doctor
+```
+</TabItem>
+<TabItem label="Windows (PowerShell)">
+```powershell
+Add-Content .env "STORE=json"
+npm run doctor
+```
+</TabItem>
+</Tabs>
+
+`npm run doctor` artık Chroma'yı sormaz; `store` satırında `json (no Podman needed)` yazar. Bir ayarı tek bir
+komut için değiştirmek isterseniz bayrak da olur: `npm run step -- 5 --store json`. `STORE=json npm run …`
+biçimi Windows'ta çalışmaz; bu yüzden repo hep bayrak ya da `.env` kullanır.
+
+Bütün ayarlar repodaki `env.example` dosyasında yorum satırı olarak durur: `OLLAMA_URL`, `CHROMA_URL`,
+`CHAT_MODEL`, `EMBED_MODEL`, `STORE`, `EDITION`. Birini değiştirmek için satırı `.env` dosyasına kopyalayıp
+baştaki `#` işaretini silin.
+
+Chroma'nın tanımı, satır satır açıklamasıyla birlikte:
+
+<RepoCode file="compose.yaml" />
+
+## Sık sorulan
+
+<FAQ q="Docker kullanıyorum, Podman kurmam gerekir mi?">
+Gerekmez. Aynı `compose.yaml` ile `docker compose up -d` çalışır; tek satırlık komutta da `podman` yerine
+`docker` yazın.
+</FAQ>
+
+<FAQ q="GPU gerekir mi?">
+Hayır. Ollama varsa GPU'yu kullanır, yoksa işlemcide çalışır. `npm run doctor` bir cevabın süresini ölçer; bu
+Mac'te 391 ms sürdü (yukarıdaki çıktı). 20 saniyeyi geçerse "slow laptop" uyarısı çıkar: adımlar yine çalışır,
+yalnızca beklersiniz. Windows dizüstülerinde süreyi ölçmedik.
+</FAQ>
+
+<FAQ q="Ollama neden container'da değil?">
+Modeller ve GPU sizin makinenizde. Ollama'yı container'a koymak GPU erişimini zorlaştırır ve modelleri ikinci kez
+indirtir. Container'da yalnızca veritabanı var.
+</FAQ>
+
+<FAQ q="Bruno şart mı?">
+Değil. Pipeline terminalde çalışır. Bruno yalnızca Chroma'nın ve Ollama'nın HTTP API'lerine elle bakmak için:
+`bruno/` klasörünü bir koleksiyon olarak açın.
+</FAQ>
+
+<FAQ q="Şirket dizüstümde yönetici yetkim yok.">
+Node, git ve Ollama kurulabildiyse gün yürür: Podman kurulamazsa JSON store'u kullanın (yukarıda). Ayrıntılar ve
+Windows'a özgü durumlar: [Kurulum sorunları](/kurulum-sorunlari/).
+</FAQ>
+
+<Takeaway>`npm run doctor` "Ready." diyorsa gün başlayabilir.</Takeaway>

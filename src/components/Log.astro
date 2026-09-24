@@ -1,0 +1,12 @@
+---
+/** Real terminal output recorded by the workshop's `npm run capture` — never typed by hand. */
+import { Code } from '@astrojs/starlight/components';
+interface Props { name: string; title?: string; from?: number; to?: number }
+const { name, title, from, to } = Astro.props;
+const logs = import.meta.glob('../snippets/logs/*.txt', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+const text = logs[`../snippets/logs/${name}.txt`];
+if (text === undefined) throw new Error(`Log: logs/${name}.txt is missing — run capture in the workshop, then npm run sync`);
+const lines = text.trimEnd().split('\n');
+const body = lines.slice(from ?? 0, to ?? lines.length).join('\n');
+---
+<Code code={body} lang="txt" frame="terminal" title={title ?? name} />

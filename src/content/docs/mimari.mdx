@@ -1,0 +1,319 @@
+---
+title: Mimari
+description: İki şerit ve bir vektör uzayı — dokümanları bir kere hazırlayan şerit, her soruda çalışan şerit, ikisinin buluştuğu yer. Her kutu repodaki bir dosya.
+---
+import { FileTree } from '@astrojs/starlight/components';
+import Deck from '../../components/Deck.astro';
+import DeckFigure from '../../components/DeckFigure.astro';
+import Step from '../../components/Step.astro';
+import WhereAmI from '../../components/WhereAmI.astro';
+import Gate from '../../components/Gate.astro';
+import RepoCode from '../../components/RepoCode.astro';
+import Log from '../../components/Log.astro';
+import FAQ from '../../components/FAQ.astro';
+import Term from '../../components/Term.astro';
+import Takeaway from '../../components/Takeaway.astro';
+
+<Gate>
+RAG'in üç işini gördük: getir, zenginleştir, üret. "Getir" için dokümanların önceden hazırlanmış olması gerekir.
+Kim hazırlıyor, ne zaman, nereye koyuyor?
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 1000 510" role="img" aria-label="RAG mimarisi: üstte bir kere çalışan ingest şeridi, altta her soruda çalışan soru şeridi, ikisini birleştiren aynı embedding modeli ve vector DB'nin içindeki vektör uzayı">
+      <defs>
+        <marker id="mi-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker>
+      </defs>
+      <g data-from="1">
+        <text x="14" y="38" class="fsub">bir kere (ingest)</text>
+        <rect x="22" y="48" width="92" height="64" rx="10" class="fbox" />
+        <rect x="18" y="52" width="92" height="64" rx="10" class="fbox" />
+        <rect x="14" y="56" width="92" height="64" rx="10" class="fbox" />
+        <text x="60" y="84" text-anchor="middle" class="flbl">Doküman</text>
+        <text x="60" y="108" text-anchor="middle" class="fsub">8 politika</text>
+      </g>
+      <g data-from="2">
+        <path d="M108 88 H118" class="farrow" marker-end="url(#mi-h)" />
+        <rect x="124" y="56" width="92" height="64" rx="10" class="fbox fbox-on" />
+        <text x="170" y="84" text-anchor="middle" class="flbl">Yükle</text>
+        <text x="170" y="108" text-anchor="middle" class="fsub">1-load.ts</text>
+      </g>
+      <g data-from="3">
+        <path d="M218 88 H228" class="farrow" marker-end="url(#mi-h)" />
+        <rect x="234" y="56" width="92" height="64" rx="10" class="fbox fbox-on" />
+        <text x="280" y="84" text-anchor="middle" class="flbl">Temizle</text>
+        <text x="280" y="108" text-anchor="middle" class="fsub">2-clean.ts</text>
+      </g>
+      <g data-from="4">
+        <path d="M328 88 H338" class="farrow" marker-end="url(#mi-h)" />
+        <rect x="344" y="56" width="92" height="64" rx="10" class="fbox fbox-on" />
+        <text x="390" y="84" text-anchor="middle" class="flbl">Chunk'la</text>
+        <text x="390" y="108" text-anchor="middle" class="fsub">3-chunk.ts</text>
+      </g>
+      <g data-from="5">
+        <path d="M438 88 H448" class="farrow" marker-end="url(#mi-h)" />
+        <rect x="454" y="56" width="92" height="64" rx="10" class="fbox fbox-on" />
+        <text x="500" y="84" text-anchor="middle" class="flbl">Embed</text>
+        <text x="500" y="108" text-anchor="middle" class="fsub">4-embed.ts</text>
+        <path d="M500 122 V196" class="farrow" stroke-dasharray="5 5" />
+        <rect x="440" y="198" width="120" height="64" rx="12" class="fbox fbox-frozen" />
+        <text x="500" y="228" text-anchor="middle" class="flbl">bge-m3</text>
+        <text x="500" y="252" text-anchor="middle" class="fsub">embedding modeli</text>
+      </g>
+      <g data-from="6">
+        <path d="M548 88 H558" class="farrow" marker-end="url(#mi-h)" />
+        <rect x="564" y="56" width="92" height="64" rx="10" class="fbox fbox-on" />
+        <text x="610" y="84" text-anchor="middle" class="flbl">Vector DB</text>
+        <text x="610" y="108" text-anchor="middle" class="fsub">5-store.ts</text>
+        <path d="M658 64 L680 22" class="faxis" />
+        <path d="M658 112 L680 330" class="faxis" />
+        <rect x="680" y="20" width="310" height="310" rx="12" class="fbox" />
+        <g data-map="points">
+        <circle cx="907.2" cy="243.3" r="4" class="fbox" />
+        <circle cx="929.5" cy="229.6" r="4" class="fbox" />
+        <circle cx="865.1" cy="262.9" r="4" class="fbox" />
+        <circle cx="855.6" cy="84.5" r="4" class="fbox" />
+        <circle cx="922.3" cy="227.8" r="4" class="fbox" />
+        <circle cx="903.6" cy="241.3" r="4" class="fbox" />
+        <circle cx="882.2" cy="260.9" r="4" class="fbox" />
+        <circle cx="907.4" cy="201.1" r="4" class="fbox" />
+        <circle cx="906.4" cy="210.3" r="4" class="fbox" />
+        <circle cx="877.1" cy="103.9" r="4" class="fbox" />
+        <circle cx="882.1" cy="234.5" r="4" class="fbox" />
+        <circle cx="786.7" cy="81.7" r="4" class="fbox" />
+        <circle cx="784.2" cy="169.1" r="4" class="fbox" />
+        <circle cx="867.6" cy="241" r="4" class="fbox" />
+        <circle cx="827.7" cy="220.1" r="4" class="fbox" />
+        <circle cx="807.6" cy="165.2" r="4" class="fbox" />
+        <circle cx="762.5" cy="114.2" r="4" class="fbox" />
+        <circle cx="747.9" cy="239.2" r="4" class="fbox" />
+        <circle cx="822.7" cy="237.2" r="4" class="fbox" />
+        <circle cx="855.6" cy="64" r="5" class="fdot" />
+        <circle cx="912.9" cy="147" r="5" class="fdot" />
+        <circle cx="934.9" cy="213.8" r="5" class="fdot" />
+        <circle cx="913.3" cy="179.4" r="5" class="fdot" />
+        <circle cx="913.4" cy="208" r="5" class="fdot" />
+        <circle cx="913.9" cy="209.3" r="5" class="fdot" />
+        <circle cx="907.9" cy="220.5" r="5" class="fdot" />
+        <circle cx="929.5" cy="190.9" r="5" class="fdot" />
+        <circle cx="891.5" cy="92.1" r="4" class="fbox" />
+        <circle cx="826.5" cy="242.2" r="4" class="fbox" />
+        <circle cx="939.4" cy="239.6" r="4" class="fbox" />
+        <circle cx="928.4" cy="246.7" r="4" class="fbox" />
+        <circle cx="946" cy="248.3" r="4" class="fbox" />
+        <circle cx="942.7" cy="244.4" r="4" class="fbox" />
+        <circle cx="933.7" cy="231.5" r="4" class="fbox" />
+        <circle cx="902.6" cy="251.5" r="4" class="fbox" />
+        <circle cx="835.8" cy="67" r="4" class="fbox" />
+        <circle cx="878.2" cy="201.1" r="4" class="fbox" />
+        <circle cx="870.9" cy="194.3" r="4" class="fbox" />
+        <circle cx="917.3" cy="229.8" r="4" class="fbox" />
+        <circle cx="872" cy="98.2" r="4" class="fbox" />
+        <circle cx="853.2" cy="187.7" r="4" class="fbox" />
+        <circle cx="779.3" cy="228.7" r="4" class="fbox" />
+        <circle cx="729.4" cy="247.4" r="4" class="fbox" />
+        <circle cx="731.3" cy="123.3" r="4" class="fbox" />
+        <circle cx="750.9" cy="211.5" r="4" class="fbox" />
+        <circle cx="732.1" cy="280.8" r="4" class="fbox" />
+        <circle cx="732.2" cy="292" r="4" class="fbox" />
+        <circle cx="734.7" cy="194.9" r="4" class="fbox" />
+        <circle cx="738.8" cy="227.6" r="4" class="fbox" />
+        <circle cx="729" cy="268.3" r="4" class="fbox" />
+        <circle cx="750.3" cy="269.5" r="4" class="fbox" />
+        <circle cx="741.5" cy="224.6" r="4" class="fbox" />
+        <circle cx="864" cy="73.6" r="4" class="fbox" />
+        <circle cx="853.2" cy="118.3" r="4" class="fbox" />
+        <circle cx="925.5" cy="201.5" r="4" class="fbox" />
+        <circle cx="917.3" cy="214.2" r="4" class="fbox" />
+        <circle cx="886.3" cy="199.3" r="4" class="fbox" />
+        <circle cx="901.1" cy="207.6" r="4" class="fbox" />
+        <circle cx="891.5" cy="242.3" r="4" class="fbox" />
+        <circle cx="890" cy="212.5" r="4" class="fbox" />
+      </g>
+        <g data-map="labels">
+        <text x="841" y="46" text-anchor="middle" class="fsub">her dokümanın "Amaç ve Kapsam" bölümü</text>
+        <text x="725" y="318" class="fsub">↑ İngilizce doküman</text>
+        <circle cx="918" cy="285" r="5" class="fdot" />
+        <text x="930" y="290" class="fsub fnum">yıllık izin</text>
+      </g>
+      </g>
+      <g data-from="7">
+        <text x="14" y="332" class="fsub">her soruda</text>
+        <text x="325" y="366" text-anchor="end" class="fsub">7 yıllık bir çalışanın</text>
+        <text x="325" y="390" text-anchor="end" class="fsub">yıllık izni kaç iş günü?</text>
+        <rect x="344" y="342" width="92" height="64" rx="10" class="fbox fbox-on" />
+        <text x="390" y="381" text-anchor="middle" class="flbl">Soru</text>
+        <path d="M438 374 H448" class="farrow" marker-end="url(#mi-h)" />
+        <rect x="454" y="342" width="92" height="64" rx="10" class="fbox fbox-on" />
+        <text x="500" y="381" text-anchor="middle" class="flbl">Embed</text>
+        <path d="M500 264 V340" class="farrow" stroke-dasharray="5 5" />
+        <text x="492" y="306" text-anchor="end" class="fsub ffrozen-t">aynı model</text>
+        <g data-map="star">
+        <path d="M887.1 190.3 L889.8 197.6 L897.6 197.9 L891.5 202.7 L893.6 210.2 L887.1 205.9 L880.6 210.2 L882.7 202.7 L876.6 197.9 L884.4 197.6 Z" class="fbox fbox-frozen" />
+        <path d="M918.0 301.0 L920.2 306.9 L926.6 307.2 L921.6 311.2 L923.3 317.3 L918.0 313.8 L912.7 317.3 L914.4 311.2 L909.4 307.2 L915.8 306.9 Z" class="fbox fbox-frozen" />
+        <text x="930" y="316" class="fsub ffrozen-t">soru</text>
+      </g>
+      </g>
+      <g data-from="8">
+        <path d="M548 374 H558" class="farrow" marker-end="url(#mi-h)" />
+        <rect x="564" y="342" width="92" height="64" rx="10" class="fbox fbox-on" />
+        <text x="610" y="381" text-anchor="middle" class="flbl">Ara</text>
+        <path d="M610 340 V124" class="farrow" marker-end="url(#mi-h)" />
+        <text x="602" y="306" text-anchor="end" class="fsub">en yakın 5</text>
+        <path d="M458 416 V424 H652 V416" class="faxis" fill="none" />
+        <text x="555" y="446" text-anchor="middle" class="fsub">6-retrieve.ts</text>
+      </g>
+      <g data-from="9">
+        <path d="M658 374 H668" class="farrow" marker-end="url(#mi-h)" />
+        <rect x="674" y="342" width="92" height="64" rx="10" class="fbox fbox-on" />
+        <text x="720" y="381" text-anchor="middle" class="flbl">Rerank</text>
+        <text x="720" y="446" text-anchor="middle" class="fsub">7-rerank.ts</text>
+      </g>
+      <g data-from="10">
+        <path d="M768 374 H778" class="farrow" marker-end="url(#mi-h)" />
+        <rect x="784" y="342" width="92" height="64" rx="10" class="fbox fbox-on" />
+        <text x="830" y="381" text-anchor="middle" class="flbl">Prompt</text>
+        <path d="M788 416 V424 H982 V416" class="faxis" fill="none" />
+        <text x="885" y="446" text-anchor="middle" class="fsub">8-answer.ts</text>
+      </g>
+      <g data-from="11">
+        <path d="M878 374 H888" class="farrow" marker-end="url(#mi-h)" />
+        <rect x="894" y="342" width="92" height="64" rx="10" class="fbox fbox-good" />
+        <text x="940" y="381" text-anchor="middle" class="flbl">Cevap</text>
+        <text x="985" y="486" text-anchor="end" class="flbl fgood-t">22 iş günü [1]</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="Dokümanlar">
+    Kraken Air'in 8 politika dokümanı, Markdown olarak. Her birinin başında kendisi hakkında bilgi var: hangi doküman, hangi sürüm, kim okuyabilir. Üst şerit onları aranabilir hâle getirir ve bir kere çalışır.
+  </Step>
+  <Step title="Yükle">
+    `1-load.ts` dosyaları okur ve baştaki bilgiyi <Term id="metadata">metadata</Term>'ya çevirir. Metin olduğu gibi kalır: PDF'ten çıkarılmış metin gibi, sayfa başlıkları ve kırık satırlarla.
+  </Step>
+  <Step title="Temizle">
+    `2-clean.ts` her sayfada tekrarlanan başlığı, sayfa numarasını ve gizlilik satırını atar, kırık satırları birleştirir. Gürültü kalsaydı her parça aynı başlığı taşıyacak ve birbirine benzeyecekti.
+  </Step>
+  <Step title="Chunk'la">
+    `3-chunk.ts` dokümanları bölüm başlıklarından böler ve her parçanın başına doküman adıyla bölüm başlığını yazar. Arama bütün dokümanı değil, bu <Term id="chunk">chunk</Term>'ları bulacak.
+  </Step>
+  <Step title="Embed">
+    `4-embed.ts` her chunk'ı bge-m3'e verir ve 1024 sayılık bir <Term id="embedding">embedding</Term> alır. Anlamca yakın metinlerin sayıları da birbirine yakın çıkar.
+  </Step>
+  <Step title="Vector DB">
+    `5-store.ts` her chunk'ı vektörü, metni ve metadata'sıyla Chroma'ya yazar. Sağdaki panel içini gösteriyor: 60 chunk'ın gerçek konumları, 1024 boyuttan 2 boyuta indirilmiş.
+  </Step>
+  <Step title="Soru, aynı modelle">
+    Her soruda alt şerit çalışır. Soru da 1024 sayıya çevrilir, üst şeritteki modelin aynısıyla; başka bir model başka bir uzay demektir. Yıldız, sorunun bu uzaydaki yeri.
+  </Step>
+  <Step title="Ara">
+    `6-retrieve.ts` vector DB'den soruya en yakın 5 chunk'ı ister. Eski sürümler ve sorana kapalı dokümanlar <Term id="metadata">metadata</Term> filtresiyle aramaya hiç girmez.
+  </Step>
+  <Step title="Rerank">
+    `7-rerank.ts` bu 5 chunk'ı soruyla birlikte chat modeline tek tek okutur, her birine 0–10 arası ilgi puanı verdirir ve yeniden sıralar. İlk 3'ü prompt'a gider.
+  </Step>
+  <Step title="Prompt">
+    `8-answer.ts` kuralları, numaralanmış 3 kaynağı ve soruyu tek bir metinde birleştirir. Chat modeli bu metnin dışında hiçbir şey görmez.
+  </Step>
+  <Step title="Cevap + kaynak">
+    Model cevabı yazar ve kaynağını numarayla gösterir: 22 iş günü, [1] Yıllık İzin Politikası §3. Cevaptaki her bilgi bir dokümana geri izlenebilir.
+  </Step>
+  <Step title="İki şerit, iki buluşma noktası">
+    Üst şerit bir kere, alt şerit her soruda çalışır. Yalnızca iki yerde buluşurlar: vector DB ve aynı embedding modeli. Chat modeli yalnızca alt şeritte çalışır: rerank ve cevap.
+  </Step>
+</Deck>
+
+## Vektör uzayı: paneldeki noktalar
+
+Paneldeki 60 nokta gerçek: `npm run map`, her chunk'ın 1024 sayısını <Term id="pca">PCA</Term> ile 2 sayıya
+indirdi ve soruyu aynı düzleme yerleştirdi. İngilizce doküman diğerlerinden ayrı düşüyor; her dokümanın "Amaç ve
+Kapsam" bölümü, doküman fark etmeksizin bir arada. Harita kaba: iki eksen yayılımın küçük bir kısmını tutuyor
+(`OUT` satırı). Asıl arama 2 boyutta değil, 1024 boyutta yapılır.
+
+<Log name="04b-map" title="npm run map" />
+
+## Repo turu: her kutu bir dosya
+
+Adım adım bölümünde her sayfanın başında bu çizimin küçük hâli durur ve o sayfanın kutusu yanar. Örneğin
+chunking sayfasında:
+
+<WhereAmI at="chunk" />
+
+<FileTree>
+- src/
+  - steps/ her kutu bir dosya, her dosya tek başına çalışır
+    - 0-bare.ts adım 0: model tek başına, doküman yok
+    - 1-load.ts Yükle
+    - 2-clean.ts Temizle
+    - 3-chunk.ts Chunk'la
+    - 4-embed.ts Embed (üst şerit)
+    - 5-store.ts Vector DB'ye yaz
+    - 6-retrieve.ts soruyu embed et ve ara
+    - 7-rerank.ts Rerank
+    - 8-answer.ts Prompt ve cevap
+  - lib/
+    - ollama.ts modele giden iki çağrı: embed ve generate
+    - chroma.ts Chroma'ya yazma ve arama
+    - store-json.ts aynı iş, JSON dosyasıyla
+    - config.ts bütün ayarlar tek yerde
+  - cli/
+    - ingest.ts üst şerit: adım 1–5
+    - ask.ts alt şerit: adım 6–8
+    - soru.ts günün sorusu ve defteri
+    - eval.ts kaliteyi ölçmek
+    - doctor.ts kurulum kontrolü
+    - catchup.ts geride kalana yetişme
+  - explore/
+    - similar.ts hangi metinler yakın?
+    - map.ts vektör uzayı, 2 boyutta
+- corpus/ Kraken Air politikaları, 2025 ve 2026
+- data/ her adımın çıktısı buraya yazılır — açıp bakın
+</FileTree>
+
+| Kutu | Dosya | Tek başına | Yazdığı |
+|---|---|---|---|
+| Yükle | `src/steps/1-load.ts` | `npm run step -- 1` | `data/1-docs.json` |
+| Temizle | `src/steps/2-clean.ts` | `npm run step -- 2` | `data/2-clean.json` |
+| Chunk'la | `src/steps/3-chunk.ts` | `npm run step -- 3` | `data/3-chunks.json` |
+| Embed | `src/steps/4-embed.ts` | `npm run step -- 4` | `data/4-vectors.json` |
+| Vector DB | `src/steps/5-store.ts` | `npm run step -- 5` | `data/5-store.json` |
+| Embed + Ara | `src/steps/6-retrieve.ts` | `npm run step -- 6` | `data/6-retrieved.json` |
+| Rerank | `src/steps/7-rerank.ts` | `npm run step -- 7` | `data/7-reranked.json` |
+| Prompt + Cevap | `src/steps/8-answer.ts` | `npm run step -- 8` | `data/8-answer.json` |
+
+İki şerit, iki komut. Üst şerit `npm run ingest`:
+
+<RepoCode file="src/cli/ingest.ts" />
+
+Alt şerit `npm run ask -- "soru"`:
+
+<RepoCode file="src/cli/ask.ts" />
+
+"Aynı model" kuralı kodda bir kontrol: vector DB başka bir embedding modeliyle doldurulduysa arama hiç başlamaz.
+
+<RepoCode file="src/steps/6-retrieve.ts" from="export async function storeReceipt" />
+
+## Sık sorulan
+
+<FAQ q="Chat modeli hangi kutularda çalışıyor?">
+Yalnızca alt şeritte: Rerank ve Cevap. Üst şerit chat modelini hiç çağırmaz; orada yalnızca embedding modeli
+çalışır. Chat modeli aramaya da karışmaz: ona ne gideceğine bizim kodumuz karar verir.
+</FAQ>
+
+<FAQ q="Embedding modelini değiştirirsem ne olur?">
+Bütün chunk'lar yeni modelle yeniden embed edilip yeniden yazılmalı (adım 4 ve 5). İki modelin vektörleri
+farklı uzaylarda yaşar; eski vektörlerle yeni bir soru vektörünü karşılaştırmak anlamsızdır. Yukarıdaki kontrol
+bu yüzden var.
+</FAQ>
+
+<FAQ q="Neden 5 chunk getirip 3'ünü prompt'a koyuyoruz?">
+Bir tasarım seçimi. Arama geniş tutulur (5) ki rerank'in seçecek malzemesi olsun; prompt dar tutulur (3) ki
+model kısa ve ilgili bir metin okusun. İki sayı da `src/lib/config.ts` içinde: `topK` ve `contextK`.
+</FAQ>
+
+<FAQ q="Chroma yerine başka bir vector DB kullanabilir miyim?">
+Evet. Kod bir arayüz üzerinden konuşur (`src/lib/store.ts`); aynı arayüzün JSON dosyası uygulaması da var.
+İkisi aynı sıralamayı verir; fark ölçekte. Ayrıntısı [D · Vector DB](/adim-adim/d-vector-db/) sayfasında.
+</FAQ>
+
+<Takeaway>Bir kere hazırla, her soruda ara: iki şerit yalnızca vector DB'de ve aynı embedding modelinde buluşur.</Takeaway>

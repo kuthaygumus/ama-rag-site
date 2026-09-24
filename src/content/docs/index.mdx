@@ -1,0 +1,119 @@
+---
+title: RAG, adım adım
+description: Bir RAG pipeline'ını adım adım kurmak ve her ara çıktıyı açıp bakmak.
+---
+import { LinkCard, CardGrid } from '@astrojs/starlight/components';
+import Deck from '../../components/Deck.astro';
+import DeckFigure from '../../components/DeckFigure.astro';
+import Step from '../../components/Step.astro';
+import WhereAmI from '../../components/WhereAmI.astro';
+import DaysQuestion from '../../components/DaysQuestion.astro';
+import Term from '../../components/Term.astro';
+import Takeaway from '../../components/Takeaway.astro';
+
+Bugün bir şirketin politika el kitabı üzerinde bir <Term id="rag">RAG</Term> pipeline'ı kuruyoruz: adım adım,
+kendi dizüstünüzde, her ara çıktıyı açıp bakarak. Modeller Ollama'da, vector DB Podman'da çalışır; kod TypeScript.
+
+Kuracağımız şey iki şerit: dokümanları bir kere hazırlayan şerit (üstte) ve her soruda çalışan şerit (altta).
+
+<WhereAmI at="load clean chunk embed store question qembed search rerank prompt answer" />
+
+Gün boyu tek bir soru soracağız. Cevabı, pipeline büyüdükçe değişecek.
+
+<DaysQuestion />
+
+## Günün haritası
+
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 1000 250" role="img" aria-label="Günün haritası: Başlamadan, beş bölüm ve Kapanış">
+      <path d="M40 150 H960" class="farrow" />
+      <g data-from="1">
+        <circle cx="70" cy="150" r="22" class="fbox fbox-on" />
+        <text x="30" y="202" class="flbl">Başlamadan</text>
+        <text x="30" y="226" class="fsub">kurulum · günün sorusu</text>
+      </g>
+      <g data-from="2">
+        <circle cx="215" cy="150" r="22" class="fbox fbox-on" />
+        <text x="215" y="157" text-anchor="middle" class="flbl">1</text>
+        <text x="215" y="86" text-anchor="middle" class="flbl">Neden RAG?</text>
+        <text x="215" y="110" text-anchor="middle" class="fsub">model bilmiyor</text>
+      </g>
+      <g data-from="3">
+        <circle cx="360" cy="150" r="22" class="fbox fbox-on" />
+        <text x="360" y="157" text-anchor="middle" class="flbl">2</text>
+        <text x="360" y="202" text-anchor="middle" class="flbl">Mimari</text>
+        <text x="360" y="226" text-anchor="middle" class="fsub">iki şerit, bir vektör uzayı</text>
+      </g>
+      <g data-from="4">
+        <circle cx="505" cy="150" r="22" class="fbox fbox-on" />
+        <text x="505" y="157" text-anchor="middle" class="flbl">3</text>
+        <text x="505" y="86" text-anchor="middle" class="flbl">Adım adım kuralım</text>
+        <text x="505" y="110" text-anchor="middle" class="fsub">A–F · her ara çıktıyı aç</text>
+      </g>
+      <g data-from="5">
+        <circle cx="650" cy="150" r="22" class="fbox fbox-on" />
+        <text x="650" y="157" text-anchor="middle" class="flbl">4</text>
+        <text x="650" y="202" text-anchor="middle" class="flbl">Üretime hazır mı?</text>
+        <text x="650" y="226" text-anchor="middle" class="fsub">kalite · güvenlik · maliyet</text>
+      </g>
+      <g data-from="6">
+        <circle cx="795" cy="150" r="22" class="fbox fbox-on" />
+        <text x="795" y="157" text-anchor="middle" class="flbl">5</text>
+        <text x="795" y="86" text-anchor="middle" class="flbl">Her derde deva mı?</text>
+        <text x="795" y="110" text-anchor="middle" class="fsub">sınırlar · RAG türleri</text>
+      </g>
+      <g data-from="7">
+        <circle cx="930" cy="150" r="22" class="fbox fbox-on" />
+        <text x="930" y="202" text-anchor="middle" class="flbl">Kapanış</text>
+        <text x="930" y="226" text-anchor="middle" class="fsub">tasarım listesi</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="Başlamadan">
+    Kurulumu bitirip `npm run doctor` çalıştırırız; "Ready." yazmalı. Sonra günün sorusunu modele tek başına, hiç doküman vermeden sorar ve cevabını not ederiz.
+  </Step>
+  <Step title="1 · Neden RAG?">
+    Model şirketimizin politikasını hiç görmedi, yine de kendinden emin bir sayı söylüyor. Bilgiyi modele vermenin iki yolu var: fine-tune ve RAG. Hangisi, ne zaman?
+  </Step>
+  <Step title="2 · Mimari">
+    Bütün pipeline tek çizimde: dokümanları bir kere hazırlayan şerit, her soruda çalışan şerit ve ikisinin buluştuğu vektör uzayı. Her kutu repodaki bir dosya.
+  </Step>
+  <Step title="3 · Adım adım kuralım">
+    Pipeline'ın sekiz adımı tek tek çalışır ve her biri çıktısını `data/` klasörüne yazar. Her adımdan sonra dosyayı açıp bakarız; günün sorusunun cevabı da adım adım değişir.
+  </Step>
+  <Step title="4 · Üretime hazır mı?">
+    "Bana iyi geldi" bir ölçü değil. Kaliteyi bir soru setiyle sayıya dökeriz, güvenlik açıklarını deneriz, zamanın ve token'ın nereye gittiğine bakarız.
+  </Step>
+  <Step title="5 · Her derde deva mı?">
+    RAG'in nerede çuvalladığı, hangi RAG türünün hangi hatayı düzelttiği ve sistem canlıya çıktıktan sonraki ilk 90 günde gelecek şikâyetler.
+  </Step>
+  <Step title="Kapanış">
+    Uçtan uca bir tasarım kontrol listesi: her aşama için doğruluk, güvenlik, performans ve maliyet. Günün sorusunun bütün cevapları yan yana. Repo sizde kalır.
+  </Step>
+</Deck>
+
+## Akşam şunları yapabileceksiniz
+
+Bu gün, büyük dil modellerinin kurum verisini **güvenli ve doğru** kullanmasını sağlayan RAG mimarileri üzerine:
+veri hazırlama, chunking, embedding, retrieval, rerank, cevap üretimi ve kalite ölçümü. Akşam:
+
+- Kurumsal bir kullanım için **uçtan uca bir RAG pipeline'ı tasarlayabileceksiniz** — [iki şeridin her kutusunu](/mimari/) kendi elinizle çalıştırmış olarak.
+- Veriyi hazırlayabileceksiniz: [ham dokümanı temizlemek](/adim-adim/a-ham-veri/) ve [doğru yerden bölmek](/adim-adim/b-chunking/).
+- [Embedding'in neyi yakın bulduğunu](/adim-adim/c-embedding/) ve [vector DB'nin ne işe yaradığını](/adim-adim/d-vector-db/) gösterebileceksiniz.
+- [Retrieval ve rerank](/adim-adim/e-retrieval-rerank/) sonucunu okuyup [cevabı kaynağıyla üretebileceksiniz](/adim-adim/f-cevap/).
+- Kritik kararları dört eksende tartabileceksiniz: **doğruluk** ([kaliteyi ölçmek](/uretim/kaliteyi-olcmek/)), **güvenlik** ([güvenlik](/uretim/guvenlik/)), **performans** ve **maliyet** ([performans ve maliyet](/uretim/performans-maliyet/)).
+
+## Başlamak için
+
+<CardGrid>
+  <LinkCard title="Kurulum" description="Node 22, Ollama ve iki model, Podman, repo. Sonunda npm run doctor." href="/baslamadan/kurulum/" />
+  <LinkCard title="Günün sorusu" description="Bütün gün aynı soru. Tahmininiz ne?" href="/baslamadan/gunun-sorusu/" />
+</CardGrid>
+
+Kod: [github.com/kuthaygumus/ama-rag-workshop](https://github.com/kuthaygumus/ama-rag-workshop).
+
+Kraken Air ve bütün dokümanları **kurgudur**: şirket, politikalar ve rakamlar bu gün için yazıldı; gerçek bir
+şirketle ilgisi yoktur.
+
+<Takeaway>Bugün hiçbir adımı ezberden anlatmıyoruz: her ara çıktıyı açıp bakıyoruz.</Takeaway>

@@ -1,0 +1,164 @@
+---
+title: A · Ham veri ve temizlik
+description: Dosyaları okumak, her dokümanın kendisi hakkında söylediğini (metadata) almak ve PDF'ten kalma gürültüyü atmak — adım 1 ve 2.
+---
+import WhereAmI from '../../../components/WhereAmI.astro';
+import DaysQuestion from '../../../components/DaysQuestion.astro';
+import Gate from '../../../components/Gate.astro';
+import Deck from '../../../components/Deck.astro';
+import DeckFigure from '../../../components/DeckFigure.astro';
+import Step from '../../../components/Step.astro';
+import Example from '../../../components/Example.astro';
+import RepoCode from '../../../components/RepoCode.astro';
+import Log from '../../../components/Log.astro';
+import YourTurn from '../../../components/YourTurn.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Takeaway from '../../../components/Takeaway.astro';
+import Term from '../../../components/Term.astro';
+
+<WhereAmI at="load clean" />
+
+<DaysQuestion answer="“… 7 yıllık bir çalışanın yıllık izni genellikle 50 iş günü (15 gün ücretli izin + 35 gün yıllık izin) olur.” ✗ uydurma" how="bare model, no documents — henüz tek bir doküman okumadık" />
+
+Pipeline'ın ilk iki kutusu: dosyaları okumak ve temizlemek. Burada hiçbir model çalışmıyor; iş tamamen bizim kodumuzda.
+
+<Gate>
+Model bu dosyaları hiç görmedi. Görse de ham hâlleri kirli: her sayfada aynı başlık, bir gizlilik satırı, bir sayfa numarası; cümleler sayfa genişliğinde bölünmüş. Bu metni olduğu gibi parçalara bölersek gürültü de parçaların içine girer.
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 820 430" role="img" aria-label="hr-leave.md dosyasının üst kısmı: metadata bloğu, gürültü satırları ve bölünmüş satırlar">
+      <rect x="10" y="10" width="560" height="410" rx="10" class="fbox" />
+      <g class="ph ph1">
+        <rect x="18" y="20" width="544" height="180" rx="6" class="fbox-on" />
+      </g>
+      <g class="ph ph2">
+        <rect x="18" y="206" width="544" height="48" rx="6" class="fbox-bad" />
+        <rect x="18" y="382" width="544" height="28" rx="6" class="fbox-bad" />
+      </g>
+      <g class="ph ph3">
+        <rect x="18" y="304" width="544" height="50" rx="6" class="fbox-gate" />
+      </g>
+      <text x="28" y="40" class="fmono">---</text>
+      <text x="28" y="62" class="fmono">id: hr-leave</text>
+      <text x="28" y="84" class="fmono">title: Yıllık İzin Politikası</text>
+      <text x="28" y="106" class="fmono">edition: "2025"</text>
+      <text x="28" y="128" class="fmono">department: İnsan Kaynakları</text>
+      <text x="28" y="150" class="fmono">access: all</text>
+      <text x="28" y="172" class="fmono">lang: tr</text>
+      <text x="28" y="194" class="fmono">---</text>
+      <text x="28" y="226" class="fmono">Kraken Air | Yıllık İzin Politikası | Sürüm 2025</text>
+      <text x="28" y="248" class="fmono">GİZLİ – Yalnızca şirket içi kullanım içindir</text>
+      <text x="28" y="274" class="fmono"># Yıllık İzin Politikası</text>
+      <text x="28" y="296" class="fmono">## 1. Amaç ve Kapsam</text>
+      <text x="28" y="324" class="fmono">Bu politika, Kraken Air çalışanlarının yıllık ücretli izin, mazeret</text>
+      <text x="28" y="346" class="fmono">izni ve ücretsiz izin haklarını, bu hakların hangi koşullarda</text>
+      <text x="28" y="372" class="fmono">…</text>
+      <text x="28" y="401" class="fmono">Sayfa 1 / 4</text>
+      <g data-from="2">
+        <path d="M575 110 H600" class="farrow-on" />
+        <text x="608" y="104" class="flbl">metadata</text>
+        <text x="608" y="128" class="fsub">→ data/1-docs.json</text>
+      </g>
+      <g data-from="4">
+        <path d="M575 230 H600" class="farrow" />
+        <text x="608" y="226" class="flbl fbad-t">gürültü</text>
+        <text x="608" y="250" class="fsub">4 kural → atılır</text>
+      </g>
+      <g data-from="6">
+        <path d="M575 330 H600" class="farrow" />
+        <text x="608" y="326" class="flbl fgate-t">bölünmüş satır</text>
+        <text x="608" y="350" class="fsub">→ tek satıra birleşir</text>
+        <text x="608" y="398" class="fsub">temiz metin →</text>
+        <text x="608" y="420" class="fsub">data/2-clean.json</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="Önce dosyayı açalım" phase="1">
+    `corpus/2025/hr-leave.md` iki kısımdan oluşuyor: üstte iki `---` çizgisi arasında kısa bir blok, altta asıl metin. Adım 1'in işi bu ikisini ayırmak.
+  </Step>
+  <Step title="Üstteki blok: metadata" phase="1">
+    Doküman kendini tanıtıyor: kimliği (`id`), sürümü (`edition`), bölümü, kimin okuyabileceği (`access`), dili (`lang`). Buna <Term id="metadata">metadata</Term> diyoruz. Kimlik dosya adından değil buradan gelir: dosya adı değişir, `id` kalır.
+  </Step>
+  <Step title="Metadata daha sonra filtre olur" phase="1">
+    8 dokümandan biri, `hr-salary-bands`, `access: hr-only` taşıyor: yalnızca İK okuyabilir. Etiketi şimdi okuyoruz, soru anında kontrol ediyoruz (E sayfası). Etiket en baştan kayıtta olmazsa sonra filtrelenecek bir şey kalmaz.
+  </Step>
+  <Step title="Alttaki metin: PDF'ten çıkmış gibi" phase="2">
+    Gerçek hayatta bu metin bir PDF'ten ya da Word'den çıkarılır. Bizimki zaten metin ama aynı izleri taşıyor: her sayfanın başında aynı başlık ve gizlilik satırı, sonunda bir sayfa numarası.
+  </Step>
+  <Step title="Gürültü neden sorun?" phase="2">
+    Başlık satırı hr-leave'in 4 sayfasının her birinde tekrar ediyor. Metni parçalara bölünce parçalar bu ortak satırı taşır ve birbirine içerikleri yüzünden değil, gürültü yüzünden benzer.
+  </Step>
+  <Step title="Bir de bölünmüş satırlar" phase="3">
+    Sayfa genişliği cümleleri de bölmüş: "mazeret" bir satırın sonunda, "izni" sonrakinin başında. Kelime kelime okuyan için sorun yok; satır satır işleyen bir program için bu iki ayrı parça.
+  </Step>
+  <Step title="Temizlik: birkaç kural ve bir birleştirici">
+    Adım 2 önce gürültü satırlarını 4 kuralla (regex) atar, sonra sayfa genişliğinin böldüğü düz yazı satırlarını birleştirir. Başlıklar, tablo satırları ve boş satırlar olduğu gibi kalır. Akıllı bir şey yok; bilinçli olarak basit.
+  </Step>
+  <Step title="Sonuç">
+    8 doküman: 1074 satır 512 satıra indi. Bunun 74'ü atılan gürültü satırı; gerisi birleştirilen satırlar ve fazla boş satırlar. İki adım birkaç milisaniye sürdü ve çıktısını `data/` klasörüne yazdı: açıp bakabilirsiniz.
+  </Step>
+</Deck>
+
+<Example>
+Günün sorusunun cevabı §3'te. Ham dosyada §3'ün ilk paragrafı üç satıra bölünmüş; temizlikten sonra `data/2-clean.json` içinde tek satır. Tablo satırlarına dokunulmaz: `|` ile başlayan satır zaten tamdır.
+</Example>
+
+<RepoCode file="corpus/2025/hr-leave.md" from="## 3. Yıllık Ücretli İzin" to="^\| 2 \|" title="corpus/2025/hr-leave.md — ham hâli" />
+
+Adım 1, dosyanın üstündeki bloğu tek fonksiyonla okur. YAML kütüphanesi yok; `key: value` satırları yetiyor:
+
+<RepoCode file="src/steps/1-load.ts" from="export function parseFrontMatter" />
+
+<Log name="01-load" title="npm run step -- 1" />
+
+Adım 2'nin kuralları bir listede duruyor. Her satırın sonundaki `// default` işareti, o satırın varsayılan olarak açık olduğunu söyler; üstündeki boş `englishFooter` birazdan sizin işiniz:
+
+<RepoCode file="src/steps/2-clean.ts" from="// ── YOUR TURN" to="^\];" />
+
+<Log name="02-clean" title="npm run step -- 2" />
+
+Log'un sonundaki "before / after", hr-leave'in ilk satırlarını gösteriyor: başlık ve gizlilik satırı gitti, doküman başlığı kaldı.
+
+## Kaçan gürültü nereye gider?
+
+İngilizce doküman (`it-security`) her sayfayı `CONFIDENTIAL – Internal use only` satırıyla bitiriyor ve bu satırı atan bir kural yok. Log'da `it-security` yanında −8 yazıyor: 4 sayfa başlığı ve 4 sayfa numarası gitti, 4 gizlilik satırı kaldı. Kalan gürültü kaybolmaz: bir sonraki adımda kendi chunk'ına dönüşür. B sayfasının bölme yöntemiyle `it-security@2025#0` adlı bir chunk çıkıyor ve içinde doküman başlığı ile bu satırdan başka bir şey yok. Embed edilir, saklanır, aramada yarışır.
+
+<YourTurn>
+**1 · Ham veriye bakın.** `corpus/2025/hr-leave.md` dosyasını açın. `---` bloğunu, sayfa başlığını ve `Sayfa 1 / 4` satırını bulun. Sonra `npm run step -- 1` ve `data/1-docs.json`: her dokümanın `access` ve `lang` alanlarına bakın. `hr-salary-bands` dokümanının hangi alanı diğerlerinden farklı?
+
+**2 · Bir kuralı kapatın.** `src/steps/2-clean.ts` içinde `NOISE` listesinin ilk satırını (sayfa başlığı kuralı) başına `//` koyarak kapatın ve `npm run step -- 2` çalıştırın. Log'da `hr-leave` satırı −12 yerine −8 göstermeli. `data/2-clean.json` içinde `Sürüm 2025` arayın: başlık metne geri döndü. Satırı geri açıp adım 2'yi yeniden çalıştırın.
+
+**3 · Kardeşini yazın.** Aynı dosyada `englishFooter` şimdilik boş. Türkçe gizlilik kuralı `/^GİZLİ – .+$/` nasıl yazıldıysa İngilizce footer için de öyle yazın. İpucu: satırdaki tire uzun tire (–); dosyadan kopyalayın. Sonra:
+
+- `npm run step -- 2` → `it-security` satırı −8 yerine −12 göstermeli.
+- `npm run check:sibling` → `step 2 · englishFooter` testi yeşil olmalı. `dot` ve `byParagraph` testleri şimdilik kırmızı kalır; onlar C sayfasında ve B sayfasının ev ödevinde.
+- İsterseniz `npm run step -- 3` ve `data/3-chunks.json`: `it-security@2025#0` artık yok.
+
+Geride kaldıysanız: `npm run catchup -- 2`. Toggle satırlarını varsayılana döndürür, `data/` klasörünü boşaltır ve adım 1–2'yi yeniden çalıştırır; yazdığınız `englishFooter` yerinde kalır.
+</YourTurn>
+
+## Sık sorulan
+
+<FAQ q="Gerçek PDF'lerde bu adım nasıl olur?">
+Adım 1'in yerine bir PDF ya da Word okuyucu gelir ve metni çıkarır. Asıl emek istenen kısım tablolar, iki sütunlu sayfalar ve taranmış belgelerdir. Bizim korpus o çıkarma işinin sonucunu taklit ediyor: sayfa başlıkları, sayfa numaraları, bölünmüş satırlar.
+</FAQ>
+
+<FAQ q="Metadata'yı neden şimdi okuyoruz, soru anında değil?">
+Filtre aramanın içinde çalışır (E sayfası). Bunun için her chunk'ın etiketini taşıması gerekir. Adım 3 her chunk'a dokümanının `edition`, `access` ve `lang` alanlarını kopyalar; etiket burada okunmazsa sonra filtrelenecek bir şey olmaz.
+</FAQ>
+
+<FAQ q="edition neden tırnak içinde yazılmış?">
+`edition: "2025"` bir metin, sayı değil. Filtre metinleri karşılaştırır: `"2025"` ile `2025` sayısı eşleşmez. Tırnak, bir YAML okuyucusunun değeri sayıya çevirmesini engeller. Bizim küçük okuyucu zaten her değeri metin olarak alıyor; tırnak dosyayı her okuyucu için güvenli kılar.
+</FAQ>
+
+<FAQ q="Bir temizlik kuralı yanlışlıkla içerik silerse?">
+Bu yüzden kurallar satırın başına ve sonuna bağlı (`^` … `$`): yalnızca bütün satır kalıba uyarsa silinir. `check:sibling` testi bunu da kontrol ediyor: `englishFooter`, "Confidential data must be encrypted." cümlesini silmemeli.
+</FAQ>
+
+<FAQ q="Temizliği embedding modeline bıraksak olmaz mı?">
+Model ne verirsek onu kodlar; gürültüyü ayırt etmek onun işi değil. Kalan gürültünün nereye gittiğini yukarıda gördük: kendi chunk'ı oldu.
+</FAQ>
+
+<Takeaway>Arama, ona verdiğimiz metinden daha iyi olamaz.</Takeaway>

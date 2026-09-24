@@ -1,0 +1,166 @@
+---
+title: RAG'siz / RAG'li
+description: Aynı soru, aynı model — bir kez kaynaksız, bir kez doğru parçalar önüne konarak. Ve "hepsini prompt'a koy" neden çözüm değil.
+---
+import Deck from '../../../components/Deck.astro';
+import DeckFigure from '../../../components/DeckFigure.astro';
+import Step from '../../../components/Step.astro';
+import DaysQuestion from '../../../components/DaysQuestion.astro';
+import Gate from '../../../components/Gate.astro';
+import Example from '../../../components/Example.astro';
+import Log from '../../../components/Log.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Term from '../../../components/Term.astro';
+import Takeaway from '../../../components/Takeaway.astro';
+
+<DaysQuestion answer="50 iş günü (15 + 35)" how="bare model, no documents" />
+
+<Gate>
+Model politikayı bilmiyor ve bilmediğini de söylemiyor. Ağırlıklarına yazmak pahalı ve yavaş. Peki bilgiyi
+modele, soruyla birlikte, her seferinde versek?
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure" stage="a">
+    <svg viewBox="0 0 1000 500" role="img" aria-label="RAG'siz: soru doğrudan modele gider. RAG'li: soru önce aranır, bulunan parçalar soruyla birlikte modele gider">
+      <defs>
+        <marker id="rr-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker>
+        <marker id="rr-on" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead-on" /></marker>
+      </defs>
+      <text x="500" y="34" text-anchor="middle" class="flbl">7 yıllık bir çalışanın yıllık izni kaç iş günü?</text>
+      <path d="M345 60 V485" class="faxis" stroke-dasharray="4 8" />
+      <text x="175" y="88" text-anchor="middle" class="flbl">RAG'siz</text>
+      <path d="M125 97 H225" class="faxis" />
+      <circle cx="60" cy="205" r="16" class="fbox" />
+      <rect x="42" y="226" width="36" height="60" rx="14" class="fbox" />
+      <rect x="190" y="190" width="130" height="90" rx="14" class="fbox fbox-frozen" />
+      <text x="255" y="232" text-anchor="middle" class="flbl">gemma3:4b</text>
+      <text x="255" y="258" text-anchor="middle" class="fsub">LLM</text>
+      <path d="M88 215 H182" class="farrow" marker-end="url(#rr-h)" />
+      <text x="135" y="205" text-anchor="middle" class="fsub">soru</text>
+      <path d="M188 262 H94" class="farrow" marker-end="url(#rr-h)" />
+      <text x="135" y="312" text-anchor="middle" class="flbl fbad-t">50 iş günü</text>
+      <text x="135" y="336" text-anchor="middle" class="fsub fbad-t">uydurma</text>
+      <g data-from="2">
+        <text x="680" y="88" text-anchor="middle" class="flbl">RAG'li (naive)</text>
+        <path d="M600 97 H760" class="faxis" />
+        <rect x="370" y="110" width="360" height="200" rx="16" class="fbox fbox-on" />
+        <text x="388" y="138" class="fsub">retrieval</text>
+        <rect x="390" y="200" width="120" height="70" rx="12" class="fbox fbox-frozen" />
+        <text x="450" y="232" text-anchor="middle" class="flbl">bge-m3</text>
+        <text x="450" y="256" text-anchor="middle" class="fsub">embedding</text>
+        <circle cx="420" cy="380" r="16" class="fbox" />
+        <rect x="402" y="401" width="36" height="60" rx="14" class="fbox" />
+        <path d="M420 358 V318" class="farrow" marker-end="url(#rr-h)" />
+        <text x="436" y="345" class="fsub">soru</text>
+      </g>
+      <g data-from="3">
+        <path d="M512 228 L592 190" class="farrow" marker-end="url(#rr-h)" />
+        <text x="524" y="200" class="fsub">1024 sayı</text>
+        <ellipse cx="655" cy="240" rx="55" ry="14" class="fbox" />
+        <rect x="600" y="150" width="110" height="90" class="fbox" />
+        <ellipse cx="655" cy="150" rx="55" ry="14" class="fbox" />
+        <text x="655" y="205" text-anchor="middle" class="flbl">Chroma</text>
+        <text x="655" y="292" text-anchor="middle" class="fsub">en yakın parçalar</text>
+        <path d="M732 180 H757" class="farrow-on" marker-end="url(#rr-on)" />
+        <rect x="765" y="110" width="225" height="150" rx="12" class="fbox" />
+        <text x="877" y="138" text-anchor="middle" class="fsub">context: ilk 3 chunk</text>
+        <text x="877" y="172" text-anchor="middle" class="flbl">hr-leave §3</text>
+        <text x="877" y="198" text-anchor="middle" class="fsub fnum">izin tablosu: 7 yıl → 22</text>
+        <text x="877" y="232" text-anchor="middle" class="fsub">+ iki parça daha</text>
+      </g>
+      <g data-from="4">
+        <path d="M877 262 V284" class="farrow-on" marker-end="url(#rr-on)" />
+        <rect x="765" y="292" width="225" height="80" rx="12" class="fbox fbox-on" />
+        <text x="877" y="326" text-anchor="middle" class="flbl">prompt</text>
+        <text x="877" y="352" text-anchor="middle" class="fsub">kurallar + kaynaklar + soru</text>
+      </g>
+      <g data-from="5">
+        <path d="M877 374 V396" class="farrow-on" marker-end="url(#rr-on)" />
+        <rect x="800" y="404" width="155" height="76" rx="12" class="fbox fbox-frozen" />
+        <text x="877" y="438" text-anchor="middle" class="flbl">gemma3:4b</text>
+        <text x="877" y="462" text-anchor="middle" class="fsub">aynı model</text>
+        <path d="M796 442 H452" class="farrow-on" marker-end="url(#rr-on)" />
+        <text x="624" y="430" text-anchor="middle" class="flbl fgood-t">22 iş günü [1]</text>
+        <text x="624" y="470" text-anchor="middle" class="fsub">[1] = hr-leave §3</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <DeckFigure slot="figure" stage="b">
+    <svg viewBox="0 0 1000 320" role="img" aria-label="Modele giden prompt token olarak: RAG ile bütün el kitabı">
+      <text x="30" y="44" class="flbl">günün sorusu, iki yoldan — ikisinin cevabı da 22 iş günü</text>
+      <text x="30" y="108" class="flbl">RAG: 3 chunk</text>
+      <text x="30" y="134" class="fsub">cevap çağrısı 894 ms</text>
+      <rect x="300" y="82" width="67" height="40" rx="6" class="fbox fbox-on" />
+      <text x="379" y="110" class="flbl fnum">1155 prompt token</text>
+      <text x="30" y="208" class="flbl">hepsi: 8 doküman</text>
+      <text x="30" y="234" class="fsub fbad-t">cevap çağrısı 30137 ms</text>
+      <rect x="300" y="182" width="660" height="40" rx="6" class="fbox fbox-bad" />
+      <text x="318" y="210" class="flbl">11358 prompt token</text>
+      <g data-from="7">
+        <text x="300" y="282" class="fsub fgate-t">bu 8 dokümandan biri yalnızca İK'ya açık: ücret bantları</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="RAG'siz" stage="a">
+    Soru doğrudan modele gider. Model yalnızca ağırlıklarında olanı bilir; Kraken Air orada yok. Cevap geliyor ama uydurma: 50 iş günü.
+  </Step>
+  <Step title="Soru önce aramaya gider" stage="a">
+    RAG'li düzende soru, modele gitmeden önce aranır. bge-m3 soruyu 1024 sayılık bir <Term id="embedding">embedding</Term>'e çevirir. Dokümanların parçaları da önceden aynı modelle çevrilip saklanmıştı.
+  </Step>
+  <Step title="En yakın parçalar" stage="a">
+    Vector DB, soruya anlamca en yakın <Term id="chunk">chunk</Term>'ları döndürür; ilk üçü context olur. Birinde izin tablosu var: 7 yıl → 22 iş günü.
+  </Step>
+  <Step title="Prompt: kaynaklar + soru" stage="a">
+    Bulunan parçalar numaralanıp sorunun önüne konur, üstüne kurallar eklenir: yalnızca kaynaklardan cevap ver, kaynağını yaz. Modele giden metnin tamamına <Term id="prompt">prompt</Term> diyoruz.
+  </Step>
+  <Step title="Aynı model, doğru cevap" stage="a">
+    Model yine gemma3:4b. Değişen yalnızca önüne konan metin: cevap 22 iş günü, kaynağı [1] hr-leave §3. Ağırlıklara kimse dokunmadı.
+  </Step>
+  <Step title="Hepsini prompt'a koysak?" stage="b">
+    El kitabının 8 dokümanı bu modelin <Term id="context">context window</Term>'una sığıyor ve cevap yine 22 iş günü. Ama tek bir soru 11358 token okutuyor, RAG'in prompt'u 1155 token. Bu Mac'te 30 saniye, RAG'in cevabı 1 saniyenin altında.
+  </Step>
+  <Step title="Seçmek, işin kendisi" stage="b">
+    Hepsini koymak her soruda bütün el kitabının bedelini öder, büyüyen bir corpus'ta bir gün sığmaz ve yalnızca İK'nın görebileceği ücret tablosunu herkese okutur. RAG'in işi seçmektir.
+  </Step>
+</Deck>
+
+<Example>
+Aynı soru, aynı model. Önce hiçbir şey kurulmamışken:
+
+<Log name="soru-0-bare" title="npm run soru — başlamadan" from={0} to={6} />
+
+Sonra bütün pipeline kurulduğunda — `HOW` satırı cevabın nereden geldiğini, altındaki satırlar kaynakları söyler:
+
+<Log name="soru-3-full" title="npm run soru — F'den sonra" from={0} to={10} />
+</Example>
+
+Modelin önüne konan metnin tamamı: kurallar, numaralı kaynaklar, soru. Bu, cevap adımının `--prompt` ile
+yazdırdığı çıktı; baştaki `OUT` satırında prompt'un token sayısı var.
+
+<Log name="08-answer" title="npm run step -- 8 --prompt" />
+
+"Hepsini prompt'a koy" denemesi: el kitabının bütün dokümanları tek prompt'ta, arama yok.
+
+<Log name="stuff-everything" title="bütün dokümanlar tek prompt'ta" />
+
+## Sık sorulan
+
+<FAQ q="Model yüz binlerce token okuyabiliyorsa neden seçelim?">
+Cevap aynı çıksa bile üç sebep var, üçü de bu sayfada: **maliyet** — her soru bütün el kitabını okutur; token
+başına ödeyen bir API'de fatura on kat büyür. **Süre** — bu Mac'te 30 saniye, RAG'in cevap çağrısı 1 saniyenin
+altında. **Erişim** — prompt'a giren her şey cevaba sızabilir, yalnızca İK'ya açık ücret bantları da dahil.
+Corpus yüz sayfadan bin sayfaya çıktığında dördüncü sebep gelir: sığmaz.
+</FAQ>
+
+<FAQ q="Arama yanlış parçayı getirirse ne olur?">
+Model yanlış context'le çalışır: ya "bilmiyorum" der ya da yanlış bir cevap yazar. Bunun canlı bir örneği
+[B · Chunking](/adim-adim/b-chunking/) sayfasında: doküman kötü bölündüğünde tablo hiç bulunamıyor.
+</FAQ>
+
+<FAQ q="Neden “naive” RAG diyoruz?">
+En sade biçimi olduğu için: bir arama, en yakın birkaç parça, prompt. Gün içinde üstüne rerank ekleyeceğiz;
+başka türleri [Sınırlar ve RAG türleri](/her-derde-deva/sinirlar-ve-turler/) sayfasında.
+</FAQ>
+
+<Takeaway>Sorun bilgiyi vermek değil, doğru parçayı seçmek.</Takeaway>

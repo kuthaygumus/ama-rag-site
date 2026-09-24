@@ -1,0 +1,261 @@
+---
+title: E · Retrieval ve rerank
+description: Retriever ne getirdi, prompt'a ne gitti? Top-k ve kesme çizgisi, metadata filtresi, erişim kontrolü ve rerank. Adım 6 ve 7.
+---
+import WhereAmI from '../../../components/WhereAmI.astro';
+import DaysQuestion from '../../../components/DaysQuestion.astro';
+import Gate from '../../../components/Gate.astro';
+import Deck from '../../../components/Deck.astro';
+import DeckFigure from '../../../components/DeckFigure.astro';
+import Step from '../../../components/Step.astro';
+import Example from '../../../components/Example.astro';
+import RepoCode from '../../../components/RepoCode.astro';
+import Log from '../../../components/Log.astro';
+import YourTurn from '../../../components/YourTurn.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Takeaway from '../../../components/Takeaway.astro';
+import Term from '../../../components/Term.astro';
+
+<WhereAmI at="qembed search rerank" />
+
+<DaysQuestion answer="rerank kapalı → “Tablo 1'e göre 7 yıllık bir çalışanın yıllık ücretli izin hakkı 22 iş gundur [1].” · rerank açık → “Tablodan, 7 tam yıl kıdeminde 22 iş günü …” ✓" how="chroma · section · filter edition 2025, access all — iki yolda da 22" />
+
+<Gate>
+Depo dolu. Şimdi soru soruyoruz: soru vektöre dönüşüyor, depodan en yakın 5 chunk geliyor, bunların ilk 3'ü prompt'a giriyor. Günün sorusunda doğru chunk ilk sırada geldi, ama skorlara yakından bakınca bu birinciliğin ne kadar ince olduğu görünüyor.
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure" stage="list">
+    <svg viewBox="0 0 1000 500" role="img" aria-label="Günün sorusu için vektör sırası ve rerank sonrası sıra: kesme çizgisi k eşittir 5, prompt'a ilk 3 chunk giriyor">
+      <rect x="20" y="14" width="960" height="44" rx="8" class="fbox" />
+      <text x="500" y="43" text-anchor="middle" class="fsub">soru → bge-m3 → Chroma: en yakın 5 chunk · filtre: edition 2025, access all</text>
+      <g data-from="2">
+        <text x="245" y="96" text-anchor="middle" class="flbl">vektör sırası · adım 6</text>
+        <rect x="22" y="118" width="446" height="26" rx="4" class="fbox-good" />
+        <text x="32" y="136" class="fsub fnum">1</text>
+        <text x="62" y="136" class="fsub">0.631</text>
+        <text x="130" y="136" class="fsub">hr-leave@2025#3 · izin tablosu</text>
+        <text x="32" y="176" class="fsub fnum">2</text>
+        <text x="62" y="176" class="fsub">0.628</text>
+        <text x="130" y="176" class="fsub">hr-leave@2025#4 · izin planlama</text>
+        <text x="32" y="216" class="fsub fnum">3</text>
+        <text x="62" y="216" class="fsub">0.627</text>
+        <text x="130" y="216" class="fsub">hr-leave@2025#5 · mazeret izinleri</text>
+        <text x="32" y="290" class="fsub fnum">4</text>
+        <text x="62" y="290" class="fsub">0.626</text>
+        <text x="130" y="290" class="fsub">hr-leave@2025#7 · izin devri</text>
+        <text x="32" y="330" class="fsub fnum">5</text>
+        <text x="62" y="330" class="fsub">0.624</text>
+        <text x="130" y="330" class="fsub">hr-leave@2025#6 · ücretsiz izin</text>
+      </g>
+      <g data-from="3">
+        <path d="M112 122 V334" class="farrow" />
+        <text x="118" y="360" class="fsub fgate-t">ilk 5'in farkı: 0.007</text>
+      </g>
+      <g data-from="4">
+        <path d="M20 378 H470" class="farrow" stroke-dasharray="7 5" />
+        <text x="466" y="370" text-anchor="end" class="fsub">kesme: k = 5</text>
+        <text x="32" y="406" class="fsub">6</text>
+        <text x="62" y="406" class="fsub">0.607</text>
+        <text x="130" y="406" class="fsub">hr-working-hours@2025#5</text>
+        <text x="32" y="442" class="fsub">7</text>
+        <text x="62" y="442" class="fsub">0.588</text>
+        <text x="130" y="442" class="fsub">hr-leave@2025#2</text>
+        <text x="32" y="478" class="fsub">8</text>
+        <text x="62" y="478" class="fsub">0.580</text>
+        <text x="130" y="478" class="fsub">benefits@2025#6</text>
+      </g>
+      <g data-from="5">
+        <path d="M20 234 H470" class="fbox-gate" stroke-dasharray="7 5" />
+        <text x="466" y="258" text-anchor="end" class="fsub fgate-t">↑ prompt'a ilk 3</text>
+      </g>
+      <g data-from="6">
+        <text x="765" y="96" text-anchor="middle" class="flbl">rerank sonrası · adım 7</text>
+        <rect x="552" y="118" width="428" height="26" rx="4" class="fbox-good" />
+        <text x="562" y="136" class="fsub fnum">1</text>
+        <text x="592" y="136" class="fsub">rel 10</text>
+        <text x="666" y="136" class="fsub">hr-leave@2025#3 · izin tablosu</text>
+        <text x="562" y="176" class="fsub fnum">2</text>
+        <text x="592" y="176" class="fsub">rel 9</text>
+        <text x="666" y="176" class="fsub">hr-leave@2025#7 · izin devri</text>
+        <text x="562" y="216" class="fsub fnum">3</text>
+        <text x="592" y="216" class="fsub">rel 6</text>
+        <text x="666" y="216" class="fsub">hr-leave@2025#4 · izin planlama</text>
+        <text x="562" y="290" class="fsub fnum">4</text>
+        <text x="592" y="290" class="fsub">rel 3</text>
+        <text x="666" y="290" class="fsub">hr-leave@2025#6 · ücretsiz izin</text>
+        <text x="562" y="330" class="fsub fnum">5</text>
+        <text x="592" y="330" class="fsub">rel 0</text>
+        <text x="666" y="330" class="fsub">hr-leave@2025#5 · mazeret izinleri</text>
+        <path d="M550 234 H980" class="fbox-gate" stroke-dasharray="7 5" />
+        <text x="976" y="258" text-anchor="end" class="fsub fgate-t">↑ prompt'a ilk 3</text>
+      </g>
+      <g data-from="7">
+        <path d="M472 131 L548 131" class="farrow" />
+        <path d="M472 171 L548 211" class="farrow" />
+        <path d="M472 211 L548 325" class="fbox-bad" />
+        <path d="M472 285 L548 171" class="farrow-on" />
+        <path d="M472 325 L548 285" class="farrow" />
+        <text x="765" y="384" text-anchor="middle" class="fsub fgood-t">§7 prompt'a girdi</text>
+        <text x="765" y="410" text-anchor="middle" class="fsub fbad-t">§5 prompt'tan çıktı</text>
+      </g>
+      <g data-from="8">
+        <text x="765" y="452" text-anchor="middle" class="fsub">arama: 6 ms · rerank: 5 çağrı, 2134 ms</text>
+        <text x="765" y="478" text-anchor="middle" class="fsub">(bu Mac'te ölçüldü)</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <DeckFigure slot="figure" stage="yol">
+    <svg viewBox="0 0 1000 210" role="img" aria-label="Retrieval yöntemleri: top-k, eşik, metadata filtresi, MMR, hybrid">
+      <rect x="20" y="20" width="176" height="160" rx="10" class="fbox-on" />
+      <text x="108" y="60" text-anchor="middle" class="flbl">top-k</text>
+      <text x="108" y="92" text-anchor="middle" class="fsub">en yakın k tane</text>
+      <text x="108" y="118" text-anchor="middle" class="fsub">bizde k = 5</text>
+      <text x="108" y="160" text-anchor="middle" class="fsub fgood-t">bu repoda</text>
+      <g class="ph ph1">
+        <rect x="216" y="20" width="176" height="160" rx="10" class="fbox" />
+        <text x="304" y="60" text-anchor="middle" class="flbl">eşik</text>
+        <text x="304" y="92" text-anchor="middle" class="fsub">skor ≥ eşik</text>
+        <text x="304" y="118" text-anchor="middle" class="fsub">kendi verinde seç</text>
+        <text x="304" y="160" text-anchor="middle" class="fsub">kavram</text>
+      </g>
+      <g class="ph ph2">
+        <rect x="412" y="20" width="176" height="160" rx="10" class="fbox-on" />
+        <text x="500" y="60" text-anchor="middle" class="flbl">filtre</text>
+        <text x="500" y="92" text-anchor="middle" class="fsub">edition, access</text>
+        <text x="500" y="118" text-anchor="middle" class="fsub">aramanın içinde</text>
+        <text x="500" y="160" text-anchor="middle" class="fsub fgood-t">bu repoda</text>
+      </g>
+      <g class="ph ph3">
+        <rect x="608" y="20" width="176" height="160" rx="10" class="fbox" />
+        <text x="696" y="60" text-anchor="middle" class="flbl">MMR</text>
+        <text x="696" y="92" text-anchor="middle" class="fsub">benzerini alma</text>
+        <text x="696" y="118" text-anchor="middle" class="fsub">çeşitlilik ekle</text>
+        <text x="696" y="160" text-anchor="middle" class="fsub">kavram</text>
+        <rect x="804" y="20" width="176" height="160" rx="10" class="fbox" />
+        <text x="892" y="60" text-anchor="middle" class="flbl">hybrid</text>
+        <text x="892" y="92" text-anchor="middle" class="fsub">vektör + kelime</text>
+        <text x="892" y="118" text-anchor="middle" class="fsub">(BM25)</text>
+        <text x="892" y="160" text-anchor="middle" class="fsub">kavram</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="Soru da vektör olur" stage="list">
+    Adım 6 soruyu aynı modelle (bge-m3) 1024 sayıya çevirir ve Chroma'dan en yakın 5 chunk'ı ister. Filtre aramanın içinde: yalnızca 2025 sürümü, yalnızca herkese açık dokümanlar.
+  </Step>
+  <Step title="Retriever ne getirdi?" stage="list">
+    5 chunk, hepsi Yıllık İzin Politikası'ndan. Cevabı taşıyan §3, yani izin tablosu, ilk sırada. İyi haber; ama skorlara bakın.
+  </Step>
+  <Step title="Skorlar neredeyse eşit" stage="list">
+    Birinci 0.631, beşinci 0.624: fark 0.007. Her hr-leave chunk'ı aynı başlıkla başlıyor, `[Yıllık İzin Politikası › …]`, soru da "yıllık izin" diyor. Sırayı bu ortak ön ek belirliyor; §3'ün birinciliği pamuk ipliğine bağlı.
+  </Step>
+  <Step title="Kesme çizgisi: k" stage="list">
+    k = 5: 6. sıradaki hr-working-hours §5 (0.607) dışarıda kaldı. k küçükse cevap kaçabilir, büyükse sonraki adımlara gürültü taşınır. En yakın k tanesini almaya <Term id="topk">top-k</Term> denir.
+  </Step>
+  <Step title="Prompt'a yalnızca 3 chunk girer" stage="list">
+    Rerank kapalıyken vektör sırasındaki ilk 3 gider: §3, §4, §5. §5 mazeret izinleri (evlilik, vefat, taşınma): soruyla ilgisi yok ama prompt'ta yer kaplıyor.
+  </Step>
+  <Step title="Rerank: soruyu ve chunk'ı birlikte oku" stage="list">
+    Vektörler ayrı ayrı yapıldı: soru tek başına, chunk tek başına. <Term id="rerank">Reranker</Term> her (soru, chunk) çiftini birlikte okur ve 0–10 arası puan verir. Bizde bu işi gemma3:4b yapıyor: 5 chunk, 5 çağrı.
+  </Step>
+  <Step title="Rerank sonrası" stage="list">
+    §3 10 puanla yerinde. §7 (izin devri) 4. sıradan 2. sıraya çıktı; §5 0 puanla 3. sıradan 5. sıraya indi ve prompt'tan çıktı. 0.007'lik farkların yerini 0 ile 10 arasında net kararlar aldı.
+  </Step>
+  <Step title="Bedeli" stage="list">
+    Arama 6 ms sürdü; rerank 2134 ms. Bu soruda cevap değişmedi: iki yolda da 22 iş günü. Rerank'ın asıl işi, doğru chunk ilk 3'ün dışında kaldığında başlıyor.
+  </Step>
+  <Step title="Doğru chunk hep önde değil" stage="list">
+    "Tatil hakkım kaç gün, 4 yıldır çalışıyorum?" sorusunda izin tablosu vektör sırasında 5. geldi (eval: rr 0.20). Rerank olmasa prompt'a hiç girmezdi. Rerank açıkken cevap doğru çıktı: 18 iş günü (eval --answers).
+  </Step>
+  <Step title="Top-k tek yol değil: eşik" stage="yol" phase="1">
+    Sabit k yerine bir skor eşiği: altındakini alma. Ama C sayfasında "ilgisiz" çift bile 0.456 aldı. Eşik tahminle değil, kendi verinizde ölçülerek seçilir ve model değişince yeniden seçilir.
+  </Step>
+  <Step title="Metadata filtresi: kim yarışabilir?" stage="yol" phase="2">
+    `access`: soran kişinin okuyabildikleri; aşağıda deniyoruz. `edition`: yalnızca en yeni sürüm. Bugün depoda tek sürüm var; ikincisini "Veri değişince" sayfasında ekleyip filtreyi orada göreceğiz.
+  </Step>
+  <Step title="MMR ve hybrid" stage="yol" phase="3">
+    <Term id="mmr">MMR</Term>, birbirinin neredeyse aynısı olan chunk'lardan birini alıp gerisini atlar. Hybrid, vektör aramasını kelime aramasıyla (BM25) birleştirir: kod, isim, sayı gibi tam eşleşmelerde kelime kazanır. İkisi de bu repoda yok.
+  </Step>
+</Deck>
+
+<Example>
+Aynı sıralama, terminalde. Önce retriever'ın listesi ve kesme çizgisi, sonra rerank kapalı ve açık.
+</Example>
+
+<Log name="06-retrieve" title="npm run step -- 6" />
+
+<Log name="07-rerank-off" title="npm run step -- 7   (RERANK = false)" />
+
+<Log name="08-answer-rerank-off" title="npm run step -- 8   (rerank kapalıyken)" from={2} />
+
+<Log name="07-rerank" title="npm run step -- 7" />
+
+Rerank kapalıyken de cevap 22; yalnızca "gündür" yerine "gundur" yazıyor. İki cevap da 7. kuralın istediği gibi tablo satırını aynen yazmadı. Cevabın kendisine F sayfasında bakacağız.
+
+Retriever'ın bütün işi: filtreyi kur, soruyu embed et, `k + 3` sonuç iste (fazlası kesme çizgisinin altını göstermek için).
+
+<RepoCode file="src/steps/6-retrieve.ts" from="export async function retrieve" />
+
+Reranker'ın sorusu tek bir prompt. Chunk'ın en fazla 700 karakterini okuyor, cevap olarak yalnızca bir sayı döndürüyor:
+
+<RepoCode file="src/steps/7-rerank.ts" from="export async function relevance" />
+
+## Erişim filtresi: aynı soru, iki çalışan
+
+Maaş bantları dokümanı `access: hr-only`. Adım 6'daki toggle, soran kişinin neyi okuyabileceğini belirliyor:
+
+<RepoCode file="src/steps/6-retrieve.ts" from="// TOGGLE access filter" to="alternative" />
+
+<Example>
+Soru: "Kıdemli uzman unvanında aylık brüt maaş bandının üst sınırı nedir?" Önce filtre açık (varsayılan: soran kişi sıradan bir çalışan), sonra filtre kapalı.
+</Example>
+
+<Log name="ask-access-on" title='npm run ask -- "Kıdemli uzman unvanında aylık brüt maaş bandının üst sınırı nedir?"' from={2} to={16} />
+
+<Log name="ask-access-on" title="… aynı komutun devamı: rerank ve cevap" from={17} />
+
+<Log name="ask-access-off" title="ASKER_MAY_READ = undefined (kimse kontrol etmiyor)" />
+
+Filtre kapalıyken ilk 5'in hepsi maaş dokümanından ve cevap maaş rakamını veriyor: yetkisi olmayan birine yetkisi olmayan bilgi. Filtre açıkken maaş rakamı hiçbir yerde yok; güvenlik tuttu. Ama cevap da doğru değil: reranker seyahat politikasının otel ve harcırah tablosuna 10 puan verdi, model de maaş sorusuna harcırahla cevap verdi. Hangi katman suçlu? Erişim doğru katmanda, retrieval'da, kodla korundu. Yanlış cevap ise reranker ile modelin hatası: "yer almıyor" demeleri gerekirdi.
+
+<YourTurn>
+**1 · Listeyi açın.** `npm run step -- 6` ve `data/6-retrieved.json`: `hits` (prompt'a aday 5 chunk), `below` (kesme çizgisinin altındaki 3), `filter`. Başka bir soru: `npm run step -- 6 "Tatil hakkım kaç gün?"`.
+
+**2 · k'yı değiştirin.** `npm run step -- 6 --k 8` → kesme çizgisi aşağı iner. Sonra `npm run step -- 6` ile 5'e dönün.
+
+**3 · Rerank'ı kapatın.** `src/steps/7-rerank.ts` → `TOGGLE rerank` bloğunda `true; // default` satırını kapatın, `false; // alternative` satırını açın. `npm run step -- 7` ve `npm run step -- 8`. Toggle'ı geri alıp `npm run step -- 7`: `data/7-reranked.json` içinde her chunk için `was` (eski sıra), `relevance` (rerank puanı) ve `score` (vektör skoru). Sonra `npm run step -- 8`.
+
+**4 · Rerank'ın asıl işi.** `npm run ask -- "Tatil hakkım kaç gün, 4 yıldır çalışıyorum?"`. Log'da izin tablosunun (`hr-leave@2025#3`) vektör sırasını ve rerank sonrası sırasını bulun. Prompt'a girdi mi? Cevap 18 mi?
+
+**5 · Erişim filtresini kapatın.** `src/steps/6-retrieve.ts` → `TOGGLE access filter` bloğunda alternatif satırı açın, varsayılanı kapatın. `npm run ask -- "Kıdemli uzman unvanında aylık brüt maaş bandının üst sınırı nedir?"`. Sonra mutlaka geri alın.
+
+Geride kaldıysanız: `npm run catchup -- 7`. Bütün toggle'lar varsayılana döner.
+</YourTurn>
+
+## Sık sorulan
+
+<FAQ q="k'yı nasıl seçerim?">
+Tahminle değil, ölçerek: Kaliteyi ölçmek sayfasındaki `npm run eval`, doğru bölümün ilk k içinde kaç soruda geldiğini (recall@k) sayıyor. Bizde retriever 5 aday veriyor, prompt'a 3 giriyor (`topK` ve `contextK`, `src/lib/config.ts`). İkisi de bizim seçimimiz.
+</FAQ>
+
+<FAQ q="Rerank her soruda şart mı?">
+Bedeli var: bizde her soru için 5 model çağrısı, günün sorusunda 2134 ms. Retriever doğru chunk'ı zaten ilk 3'e koyuyorsa bu süre boşa gider. Kaç soruda gerektiğini değerlendirme gösterir.
+</FAQ>
+
+<FAQ q="Reranker yanılır mı?">
+Evet. Maaş sorusunda seyahat politikasının otel ve harcırah tablosuna 10 verdi; muhtemelen "kıdemli uzman" unvanı orada da geçtiği için. Beraberlikler de oluyor: log'daki `ties` satırı, aynı puanı alan chunk sayısını yazıyor.
+</FAQ>
+
+<FAQ q="Bi-encoder ve cross-encoder ne demek?">
+Embedding modeli bir bi-encoder: soru ve chunk ayrı ayrı vektöre çevrilir, chunk vektörleri önceden hesaplanır, arama hızlıdır. Cross-encoder soruyu ve chunk'ı birlikte okur; daha dikkatlidir ama her soruda her aday için yeniden çalışır. Bizim reranker bir sohbet modeli ama aynı fikri uyguluyor. Özel cross-encoder rerank modelleri bu işi daha hızlı yapar; onları ölçmedik.
+</FAQ>
+
+<FAQ q="Filtreyi aramadan sonra uygulasak olmaz mı?">
+Önce 5 sonuç alıp sonra elerseniz elinizde 5'ten az, belki hiç sonuç kalmaz; yetkisiz metin de bir an için sürece girmiş olur. Bizde filtre aramanın içinde: `toWhere()` onu Chroma'nın `where` koşuluna çeviriyor.
+</FAQ>
+
+<FAQ q="Edition filtresini nerede göreceğiz?">
+Bugün depoda yalnızca 2025 sürümü var; filtre şu an bir şey elemiyor. 2026 sürümünü "Veri değişince" sayfasında ekliyoruz ve filtreyi açıp kapatarak farkı orada görüyoruz.
+</FAQ>
+
+<Takeaway>Doğru chunk'ı bulmak yetmez; prompt'a girecek sıraya da çıkması gerekir.</Takeaway>

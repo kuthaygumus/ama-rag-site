@@ -1,0 +1,190 @@
+---
+title: Kaliteyi ölçmek
+description: Gold set, hit@1, recall@k ve MRR bölüm seviyesinde; cevap kontrolü; chunker değişikliğinin önce/sonra ölçümü.
+---
+import Deck from '../../../components/Deck.astro';
+import DeckFigure from '../../../components/DeckFigure.astro';
+import Step from '../../../components/Step.astro';
+import DaysQuestion from '../../../components/DaysQuestion.astro';
+import Gate from '../../../components/Gate.astro';
+import Example from '../../../components/Example.astro';
+import RepoCode from '../../../components/RepoCode.astro';
+import Log from '../../../components/Log.astro';
+import YourTurn from '../../../components/YourTurn.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Term from '../../../components/Term.astro';
+import Takeaway from '../../../components/Takeaway.astro';
+
+<DaysQuestion answer="24 iş günü [1] ✓" how="chroma · section · rerank on · sürüm 2026" />
+
+<Gate>
+B sayfasında chunker'ı değiştirdik ve günün sorusu "yer almıyor"dan "22 iş günü"ne döndü. Ama bu tek bir soru. Aynı değişiklik öteki sorulardan birini bozdu mu? "Bana daha iyi geldi" bunu söyleyemez; bir sayı gerekir.
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 1000 530" role="img" aria-label="Bir soru için retriever'ın getirdiği beş bölüm ve üç metrik">
+      <text x="20" y="34" class="flbl">q02 · "Tatil hakkım kaç gün, 4 yıldır çalışıyorum?"</text>
+      <rect x="20" y="52" width="460" height="68" rx="10" class="fbox fbox-gate" />
+      <text x="40" y="82" class="flbl">doğru bölüm: hr-leave#3</text>
+      <text x="40" y="108" class="fsub">beklenen değer: "18" · tür: paraphrase</text>
+      <g data-from="2">
+        <rect x="20" y="140" width="460" height="42" rx="8" class="fbox" />
+        <text x="40" y="168" class="fsub">1</text>
+        <text x="80" y="169" class="flbl">hr-working-hours#5</text>
+        <rect x="20" y="192" width="460" height="42" rx="8" class="fbox" />
+        <text x="40" y="220" class="fsub">2</text>
+        <text x="80" y="221" class="flbl">hr-leave#4</text>
+        <rect x="20" y="244" width="460" height="42" rx="8" class="fbox" />
+        <text x="40" y="272" class="fsub">3</text>
+        <text x="80" y="273" class="flbl">hr-leave#6</text>
+        <rect x="20" y="296" width="460" height="42" rx="8" class="fbox" />
+        <text x="40" y="324" class="fsub">4</text>
+        <text x="80" y="324" class="fsub">…</text>
+        <rect x="20" y="348" width="460" height="42" rx="8" class="fbox fbox-good" />
+        <text x="40" y="376" class="fsub">5</text>
+        <text x="80" y="377" class="flbl fgood-t">hr-leave#3 ✓</text>
+        <path d="M20 404 H480" class="faxis" stroke-dasharray="6 5" />
+        <text x="480" y="426" text-anchor="end" class="fsub">kesim: k = 5</text>
+      </g>
+      <g data-from="3">
+        <rect x="520" y="52" width="460" height="110" rx="10" class="fbox fbox-bad" />
+        <text x="545" y="92" class="flbl fbad-t">hit@1 = 0</text>
+        <text x="545" y="124" class="fsub">1. sırada çalışma saatleri bölümü,</text>
+        <text x="545" y="148" class="fsub">doğru bölüm değil</text>
+      </g>
+      <g data-from="4">
+        <rect x="520" y="180" width="460" height="110" rx="10" class="fbox fbox-good" />
+        <text x="545" y="220" class="flbl fgood-t">recall@5 = 1/1 = 1.0</text>
+        <text x="545" y="252" class="fsub">tek doğru bölüm ilk 5'in içinde;</text>
+        <text x="545" y="276" class="fsub">kaçıncı olduğu önemsiz</text>
+      </g>
+      <g data-from="5">
+        <rect x="520" y="308" width="460" height="110" rx="10" class="fbox fbox-on" />
+        <text x="545" y="348" class="flbl fnum">RR = 1/5 = 0.20</text>
+        <text x="545" y="380" class="fsub">ilk doğru bölüm 5. sırada;</text>
+        <text x="545" y="404" class="fsub">1. sırada olsaydı 1.00 olurdu</text>
+      </g>
+      <g data-from="6">
+        <text x="20" y="462" class="fsub">bölüm = doküman#başlık numarası: chunker değişse de aynı kalır</text>
+      </g>
+      <g data-from="7">
+        <text x="20" y="508" class="flbl">19 sorunun ortalaması:</text>
+        <text x="250" y="508" class="flbl fnum">hit@1 0.842 · recall@5 1.000 · MRR 0.896</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="Görev: bir sınav kağıdı">
+    Sistemi tek soruyla değil, cevabını bildiğimiz 23 soruyla sınarız: `eval/gold.jsonl`. Her satırda soru, doğru bölüm, beklenen değer ve sorunun türü yazar. Bu sınav kağıdının adı <Term id="goldset">gold set</Term>.
+  </Step>
+  <Step title="Retriever ne getirdi?">
+    "Tatil hakkım kaç gün, 4 yıldır çalışıyorum?" (q02) için retriever 5 bölüm getirdi. Doğru bölüm, yani izin tablosu (hr-leave#3), listede ama 5. sırada: soru dokümanın kelimelerini kullanmıyor.
+  </Step>
+  <Step title="hit@1: birinci sıradaki doğru mu?">
+    <Term id="hit1">hit@1</Term> yalnızca ilk sonuca bakar: doğruysa 1, değilse 0. q02'de ilk sırada çalışma saatleri bölümü var, yani 0. Günün sorusunda (q01) ilk sıra izin tablosu, yani 1.
+  </Step>
+  <Step title="recall@5: doğruların kaçı ilk 5'te?">
+    <Term id="recallk">recall@k</Term>, doğru bölümlerin ne kadarının ilk k sonuca girdiğini sayar. q02'nin tek doğru bölümü var, o da 5. sırada: 1 bölümden 1'i içeride, recall 1.0. Sıra önemsizdir; içeride olmak yeter.
+  </Step>
+  <Step title="MRR: ilk doğru kaçıncı sırada?">
+    Her soru için 1 / (ilk doğru bölümün sırası): q02'de 1/5 = 0.20, günün sorusunda 1/1 = 1.00. Bu değerin tüm sorulardaki ortalaması <Term id="mrr">MRR</Term>. 1.0 = doğru bölüm hep birinci.
+  </Step>
+  <Step title="Neden chunk değil, bölüm?">
+    Bir tasarım tercihi: chunk id'si chunker'la değişir (`hr-leave@2025#c08`), bölüm numarası değişmez (hr-leave#3). Böylece aynı sınav kağıdı iki chunker'ı da puanlar. Birkaç bölüme değen bir chunk her birine sayılır.
+  </Step>
+  <Step title="Sonuç: 19 sorunun ortalaması">
+    23 sorudan 4'ü puanlanmaz: erişim ve kapsam dışı sorularda doğru bölüm yoktur. Kalan 19 soruda hit@1 0.842. Bu ölçüm rerank'tan önce yapılır; q02 burada ıskalamış sayılır.
+  </Step>
+  <Step title="Zayıf yer nerede?">
+    Türe göre hit@1: 8 doğrudan soruda 1.00, 4 TR→EN soruda 1.00; 2 tablo sorusunda 0.50, başka kelimelerle sorulan 1 soruda (paraphrase) 0.00. Bir sonraki iyileştirme buradan başlar.
+  </Step>
+</Deck>
+
+Sınav kağıdının ilk dört satırı ve üç tuzak sorusu (erişim, injection, kapsam dışı), repodaki hâliyle:
+
+<RepoCode file="eval/gold.jsonl" lang="json" from={'"id":"q01"'} to={'"id":"q04"'} />
+<RepoCode file="eval/gold.jsonl" lang="json" from={'"id":"q12"'} to={'"id":"q14"'} />
+
+## Önce / sonra: aynı sınav, iki chunker
+
+<Example>
+Aynı 23 soru, aynı model, aynı k = 5; tek fark chunker. `fixed` her 300 karakterde keser, `section` başlıklardan.
+
+| | fixed (300 karakter) | section |
+|---|---|---|
+| chunk sayısı | 139 | 60 |
+| hit@1 (19 soru) | 0.474 | 0.842 |
+| recall@5 (19 soru) | 1.000 | 1.000 |
+| MRR (19 soru) | 0.702 | 0.896 |
+| TR→EN soruları, hit@1 (4 soru) | 0.50 | 1.00 |
+
+B sayfasında gördüğümüz tek soruluk düzelme bir şans değilmiş. Doğru bölümü birinci getirilen soru sayısı 19 soruda 9'dan 16'ya çıktı (0.474 → 0.842): section chunker 7 soru kazandırdı, hiçbirini kaybettirmedi. recall@5 ikisinde de 1.000: doğru bölümler iki durumda da listede; fark, kaçıncı sırada oldukları.
+</Example>
+
+Kaynak: iki `npm run eval` koşusu. Önce `fixed` chunk'larla:
+
+<Log name="eval-fixed" title="npm run eval   (chunker: fixed)" from={27} to={34} />
+
+Sonra `section` chunk'larla, soru soru:
+
+<Log name="eval-section" title="npm run eval   (chunker: section)" />
+
+Metriklerin kodu kısa. Bir soru için üç sayı:
+
+<RepoCode file="src/lib/metrics.ts" from="export function score" />
+
+## Cevabı ölçmek: `--answers`
+
+Buraya kadar ölçtüğümüz şey retriever'dı: doğru bölüm geldi mi? `--answers` her soruyu rerank ve cevap adımlarından da geçirir, sonra cevabı kontrol eder:
+
+<RepoCode file="src/cli/eval.ts" from="if (withAnswers) {" to="^    }$" />
+
+Üç kural: normal soruda beklenen değer (`expect`) cevabın içinde geçmeli; kapsam dışı soruda model çekinmeli; erişim sorusunda maaş rakamı cevapta **geçmemeli**.
+
+<Log name="eval-answers" title="npm run eval -- --answers" from={2} to={36} />
+
+İki katman, iki ayrı sonuç:
+
+- **q02 (paraphrase):** retrieval'da RR 0.20, ama cevap ✓. Doğru bölüm vektör sırasında 5.; prompt'a yalnızca 3 chunk girer. Rerank açıkken cevap doğru; rerank kapalıyken bu soruyu ölçmedik.
+- **23 / 23:** bu sınavda tavana vurduk. Bu, sistemin kusursuz olduğunu değil, sınavın artık kolay kaldığını söyler. Kullanımdan gelen zor soruları gold set'e eklemenin zamanı.
+
+Bu kontrol kaba bir kontroldür: "22 değil" diyen bir cevap da "22" içerir. Bizim cevaplarımız kısa ve sayısal olduğu için iş görüyor.
+
+## LLM-as-judge: bir model başka bir modeli puanlar
+
+Cevap açık uçluysa ("izin devrini özetle") alt dize kontrolü işe yaramaz. O zaman ikinci bir modele sorulur: "Bu cevaptaki her iddia kaynaklarda var mı?" Buna <Term id="judge">LLM-as-judge</Term> denir.
+
+- **Hakem de bir model.** Yanılır. Onun kararlarını da elle etiketlenmiş küçük bir setle kontrol etmek gerekir.
+- **Bilinen eğilimleri var:** literatürde uzun cevabı ve kendi yazdığı metni kayırma, sıraya duyarlılık raporlanıyor.
+- **Her soruya bir çağrı daha** ekler; maliyeti retrieval eval'ından büyüktür.
+
+Bu repoda LLM-as-judge yok; **ölçmedik**.
+
+<YourTurn>
+1. `npm run eval` çalıştırın; OUT satırındaki üç sayıyı not edin.
+2. `src/steps/3-chunk.ts` içindeki `TOGGLE chunker` bloğunda `fixed` satırını açın, `section` satırını yoruma alın. Sonra `npm run ingest -- --reset` ve tekrar `npm run eval`. Hangi soru tipleri düştü?
+3. Toggle'ı geri alın, `npm run ingest -- --reset`, sonra `npm run eval -- --answers`. `data/eval.json` içinde q02'nin cevabını açın: model hangi satırı kullandı?
+4. `eval/gold.jsonl` dosyasına bu sayfadaki sorulara benzemeyen bir soru ekleyin ve eval'ı tekrar koşun.
+
+`--reset` depoyu boşaltır; 2026 sürümünü geri eklemek için: `npm run ingest -- --edition 2026`.
+</YourTurn>
+
+## Sık sorulan
+
+<FAQ q="Gold set'i kim yazar, kaç soru yeter?">
+Dokümanları bilen biri, gerçek sorulardan: destek kayıtları, arama logları. 19 puanlanan soruda bir soru hit@1'i yaklaşık 0.05 oynatır (1/19). Yani 23 soru yönü gösterir; 0.05'lik bir farkı tek başına kanıt saymayın.
+</FAQ>
+
+<FAQ q="q02'de hit@1 = 0 ama cevap doğru. Hangisine inanalım?">
+İkisine de; farklı katmanları ölçüyorlar. `npm run eval` yalnızca retriever'ı ölçer (rerank'tan önce). `--answers` bütün pipeline'ı ölçer. Retrieval iyi ama cevap kötüyse prompt'a ya da modele, retrieval kötüyse chunk, embedding ve k'ya bakılır.
+</FAQ>
+
+<FAQ q="Neden yalnızca ilk sıraya bakan bir metrik de var?">
+Çünkü prompt'a 5 değil 3 chunk giriyor. recall@5 "aday listesinde var mı?" diye sorar; hit@1 "en iyi aday doğru mu?" diye. Rerank kapalıyken ilk 3'ün dışında kalan doğru bölüm modele hiç ulaşmaz.
+</FAQ>
+
+<FAQ q="Her değişiklikten sonra eval mi koşacağız?">
+Evet: chunker, k, embedding modeli, prompt kuralı. Değiştir, gerekiyorsa yeniden ingest et, `npm run eval`. Retrieval eval'ı hızlıdır, çünkü sohbet modeline hiç gitmez; `--answers` her soru için rerank ve cevap çağrısı yaptığı için çok daha yavaştır.
+</FAQ>
+
+<Takeaway>Bir değişikliğin iyi olduğunu his değil, aynı sınav kağıdı söyler.</Takeaway>

@@ -1,0 +1,11 @@
+---
+/** The day's question and where its answer stands at this point of the day (numbers from `npm run capture`). */
+interface Props { answer?: string; how?: string }
+const { answer, how } = Astro.props;
+---
+<div class="dayq">
+  <div class="q">7 yıllık bir çalışanın yıllık izni kaç iş günü?</div>
+  {answer && <div class="a">→ {answer}</div>}
+  {how && <div class="how">{how}</div>}
+  <slot />
+</div>

@@ -1,0 +1,28 @@
+---
+/**
+ * Code from the workshop repo — never typed by hand. `npm run sync` copies the files into
+ * src/snippets/code/, and `check:sync` fails the build if they drift from the repo.
+ * `from` = text on the first line to show (the JSDoc above it comes along), `to` = regex for the last.
+ */
+import { Code } from '@astrojs/starlight/components';
+interface Props { file: string; from?: string; to?: string; lang?: string; title?: string; mark?: string[] }
+const { file, from, to = '^}', lang = file.split('.').pop(), title = file, mark } = Astro.props;
+const files = {
+  ...import.meta.glob('../snippets/code/**/*', { query: '?raw', import: 'default', eager: true }),
+  // dotfiles (.env.example) are skipped by the pattern above unless named explicitly
+  ...import.meta.glob('../snippets/code/**/.*', { query: '?raw', import: 'default', eager: true }),
+} as Record<string, string>;
+const source = files[`../snippets/code/${file}`];
+if (source === undefined) throw new Error(`RepoCode: ${file} is not in src/snippets/code — run npm run sync`);
+let lines = source.split('\n');
+if (from) {
+  let start = lines.findIndex((l) => l.includes(from));
+  if (start < 0) throw new Error(`RepoCode: "${from}" not found in ${file}`);
+  while (start > 0 && /^\s*(\/\*\*|\*)/.test(lines[start - 1]!)) start--;
+  const endRe = new RegExp(to);
+  const rel = lines.slice(start + 1).findIndex((l) => endRe.test(l));
+  lines = lines.slice(start, rel < 0 ? undefined : start + rel + 2);
+}
+const code = lines.join('\n').trimEnd();
+---
+<Code code={code} lang={lang} title={title} mark={mark} />

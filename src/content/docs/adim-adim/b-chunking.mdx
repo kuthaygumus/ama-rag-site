@@ -1,0 +1,217 @@
+---
+title: B · Chunking
+description: Dokümanları parçalara bölmek — her 300 karakterde bir mi, dokümanın kendi başlıklarından mı? Adım 3 ve günün sorusunun ilk düzgün cevabı.
+---
+import WhereAmI from '../../../components/WhereAmI.astro';
+import DaysQuestion from '../../../components/DaysQuestion.astro';
+import Gate from '../../../components/Gate.astro';
+import Deck from '../../../components/Deck.astro';
+import DeckFigure from '../../../components/DeckFigure.astro';
+import Step from '../../../components/Step.astro';
+import Example from '../../../components/Example.astro';
+import RepoCode from '../../../components/RepoCode.astro';
+import Log from '../../../components/Log.astro';
+import YourTurn from '../../../components/YourTurn.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Takeaway from '../../../components/Takeaway.astro';
+import Term from '../../../components/Term.astro';
+
+<WhereAmI at="chunk" />
+
+<DaysQuestion answer="fixed → “Bu bilgi politikalarda yer almıyor.” · section → “Tablodan, 7 tam yıl kıdeminde 22 iş günü ücretli izin hakkı olduğunu görüyoruz [1].” ✓" how="chunker fixed → section · in-memory search (black box) · rerank on" />
+
+<Gate>
+Bir dokümanın tamamını her soruda modele veremeyiz. Günün sorusunun cevabı hr-leave'in 199 satırından tek bir tablo satırında: `| 7 | 22 |`. Dokümanı parçalara bölmemiz gerekiyor; nasıl böldüğümüz de aramanın neyi bulabileceğini belirliyor.
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure" stage="a">
+    <svg viewBox="0 0 1000 260" role="img" aria-label="Bir doküman parçalara bölünür, arama birkaç parçayı seçip prompt'a koyar">
+      <rect x="30" y="30" width="190" height="200" rx="10" class="fbox" />
+      <text x="125" y="70" text-anchor="middle" class="flbl">hr-leave</text>
+      <text x="125" y="98" text-anchor="middle" class="fsub">199 satır</text>
+      <path d="M55 125 H195 M55 145 H180 M55 165 H195 M55 185 H170 M55 205 H190" class="faxis" />
+      <path d="M228 130 H292" class="farrow" marker-end="url(#bh-a)" />
+      <text x="260" y="118" text-anchor="middle" class="fsub">böl</text>
+      <rect x="310" y="60" width="64" height="44" rx="6" class="fbox" />
+      <rect x="386" y="60" width="64" height="44" rx="6" class="fbox" />
+      <rect x="462" y="60" width="140" height="44" rx="6" class="fbox-on" />
+      <text x="532" y="88" text-anchor="middle" class="fsub">| 7 | 22 |</text>
+      <rect x="310" y="116" width="64" height="44" rx="6" class="fbox" />
+      <rect x="386" y="116" width="64" height="44" rx="6" class="fbox" />
+      <rect x="462" y="116" width="64" height="44" rx="6" class="fbox" />
+      <rect x="538" y="116" width="64" height="44" rx="6" class="fbox" />
+      <text x="456" y="192" text-anchor="middle" class="fsub">chunk'lar</text>
+      <path d="M610 100 H708" class="farrow-on" marker-end="url(#bh-b)" />
+      <text x="660" y="88" text-anchor="middle" class="fsub">en yakın 3'ü</text>
+      <rect x="720" y="50" width="250" height="120" rx="10" class="fbox" />
+      <text x="845" y="94" text-anchor="middle" class="flbl">prompt</text>
+      <text x="845" y="124" text-anchor="middle" class="fsub">soru + 3 chunk</text>
+      <text x="500" y="245" text-anchor="middle" class="fsub">8 dokümanın tamamı değil, yalnızca seçilen parçalar modele gider</text>
+      <defs>
+        <marker id="bh-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker>
+        <marker id="bh-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead-on" /></marker>
+      </defs>
+    </svg>
+  </DeckFigure>
+  <DeckFigure slot="figure" stage="b">
+    <svg viewBox="0 0 1000 640" role="img" aria-label="İzin tablosu iki şekilde bölünmüş: her 300 karakterde bir kesince 7. yılın satırı başlıksız bir parçaya düşüyor; başlıklardan kesince tablo başlığıyla birlikte kalıyor">
+      <g data-from="2">
+        <text x="250" y="30" text-anchor="middle" class="flbl">fixed · her 300 karakterde bir kes</text>
+        <rect x="20" y="48" width="460" height="40" rx="6" class="fbox" />
+        <text x="34" y="74" class="fsub">… ## 3. Yıllık Ü</text>
+        <text x="468" y="74" text-anchor="end" class="fsub">c06</text>
+        <rect x="20" y="96" width="460" height="214" rx="6" class="fbox" />
+        <text x="468" y="120" text-anchor="end" class="fsub">c07</text>
+        <text x="34" y="120" class="fsub">cretli İzin</text>
+        <text x="34" y="145" class="fsub">Yıllık ücretli izin süresi, … ayrı bir satırda verilmiştir.</text>
+        <text x="34" y="170" class="fsub">| Kıdem (tam yıl) | Yıllık ücretli izin (iş günü) |</text>
+        <text x="34" y="195" class="fsub">|---|---|</text>
+        <text x="34" y="220" class="fsub">| 1 | 16 |</text>
+        <text x="34" y="245" class="fsub">⋮</text>
+        <text x="34" y="270" class="fsub">| 4 | 18 |</text>
+        <text x="34" y="295" class="fsub">| 5 | 2</text>
+        <rect x="20" y="352" width="460" height="200" rx="6" class="fbox" />
+      </g>
+      <g data-from="4">
+        <rect x="20" y="352" width="460" height="200" rx="6" class="fbox-bad" />
+        <rect x="28" y="411" width="120" height="22" rx="4" class="fbox-bad" />
+        <text x="250" y="628" text-anchor="middle" class="fsub fbad-t">başlık c07'de kaldı: c08'deki “7” ve “22” neyin sayısı?</text>
+      </g>
+      <g data-from="2">
+        <text x="468" y="376" text-anchor="end" class="fsub">c08</text>
+        <text x="34" y="376" class="fsub">2 |</text>
+        <text x="34" y="401" class="fsub">| 6 | 22 |</text>
+        <text x="34" y="426" class="fsub">| 7 | 22 |</text>
+        <text x="34" y="451" class="fsub">| 8 | 22 |</text>
+        <text x="34" y="476" class="fsub">⋮</text>
+        <text x="34" y="501" class="fsub">| 15 ve üzeri | 28 |</text>
+        <text x="34" y="526" class="fsub">İzin talepleri, … bölüm direktörünün onayı da ara</text>
+        <rect x="20" y="562" width="460" height="36" rx="6" class="fbox" />
+        <text x="34" y="586" class="fsub">nır. …</text>
+        <text x="468" y="586" text-anchor="end" class="fsub">c09</text>
+      </g>
+      <g data-from="3">
+        <path d="M14 322 H486" class="fbox-bad" stroke-dasharray="7 5" />
+        <text x="34" y="343" class="fsub fbad-t">✂ 300. karakter: 5. yılın “22”si ikiye bölündü</text>
+      </g>
+      <g data-from="5">
+        <text x="750" y="30" text-anchor="middle" class="flbl">section · başlıklardan kes</text>
+        <rect x="520" y="48" width="460" height="40" rx="6" class="fbox" />
+        <text x="534" y="74" class="fsub">[Yıllık İzin Politikası › 2. Hak Kazanma …]</text>
+        <text x="968" y="74" text-anchor="end" class="fsub">#2</text>
+        <rect x="520" y="96" width="460" height="340" rx="6" class="fbox-on" />
+      </g>
+      <g data-from="6">
+        <rect x="528" y="280" width="120" height="22" rx="4" class="fbox-good" />
+        <text x="750" y="628" text-anchor="middle" class="fsub fgood-t">başlık ve tablo aynı chunk'ta</text>
+      </g>
+      <g data-from="5">
+        <text x="968" y="122" text-anchor="end" class="fsub">#3</text>
+        <text x="534" y="122" class="fsub fnum">[Yıllık İzin Politikası › 3. Yıllık Ücretli İzin]</text>
+        <text x="534" y="147" class="fsub">Yıllık ücretli izin süresi, … ayrı bir satırda verilmiştir.</text>
+        <text x="534" y="172" class="fsub">| Kıdem (tam yıl) | Yıllık ücretli izin (iş günü) |</text>
+        <text x="534" y="197" class="fsub">|---|---|</text>
+        <text x="534" y="222" class="fsub">| 1 | 16 |</text>
+        <text x="534" y="247" class="fsub">⋮</text>
+        <text x="534" y="272" class="fsub">| 6 | 22 |</text>
+        <text x="534" y="297" class="fsub">| 7 | 22 |</text>
+        <text x="534" y="322" class="fsub">| 8 | 22 |</text>
+        <text x="534" y="347" class="fsub">⋮</text>
+        <text x="534" y="372" class="fsub">| 15 ve üzeri | 28 |</text>
+        <text x="534" y="397" class="fsub">İzin talepleri, … onayı da aranır.</text>
+        <text x="534" y="422" class="fsub">Takvim yılı içinde … 7. bölümde açıklanmıştır.</text>
+        <rect x="520" y="446" width="460" height="40" rx="6" class="fbox" />
+        <text x="534" y="472" class="fsub">[Yıllık İzin Politikası › 4. İzin Planlama …]</text>
+        <text x="968" y="472" text-anchor="end" class="fsub">#4</text>
+      </g>
+      <g data-from="7">
+        <text x="750" y="536" text-anchor="middle" class="fsub">fixed: 139 chunk · ortalama 287 karakter</text>
+        <text x="750" y="566" text-anchor="middle" class="fsub fnum">section: 60 chunk · ortalama 688 karakter</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="Neden bölüyoruz?" stage="a">
+    Her soruda 8 dokümanın hepsini modele vermek pahalı ve gürültülü. Dokümanları parçalara böleriz; arama yalnızca soruya en yakın birkaç parçayı seçer. Bu parçaların adı <Term id="chunk">chunk</Term>.
+  </Step>
+  <Step title="Birinci yol: her 300 karakterde bir kes" stage="b">
+    `fixedSize(doc, 300)`: içerik ne olursa olsun, 300 karakterde bir makas. Başlığa, tabloya, kelimeye bakmaz. Herkesin başladığı yer; kodu on satır. 300 bizim seçimimiz.
+  </Step>
+  <Step title="Makas tabloya denk geliyor" stage="b">
+    c06, bölüm başlığını "Yıllık Ü" harfinde kesiyor. c07, 5. yılın satırını "| 5 | 2" diye bitiriyor; c08 "2 |" ile başlıyor. Tablonun başlık satırı c07'de kaldı.
+  </Step>
+  <Step title="Başlıksız satır ne anlatır?" stage="b">
+    Cevap satırı `| 7 | 22 |` c08'de, ama başlığı yok: 7 yıl mı, 22 gün mü, parça söylemiyor. İçinde "yıllık" kelimesi de geçmiyor. Prompt'a giden 3 kaynak arasında c08 yok; model "Bu bilgi politikalarda yer almıyor." dedi.
+  </Step>
+  <Step title="İkinci yol: dokümanın kendi başlıklarından kes" stage="b">
+    `bySection(doc)`: her `## n.` başlığında keser ve her parçanın önüne `[Yıllık İzin Politikası › 3. Yıllık Ücretli İzin]` ekler. Tablo, onu açıklayan başlıkla aynı parçada kalır.
+  </Step>
+  <Step title="Aynı soru, doğru cevap" stage="b">
+    Chunker'ı değiştirip `npm run soru`: "Tablodan, 7 tam yıl kıdeminde 22 iş günü …" ve kaynak `hr-leave@2025#3`. Model aynı, arama kodu aynı, kurallar aynı. Değişen tek şey makasın yeri.
+  </Step>
+  <Step title="Bedeli: parçalar büyüdü" stage="b">
+    Fixed: 139 chunk, ortalama 287 karakter. Section: 60 chunk, ortalama 688 karakter. Büyük parça prompt'ta daha çok yer kaplar. 1500 karakteri aşan bölüm paragraflarından yeniden bölünür; bu sınır da bizim seçimimiz.
+  </Step>
+</Deck>
+
+<Example>
+c08'in başlıksız satırları, log'da tam olarak böyle görünüyor. `soru` bu adımda bir kara kutu ile arıyor (vektörler ve depo henüz yok, C ve D sayfalarında açacağız) ama sonuç açık: cevap satırı prompt'a ulaşmadı.
+</Example>
+
+<Log name="03-chunk-fixed" title="npm run step -- 3   (CHUNKER = fixed)" />
+
+<Log name="soru-1-fixed" title="npm run soru" to={10} />
+
+Aynı adım, chunker `section`. Cevap satırı artık başlığıyla ve bölüm adıyla aynı parçada:
+
+<Log name="03-chunk-section" title="npm run step -- 3   (CHUNKER = section)" />
+
+<Log name="soru-2-section" title="npm run soru" />
+
+LEDGER satırları günün sorusunun cevabını adım adım kaydediyor: modelin tek başına uydurması, fixed chunk'larla "yer almıyor", section chunk'larla 22 iş günü.
+
+İki bölme yolu ve aralarındaki seçim, `src/steps/3-chunk.ts` içinde:
+
+<RepoCode file="src/steps/3-chunk.ts" from="// TOGGLE chunker" to="alternative" />
+
+<RepoCode file="src/steps/3-chunk.ts" from="export function fixedSize" />
+
+<RepoCode file="src/steps/3-chunk.ts" from="export function bySection" />
+
+<YourTurn>
+**1 · Makası kendiniz görün.** `src/steps/3-chunk.ts` içinde `TOGGLE chunker` bloğunda `"section"; // default` satırının başına `//` koyun, `"fixed"; // alternative` satırındaki `//` işaretini kaldırın. `npm run step -- 3` çalıştırın: log, `| 7 |` satırını taşıyan parçayı (`hr-leave@2025#c08`) ve ilk satırını gösterir.
+
+**2 · Parçaları açın.** `data/3-chunks.json` içinde `hr-leave@2025#c07` ve `hr-leave@2025#c08` kayıtlarını bulun. Tablo başlığı hangisinde, `| 7 | 22 |` hangisinde? `sections` alanı ne diyor?
+
+**3 · Cevabı sorun.** `npm run soru` → "Bu bilgi politikalarda yer almıyor." İlk çalıştırmada biraz sürer: kara kutu chunk'ları o an embed ediyor.
+
+**4 · Geri alın.** Toggle'ı `section`'a döndürün, `npm run step -- 3` ve yeniden `npm run soru` → 22 iş günü, kaynak `[1] hr-leave@2025#3`. LEDGER'da cevabın nasıl değiştiğini görün.
+
+**Ev ödevi · Üçüncü yol.** Dosyanın altında `byParagraph` bekliyor: boş satırlardan kes, paragrafları en fazla `max` karakterlik parçalara topla (bunu `packParagraphs()` zaten yapıyor), her parçanın önüne `[${doc.title}]` ekle. Kontrol: `npm run check:sibling` → `step 3 · byParagraph (homework)` yeşil.
+
+Geride kaldıysanız: `npm run catchup -- 3`.
+</YourTurn>
+
+## Sık sorulan
+
+<FAQ q="Neden 300? Başka bir sayı tabloyu kurtarmaz mıydı?">
+300 bizim seçimimiz. Başka bir sayı makası başka bir yere düşürür ama sorun aynı kalır: makas içeriğe bakmıyor. Hangi sayıyı seçerseniz seçin bir gün bir tablonun, bir listenin ya da bir cümlenin ortasına denk gelir.
+</FAQ>
+
+<FAQ q="Parçalar birbirine biraz taşsa (overlap)?">
+Komşu parçaların birkaç yüz karakteri paylaşması yaygın bir yöntem: kesikte kalan başlık bazen komşu parçaya da düşer. Garantisi yoktur, parça sayısı ve depolama artar. Bu korpusta ölçmedik.
+</FAQ>
+
+<FAQ q="Dokümanın başlıkları yoksa ne yaparız?">
+Paragraflardan bölmek (ev ödevi), cümlelerden bölmek ya da anlamın değiştiği yerden bölmek (semantic chunking) seçenekler. Hangisinin kazandığını tahmin etmeyin, ölçün: Kaliteyi ölçmek sayfasındaki `npm run eval` iki chunker'ı aynı soru setinde karşılaştırıyor.
+</FAQ>
+
+<FAQ q="Büyük parça her zaman daha mı iyi?">
+Hayır. Büyük parça prompt'u uzatır (maliyet ve süre) ve farklı konuları tek vektörde karıştırır. Bu yüzden `bySection`, 1500 karakteri aşan bir bölümü paragraflarından yeniden böler (`MAX_SECTION_CHARS`).
+</FAQ>
+
+<FAQ q="Fixed chunk'ta sections: 2,3 ne demek?">
+Makas bir bölüm başlığının üstünden geçtiğinde parça iki bölüme birden dokunur; `sections` alanı bunu kaydeder. Değerlendirme (Kaliteyi ölçmek) doğru cevabı bölüm düzeyinde kontrol ettiği için bu alan önemli.
+</FAQ>
+
+<Takeaway>Bunu bir splitter kazandı, model değil.</Takeaway>

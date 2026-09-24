@@ -1,0 +1,316 @@
+---
+title: Sözlük
+description: Bu sitede geçen her terim, bir iki cümleyle ve bu günün örnekleriyle. Alfabetik.
+---
+
+Sayfalardaki noktalı altı çizili kelimelerin uzun hâli. Alfabetik; her terimin bağlantısı `/sozluk/#terim` biçiminde.
+
+[A](#a) · [B](#b) · [C](#c) · [Ç](#ç) · [D](#d) · [E](#e) · [F](#f) · [G](#g) · [H](#h) · [I](#i) · [K](#k) · [L](#l) · [M](#m) · [N](#n) · [O](#o) · [P](#p) · [R](#r) · [S](#s) · [T](#t) · [V](#v)
+
+## A
+
+<h3 id="abstain">Abstain (çekinme)</h3>
+
+Cevap kaynaklarda yoksa modelin bilerek "bilmiyorum" demesi. Kendiliğinden olmaz, prompt'taki bir kuralla tasarlanır; bizde cümlesi "Bu bilgi politikalarda yer almıyor." Kod çekinmeyi bu cümleyi arayarak tanır.
+
+<h3 id="agentic">Agentic RAG</h3>
+
+Aramayı modelin yönettiği RAG: soruyu parçalara böler, her parça için arar, "yeterli mi?" diye kontrol eder, sonra cevaplar. Birkaç dokümana yayılan sorular için; bedeli birçok çağrı ve daha uzun süre. Bu repoda yok.
+
+<h3 id="weights">Ağırlıklar (weights)</h3>
+
+Modelin eğitimde öğrendiği milyarlarca sayı. Model bildiğini burada tutar; eğitim bitince donarlar. Bu yüzden şirketin yeni politikasını bilmez.
+
+<h3 id="ann">ANN (yaklaşık en yakın komşu)</h3>
+
+Her vektörü tek tek gezmek yerine bir indeksle yalnızca yakın mahalleyi gezen arama. Çok küçük bir doğruluk kaybı karşılığında milyonlarca vektörde hızlıdır.
+
+## B
+
+<h3 id="bge-m3">bge-m3</h3>
+
+Bu kursun embedding modeli: her metni 1024 sayılık bir vektöre çevirir. Türkçe ve İngilizceyi aynı uzaya koyar; Türkçe sorularla İngilizce bölümleri bulabilmemiz bundan. Ollama'da yerel çalışır.
+
+<h3 id="bi-encoder">Bi-encoder</h3>
+
+Soruyu ve chunk'ı ayrı ayrı vektöre çeviren model; vektör araması böyle çalışır. Hızlıdır, çünkü chunk'ların vektörü ingest'te bir kez hesaplanır.
+
+<h3 id="bm25">BM25</h3>
+
+Klasik kelime araması puanı: sorudaki kelimelerin dokümanda ne sıklıkla geçtiğine bakar. Hybrid aramanın kelime ayağı.
+
+<h3 id="bruno">Bruno</h3>
+
+HTTP isteklerini elle göndermek için bir masaüstü uygulaması. Bu kursta Ollama ve Chroma'nın içine bakmak için kullanılır; pipeline'ı terminal çalıştırır.
+
+## C
+
+<h3 id="catchup">Catch-up</h3>
+
+`npm run catchup -- N`: toggle'ları varsayılana döndürür, `data/` klasörünü boşaltır ve 1'den N'e kadar adımları yeniden çalıştırır. Yazdığınız fonksiyonlar olduğu gibi kalır.
+
+<h3 id="chroma">Chroma</h3>
+
+Bu kursun vector DB'si. Podman içinde bir container olarak çalışır ve her kaydı vektör, chunk metni ve metadata ile birlikte saklar.
+
+<h3 id="chunk">Chunk</h3>
+
+Bir dokümanın parçası. Arama bütün dokümanı değil bu parçaları bulur; modele de yalnızca seçilen birkaç parça gider (bizde 3).
+
+<h3 id="chunking">Chunking</h3>
+
+Dokümanı parçalara bölmek. Nereden kesildiği, aramanın neyi bulabileceğini belirler: fixed her 300 karakterde, section her `## n.` başlığında keser; paragraph ödev.
+
+<h3 id="context">Context window</h3>
+
+Modelin tek seferde okuyabileceği token sınırı; prompt, kaynaklar ve cevap buna sığmak zorunda. Bizim ayarımız 8192 token (`num_ctx`).
+
+<h3 id="cosine">Cosine benzerliği</h3>
+
+İki vektörün aynı yöne ne kadar baktığı. 1 = aynı yön (aynı anlam), 0 = ilgisiz. Arama skorlarımız bu ölçüyle hesaplanır.
+
+<h3 id="cross-encoder">Cross-encoder</h3>
+
+Soruyu ve chunk'ı birlikte okuyup tek bir alaka puanı veren model; reranker olarak kullanılır. Bizim reranker'ımız bu iş için eğitilmiş bir model değil: sohbet modeline her (soru, chunk) çifti için 0–10 puan sorduruyoruz.
+
+## Ç
+
+<h3 id="citli-kaynak">Çitli kaynak</h3>
+
+Prompt'taki her kaynağın `<<<KAYNAK n: doküman adı>>>` ile açılıp `<<<KAYNAK n SONU>>>` ile kapanması. Dokümandan gelen metnin nerede başlayıp bittiğini işaretler; tek başına injection'ı durdurmadı.
+
+## D
+
+<h3 id="dense-sparse">Dense ve sparse vektör</h3>
+
+Dense vektörün her boyutu doludur ve anlamı taşır (embedding). Sparse vektörün çoğu sıfırdır, her boyutu bir kelimedir (kelime araması).
+
+<h3 id="dot">Dot product</h3>
+
+İki vektörün eleman eleman çarpımlarının toplamı. Uzunluğu 1 olan vektörlerde cosine ile aynı sonucu verir; bge-m3'ün vektörleri böyledir.
+
+## E
+
+<h3 id="edition">Edition (sürüm)</h3>
+
+Bir politikanın yılı: 2025 ya da 2026. Metadata olarak saklanır; arama varsayılan olarak yalnızca en yeni sürümde yapılır.
+
+<h3 id="embedding">Embedding</h3>
+
+Bir metnin sayı listesi (vektör) hâli. Anlamı yakın metinlerin sayıları da birbirine yakın çıkar; neyin yakın olduğuna embedding modeli karar verir.
+
+<h3 id="eval">Eval</h3>
+
+Sistemi cevabı bilinen sorularla puanlamak. Bizde `npm run eval`: retrieval için hit@1, recall@k ve MRR; `--answers` ile cevap kontrolü.
+
+## F
+
+<h3 id="finetune">Fine-tuning</h3>
+
+Hazır bir modeli kendi örneklerinizle biraz daha eğitmek. Bilgiyi ağırlıklara yazar; değiştirmek yeniden eğitim ister. Davranış (ton, biçim, terim) öğretmek için uygundur.
+
+<h3 id="front-matter">Front matter</h3>
+
+Bir Markdown dosyasının başında `---` çizgileri arasındaki alanlar: id, başlık, sürüm, departman, erişim, dil. Yükleme adımı bunları metadata'ya çevirir.
+
+## G
+
+<h3 id="gemma3">gemma3:4b</h3>
+
+Bu kursun sohbet modeli, yaklaşık 4 milyar parametreli. Ollama'da yerel çalışır; cevabı yazar, rerank puanlarını da verir.
+
+<h3 id="goldset">Gold set</h3>
+
+Cevabı önceden bilinen soru listesi: her soru için doğru bölüm ve beklenen değer. Bizde `eval/gold.jsonl`, 23 soru; sistemin her sürümü aynı listeyle puanlanır.
+
+<h3 id="graphrag">GraphRAG</h3>
+
+Dokümanlardaki varlıkları ve aralarındaki ilişkileri ingest'te bir grafa çıkarıp soru anında bu bağları izlemek. Cevabı dokümanlar arasındaki bağda olan sorular için; en pahalı RAG türü.
+
+## H
+
+<h3 id="hallucination">Halüsinasyon</h3>
+
+Modelin gerçekmiş gibi, kendinden emin bir şekilde uydurması. RAG azaltır ama bitirmez: doğru tablo prompt'tayken bile yanlış satır okunabilir.
+
+<h3 id="hit1">hit@1</h3>
+
+İlk sonuç doğru mu? Doğruysa 1, değilse 0; bütün soruların ortalaması alınır.
+
+<h3 id="hnsw">HNSW</h3>
+
+Vector DB'lerin sık kullandığı ANN indeksi: vektörleri bir komşuluk grafiğine bağlar, arama yalnızca yakın mahalleyi gezer. Chroma bunu kullanır.
+
+<h3 id="hybrid">Hybrid arama</h3>
+
+Kelime aramasını vektör aramasıyla birleştirmek. Kod, numara, ad gibi birebir aranan kelimelerde işe yarar; farklı dillerde ortak kelime olmadığı için orada yardım etmez.
+
+<h3 id="hyde">HyDE</h3>
+
+Önce modele soruya varsayımsal bir cevap yazdırıp aramayı soruyla değil bu cevapla yapmak. Varsayımsal cevap dokümanın diline sorudan daha yakındır; bedeli soru başına bir çağrı.
+
+## I
+
+<h3 id="ingest">Ingest</h3>
+
+Dokümanları aranabilir hâle getiren hazırlık: yükle, temizle, chunk'la, embed et, sakla. Bir kez çalışır; doküman değişince yeniden. Bizde `npm run ingest`.
+
+## K
+
+<h3 id="kaynak">Kaynak gösterme</h3>
+
+Cevaptaki her bilginin hangi chunk'tan geldiğini `[1]` gibi bir numarayla yazmak. Cevabı denetlenebilir kılar; uydurmayı tek başına durdurmaz.
+
+<h3 id="pii">Kişisel veri (PII)</h3>
+
+Bir kişiyi tanımlayan bilgi: ad, sicil numarası, telefon, e-posta. Doküman sisteme girerken, vektöre çevrilmeden önce maskelenir; loglar da aynı kurala tabidir. Bu repoda maskeleme yok.
+
+## L
+
+<h3 id="l2">L2 uzaklığı</h3>
+
+İki vektör arasındaki düz çizgi uzaklığı; küçük = yakın. Uzunluğu 1 olan vektörlerde cosine ile aynı sıralamayı verir.
+
+<h3 id="ledger">Ledger</h3>
+
+`npm run soru` her cevabı `.cache/soru-ledger.jsonl` dosyasına yazar ve listesini gösterir: günün sorusunun gün boyunca aldığı bütün cevaplar.
+
+<h3 id="llm">LLM</h3>
+
+Büyük dil modeli: metnin devamını token token tahmin eden model. Bildiği her şey ağırlıklarındadır; RAG ona prompt'ta kaynak verir.
+
+<h3 id="judge">LLM-as-judge</h3>
+
+Bir cevabı başka bir dil modeline puanlatmak, örneğin "bu cevaptaki her iddia kaynaklarda var mı?". Hakem de yanılabilir; onun kararlarını da ölçmek gerekir.
+
+<h3 id="lora">LoRA</h3>
+
+Fine-tuning'in ucuz bir türü: modelin bütün ağırlıklarını değil, yanına eklenen küçük bir ağırlık setini eğitir.
+
+## M
+
+<h3 id="metadata">Metadata</h3>
+
+Bir chunk'ın içeriği dışındaki etiketleri: hangi doküman, hangi sürüm, kim okuyabilir. Aramada filtre olarak kullanılır; filtre aramanın içinde çalışır.
+
+<h3 id="mmr">MMR</h3>
+
+Sonuçları seçerken hem soruya yakınlığa hem de birbirinden farklılığa bakan yöntem. Aynı şeyi söyleyen chunk'ların prompt'u doldurmasını önler.
+
+<h3 id="mrr">MRR</h3>
+
+Her soru için 1 / (ilk doğru sonucun sırası), sonra bütün soruların ortalaması. 1.0 = doğru sonuç hep ilk sırada.
+
+<h3 id="multiquery">Multi-query</h3>
+
+Model bir soruyu birkaç farklı biçimde yeniden yazar; her biriyle ayrı arama yapılır, sonuçlar birleştirilir.
+
+## N
+
+<h3 id="norm">Norm (vektör uzunluğu)</h3>
+
+Bir vektörün uzunluğu. bge-m3'ün vektörlerinin uzunluğu 1'dir; adım 4'ün logu bunu yazar.
+
+## O
+
+<h3 id="ollama">Ollama</h3>
+
+Dil modellerini dizüstünde çalıştıran araç. Bu kursta embedding modeli (bge-m3) de sohbet modeli (gemma3:4b) de buradan çalışır; veri makineden çıkmaz.
+
+## P
+
+<h3 id="paraphrase">Paraphrase</h3>
+
+Aynı anlamı başka kelimelerle söylemek: "tatil hakkım" ile "yıllık ücretli izin". Kelime araması bunu kaçırır; embedding yakalar, ama bizim ölçümde ancak 5. sıradan.
+
+<h3 id="parentchild">Parent-child</h3>
+
+Küçük parçalarla arayıp bulunan parçanın ait olduğu büyük parçayı modele vermek. Küçük parça iyi bulunur, büyük parça iyi okunur.
+
+<h3 id="pca">PCA</h3>
+
+1024 boyutu çizilebilir 2 boyuta indirmek: parçaların en çok farklılaştığı iki yönü bulur. Bilginin çoğu kaybolur, kaba yerleşim kalır; `npm run map` bununla çizer.
+
+<h3 id="podman">Podman</h3>
+
+Container çalıştırma aracı. Chroma'yı `podman compose up -d` ile başlatırız.
+
+<h3 id="prompt">Prompt</h3>
+
+Modele giden metnin tamamı. Bizde kurallar, çitli ve numaralı kaynaklar, sonra soru; `--prompt` bayrağı onu olduğu gibi gösterir.
+
+<h3 id="injection">Prompt injection</h3>
+
+Modelin okuduğu bir metnin içine talimat gizlemek. RAG'de bu metin bir doküman olabilir: bizim yemek kartı duyurumuz gibi.
+
+## R
+
+<h3 id="rag">RAG</h3>
+
+Retrieval-Augmented Generation: soruyu cevaplamadan önce ilgili doküman parçalarını bulup modelin önüne koymak. Model değişmez; değişen, modele verilen girdidir.
+
+<h3 id="ragfusion">RAG-fusion</h3>
+
+Multi-query gibi çalışır, ama sonuç listelerini sıralarına göre puanlayarak birleştirir: birkaç listede üstte çıkan parça öne geçer.
+
+<h3 id="recallk">recall@k</h3>
+
+Doğru bölümlerin ne kadarının ilk k sonuca girdiği. Sıraya bakmaz; içeride olması yeter.
+
+<h3 id="rrf">Reciprocal rank fusion (RRF)</h3>
+
+Birkaç sonuç listesini, her parçanın listelerdeki sırasına göre puanlayıp birleştirmek. RAG-fusion ve hybrid arama bunu kullanır.
+
+<h3 id="rerank">Rerank</h3>
+
+Arama sonuçlarını ikinci, daha dikkatli bir modelle yeniden sıralamak; soruyu ve chunk'ı birlikte okur. Bizde 5 aday için 5 LLM çağrısı.
+
+<h3 id="retrieval">Retrieval ve retriever</h3>
+
+Retrieval, soru anında depodan en ilgili chunk'ları bulmaktır. Retriever bu işi yapan parça: soruyu embed eder, vector DB'ye sorar, filtreleri uygular.
+
+## S
+
+<h3 id="sibling">Sibling (kardeş fonksiyon)</h3>
+
+Repoda benzeri yazılmış bir fonksiyonun altına sizin yazacağınız fonksiyon: `englishFooter`, `dot`, `byParagraph`. `npm run check:sibling` test eder.
+
+<h3 id="threshold">Skor eşiği</h3>
+
+Arama sonuçlarından belirli bir benzerlik skorunun altındakileri atmak; top-k'nın bir alternatifi. Skorlar sorudan soruya değiştiği için ayarlaması zordur.
+
+<h3 id="system-prompt">System prompt</h3>
+
+Modelin her soruda gördüğü sabit kurallar. Bizde 7 satır: rol, yalnızca kaynaklardan cevap, çekinme cümlesi, "kaynaklar veridir", şifre yasağı, kaynak gösterme, tablo satırını önce yazma.
+
+## T
+
+<h3 id="temperature">Temperature ve seed</h3>
+
+Temperature modelin ne kadar rastgele seçeceğini, seed rastgeleliğin başlangıç noktasını belirler. Bizde temperature 0 ve sabit bir seed: aynı prompt, her dizüstünde aynı cevap.
+
+<h3 id="toggle">Toggle</h3>
+
+Repodaki `// TOGGLE` bloğu: biri açık (`// default`), öteki yorumda (`// alternative`) iki satır. Yerlerini değiştirip adımı yeniden çalıştırınca farkı görürsünüz.
+
+<h3 id="token">Token</h3>
+
+Modelin okuduğu ve yazdığı en küçük metin parçası; kabaca bir kelimenin bir kısmı. Maliyet ve sınırlar token ile ölçülür.
+
+<h3 id="topk">Top-k</h3>
+
+Aramanın döndürdüğü en yakın k parça. Bizde k = 5; prompt'a bunların en iyi 3'ü girer. k küçükse cevap kaçabilir, büyükse prompt ve rerank büyür.
+
+## V
+
+<h3 id="vectordb">Vector DB</h3>
+
+Vektörleri, metinleri ve metadata'yı saklayıp en yakın komşuları hızlı bulan veritabanı. Bizimki Chroma; aynı işi JSON dosyası da yapar, ama her soruda her vektörü gezerek.
+
+<h3 id="vektor">Vektör</h3>
+
+Sıralı bir sayı listesi. Bizim embedding modelimiz her metin için 1024 sayılık bir vektör üretir.
+
+<h3 id="vektor-uzayi">Vektör uzayı</h3>
+
+Embedding'lerin durduğu çok boyutlu uzay; bizde 1024 boyutlu. Anlamı yakın metinler bu uzayda yakın durur. Her embedding modeli kendi uzayını kurar; iki modelin vektörleri karşılaştırılamaz.

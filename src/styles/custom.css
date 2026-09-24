@@ -1,0 +1,341 @@
+/* ── Tokens ─────────────────────────────────────────────────────────────────
+   Starlight's own tokens carry the page; these five carry the story in the diagrams:
+   accent = our pipeline, frozen = the model's weights, bad/good = before/after a fix,
+   gate = the failure that makes the next step necessary. Dark is Starlight's default. */
+:root {
+  --sl-content-width: 64rem;
+  --rag-accent: #3cc7b4;
+  --rag-accent-low: rgba(60, 199, 180, 0.16);
+  --rag-frozen: #8f95f2;
+  --rag-frozen-low: rgba(143, 149, 242, 0.16);
+  --rag-bad: #f0707a;
+  --rag-bad-low: rgba(240, 112, 122, 0.15);
+  --rag-good: #6fcf7f;
+  --rag-good-low: rgba(111, 207, 127, 0.15);
+  --rag-gate: #f2b84b;
+  --rag-gate-low: rgba(242, 184, 75, 0.16);
+  --rag-ink: var(--sl-color-white);
+  --rag-line: var(--sl-color-gray-3);
+  --rag-hand: 'Caveat', 'Comic Sans MS', cursive;
+}
+:root[data-theme='light'] {
+  --rag-accent: #0d8a7a;
+  --rag-accent-low: rgba(13, 138, 122, 0.12);
+  --rag-frozen: #4b52c9;
+  --rag-frozen-low: rgba(75, 82, 201, 0.1);
+  --rag-bad: #c62f3b;
+  --rag-bad-low: rgba(198, 47, 59, 0.1);
+  --rag-good: #1f8a33;
+  --rag-good-low: rgba(31, 138, 51, 0.1);
+  --rag-gate: #a86a00;
+  --rag-gate-low: rgba(168, 106, 0, 0.12);
+}
+
+/* Read from the back row. */
+.sl-markdown-content { font-size: 1.05rem; }
+.sl-markdown-content table { font-size: 0.95em; }
+
+/* ── Present mode (F) ───────────────────────────────────────────────────────
+   One shared screen: no sidebar, no header, no pager — the content fills the screen. */
+:root[data-present] header.header,
+:root[data-present] #starlight__sidebar,
+:root[data-present] .sidebar-pane,
+:root[data-present] starlight-menu-button,
+:root[data-present] .pagination-links,
+:root[data-present] footer .meta { display: none !important; }
+:root[data-present] {
+  --sl-nav-height: 0rem;
+  --sl-sidebar-width: 0rem;
+  --sl-content-width: 88rem;
+}
+:root[data-present] .main-frame { padding-top: 0; padding-inline-start: 0; }
+:root[data-present] .sl-markdown-content { font-size: 1.25rem; }
+:root[data-present] .deck-figure svg { max-width: 64rem; }
+
+/* ── Callouts ───────────────────────────────────────────────────────────── */
+.takeaway {
+  margin: 1.4rem 0;
+  padding: 0.8rem 1.1rem;
+  border-left: 4px solid var(--rag-accent);
+  border-radius: 0 0.45rem 0.45rem 0;
+  background: var(--rag-accent-low);
+  font-size: 1.12em;
+  font-weight: 600;
+}
+.gate {
+  margin: 1.2rem 0;
+  padding: 0.7rem 1rem;
+  border-left: 4px solid var(--rag-gate);
+  border-radius: 0 0.45rem 0.45rem 0;
+  background: var(--rag-gate-low);
+}
+.gate::before, .yourturn::before, .example::before, .dayq::before {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: 0.72em;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+}
+.gate::before { content: 'NE BOZULDU?'; color: var(--rag-gate); }
+.yourturn {
+  margin: 1.4rem 0;
+  padding: 0.8rem 1rem;
+  border: 1.5px dashed var(--rag-accent);
+  border-radius: 0.5rem;
+}
+.yourturn::before { content: 'SIRA SENDE'; color: var(--rag-accent); }
+.example {
+  margin: 1.4rem 0;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.5rem;
+  background: var(--sl-color-gray-6);
+}
+.example::before { content: 'ÖRNEK'; color: var(--sl-color-gray-3); }
+.dayq {
+  margin: 1rem 0 1.4rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--rag-frozen);
+  border-radius: 0.5rem;
+  background: var(--rag-frozen-low);
+}
+.dayq::before { content: 'GÜNÜN SORUSU'; color: var(--rag-frozen); }
+.dayq .q { font-weight: 600; }
+.dayq .a { margin-top: 0.3rem; font-family: var(--sl-font-system-mono); font-size: 0.92em; }
+.dayq .how { color: var(--sl-color-gray-3); font-size: 0.85em; }
+.faq { margin: 0.5rem 0; border-bottom: 1px solid var(--sl-color-gray-5); }
+.faq summary { padding: 0.5rem 0; cursor: pointer; font-weight: 600; }
+.faq > div { padding: 0 0 0.8rem 1rem; }
+
+/* ── Term popovers ─────────────────────────────────────────────────────── */
+.sl-markdown-content .term { border-bottom: 1.5px dotted var(--rag-accent); cursor: help; }
+.sl-markdown-content .term:hover,
+.sl-markdown-content .term:focus-visible,
+.sl-markdown-content .term[data-term-open] { background: var(--rag-accent-low); border-radius: 0.2rem; outline: none; }
+.term-popover {
+  position: fixed;
+  z-index: 90;
+  max-width: min(21rem, calc(100vw - 1.25rem));
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.4rem;
+  background: var(--sl-color-bg-nav);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+.term-popover[hidden] { display: none; }
+.term-popover strong { display: block; margin-bottom: 0.25rem; color: var(--sl-color-white); }
+.term-popover p { margin: 0; color: var(--sl-color-gray-2); }
+
+/* ── Figures ───────────────────────────────────────────────────────────────
+   Inline SVG drawn with the tokens above, so light and dark are the same drawing.
+   Labels use the hand-drawn face; lines stay clean. */
+.figure { margin: 1.4rem 0; text-align: center; }
+.figure svg { max-width: 100%; height: auto; }
+.figure figcaption { margin-top: 0.45rem; color: var(--sl-color-gray-3); font-size: 0.86em; }
+/* ── Step deck ──────────────────────────────────────────────────────────────
+   One idea per screen, walked with the arrow keys. The wiring is src/deck.js.
+
+   Until the script sets `data-ready` every step and every figure stays visible and
+   stacked, so the page still reads end to end without JavaScript, in print, and to
+   the search indexer. */
+.deck {
+  margin: 1.5rem 0;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.6rem;
+  background: var(--sl-color-bg-nav);
+  overflow: hidden;
+}
+
+.deck-head {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.55rem 0.9rem;
+  border-bottom: 1px solid var(--sl-color-gray-5);
+}
+.deck-count {
+  flex: none;
+  color: var(--sl-color-gray-3);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+}
+.deck-bar {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--sl-color-gray-5);
+}
+.deck-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--rag-accent);
+  transition: width 0.25s ease;
+}
+
+/* Stage and steps are each a one-cell grid with every child stacked in that cell, so
+   the deck is always as tall as its tallest step and nothing below it moves while the
+   reader advances. The inactive children are hidden with `visibility`, which keeps
+   their space but takes them out of the tab order and the accessibility tree.
+
+   Without `data-ready` none of this applies: the figures and steps are plain blocks,
+   all visible, in document order. */
+.deck-stage {
+  background: var(--sl-color-bg);
+  border-bottom: 1px solid var(--sl-color-gray-5);
+}
+.deck-figure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9rem;
+}
+.deck-figure svg {
+  width: 100%;
+  max-width: 40rem;
+  height: auto;
+}
+
+.deck-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.deck-list > li {
+  margin: 0;
+  padding: 0.9rem 1rem 1rem;
+}
+
+.deck[data-ready] .deck-stage,
+.deck[data-ready] .deck-list {
+  display: grid;
+}
+.deck[data-ready] .deck-figure,
+.deck[data-ready] .deck-list > li {
+  grid-area: 1 / 1;
+  visibility: hidden;
+}
+.deck[data-ready] .deck-figure.on,
+.deck[data-ready] .deck-list > li.on {
+  visibility: visible;
+}
+.deck-list > li > h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.12rem;
+  line-height: 1.3;
+}
+.deck-list > li > p {
+  margin: 0 0 0.55rem;
+  font-size: 0.97em;
+  line-height: 1.6;
+}
+.deck-list > li > p:last-child { margin-bottom: 0; }
+/* The line the step exists to leave behind. */
+.deck-list > li > p.key {
+  padding: 0.5rem 0.75rem;
+  border-left: 3px solid var(--rag-accent);
+  border-radius: 0 0.3rem 0.3rem 0;
+  background: var(--rag-accent-low);
+  font-weight: 600;
+}
+
+.deck-foot {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.6rem 0.9rem;
+  border-top: 1px solid var(--sl-color-gray-5);
+}
+.deck-btn {
+  flex: none;
+  padding: 0.35rem 0.85rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.35rem;
+  background: var(--sl-color-bg);
+  color: var(--sl-color-white);
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+.deck-btn:hover:not(:disabled) { border-color: var(--rag-accent); }
+.deck-btn:disabled { opacity: 0.35; cursor: default; }
+.deck-btn-primary {
+  border-color: var(--rag-accent);
+  background: var(--rag-accent);
+  color: var(--sl-color-black);
+  font-weight: 600;
+}
+.deck-dots {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  justify-content: center;
+}
+.deck-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--sl-color-gray-5);
+  cursor: pointer;
+}
+.deck-dot.done { background: var(--sl-color-gray-4); }
+.deck-dot.on {
+  background: var(--rag-accent);
+  transform: scale(1.35);
+}
+.deck-dot:focus-visible,
+.deck-btn:focus-visible { outline: 2px solid var(--rag-accent); outline-offset: 2px; }
+@media (max-width: 30rem) { .deck-dots { display: none; } }
+.deck-figure svg { max-width: 52rem; }
+
+/* Phase highlight: a figure shared by several steps dims all but the part being discussed. */
+.deck-figure[data-phase] .ph { opacity: 0.25; transition: opacity 0.2s ease; }
+.deck-figure[data-phase='1'] .ph1, .deck-figure[data-phase='2'] .ph2, .deck-figure[data-phase='3'] .ph3,
+.deck-figure[data-phase='4'] .ph4, .deck-figure[data-phase='5'] .ph5, .deck-figure[data-phase='6'] .ph6,
+.deck-figure[data-phase='7'] .ph7, .deck-figure[data-phase='8'] .ph8 { opacity: 1; }
+/* Cumulative reveal: parts arrive at data-from and stay (until data-to). The newest part is marked. */
+.deck[data-ready] .deck-figure [data-from] { opacity: 0; transition: opacity 0.3s ease; }
+.deck[data-ready] .deck-figure [data-from].shown { opacity: 1; }
+.deck[data-ready] .deck-figure [data-from].fresh .fbox { stroke: var(--rag-accent); stroke-width: 2.5; }
+@media (prefers-reduced-motion: reduce) {
+  .deck-figure[data-phase] .ph, .deck-bar i, .deck[data-ready] .deck-figure [data-from] { transition: none; }
+}
+
+/* Diagram vocabulary. */
+.figure text, .deck-figure text { font-family: var(--rag-hand); fill: var(--rag-ink); }
+.fbox { fill: var(--sl-color-gray-6); stroke: var(--rag-line); stroke-width: 1.5; }
+.fbox-on { fill: var(--rag-accent-low); stroke: var(--rag-accent); stroke-width: 2; }
+.fbox-frozen { fill: var(--rag-frozen-low); stroke: var(--rag-frozen); stroke-width: 2; }
+.fbox-bad { fill: var(--rag-bad-low); stroke: var(--rag-bad); stroke-width: 2; }
+.fbox-good { fill: var(--rag-good-low); stroke: var(--rag-good); stroke-width: 2; }
+.fbox-gate { fill: var(--rag-gate-low); stroke: var(--rag-gate); stroke-width: 2; }
+.flbl { font-size: 22px; font-weight: 700; }
+.fsub { font-size: 17px; fill: var(--sl-color-gray-2) !important; }
+.fmono { font-family: var(--sl-font-system-mono) !important; font-size: 13px; }
+.fnum { fill: var(--rag-accent) !important; font-weight: 700; }
+.fbad-t { fill: var(--rag-bad) !important; }
+.fgood-t { fill: var(--rag-good) !important; }
+.fgate-t { fill: var(--rag-gate) !important; }
+.ffrozen-t { fill: var(--rag-frozen) !important; }
+.farrow { stroke: var(--rag-line); stroke-width: 2; fill: none; }
+.farrow-on { stroke: var(--rag-accent); stroke-width: 2.5; fill: none; }
+.fhead { fill: var(--rag-line); }
+.fhead-on { fill: var(--rag-accent); }
+.fdot { fill: var(--rag-accent); }
+.faxis { stroke: var(--sl-color-gray-4); stroke-width: 1; }
+
+/* WhereAmI: the architecture strip at the top of every build page. */
+.whereami { margin: 0.2rem 0 1.2rem; }
+.whereami svg { width: 100%; height: auto; }
+.whereami .fbox { stroke-width: 1.2; }
+.whereami text { font-family: var(--rag-hand); fill: var(--rag-ink); font-size: 17px; }
+
+/* Starlight spaces sibling blocks in page content with margin-top; inside the deck's own furniture that
+   pushed the second dot and the "İleri" button off the row. */
+.sl-markdown-content .deck :is(.deck-head, .deck-foot, .deck-dots) > * { margin-top: 0; }

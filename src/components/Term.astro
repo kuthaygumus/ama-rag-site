@@ -1,0 +1,6 @@
+---
+/** A word the reader may not know. The definition comes from src/scripts/terms.js by `id`. */
+interface Props { id: string }
+const { id } = Astro.props;
+---
+<span class="term" data-term={id}><slot /></span>

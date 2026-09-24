@@ -1,0 +1,206 @@
+---
+title: Model bilmiyor, bildiğini sanıyor
+description: Kaynaksız sorulan günün sorusu, bir sonraki token makinesi ve bilginin durduğu yer — donmuş ağırlıklar.
+---
+import Deck from '../../../components/Deck.astro';
+import DeckFigure from '../../../components/DeckFigure.astro';
+import Step from '../../../components/Step.astro';
+import DaysQuestion from '../../../components/DaysQuestion.astro';
+import Gate from '../../../components/Gate.astro';
+import Example from '../../../components/Example.astro';
+import RepoCode from '../../../components/RepoCode.astro';
+import Log from '../../../components/Log.astro';
+import YourTurn from '../../../components/YourTurn.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Term from '../../../components/Term.astro';
+import Takeaway from '../../../components/Takeaway.astro';
+
+<DaysQuestion answer="50 iş günü (15 + 35)" how="bare model, no documents" />
+
+<Gate>
+Model, Kraken Air'in izin politikasını hiç görmedi. Yine de günün sorusuna tereddüt etmeden bir sayı söyledi:
+50 iş günü. Politikadaki sayı başka.
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure" stage="a">
+    <svg viewBox="0 0 1000 360" role="img" aria-label="Soru, doküman verilmemiş model ve modelin uydurduğu cevap">
+      <defs>
+        <marker id="mb-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker>
+      </defs>
+      <rect x="20" y="40" width="330" height="100" rx="14" class="fbox" />
+      <text x="185" y="82" text-anchor="middle" class="flbl">7 yıllık bir çalışanın</text>
+      <text x="185" y="112" text-anchor="middle" class="flbl">yıllık izni kaç iş günü?</text>
+      <path d="M352 90 H402" class="farrow" marker-end="url(#mb-a)" />
+      <rect x="410" y="40" width="180" height="100" rx="14" class="fbox fbox-frozen" />
+      <text x="500" y="82" text-anchor="middle" class="flbl">gemma3:4b</text>
+      <text x="500" y="110" text-anchor="middle" class="fsub">hiç doküman yok</text>
+      <path d="M592 90 H642" class="farrow" marker-end="url(#mb-a)" />
+      <rect x="650" y="40" width="330" height="100" rx="14" class="fbox" />
+      <text x="815" y="82" text-anchor="middle" class="flbl">50 iş günü</text>
+      <text x="815" y="110" text-anchor="middle" class="fsub">(15 gün ücretli + 35 gün yıllık)</text>
+      <g data-from="2">
+        <text x="30" y="205" class="fsub">cevap token token yazılır — her adımda en olası devam:</text>
+        <rect x="30" y="222" width="140" height="54" rx="10" class="fbox" />
+        <text x="100" y="256" text-anchor="middle" class="flbl">… izni</text>
+        <path d="M172 249 H192" class="farrow" marker-end="url(#mb-a)" />
+        <rect x="200" y="222" width="150" height="54" rx="10" class="fbox" />
+        <text x="275" y="256" text-anchor="middle" class="flbl">genellikle</text>
+        <path d="M352 249 H372" class="farrow" marker-end="url(#mb-a)" />
+        <rect x="380" y="222" width="130" height="54" rx="10" class="fbox fbox-gate" />
+        <text x="445" y="256" text-anchor="middle" class="flbl">50</text>
+        <path d="M512 249 H532" class="farrow" marker-end="url(#mb-a)" />
+        <rect x="540" y="222" width="110" height="54" rx="10" class="fbox" />
+        <text x="595" y="256" text-anchor="middle" class="flbl">iş</text>
+        <path d="M652 249 H672" class="farrow" marker-end="url(#mb-a)" />
+        <rect x="680" y="222" width="120" height="54" rx="10" class="fbox" />
+        <text x="740" y="256" text-anchor="middle" class="flbl">günü</text>
+        <text x="830" y="256" class="flbl">…</text>
+        <text x="445" y="305" text-anchor="middle" class="fsub fgate-t">bir sayı gelmesi olası;</text>
+        <text x="445" y="328" text-anchor="middle" class="fsub fgate-t">doğru sayı olduğunu kontrol eden yok</text>
+      </g>
+      <g data-from="5">
+        <path d="M665 128 L965 52" class="fbox-bad" />
+        <text x="815" y="180" text-anchor="middle" class="flbl fgood-t">politika: 22 iş günü</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <DeckFigure slot="figure" stage="b">
+    <svg viewBox="0 0 1000 400" role="img" aria-label="Modelin ağırlıkları: eğitimde ayarlanır, sonra donar; şirket politikası içlerinde yok">
+      <defs>
+        <marker id="mb-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker>
+        <marker id="mb-on" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead-on" /></marker>
+      </defs>
+      <rect x="330" y="95" width="340" height="200" rx="14" class="fbox fbox-frozen" />
+      <text x="500" y="130" text-anchor="middle" class="flbl">gemma3:4b</text>
+      <rect x="365" y="148" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="393" y="148" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="421" y="148" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="449" y="148" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="477" y="148" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="505" y="148" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="533" y="148" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="561" y="148" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="589" y="148" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="617" y="148" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="365" y="176" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="393" y="176" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="421" y="176" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="449" y="176" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="477" y="176" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="505" y="176" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="533" y="176" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="561" y="176" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="589" y="176" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="617" y="176" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="365" y="204" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="393" y="204" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="421" y="204" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="449" y="204" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="477" y="204" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="505" y="204" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="533" y="204" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="561" y="204" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="589" y="204" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="617" y="204" width="20" height="20" rx="3" class="fbox-frozen" />
+      <text x="500" y="256" text-anchor="middle" class="fsub">ağırlıklar: yaklaşık 4 milyar sayı</text>
+      <text x="500" y="279" text-anchor="middle" class="fsub">bildiği her şey bu sayılara dağılmış</text>
+      <g data-from="3">
+        <rect x="30" y="95" width="220" height="90" rx="12" class="fbox" />
+        <text x="140" y="132" text-anchor="middle" class="flbl">eğitim verisi</text>
+        <text x="140" y="160" text-anchor="middle" class="fsub">internet · kitap · kod</text>
+        <path d="M252 140 H322" class="farrow" marker-end="url(#mb-b)" />
+        <text x="287" y="128" text-anchor="middle" class="fsub">eğitim</text>
+      </g>
+      <g data-from="4">
+        <text x="500" y="78" text-anchor="middle" class="flbl ffrozen-t">eğitim bitti: sayılar dondu</text>
+        <rect x="30" y="235" width="220" height="90" rx="12" class="fbox fbox-bad" />
+        <text x="140" y="272" text-anchor="middle" class="flbl">Kraken Air</text>
+        <text x="140" y="300" text-anchor="middle" class="fsub">izin politikası</text>
+        <path d="M252 280 H300" class="farrow" stroke-dasharray="6 6" />
+        <text x="314" y="288" text-anchor="middle" class="flbl fbad-t">✗</text>
+        <text x="290" y="348" text-anchor="middle" class="fsub fbad-t">eğitimde yoktu</text>
+        <rect x="760" y="95" width="210" height="80" rx="12" class="fbox" />
+        <text x="865" y="130" text-anchor="middle" class="flbl">cevap</text>
+        <text x="865" y="157" text-anchor="middle" class="fsub">sayılar okunur, yazılmaz</text>
+        <path d="M672 135 H752" class="farrow" marker-end="url(#mb-b)" />
+        <rect x="760" y="225" width="210" height="80" rx="12" class="fbox" />
+        <text x="865" y="260" text-anchor="middle" class="flbl">soru</text>
+        <text x="865" y="287" text-anchor="middle" class="fsub">her soruda aynı sayılar</text>
+        <path d="M758 265 H680" class="farrow" marker-end="url(#mb-b)" />
+      </g>
+      <g data-from="6">
+        <text x="30" y="219" class="fsub ffrozen-t">① ağırlıklara yaz: fine-tune</text>
+        <path d="M140 327 V378 H865 V315" class="farrow-on" marker-end="url(#mb-on)" />
+        <text x="500" y="368" text-anchor="middle" class="fsub fnum">② soruyla birlikte önüne koy: RAG</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="Kaynaksız soru" stage="a">
+    Günün sorusunu modele tek başına sorduk. Tereddüt etmedi: 50 iş günü, üstelik hesabıyla (15 + 35). Model Kraken Air'in politikasını hiç görmedi; bu sayı o politikadan gelmiyor.
+  </Step>
+  <Step title="Nasıl yazdı?" stage="a">
+    Model cevabı <Term id="token">token</Term> token yazar: her adımda, o ana kadarki metne en olası devamı seçer. "Kaç iş günü?" sorusundan sonra metinlerde hep bir sayı gelir. Sayının doğruluğunu kontrol eden bir adım yok.
+  </Step>
+  <Step title="Bilgi nerede duruyor?" stage="b">
+    Modelin bildiği her şey <Term id="weights">ağırlıklarında</Term>: gemma3:4b'de yaklaşık 4 milyar sayı. Eğitim bu sayıları, metni daha iyi tahmin edecek şekilde azar azar ayarlar. Bilgi tek bir yerde değil, sayılara dağılmış.
+  </Step>
+  <Step title="Eğitim bitti, sayılar dondu" stage="b">
+    Eğitim bitince ağırlıklar dondurulur. Her soru onları okur, hiçbiri yazmaz; sohbet de modele bir şey öğretmez. Kraken Air'in politikası eğitim verisinde yoktu, yani bu sayılarda da yok.
+  </Step>
+  <Step title="Bilmediğini bilmiyor" stage="a">
+    Politika 22 iş günü diyor. Modelin içinde "bunu bilmiyorum" diye yanan bir ışık yok: uydurulan cevap da doğru cevap kadar akıcı çıkar. Buna <Term id="hallucination">halüsinasyon</Term> denir.
+  </Step>
+  <Step title="Bilgiyi modele vermenin iki yolu" stage="b">
+    Ya ağırlıklara yeniden yazarız (<Term id="finetune">fine-tune</Term>) ya da her soruda ilgili metni soruyla birlikte modelin önüne koyarız (<Term id="rag">RAG</Term>). Bu bölümün geri kalanı bu seçim üzerine.
+  </Step>
+</Deck>
+
+<Example>
+Model: "… 7 yıllık bir çalışanın yıllık izni genellikle **50 iş günü** (15 gün ücretli izin + 35 gün yıllık izin)
+olur." Politikanın kendisi `corpus/2025/hr-leave.md` içinde; her kıdem yılı bir satır:
+
+<RepoCode file="corpus/2025/hr-leave.md" from="| Kıdem (tam yıl)" to="15 ve üzeri" mark={["| 7 | 22 |"]} />
+</Example>
+
+Adım 0'ın bütün kodu: modele soruyu verir, başka hiçbir şey vermez.
+
+<RepoCode file="src/steps/0-bare.ts" />
+
+<Log name="00-bare" title="npm run step -- 0" />
+
+`OUT` satırındaki prompt token sayısına dikkat: modele giden metnin tamamı bu kadar kısa. RAG'de bu sayı
+büyüyecek, çünkü soruyla birlikte kaynaklar da gidecek.
+
+<YourTurn>
+Politikada cevabı olan başka bir soruyu modele kaynaksız sorun:
+
+```sh
+npm run step -- 0 "Seyahat dönüşü fişlerimi en geç kaç gün içinde sisteme yüklemem gerekiyor?"
+```
+
+Sonra cevabı politikayla karşılaştırın: `corpus/2025/travel-expenses.md`, 7. bölüm. Model ne kadar emin
+konuşuyor?
+</YourTurn>
+
+## Sık sorulan
+
+<FAQ q="Hiç ayar yapmadan “bilmiyorum” diyen model var mı?">
+Güvenilir biçimde yok. Bazı modeller bazen çekimser kalır, ama hangi soruda kalacağını önceden bilemezsiniz.
+RAG'de "bilmiyorum" **tasarlanır**: retrieval'da bir skor eşiği (yeterince yakın parça yoksa soruyu modele hiç
+götürmemek), prompt'ta bir kural ("cevap kaynaklarda yoksa şunu yaz") ve kodda bir kontrol (cevap bir kaynağa
+dayanıyor mu). Bu repoda prompt kuralı ve onu yakalayan kod var; ikisi de
+[F · Cevap üretimi](/adim-adim/f-cevap/) sayfasında. Bedeli de var: kural fazla sıkıysa doğru cevaplar da susar.
+</FAQ>
+
+<FAQ q="Daha büyük bir model bilir mi?">
+Kamuya açık konularda daha çok şey bilir. Kraken Air kurgu; bir şirketin iç dokümanları da hiçbir modelin
+eğitim verisinde yoktur. Büyük model de bu soruda ya uydurur ya susar; hangisini yapacağını da siz seçemezsiniz.
+</FAQ>
+
+<FAQ q="Sohbet ederken öğrenmiyor mu?">
+Hayır. Önceki mesajlar her seferinde prompt'a yeniden eklenir; bu yüzden hatırlıyor gibi görünür. Sohbet
+bitince hiçbir şey kalmaz, ağırlıklar değişmez.
+</FAQ>
+
+<Takeaway>Bilmiyor — ve bilmediğini bilmiyor.</Takeaway>

@@ -1,0 +1,120 @@
+---
+title: RAG nedir?
+description: Retrieval-Augmented Generation tek cümlede — neyi çözer, neyi çözmez.
+---
+import Deck from '../../../components/Deck.astro';
+import DeckFigure from '../../../components/DeckFigure.astro';
+import Step from '../../../components/Step.astro';
+import Gate from '../../../components/Gate.astro';
+import RepoCode from '../../../components/RepoCode.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Term from '../../../components/Term.astro';
+import Takeaway from '../../../components/Takeaway.astro';
+
+<Gate>
+Bir önceki sayfada aynı model, önüne doğru parçalar konunca doğru cevabı kaynağıyla verdi. Bu düzeneğin bir
+adı var; adı da ne yaptığını söylüyor.
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 1000 330" role="img" aria-label="RAG: Retrieval getirir, Augmented prompt'a ekler, Generation model cevabı yazar">
+      <defs>
+        <marker id="rn-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker>
+      </defs>
+      <rect x="15" y="120" width="115" height="70" rx="12" class="fbox" />
+      <text x="72" y="162" text-anchor="middle" class="flbl">soru</text>
+      <path d="M132 155 H157" class="farrow" marker-end="url(#rn-h)" />
+      <g class="ph ph1">
+        <rect x="165" y="90" width="235" height="130" rx="14" class="fbox fbox-on" />
+        <text x="282" y="128" text-anchor="middle" class="flbl">R · Retrieval</text>
+        <text x="282" y="156" text-anchor="middle" class="fsub">getir: en ilgili parçalar</text>
+        <text x="282" y="190" text-anchor="middle" class="fsub">embed · ara · rerank</text>
+        <rect x="165" y="262" width="235" height="52" rx="10" class="fbox" />
+        <text x="282" y="295" text-anchor="middle" class="flbl">vector DB</text>
+        <path d="M282 260 V228" class="farrow" marker-end="url(#rn-h)" />
+        <text x="412" y="295" class="fsub">ingest ile bir kere doldu</text>
+      </g>
+      <path d="M402 155 H427" class="farrow" marker-end="url(#rn-h)" />
+      <g class="ph ph2">
+        <rect x="435" y="90" width="235" height="130" rx="14" class="fbox fbox-on" />
+        <text x="552" y="128" text-anchor="middle" class="flbl">A · Augmented</text>
+        <text x="552" y="156" text-anchor="middle" class="fsub">zenginleştir: prompt'a ekle</text>
+        <text x="552" y="190" text-anchor="middle" class="fsub">kurallar + kaynaklar + soru</text>
+      </g>
+      <path d="M672 155 H697" class="farrow" marker-end="url(#rn-h)" />
+      <g class="ph ph3">
+        <rect x="705" y="90" width="175" height="130" rx="14" class="fbox fbox-frozen" />
+        <text x="792" y="128" text-anchor="middle" class="flbl">G · Generation</text>
+        <text x="792" y="156" text-anchor="middle" class="fsub">üret: model yazar</text>
+        <text x="792" y="190" text-anchor="middle" class="fsub">aynı gemma3:4b</text>
+      </g>
+      <path d="M882 155 H902" class="farrow" marker-end="url(#rn-h)" />
+      <rect x="908" y="112" width="84" height="86" rx="12" class="fbox" />
+      <text x="950" y="150" text-anchor="middle" class="flbl">cevap</text>
+      <text x="950" y="176" text-anchor="middle" class="fsub">+ [1]</text>
+    </svg>
+  </DeckFigure>
+  <Step title="Adın açılımı">
+    <Term id="rag">RAG</Term> = Retrieval-Augmented Generation. Türkçesiyle: getirerek zenginleştirilmiş üretim. Üç kelime, sırayla çalışan üç iş; üçü de bugün bir dosya olarak karşınıza çıkacak.
+  </Step>
+  <Step title="R · Retrieval: getir" phase="1">
+    Soru, dokümanlardan önceden hazırlanmış parçalar arasında aranır ve en ilgili birkaçı seçilir. Bizde üç iş: soruyu embed et, vector DB'de ara, <Term id="rerank">rerank</Term> ile yeniden sırala.
+  </Step>
+  <Step title="A · Augmented: zenginleştir" phase="2">
+    Seçilen parçalar numaralanıp sorunun önüne konur, üstüne kurallar eklenir. Modelin gördüğü girdi artık yalnızca soru değil: kurallar, kaynaklar ve soru.
+  </Step>
+  <Step title="G · Generation: üret" phase="3">
+    Model cevabı bu girdiden yazar ve kullandığı kaynağın numarasını ekler. Model, başlamadan önce kaynaksız sorduğumuz aynı gemma3:4b; ağırlıklarına kimse dokunmadı.
+  </Step>
+  <Step title="Tek cümlede">
+    <p class="key">RAG, soruyu cevaplamadan önce ilgili doküman parçalarını bulup modelin önüne koyan ve cevabı bu parçalardan yazdıran düzenektir.</p>
+  </Step>
+</Deck>
+
+Aynı üç iş kodda üç satır. `npm run ask` bir soruyu adım 6, 7 ve 8'den geçirir:
+
+<RepoCode file="src/cli/ask.ts" />
+
+## Neyi çözer?
+
+| Sorun | RAG ne yapar | Bugün nerede görüyoruz |
+|---|---|---|
+| **Özel veri** | Modelin hiç görmediği şirket dokümanını her soruda önüne koyar | [RAG'siz / RAG'li](/neden-rag/ragsiz-ragli/) |
+| **Güncellik** | Yeni sürüm gelince yeniden ingest; eğitim yok | [Veri değişince](/adim-adim/veri-degisince/) |
+| **Kaynak gösterme** | Cevap, hangi parçadan geldiğini `[1]` ile söyler | [F · Cevap üretimi](/adim-adim/f-cevap/) |
+| **Erişim kontrolü** | Yalnızca İK'ya açık doküman, aramada filtreyle dışarıda kalır | [E · Retrieval ve rerank](/adim-adim/e-retrieval-rerank/) · [Güvenlik](/uretim/guvenlik/) |
+| **Uydurma** | Kaynakta yoksa "bilmiyorum" demesi tasarlanabilir | [F · Cevap üretimi](/adim-adim/f-cevap/) |
+
+## Neyi çözmez?
+
+- **Stil ve format.** Modelin nasıl konuştuğu RAG'in işi değil: prompt ya da
+  [fine-tune](/neden-rag/rag-mi-fine-tune-mu/).
+- **Hesap.** Model yine bir dil modeli; kaynaktaki sayılarla işlem yaparken yanılabilir. Bunu bugün ölçmedik.
+- **Kötü veri.** Yanlış, eski ya da birbiriyle çelişen doküman, doğru getirilse de yanlış cevap üretir.
+- **Modelin okuma hatası.** Doğru parça önündeyken bile model yanlış satırı okuyabilir. Bu corpus'ta ölçtük:
+  [Sınırlar ve RAG türleri](/her-derde-deva/sinirlar-ve-turler/).
+
+Bugün kurduğumuz, RAG'in en sade biçimi (naive RAG) artı rerank. Başka türleri ve her birinin hangi hatayı
+düzelttiği [Sınırlar ve RAG türleri](/her-derde-deva/sinirlar-ve-turler/) sayfasında.
+
+## Sık sorulan
+
+<FAQ q="RAG demek vector DB demek mi?">
+Hayır. "Getir" adımı anahtar kelime araması, bir SQL sorgusu ya da bir API çağrısı da olabilir. Vector araması
+yaygın, çünkü kelimeyi değil anlamı arar; ne kadar iyi aradığını [C · Embedding](/adim-adim/c-embedding/)
+sayfasında ölçüyoruz. Kelime aramasıyla anlam aramasını birleştirene hybrid arama denir.
+</FAQ>
+
+<FAQ q="RAG bir kütüphane mi, bir ürün mü?">
+Bir düzenek, bir tasarım kalıbı. Bugün her adımı kendimiz, düz TypeScript'le yazıyoruz; framework'ler aynı
+adımları paketler. Adımları bir kez elle kurmak, framework'ün içinde ne olduğunu görmeyi sağlar.
+</FAQ>
+
+<FAQ q="RAG halüsinasyonu bitirir mi?">
+Azaltır, bitirmez. Model önündeki metinden yazmaya yönlendirilir, ama metni yanlış okuyabilir ya da kaynağın
+söylemediği bir şeyi ekleyebilir. Bu yüzden cevaplar kaynak numarası taşır ve kalite bir soru setiyle ölçülür:
+[Kaliteyi ölçmek](/uretim/kaliteyi-olcmek/).
+</FAQ>
+
+<Takeaway>RAG modeli değiştirmez, modele verilen girdiyi değiştirir.</Takeaway>

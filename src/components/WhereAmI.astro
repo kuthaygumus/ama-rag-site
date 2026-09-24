@@ -1,0 +1,36 @@
+---
+/**
+ * The architecture as a strip: the ingest lane (runs once) above, the question lane (runs every time)
+ * below. `at` lists the boxes to light, space-separated:
+ * load clean chunk embed store question qembed search rerank prompt answer
+ */
+interface Props { at: string }
+const lit = new Set(Astro.props.at.split(/\s+/));
+const X = (col: number) => 15 + col * 118;
+const W = 105;
+const top: [string, string, number][] = [["load", "Yükle", 0], ["clean", "Temizle", 1], ["chunk", "Chunk'la", 2], ["embed", "Embed", 3], ["store", "Vector DB", 4]];
+const bottom: [string, string, number][] = [["question", "Soru", 2], ["qembed", "Embed", 3], ["search", "Ara", 4], ["rerank", "Rerank", 5], ["prompt", "Prompt", 6], ["answer", "Cevap", 7]];
+const cls = (id: string) => (lit.has(id) ? "fbox fbox-on" : "fbox");
+---
+<div class="whereami" aria-label="Pipeline'da neredeyiz">
+  <svg viewBox="0 0 960 165" role="img">
+    <text x="15" y="14" class="fsub">bir kere (ingest)</text>
+    <text x="15" y="138" class="fsub">her soruda</text>
+    {top.map(([id, label, c], i) => (
+      <g>
+        <rect x={X(c)} y="22" width={W} height="42" rx="8" class={cls(id)} />
+        <text x={X(c) + W / 2} y="49" text-anchor="middle">{label}</text>
+        {i < top.length - 1 && <path d={`M${X(c) + W + 2} 43 H${X(c + 1) - 4}`} class="farrow" marker-end="url(#wa)" />}
+      </g>
+    ))}
+    {bottom.map(([id, label, c], i) => (
+      <g>
+        <rect x={X(c)} y="110" width={W} height="42" rx="8" class={cls(id)} />
+        <text x={X(c) + W / 2} y="137" text-anchor="middle">{label}</text>
+        {i < bottom.length - 1 && <path d={`M${X(c) + W + 2} 131 H${X(c + 1) - 4}`} class="farrow" marker-end="url(#wa)" />}
+      </g>
+    ))}
+    <path d={`M${X(4) + W / 2} 108 V68`} class="farrow" marker-end="url(#wa)" />
+    <defs><marker id="wa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker></defs>
+  </svg>
+</div>
