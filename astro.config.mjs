@@ -29,6 +29,7 @@ export default defineConfig({
       ],
       social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/kuthaygumus/ama-rag-workshop' }],
       sidebar: [
+        { slug: 'index', label: 'Ana sayfa' },
         { label: 'Başlamadan', items: items([['baslamadan/kurulum', 'Kurulum'], ['baslamadan/gunun-sorusu', 'Günün sorusu']]) },
         {
           label: '1 · Neden RAG?',
