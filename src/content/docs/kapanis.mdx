@@ -209,12 +209,13 @@ Doğru chunk prompt'taysa suçlu üretim adımı: önce prompt'a, sonra modele b
 Bütün kod, corpus, gold set ve bu sitedeki her log: [github.com/kuthaygumus/ama-rag-workshop](https://github.com/kuthaygumus/ama-rag-workshop). Her şey dizüstünüzde çalışıyor; bugün kurduğunuz pipeline sizde kalıyor.
 
 <YourTurn>
-1. **İlk ödev: rerank'ın faydasını ölçün.** `src/steps/7-rerank.ts` içindeki `TOGGLE rerank` bloğunda `false` satırını açın, `npm run eval -- --answers` koşun. q02'nin cevabı ve 23/23 ne oldu? Toggle'ı geri alın.
-2. **Ödev: `byParagraph`.** `src/steps/3-chunk.ts` içindeki `HOMEWORK` notunun altındaki fonksiyonu yazın: dokümanı paragraflardan kesin, en fazla `max` karakterlik paketlere doldurun, her chunk'ın önüne başlık önekini koyun. Kontrol: `npm run check:sibling`.
-3. Henüz yazmadıysanız öteki iki alıştırma: `englishConfidential` kuralı (bir RegExp, `src/steps/2-clean.ts`) ve `dot` fonksiyonu (`src/lib/similarity.ts`). Aynı komut kontrol eder.
-4. `byParagraph`'ı `ChunkerName` tipine ve `CHUNKERS` listesine ekleyin, toggle'a üçüncü bir satır yazın, yeniden ingest edin ve `npm run eval` ile section'la karşılaştırın.
-5. `eval/gold.jsonl` dosyasına kendi sorularınızı ekleyin; özellikle sistemi zorlayacaklarını.
-6. Bu sitede "Ölçmedik" yazan başka bir şeyi seçin ve ölçün: `--k 10`, başka bir `CHAT_MODEL`.
+1. **Defterinize bakın.** `npm run question`: günün sorusuna sabahtan beri verilen bütün cevaplar alt alta. Yukarıdaki log'la karşılaştırın.
+2. **İlk ödev: rerank'ın faydasını ölçün.** `src/steps/7-rerank.ts` içindeki `TOGGLE rerank` bloğunda `false` satırını açın, `npm run eval -- --answers` koşun. q02'nin cevabı ve 23/23 ne oldu? Toggle'ı geri alın.
+3. **Ödev: `byParagraph`.** `src/steps/3-chunk.ts` içindeki `HOMEWORK` notunun altındaki fonksiyonu yazın: dokümanı paragraflardan kesin, en fazla `max` karakterlik paketlere doldurun, her chunk'ın önüne başlık önekini koyun. Kontrol: `npm run check:sibling`.
+4. Henüz yazmadıysanız öteki iki alıştırma: `englishConfidential` kuralı (bir RegExp, `src/steps/2-clean.ts`) ve `dot` fonksiyonu (`src/lib/similarity.ts`). Aynı komut kontrol eder.
+5. `byParagraph`'ı `ChunkerName` tipine ve `CHUNKERS` listesine ekleyin, toggle'a üçüncü bir satır yazın, yeniden ingest edin ve `npm run eval` ile section'la karşılaştırın.
+6. `eval/gold.jsonl` dosyasına kendi sorularınızı ekleyin; özellikle sistemi zorlayacaklarını.
+7. Bu sitede "Ölçmedik" yazan başka bir şeyi seçin ve ölçün: `--k 10`, başka bir `CHAT_MODEL`.
 </YourTurn>
 
 <Takeaway>Model bütün gün aynıydı; cevabı değiştiren her şey pipeline'daydı.</Takeaway>
