@@ -96,12 +96,12 @@ Depo dolu. Şimdi soru soruyoruz: soru vektöre dönüşüyor, depodan en yakın
         <path d="M472 211 L548 325" class="fbox-bad" />
         <path d="M472 285 L548 171" class="farrow-on" />
         <path d="M472 325 L548 285" class="farrow" />
-        <text x="765" y="384" text-anchor="middle" class="fsub fgood-t">§7 prompt'a girdi</text>
-        <text x="765" y="410" text-anchor="middle" class="fsub fbad-t">§5 prompt'tan çıktı</text>
+        <text x="765" y="384" text-anchor="middle" class="fsub fgood-t">§5 (ilgisiz) prompt'tan çıktı</text>
+        <text x="765" y="410" text-anchor="middle" class="fsub fbad-t">§7 girdi: rel 9, ama cevap değil</text>
       </g>
       <g data-from="8">
-        <text x="765" y="452" text-anchor="middle" class="fsub">arama: 6 ms · rerank: 5 çağrı, 2134 ms</text>
-        <text x="765" y="478" text-anchor="middle" class="fsub">(bu Mac'te ölçüldü)</text>
+        <text x="765" y="452" text-anchor="middle" class="fsub">arama: 7 ms · rerank: 5 çağrı, 2243 ms</text>
+        <text x="765" y="478" text-anchor="middle" class="fsub">(M serisi bir Mac'te ölçüldü)</text>
       </g>
     </svg>
   </DeckFigure>
@@ -147,7 +147,7 @@ Depo dolu. Şimdi soru soruyoruz: soru vektöre dönüşüyor, depodan en yakın
     5 chunk, hepsi Yıllık İzin Politikası'ndan. Cevabı taşıyan §3, yani izin tablosu, ilk sırada. İyi haber; ama skorlara bakın.
   </Step>
   <Step title="Skorlar neredeyse eşit" stage="list">
-    Birinci 0.631, beşinci 0.624: fark 0.007. Her hr-leave chunk'ı aynı başlıkla başlıyor, `[Yıllık İzin Politikası › …]`, soru da "yıllık izin" diyor. Sırayı bu ortak ön ek belirliyor; §3'ün birinciliği pamuk ipliğine bağlı.
+    Birinci 0.631, beşinci 0.624: fark 0.007. Her hr-leave chunk'ı `[Yıllık İzin Politikası › …]` ön ekiyle başlıyor, soru da "yıllık izin" diyor. Ön ek sırayı belirlemiyor, hepsini soruya eşit yaklaştırıyor; sırayı küçük içerik farkları belirliyor. §3'ün birinciliği pamuk ipliğine bağlı.
   </Step>
   <Step title="Kesme çizgisi: k" stage="list">
     k = 5: 6. sıradaki hr-working-hours §5 (0.607) dışarıda kaldı. k küçükse cevap kaçabilir, büyükse sonraki adımlara gürültü taşınır. En yakın k tanesini almaya <Term id="topk">top-k</Term> denir.
@@ -159,22 +159,16 @@ Depo dolu. Şimdi soru soruyoruz: soru vektöre dönüşüyor, depodan en yakın
     Vektörler ayrı ayrı yapıldı: soru tek başına, chunk tek başına. <Term id="rerank">Reranker</Term> her (soru, chunk) çiftini birlikte okur ve 0–10 arası puan verir. Bizde bu işi gemma3:4b yapıyor: 5 chunk, 5 çağrı.
   </Step>
   <Step title="Rerank sonrası" stage="list">
-    §3 10 puanla yerinde. §7 (izin devri) 4. sıradan 2. sıraya çıktı; §5 0 puanla 3. sıradan 5. sıraya indi ve prompt'tan çıktı. 0.007'lik farkların yerini 0 ile 10 arasında net kararlar aldı.
+    §3 10 puanla yerinde; §5 (mazeret izinleri) 0 puanla 5. sıraya indi ve prompt'tan çıktı. 0.007'lik farkların yerini net kararlar aldı. Ama reranker da yanılır: §7 (izin devri) 9 puanla 2. sıraya çıktı, oysa soruyu cevaplamıyor.
   </Step>
   <Step title="Bedeli" stage="list">
-    Arama 6 ms sürdü; rerank 2134 ms. Bu soruda cevap değişmedi: iki yolda da 22 iş günü. Rerank'ın asıl işi, doğru chunk ilk 3'ün dışında kaldığında başlıyor.
+    Arama 7 ms sürdü; rerank 2243 ms. Bu soruda cevap değişmedi: iki yolda da 22 iş günü. Rerank'ın asıl işi, doğru chunk ilk 3'ün dışında kaldığında başlıyor.
   </Step>
   <Step title="Doğru chunk hep önde değil" stage="list">
-    "Tatil hakkım kaç gün, 4 yıldır çalışıyorum?" sorusunda izin tablosu vektör sırasında 5. geldi (eval: rr 0.20). Rerank olmasa prompt'a hiç girmezdi. Rerank açıkken cevap doğru çıktı: 18 iş günü (eval --answers).
+    "Tatil hakkım kaç gün, 4 yıldır çalışıyorum?" sorusunda izin tablosu vektör sırasında ancak 5. geldi. Rerank olmasa prompt'a hiç girmezdi. Rerank açıkken cevap doğru çıktı: 18 iş günü. Bu soruyu Kaliteyi ölçmek sayfasında yeniden göreceğiz.
   </Step>
-  <Step title="Top-k tek yol değil: eşik" stage="yol" phase="1">
-    Sabit k yerine bir skor eşiği: altındakini alma. Ama C sayfasında "ilgisiz" çift bile 0.456 aldı. Eşik tahminle değil, kendi verinizde ölçülerek seçilir ve model değişince yeniden seçilir.
-  </Step>
-  <Step title="Metadata filtresi: kim yarışabilir?" stage="yol" phase="2">
-    `access`: soran kişinin okuyabildikleri; aşağıda deniyoruz. `edition`: yalnızca en yeni sürüm. Bugün depoda tek sürüm var; ikincisini "Veri değişince" sayfasında ekleyip filtreyi orada göreceğiz.
-  </Step>
-  <Step title="MMR ve hybrid" stage="yol" phase="3">
-    <Term id="mmr">MMR</Term>, birbirinin neredeyse aynısı olan chunk'lardan birini alıp gerisini atlar. Hybrid, vektör aramasını kelime aramasıyla (BM25) birleştirir: kod, isim, sayı gibi tam eşleşmelerde kelime kazanır. İkisi de bu repoda yok.
+  <Step title="Top-k tek yol değil" stage="yol">
+    Eşik: sabit k yerine bir skor sınırı; ama C'de "ilgisiz" çift bile 0.456 aldı, eşik kendi verinizde ölçülerek seçilir. Metadata filtresi (`access`, `edition`) bu repoda var: aşağıda ve "Veri değişince" sayfasında. <Term id="mmr">MMR</Term> neredeyse aynı chunk'lardan birini alır; hybrid, vektörü kelime aramasıyla (BM25) birleştirir. İkisi bu repoda yok.
   </Step>
 </Deck>
 
@@ -190,7 +184,7 @@ Aynı sıralama, terminalde. Önce retriever'ın listesi ve kesme çizgisi, sonr
 
 <Log name="07-rerank" title="npm run step -- 7" />
 
-Rerank kapalıyken de cevap 22; yalnızca "gündür" yerine "gundur" yazıyor. İki cevap da 7. kuralın istediği gibi tablo satırını aynen yazmadı. Cevabın kendisine F sayfasında bakacağız.
+Rerank kapalıyken de cevap 22; yalnızca "gündür" yerine "gundur" yazıyor. İki cevap da, F'de göreceğimiz tablo kuralının istediği gibi, kullandığı satırı aynen yazmadı. Cevabın kendisine F sayfasında bakacağız.
 
 Retriever'ın bütün işi: filtreyi kur, soruyu embed et, `k + 3` sonuç iste (fazlası kesme çizgisinin altını göstermek için).
 
@@ -221,15 +215,17 @@ Filtre kapalıyken ilk 5'in hepsi maaş dokümanından ve cevap maaş rakamını
 <YourTurn>
 **1 · Listeyi açın.** `npm run step -- 6` ve `data/6-retrieved.json`: `hits` (prompt'a aday 5 chunk), `below` (kesme çizgisinin altındaki 3), `filter`. Başka bir soru: `npm run step -- 6 "Tatil hakkım kaç gün?"`.
 
-**2 · k'yı değiştirin.** `npm run step -- 6 --k 8` → kesme çizgisi aşağı iner. Sonra `npm run step -- 6` ile 5'e dönün.
+**2 · Rerank'ı kapatın.** `src/steps/7-rerank.ts` → `TOGGLE rerank` bloğunda `true; // default` satırını kapatın, `false; // alternative` satırını açın. `npm run step -- 7` ve `npm run step -- 8`. Toggle'ı geri alıp `npm run step -- 7`: `data/7-reranked.json` içinde her chunk için `was` (eski sıra), `relevance` (rerank puanı) ve `score` (vektör skoru). Sonra `npm run step -- 8`.
 
-**3 · Rerank'ı kapatın.** `src/steps/7-rerank.ts` → `TOGGLE rerank` bloğunda `true; // default` satırını kapatın, `false; // alternative` satırını açın. `npm run step -- 7` ve `npm run step -- 8`. Toggle'ı geri alıp `npm run step -- 7`: `data/7-reranked.json` içinde her chunk için `was` (eski sıra), `relevance` (rerank puanı) ve `score` (vektör skoru). Sonra `npm run step -- 8`.
+**3 · Rerank'ın asıl işi.** `npm run ask -- "Tatil hakkım kaç gün, 4 yıldır çalışıyorum?"`. Log'da izin tablosunun (`hr-leave@2025#3`) vektör sırasını ve rerank sonrası sırasını bulun. Prompt'a girdi mi? Cevap 18 mi?
 
-**4 · Rerank'ın asıl işi.** `npm run ask -- "Tatil hakkım kaç gün, 4 yıldır çalışıyorum?"`. Log'da izin tablosunun (`hr-leave@2025#3`) vektör sırasını ve rerank sonrası sırasını bulun. Prompt'a girdi mi? Cevap 18 mi?
-
-**5 · Erişim filtresini kapatın.** `src/steps/6-retrieve.ts` → `TOGGLE access filter` bloğunda alternatif satırı açın, varsayılanı kapatın. `npm run ask -- "Kıdemli uzman unvanında aylık brüt maaş bandının üst sınırı nedir?"`. Sonra mutlaka geri alın.
+**4 · Erişim filtresini kapatın.** `src/steps/6-retrieve.ts` → `TOGGLE access filter` bloğunda alternatif satırı açın, varsayılanı kapatın. `npm run ask -- "Kıdemli uzman unvanında aylık brüt maaş bandının üst sınırı nedir?"`. Sonra mutlaka geri alın.
 
 Geride kaldıysanız: `npm run catchup -- 7`. Bütün toggle'lar varsayılana döner.
+</YourTurn>
+
+<YourTurn optional>
+**k'yı değiştirin.** `npm run step -- 6 --k 8` → kesme çizgisi aşağı iner. Sonra `npm run step -- 6` ile 5'e dönün.
 </YourTurn>
 
 ## Sık sorulan
@@ -239,11 +235,11 @@ Tahminle değil, ölçerek: Kaliteyi ölçmek sayfasındaki `npm run eval`, doğ
 </FAQ>
 
 <FAQ q="Rerank her soruda şart mı?">
-Bedeli var: bizde her soru için 5 model çağrısı, günün sorusunda 2134 ms. Retriever doğru chunk'ı zaten ilk 3'e koyuyorsa bu süre boşa gider. Kaç soruda gerektiğini değerlendirme gösterir.
+Bedeli var: bizde her soru için 5 model çağrısı, günün sorusunda 2243 ms. Retriever doğru chunk'ı zaten ilk 3'e koyuyorsa bu süre boşa gider. Kaç soruda gerektiğini değerlendirme gösterir.
 </FAQ>
 
 <FAQ q="Reranker yanılır mı?">
-Evet. Maaş sorusunda seyahat politikasının otel ve harcırah tablosuna 10 verdi; muhtemelen "kıdemli uzman" unvanı orada da geçtiği için. Beraberlikler de oluyor: log'daki `ties` satırı, aynı puanı alan chunk sayısını yazıyor.
+Evet. Günün sorusunda izin devrine (§7) 9 verdi, oysa o bölüm soruyu cevaplamıyor. Maaş sorusunda seyahat politikasının otel ve harcırah tablosuna 10 verdi; muhtemelen "kıdemli uzman" unvanı orada da geçtiği için. Beraberlikler de oluyor: log'daki `ties` satırı, aynı puanı alan chunk sayısını yazıyor.
 </FAQ>
 
 <FAQ q="Bi-encoder ve cross-encoder ne demek?">

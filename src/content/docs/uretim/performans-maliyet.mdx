@@ -23,28 +23,28 @@ Cevap doğru ve kaynaklı. Şimdi bir de şunu soralım: bir soru kaç saniye s�
 
 <Deck>
   <DeckFigure slot="figure">
-    <svg viewBox="0 0 1000 520" role="img" aria-label="Bir sorunun aşama süreleri, prompt token karşılaştırması ve ingest cache'i">
+    <svg viewBox="0 0 1000 520" role="img" aria-label="Prompt token karşılaştırması, bir sorunun aşama süreleri ve ingest cache'i">
       <g class="ph ph1">
-        <text x="40" y="34" class="flbl">Günün sorusu, bu Mac'te: süre nerede geçiyor?</text>
-        <rect x="40" y="56" width="4" height="56" class="fbox fbox-on" />
-        <rect x="44" y="56" width="661" height="56" rx="6" class="fbox fbox-gate" />
-        <rect x="705" y="56" width="275" height="56" rx="6" class="fbox fbox-frozen" />
-        <text x="374" y="92" text-anchor="middle" class="flbl">rerank · 5 LLM çağrısı · 2134 ms</text>
-        <text x="842" y="92" text-anchor="middle" class="flbl">cevap · 894 ms</text>
-        <path d="M42 116 V128" class="faxis" />
-        <text x="40" y="150" class="fsub">↑ arama 6 ms · soruyu embed 0 ms (cache'ten)</text>
+        <text x="40" y="34" class="flbl">Prompt'a giren token (rerank hariç)</text>
+        <rect x="40" y="50" width="96" height="44" rx="6" class="fbox fbox-good" />
+        <text x="150" y="79" class="fsub">RAG: 3 chunk · 1155 token · 22 ✓</text>
+        <rect x="40" y="106" width="940" height="44" rx="6" class="fbox fbox-bad" />
+        <text x="60" y="135" class="fsub">hepsi: 8 doküman, maaş tablosu dahil · 11358 token · 22 ✓</text>
+        <path d="M718 40 V162" class="faxis" stroke-dasharray="6 5" />
+        <text x="718" y="184" text-anchor="middle" class="fsub">bizim num_ctx ayarımız: 8192 token</text>
       </g>
       <g class="ph ph2">
-        <text x="40" y="206" class="flbl">Prompt'a giren token</text>
-        <rect x="40" y="222" width="96" height="44" rx="6" class="fbox fbox-good" />
-        <text x="150" y="251" class="fsub">RAG: 3 chunk · 1155 token · 894 ms · cevap 22 ✓</text>
-        <rect x="40" y="278" width="940" height="44" rx="6" class="fbox fbox-bad" />
-        <text x="60" y="307" class="fsub">hepsi: 8 doküman · 11358 token · 30137 ms · cevap 22 ✓</text>
-        <path d="M718 212 V334" class="faxis" stroke-dasharray="6 5" />
-        <text x="718" y="356" text-anchor="middle" class="fsub">varsayılan pencere: 8192 token</text>
+        <text x="40" y="236" class="flbl">Günün sorusu, tek koşu: süre nerede geçiyor?</text>
+        <rect x="40" y="254" width="6" height="56" class="fbox fbox-on" />
+        <rect x="46" y="254" width="668" height="56" rx="6" class="fbox fbox-gate" />
+        <rect x="714" y="254" width="266" height="56" rx="6" class="fbox fbox-frozen" />
+        <text x="380" y="290" text-anchor="middle" class="flbl">rerank · 5 LLM çağrısı · 2244 ms</text>
+        <text x="847" y="290" text-anchor="middle" class="flbl">cevap · 891 ms</text>
+        <path d="M43 314 V326" class="faxis" />
+        <text x="40" y="348" class="fsub">↑ arama adımı 21 ms (vector DB 7 ms · soruyu embed 0 ms, cache'ten)</text>
       </g>
       <g class="ph ph3">
-        <text x="40" y="410" class="flbl">Ingest, ikinci kez: 60 vektörün 60'ı cache'ten, adım 4 = 40 ms</text>
+        <text x="40" y="410" class="flbl">Ingest, ikinci kez: 60 vektörün 60'ı cache'ten, adım 4 = 38 ms</text>
         <rect x="40" y="428" width="460" height="52" rx="8" class="fbox" />
         <text x="270" y="461" text-anchor="middle" class="flbl">2025 · 60 kayıt · dokunulmadı</text>
         <rect x="520" y="428" width="460" height="52" rx="8" class="fbox fbox-on" />
@@ -53,47 +53,46 @@ Cevap doğru ve kaynaklı. Şimdi bir de şunu soralım: bir soru kaç saniye s�
       </g>
     </svg>
   </DeckFigure>
-  <Step title="Bir soru nereye zaman harcıyor?" phase="1">
-    Günün sorusu, bu Mac'te ölçüldü: soruyu embed 0 ms (cache'ten), arama 6 ms, rerank 2134 ms, cevap 894 ms. Sürenin yaklaşık %70'i rerank, %30'u cevap; arama çizgide görünmüyor bile.
+  <Step title="Hepsini prompt'a koysak?" phase="1">
+    8 dokümanın tamamı (40092 karakter) tek prompt'ta: 11358 prompt <Term id="token">token</Term>. RAG'li cevapta 3 chunk, 1155 token: yaklaşık 10 kat az. Rerank hariç; rerank çağrılarının token'ını loglamıyoruz. 11358, bizim num_ctx ayarımız olan 8192'lik <Term id="context">pencereye</Term> sığmaz; bu ölçüm için 32768'e açtık.
   </Step>
-  <Step title="Rerank neden bu kadar pahalı?" phase="1">
-    <Term id="rerank">Rerank</Term>, 5 chunk için 5 ayrı LLM çağrısıdır; her çağrı soruyu ve chunk'ı birlikte okur. Çağrılar paralel gider, yine de saniyeler sürer: maaş bandı sorusunda aynı adım 5672 ms, yemek kartı sorusunda 4897 ms sürdü.
+  <Step title="…ve maaş tablosu herkese" phase="1">
+    Cevap doğru (22). Ama 8 dokümanın biri hr-only maaş tablosu: retrieval yoksa erişim filtresi de yok, maaşlar her çalışanın prompt'una girer. Süre 29983 ms; RAG koşularında cevap çağrısı 888–3941 ms. Kat vermiyoruz: tek koşu, ve pencere büyüyünce model yeniden yüklendi.
   </Step>
-  <Step title="Vector DB darboğaz değil" phase="1">
-    60 vektörde arama 6 ms. Burada hızlandırılacak şey veritabanı değil, LLM çağrıları: kaç tane, ne kadar uzun prompt'la, hangi boyda bir modelle. Milyonlarca vektörde arama da pahalılaşır; D sayfasındaki indeks bunun için.
-  </Step>
-  <Step title="Hepsini prompt'a koysak?" phase="2">
-    8 dokümanın tamamı (40092 karakter) tek prompt'ta: 11358 prompt <Term id="token">token</Term>, 30137 ms. RAG'li cevapta prompt 1155 token, süre 894 ms. Yaklaşık 10 kat token, 34 kat süre.
-  </Step>
-  <Step title="…ve pencereye sığmıyor" phase="2">
-    11358 token, varsayılan 8192 token'lık <Term id="context">pencereye</Term> sığmaz; bu ölçüm için pencere 32768'e açıldı. Cevap bu koşuda doğru (22), ama her soru bütün el kitabının token'ını ve yarım dakikayı öder.
+  <Step title="Bir soru nereye zaman harcıyor?" phase="2">
+    Günün sorusu, M serisi bir Mac'te, tek koşu: arama 21 ms, <Term id="rerank">rerank</Term> 2244 ms, cevap 891 ms. Rerank bu toplamın (3156 ms) yaklaşık %71'i: 5 chunk için 5 ayrı LLM çağrısı. Başka sorularda aynı adım 5053–5672 ms sürdü. Sizde süreler farklı olur.
   </Step>
   <Step title="Ingest'te: cache ve artımlı yükleme" phase="3">
-    Her embedding, model + metin hash'iyle `.cache/` altına yazılır; yeniden çalıştırınca 60 vektörün 60'ı cache'ten geldi, adım 4 40 ms sürdü. 2026 sürümü eklenince depo yalnızca 2026'nın 60 kaydını yazdı; 2025 yerinde kaldı.
+    Her embedding, model + metin hash'iyle `.cache/` altına yazılır; yeniden çalıştırınca 60 vektörün 60'ı cache'ten geldi, adım 4 38 ms sürdü. 2026 sürümü eklenince depo yalnızca 2026'nın 60 kaydını yazdı; 2025 yerinde kaldı.
   </Step>
   <Step title="Süreyi ve faturayı ne büyütür?">
-    Modele kaç kez gittiğiniz ve her seferinde ne kadar metin gönderdiğiniz. Aşağıdaki düğmelerin her biri bu iki sayıdan birini değiştirir; çoğu doğruluğu da. O yüzden her düğmeden sonra eval.
+    Modele kaç kez gittiğiniz ve her seferinde ne kadar metin gönderdiğiniz. Bir soru 6 çağrıdır: 5 rerank, 1 cevap. Aynı anda N kişi sorarsa model N × 6 çağrıyı karşılar. Aşağıdaki düğmelerin her biri bu sayılardan birini, çoğu doğruluğu da değiştirir; her düğmeden sonra eval.
   </Step>
 </Deck>
 
 ## Ölçümler, adım adım
 
-Her adım kendi süresini yazar. Günün sorusu için arama, rerank ve cevap:
+Her adım kendi süresini yazar. Günün sorusu için arama, rerank ve cevap; süreler M serisi bir Mac'te, tek koşudan, sizde farklı olur:
 
 <Log name="06-retrieve" title="npm run step -- 6" from={0} to={6} />
 <Log name="07-rerank" title="npm run step -- 7" from={0} to={6} />
 <Log name="08-answer" title="npm run step -- 8 --prompt" from={0} to={6} />
+
+Rerank'ın payı bu üç adımın `TIME` satırlarından: 2244 / (21 + 2244 + 891) = 2244 / 3156 ≈ %71. Tek bir koşu; başka bir soruda oran değişir.
 
 <Example>
 **Hepsini prompt'a koymak.** Retrieval yok: 8 dokümanın temiz metni art arda tek prompt'a girer; kurallar ve soru aynı.
 
 | | RAG (3 chunk) | hepsi (8 doküman) |
 |---|---|---|
-| prompt token | 1155 | 11358 |
-| süre | 894 ms | 30137 ms |
+| prompt token (rerank hariç) | 1155 | 11358 |
+| prompt'taki hr-only doküman | yok (filtre) | maaş tablosu |
+| cevap çağrısı | 888 ms | 29983 ms |
 | cevap | 22 iş günü ✓ | 22 iş günü ✓ |
 
-Cevap iki yolda da doğru. Fark, her soruda ödenen bedelde: bütün el kitabının token'ı ve 30 saniye. Üstelik bu prompt, pencere büyütülmeden modele sığmıyor. El kitabı büyüdükçe bu yol kapanır.
+Cevap iki yolda da doğru. Fark, her soruda ödenen bedelde: bütün el kitabının token'ı ve yarım dakika. Bu prompt bizim 8192'lik ayarımıza sığmıyor; el kitabı büyüdükçe bu yol kapanır. Asıl engel ise güvenlik: erişim filtresi aramanın içindedir, arama yoksa filtre de yoktur.
+
+Süre için kat vermiyoruz. 888 ms tek bir koşu; bu sitedeki öteki RAG koşularında cevap çağrısı 3941 ms'ye kadar çıktı. 29983 ms de tek bir koşu; pencere 32768'e büyüdüğü için modelin yeniden yüklenmesini de içeriyor, ama bu sürenin küçük bir kısmı: asıl maliyet 11358 token'ı okumak.
 </Example>
 
 <Log name="stuff-everything" title="her doküman tek prompt'ta (retrieval yok)" />
@@ -112,7 +111,7 @@ Adım 4'ü yeniden çalıştırmak bu yüzden milisaniyeler sürer: 60 vektörü
 
 <Log name="04-embed" title="npm run step -- 4   (ikinci kez)" />
 
-Bu sitenin kayıtlarında bütün vektörler cache'ten geliyor; bir chunk'ı ilk kez embed etmenin süresini bu loglar göstermiyor. Tek bir cümle için `npm run doctor` 183 ms ölçtü. Kendi makinenizde görmek için `.cache/` klasörünü silip `npm run step -- 4` çalıştırın: log, chunk başına milisaniyeyi yazar.
+Bu sitenin kayıtlarında bütün vektörler cache'ten geliyor; bir chunk'ı ilk kez embed etmenin süresini bu loglar göstermiyor. `npm run doctor` tek bir cümleyi 1924 ms'de embed etti, ama o koşu soğuk başladı: sürenin içinde modelin belleğe yüklenmesi de var. Kendi makinenizde görmek için `.cache/` klasörünü silip `npm run step -- 4` çalıştırın: log, chunk başına milisaniyeyi yazar.
 
 Yeni bir sürüm gelince depo yalnızca o sürümün kayıtlarını değiştirir. Öteki sürüm yerinde kalır:
 
@@ -124,15 +123,24 @@ Yeni bir sürüm gelince depo yalnızca o sürümün kayıtlarını değiştirir
 
 | Düğme | Bizde | Artırınca | Burada ölçtük mü? |
 |---|---|---|---|
-| Chunk boyu | section: ortalama 688 karakter, 60 chunk · fixed: 300 karakter, 139 chunk | prompt'a giren token artar, vektör sayısı azalır | Evet: hit@1 fixed ile 0.474, section ile 0.842 ([Kaliteyi ölçmek](/uretim/kaliteyi-olcmek/)) |
-| k (retriever'ın getirdiği aday) | 5 | rerank'ta her aday bir LLM çağrısı daha | Hayır: `--k 10` ile siz deneyin |
+| Chunk boyu | section: ortalama 688 karakter, 60 chunk · fixed: 300 karakter, 139 chunk | prompt'a giren token artar, vektör sayısı azalır | Evet: hit@1 fixed ile 0.368 (19 sorunun 7'si), section ile 0.842 (16'sı) ([Kaliteyi ölçmek](/uretim/kaliteyi-olcmek/)) |
+| k (retriever'ın getirdiği aday) | 5 | rerank'ta her aday bir LLM çağrısı daha; prompt'a yine 3 chunk girer | Hayır: `--k 10` ile siz deneyin |
 | Prompt'a giren chunk | 3 | prompt token artar | 3 chunk = 1155 prompt token (günün sorusu) |
 | Rerank | açık | kapatınca 5 çağrı gider, sıra vektör skoruna kalır | Kısmen: günün sorusunda cevap iki durumda da 22. q02'de doğru bölüm vektör sırasında 5.; rerank açıkken cevap doğru, kapalıyken ölçmedik |
 | Model boyu | gemma3:4b | RAM ve süre artar | Hayır: süreyi yalnızca gemma3:4b ile ölçtük |
-| Embedding cache | açık | — | Evet: 60 vektörün 60'ı cache'ten, adım 4 = 40 ms |
+| Embedding cache | açık | — | Evet: 60 vektörün 60'ı cache'ten, adım 4 = 38 ms |
 | Artımlı ingest | sürüm başına `replaceEdition` | — | Evet: 2026 eklendi, depoda 120 kayıt, 2025'e dokunulmadı |
 
-API'li bir modelde fatura, okunan (prompt) ve yazılan (output) token ile büyür; fiyatlar sağlayıcıya göre değişir, burada rakam vermiyoruz. Bir not: rerank çağrılarının token sayısını loglamadık; onlar da faturaya girer.
+## Fatura: fiyatsız bir formül
+
+Fiyatlar sağlayıcıya göre değişir; burada rakam vermiyoruz, formülü veriyoruz. API'li bir modelde:
+
+> **günlük maliyet ≈ sorgu/gün × (cevap prompt'u + 5 × rerank prompt'u + çıktı token'ı) × birim fiyat**
+> **+ ingest'te bir kerelik embedding** (yalnızca değişen sürüm; cache aynı metni yeniden embed etmez)
+
+- Girdi ve çıktı token'ının fiyatı çoğu sağlayıcıda farklıdır; formülü ikiye bölerek hesaplayın.
+- Bizim ölçtüğümüz terimler, günün sorusunda: cevap prompt'u 1155 token, çıktı 28 token. Rerank prompt'larının token'ını loglamıyoruz; her biri soruyu ve tek bir chunk'ı taşır.
+- Kendi sunucunuzda (self-host) birim fiyatın yerini GPU saati alır: aynı anda gelen N soru × 6 çağrıyı bekletmeden karşılayacak kapasite.
 
 <YourTurn>
 1. `npm run ask -- "Frankfurt'a iki günlük toplantıya gidiyorum, uzmanım. Günlük harcırahım ne kadar?"` çalıştırın. Arama, rerank ve cevap sürelerini not edin.
@@ -143,15 +151,15 @@ API'li bir modelde fatura, okunan (prompt) ve yazılan (output) token ile büyü
 ## Sık sorulan
 
 <FAQ q="Daha hızlı bir vector DB alsak?">
-Bu ölçümde arama 6 ms, rerank ile cevap birlikte 3 saniyeye yakın. Veritabanını iki kat hızlandırmak toplamda fark edilmez. Darboğaz, modele yapılan çağrılar.
+Bu ölçümde vector DB araması 7 ms; rerank ile cevap birlikte 3135 ms (2244 + 891). Veritabanını iki kat hızlandırmak toplamda fark edilmez; darboğaz modele yapılan çağrılar. 60 vektörde durum bu; milyonlarca vektörde arama da pahalılaşır, D sayfasındaki indeks bunun için.
 </FAQ>
 
 <FAQ q="Rerank'ı kapatıp süreyi kısaltalım mı?">
-Kapatınca 2134 ms'lik adım gider. Günün sorusunda cevap değişmedi (kapalıyken de 22). Ama q02'de doğru bölüm vektör sırasında 5.; rerank olmadan prompt'a giren ilk 3'e girmez. Süre ve doğruluk aynı düğmede; kararı eval verir. Daha hızlı bir seçenek, bu iş için eğitilmiş küçük bir reranker modeli (cross-encoder); onu ölçmedik.
+Kapatınca 2244 ms'lik adım gider. Günün sorusunda cevap değişmedi (kapalıyken de 22). Ama q02'de doğru bölüm vektör sırasında 5.; rerank olmadan prompt'a giren ilk 3'e girmez. Süre ve doğruluk aynı düğmede; kararı eval verir. Daha hızlı bir seçenek, bu iş için eğitilmiş küçük bir reranker modeli (cross-encoder); onu ölçmedik.
 </FAQ>
 
 <FAQ q="Cevapları da cache'lesek?">
-Aynı soru, aynı kaynaklar, temperature 0 ve sabit seed ile aynı cevap gelir; soruyu ve sürümü anahtar yapıp cevabı saklamak mümkün. Yeni bir sürüm ingest edilince o cache silinmelidir. Bu repoda cevap cache'i yok; ölçmedik.
+Aynı soru, aynı kaynaklar, temperature 0 ve sabit seed ile aynı makinede aynı cevap gelir; cevabı saklamak mümkün. Anahtar üç parçalı olmalı: soru + sürüm + erişim kapsamı. Kapsam anahtarda yoksa İK'nın aldığı maaş cevabı önbellekten bir çalışana gider. Yeni bir sürüm ingest edilince o sürümün cache'i silinir. Bu repoda cevap cache'i yok.
 </FAQ>
 
 <FAQ q="Daha büyük bir model daha mı iyi?">

@@ -147,10 +147,10 @@ Bir dokümanın tamamını her soruda modele veremeyiz. Günün sorusunun cevab�
     `bySection(doc)`: her `## n.` başlığında keser ve her parçanın önüne `[Yıllık İzin Politikası › 3. Yıllık Ücretli İzin]` ekler. Tablo, onu açıklayan başlıkla aynı parçada kalır.
   </Step>
   <Step title="Aynı soru, doğru cevap" stage="b">
-    Chunker'ı değiştirip `npm run soru`: "Tablodan, 7 tam yıl kıdeminde 22 iş günü …" ve kaynak `hr-leave@2025#3`. Model aynı, arama kodu aynı, kurallar aynı. Değişen tek şey makasın yeri.
+    Chunker'ı `section` yapıp adım 3'ü yeniden çalıştırınca `npm run soru`: "Tablodan, 7 tam yıl kıdeminde 22 iş günü …" ve kaynak `hr-leave@2025#3`. Model aynı, arama kodu aynı, kurallar aynı. Değişen tek şey makasın yeri.
   </Step>
-  <Step title="Bedeli: parçalar büyüdü" stage="b">
-    Fixed: 139 chunk, ortalama 287 karakter. Section: 60 chunk, ortalama 688 karakter. Büyük parça prompt'ta daha çok yer kaplar. 1500 karakteri aşan bölüm paragraflarından yeniden bölünür; bu sınır da bizim seçimimiz.
+  <Step title="Bedeli: büyük parça, ortak ön ek" stage="b">
+    Section: 60 chunk, ortalama 688 karakter (fixed: 139, ortalama 287); büyük parça prompt'ta daha çok yer kaplar. `[Doküman › Bölüm]` ön eki, A'da attığımız sayfa başlığına benziyor; ama o bilgi taşımıyordu, bu taşıyor. Bedeli: aynı dokümanın chunk'ları birbirine yaklaşır. E sayfasında göreceğiz.
   </Step>
 </Deck>
 
@@ -179,7 +179,7 @@ LEDGER satırları günün sorusunun cevabını adım adım kaydediyor: modelin 
 <RepoCode file="src/steps/3-chunk.ts" from="export function bySection" />
 
 <YourTurn>
-**1 · Makası kendiniz görün.** `src/steps/3-chunk.ts` içinde `TOGGLE chunker` bloğunda `"section"; // default` satırının başına `//` koyun, `"fixed"; // alternative` satırındaki `//` işaretini kaldırın. `npm run step -- 3` çalıştırın: log, `| 7 |` satırını taşıyan parçayı (`hr-leave@2025#c08`) ve ilk satırını gösterir.
+**1 · Makası kendiniz görün.** `src/steps/3-chunk.ts` içinde `TOGGLE chunker` bloğunda `"section"; // default` satırının başına `//` koyun, `"fixed"; // alternative` satırındaki `//` işaretini kaldırın. `npm run step -- 3` çalıştırın: log, `| 7 |` satırını taşıyan parçayı (`hr-leave@2025#c08`) bulur ve parçanın tamamını gösterir.
 
 **2 · Parçaları açın.** `data/3-chunks.json` içinde `hr-leave@2025#c07` ve `hr-leave@2025#c08` kayıtlarını bulun. Tablo başlığı hangisinde, `| 7 | 22 |` hangisinde? `sections` alanı ne diyor?
 
@@ -207,7 +207,7 @@ Paragraflardan bölmek (ev ödevi), cümlelerden bölmek ya da anlamın değişt
 </FAQ>
 
 <FAQ q="Büyük parça her zaman daha mı iyi?">
-Hayır. Büyük parça prompt'u uzatır (maliyet ve süre) ve farklı konuları tek vektörde karıştırır. Bu yüzden `bySection`, 1500 karakteri aşan bir bölümü paragraflarından yeniden böler (`MAX_SECTION_CHARS`).
+Hayır. Büyük parça prompt'u uzatır (maliyet ve süre) ve farklı konuları tek vektörde karıştırır. Bu yüzden `bySection`, 1500 karakteri aşan bir bölümü paragraflarından yeniden böler (`MAX_SECTION_CHARS`). 1500 bizim seçimimiz.
 </FAQ>
 
 <FAQ q="Fixed chunk'ta sections: 2,3 ne demek?">

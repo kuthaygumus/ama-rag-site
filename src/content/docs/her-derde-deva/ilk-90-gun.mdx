@@ -28,101 +28,92 @@ RAG türlerini gördük; hangisini ne zaman eklemeli? Bir blog yazısının ilk 
       <g class="ph ph8">
         <rect x="60" y="520" width="880" height="52" rx="10" class="fbox fbox-good" />
         <text x="84" y="554" class="flbl">başlıktan kes, öneki yaz</text>
-        <text x="520" y="553" class="fsub">B sayfası</text>
-        <text x="700" y="553" class="fsub">bedava</text>
+        <text x="500" y="553" class="fsub">B sayfası</text>
+        <text x="590" y="553" class="fsub">bedava</text>
         <text x="920" y="553" text-anchor="end" class="fsub fgood-t">ölçtük</text>
       </g>
       <g data-from="2">
         <g class="ph ph1">
           <rect x="60" y="456" width="880" height="52" rx="10" class="fbox fbox-on" />
           <text x="84" y="490" class="flbl">metadata filtresi (sürüm, kapsam)</text>
-          <text x="520" y="489" class="fsub">T1 · T2</text>
-          <text x="700" y="489" class="fsub">bedava</text>
+          <text x="500" y="489" class="fsub">T1 · T2</text>
+          <text x="590" y="489" class="fsub">bedava</text>
           <text x="920" y="489" text-anchor="end" class="fsub fgood-t">T2 ölçtük</text>
         </g>
       </g>
-      <g data-from="4">
+      <g data-from="3">
         <g class="ph ph2">
           <rect x="60" y="392" width="880" height="52" rx="10" class="fbox fbox-on" />
           <text x="84" y="426" class="flbl">context'i azalt, sırala</text>
-          <text x="520" y="425" class="fsub">T3</text>
-          <text x="700" y="425" class="fsub">bedava</text>
+          <text x="500" y="425" class="fsub">T3</text>
+          <text x="590" y="425" class="fsub">bedava</text>
           <text x="920" y="425" text-anchor="end" class="fsub fgood-t">ölçtük</text>
         </g>
       </g>
-      <g data-from="5">
+      <g data-from="4">
         <g class="ph ph3">
           <rect x="60" y="328" width="880" height="52" rx="10" class="fbox" stroke-dasharray="7 6" />
           <text x="84" y="362" class="flbl">hybrid (kelime + vektör)</text>
-          <text x="520" y="361" class="fsub">T4</text>
-          <text x="700" y="361" class="fsub">ikinci indeks</text>
+          <text x="500" y="361" class="fsub">T4</text>
+          <text x="590" y="361" class="fsub">ikinci indeks</text>
           <text x="920" y="361" text-anchor="end" class="fsub fgate-t">eklemedik: hata yok</text>
         </g>
       </g>
-      <g data-from="6">
-        <g class="ph ph4">
+      <g data-from="4">
+        <g class="ph ph3">
           <rect x="60" y="264" width="880" height="52" rx="10" class="fbox fbox-on" />
           <text x="84" y="298" class="flbl">rerank</text>
-          <text x="520" y="297" class="fsub">T5</text>
-          <text x="700" y="297" class="fsub">5 çağrı</text>
-          <text x="920" y="297" text-anchor="end" class="fsub fgood-t">ölçtük</text>
+          <text x="500" y="297" class="fsub">T5</text>
+          <text x="590" y="297" class="fsub">5 çağrı</text>
+          <text x="920" y="297" text-anchor="end" class="fsub fgood-t">açıkken ölçtük</text>
         </g>
       </g>
-      <g data-from="7">
-        <g class="ph ph5">
+      <g data-from="5">
+        <g class="ph ph4">
           <rect x="60" y="200" width="880" height="52" rx="10" class="fbox" />
           <text x="84" y="234" class="flbl">parent-child</text>
-          <text x="520" y="233" class="fsub">T6</text>
-          <text x="700" y="233" class="fsub">iki boy chunk</text>
+          <text x="500" y="233" class="fsub">T6</text>
+          <text x="590" y="233" class="fsub">iki boy chunk</text>
           <text x="920" y="233" text-anchor="end" class="fsub fgate-t">ölçmedik</text>
         </g>
       </g>
-      <g data-from="8">
-        <g class="ph ph6">
+      <g data-from="5">
+        <g class="ph ph4">
           <rect x="60" y="136" width="880" height="52" rx="10" class="fbox" />
           <text x="84" y="170" class="flbl">agentic RAG</text>
-          <text x="520" y="169" class="fsub">T7</text>
-          <text x="700" y="169" class="fsub">birçok çağrı</text>
+          <text x="500" y="169" class="fsub">T7</text>
+          <text x="590" y="169" class="fsub">birçok çağrı</text>
           <text x="920" y="169" text-anchor="end" class="fsub fgate-t">ölçmedik</text>
         </g>
       </g>
-      <g data-from="9">
-        <g class="ph ph7">
+      <g data-from="6">
+        <g class="ph ph5">
           <rect x="60" y="72" width="880" height="52" rx="10" class="fbox" />
           <text x="84" y="106" class="flbl">GraphRAG</text>
-          <text x="520" y="105" class="fsub">T8</text>
-          <text x="700" y="105" class="fsub">tüm corpus</text>
+          <text x="500" y="105" class="fsub">T8</text>
+          <text x="590" y="105" class="fsub">tüm corpus</text>
           <text x="920" y="105" text-anchor="end" class="fsub fgate-t">ölçmedik</text>
         </g>
       </g>
     </svg>
   </DeckFigure>
   <Step title="Canlıya çıktık">
-    Pipeline Kraken Air'in İK asistanı oldu; model 90 gün boyunca değişmeyecek (gemma3:4b). Pazartesi ilk ticket geldi. Ticket'lar kurgu; içlerindeki ölçümler bu günün loglarından, ölçmediklerimizde "Ölçmedik" yazıyor.
+    Pipeline Kraken Air'in İK asistanı oldu; model 90 gün boyunca değişmeyecek (gemma3:4b). Pazartesi ilk ticket geldi. Ticket'lar kurgu; içlerindeki ölçümler bu günün loglarından. Her basamağın sağında, ölçülüp ölçülmediğini söyleyen tek bir rozet var.
   </Step>
-  <Step title="T1 · Londra'da yurt içi tablo önde" phase="1">
-    Eval'da Londra otel limiti sorusu (q06): yurt içi harcırah tablosu 1. sırada, yurt dışı 2. Cevap doğru; ama doğru tabloyu seçen model, ikizleri ayıran bir etiket yok. Çözüm: kapsam etiketi ve filtre. Ölçmedik.
-  </Step>
-  <Step title="T2 · Sürüm filtresi kapatıldı" phase="1">
-    Biri sürüm filtresini kapattı. Cevap hâlâ 24, ama prompt'ta 2025'in tablosu da var (22) ve ikisinde de yıl yazmıyor; model bu koşuda doğru olanı seçti. Çözüm: sürüm filtresi, bizde varsayılan. Ölçtük.
+  <Step title="T1 · T2 · Etiketle, filtrele" phase="1">
+    T1: Londra otel limiti sorusunda (q06) yurt içi tablo 1. sırada; cevap doğru, ama ikiz tabloları ayıran bir etiket yok. T2: biri sürüm filtresini kapattı; prompt'a 2025'in tablosu (22) da girdi, model bu koşuda 24'ü seçti. İkisinin çözümü metadata filtresi; sürüm filtresi bizde varsayılan.
   </Step>
   <Step title="T3 · Hepsini prompt'a koyalım" phase="2">
-    Biri "retrieval'a ne gerek var, el kitabının tamamını koyalım" dedi. Ölçtük: 11358 token, varsayılan 8192'lik pencereye sığmıyor; pencere açılınca cevap doğru, ama 30137 ms. RAG ile 894 ms. Çözüm: az ve seçilmiş context.
+    Biri "el kitabının tamamını koyalım" dedi. 11358 token, bizim num_ctx ayarımız olan 8192'ye sığmıyor; pencere açılınca cevap doğru, ama 29983 ms ve hr-only maaş tablosu her prompt'ta. RAG'in cevap çağrısı 1155 token, 888 ms. Çözüm: az ve seçilmiş context.
   </Step>
-  <Step title="T4 · “Hybrid ekleyelim”" phase="3">
-    IT güvenlik politikası İngilizce; ekip "Türkçe soruda kelime tutmaz, hybrid ekleyelim" dedi. Eval: 4 TR→EN sorusunun 4'ünde doğru bölüm 1. sırada. Hata yok, hybrid eklenmedi. Ortak kelime olmadığı için yardım da edemezdi.
+  <Step title="T4 · T5 · Kelimeler tutmayınca" phase="3">
+    T4: IT güvenlik politikası İngilizce; ekip hybrid istedi. Eval: 4 TR→EN sorusunun 4'ünde doğru bölüm 1. sırada; hata yok, hybrid eklenmedi. T5: "Tatil hakkım kaç gün?" sorusunda izin tablosu vektör sırasında 5.; prompt'a ilk 3 girer. Rerank açıkken cevap doğru; bedeli 5 LLM çağrısı, 2244 ms.
   </Step>
-  <Step title="T5 · “Tatil hakkım”" phase="4">
-    "Tatil hakkım kaç gün, 4 yıldır çalışıyorum?" sorusunda izin tablosu vektör sırasında 5.; prompt'a ilk 3 girer. Rerank açıkken cevap doğru. Bedeli 5 LLM çağrısı, 2134 ms. Daha ucuz aday (HyDE) ölçülmedi.
+  <Step title="T6 · T7 · Başlık yok, soru üç parçalı" phase="4">
+    T6: İK duyuruları başlıksız e-posta olarak geliyor; küçük chunk iyi bulunur ama başlığını kaybeder. Çözüm: küçükle ara, büyüğü ver (parent-child). T7: bir soruda üç soru: doğum izni, o günlerde yemek kartı, izin devri. Cevap üç ayrı bölümde; çözüm soruyu parçalara bölen agentic RAG.
   </Step>
-  <Step title="T6 · Başlıksız dokümanlar" phase="5">
-    İK duyuruları artık başlıksız e-posta olarak geliyor; bölüme göre kesecek başlık yok. Küçük chunk iyi bulunur ama başlığını kaybeder (fixed-300'de gördük). Çözüm: küçükle ara, büyüğü ver (parent-child). Ölçmedik.
-  </Step>
-  <Step title="T7 · Üç soru bir arada" phase="6">
-    "Eşim doğum yapacak: kaç gün izin alırım, o günlerde yemek kartı yüklenir mi, yıllık iznimi devredebilir miyim?" Cevap üç ayrı bölümde; tek arama hepsini getiremeyebilir. Çözüm: agentic RAG. Ölçmedik.
-  </Step>
-  <Step title="T8 · 330 mu, 400 mü?" phase="7">
-    Yan Haklar 330 TL diyor, asistan 400 TL dedi. Doğrusu 400: duyuru o bölümü güncelliyor ve iki chunk da prompt'taydı. Ama bu bağ yalnızca metinde yazıyor. Çözüm: dokümanlar arası ilişki (GraphRAG). Ölçmedik.
+  <Step title="T8 · 330 mu, 400 mü?" phase="5">
+    Yan Haklar 330 TL diyor, asistan 400 TL dedi. Doğrusu 400: duyuru o bölümü güncelliyor ve iki chunk da prompt'taydı. Bu bağ yalnızca metinde yazıyor; duyuru ilk 3'e girmeseydi modelin elinde 330 kalırdı. Çözüm: dokümanlar arası ilişki (GraphRAG).
   </Step>
   <Step title="Sekiz ticket, bir merdiven">
     Basamaklar maliyet sırasıyla: en ucuzdan başla, ölç, yetmezse bir üst basamak. Sekiz ticket'ta model hiç değişmedi; her teşhis prompt'a ve eval'a bakarak kondu. Hatası olmayan bir tekniği eklemek, bedelini boşuna ödemektir.
@@ -149,7 +140,7 @@ Aşağıda her ticket'ın ayrıntısı: şikâyet (kurgu), ölçüm (log) ya da 
 
 **Ölçüm.** Sürüm filtresi kapalı:
 
-<Log name="edition-all" title="npm run soru   (EDITION = all)" />
+<Log name="edition-all" title={'npm run soru   (EDITION_FILTER = "all")'} />
 
 **Teşhis.** İki sürümün metinleri neredeyse aynı: her chunk'ın bir ikizi var, skorları neredeyse eşit (0.632 ve 0.631). İki tablo da prompt'a girdi: 2026 (24) ve 2025 (22). Kaynak çitinde ve chunk metninde yıl yazmıyor; model bu koşuda 24'ü seçti, 22'yi seçmesini engelleyen hiçbir şey yok.
 **Teknik.** Sürüm filtresi: yalnızca en yeni sürüm yarışır. Bizde varsayılan; filtre açıkken kaynakların üçü de 2026 ([Veri değişince](/adim-adim/veri-degisince/)).
@@ -163,9 +154,9 @@ Aşağıda her ticket'ın ayrıntısı: şikâyet (kurgu), ölçüm (log) ya da 
 
 <Log name="stuff-everything" title="her doküman tek prompt'ta (retrieval yok)" />
 
-**Teşhis.** Cevap doğru, ama 11358 token varsayılan 8192'lik pencereye sığmıyor; ölçmek için pencere 32768'e açıldı. RAG ile aynı cevap 1155 token ve 894 ms.
+**Teşhis.** Cevap doğru, ama 11358 token bizim num_ctx ayarımız olan 8192'ye sığmıyor; ölçmek için pencere 32768'e açıldı. RAG ile aynı cevap 1155 token, cevap çağrısı 888 ms. Asıl sorun güvenlikte: 8 dokümanın biri hr-only maaş tablosu, ve retrieval yoksa erişim filtresi de yok.
 **Teknik.** Context'i azalt ve sırala: yalnızca seçilmiş chunk'lar, en iyisi başta. RAG'in kendisi bu.
-**Bedel.** Bedava; bedeli olan, yapmamak: her soruda yaklaşık 10 kat token ve 34 kat süre. El kitabı büyüdükçe bu yol tamamen kapanır.
+**Bedel.** Bedava; bedeli olan, yapmamak: her soruda yaklaşık 10 kat prompt token'ı (rerank hariç), yarım dakikalık bir çağrı ve herkesin prompt'unda maaş tablosu. El kitabı büyüdükçe bu yol tamamen kapanır.
 
 ## T4 · 1. ay — "Hybrid ekleyelim"
 
@@ -175,7 +166,7 @@ Aşağıda her ticket'ın ayrıntısı: şikâyet (kurgu), ölçüm (log) ya da 
 
 <Log name="eval-section" title="npm run eval   (TR→EN soruları)" from={10} to={14} />
 
-**Teşhis.** Hata yok. bge-m3 Türkçe soruyu İngilizce bölümle zaten eşleştiriyor. Üstelik kelime araması Türkçe soru ile İngilizce metin arasında ortak kelime bulamaz; bu hatayı düzeltemezdi bile.
+**Teşhis.** Hata yok. bge-m3 Türkçe soruyu İngilizce bölümle zaten eşleştiriyor. Kelime araması burada az şey eklerdi: Türkçe soruyla İngilizce metin arasında kelimelerin çoğu tutmaz; yalnızca kısaltmalar, adlar ve adresler iki dilde aynı yazılır.
 **Teknik.** <Term id="hybrid">Hybrid</Term> arama: kod, numara, ürün adı gibi birebir aranan kelimelerde işe yarar. Burada eklemedik.
 **Bedel.** İkinci bir indeks, iki listeyi birleştirme, bakım. Hatası olmayan bir yere eklenince bu bedel boşa ödenir.
 
@@ -189,7 +180,7 @@ Aşağıda her ticket'ın ayrıntısı: şikâyet (kurgu), ölçüm (log) ya da 
 
 **Teşhis.** Soru "tatil hakkım" diyor, doküman "yıllık ücretli izin". Kelime ortak değil, anlam ortak: embedding buluyor ama zar zor. Prompt'a yalnızca ilk 3 chunk girer; 5. sıradaki tablo ancak rerank ile öne geçer.
 **Teknik.** <Term id="rerank">Rerank</Term>: soruyla chunk'ı birlikte okuyan ikinci bir sıralama. Daha ucuz bir aday: soruyu dokümanın diliyle yeniden yazdırmak ya da önce varsayımsal bir cevap yazdırıp onunla aramak (<Term id="hyde">HyDE</Term>).
-**Bedel.** Rerank: 5 LLM çağrısı, günün sorusunda 2134 ms. Rerank kapalıyken q02'yi ölçmedik; HyDE'yi de ölçmedik. Rerank da yanılır: maaş sorusunda seyahat bölümüne 10 üzerinden 10 verdi ([Güvenlik](/uretim/guvenlik/)).
+**Bedel.** Rerank: 5 LLM çağrısı, günün sorusunda 2244 ms. Rerank kapalıyken q02'yi ölçmedik; HyDE'yi de ölçmedik. Rerank da yanılır: maaş sorusunda seyahat bölümüne 10 üzerinden 10 verdi ([Güvenlik](/uretim/guvenlik/)).
 
 ## T6 · 2. ay — Başlıksız dokümanlar
 
@@ -230,7 +221,7 @@ Her basamak süre, çağrı ya da bakım bedeli ekler, bazıları doğruluğu da
 </FAQ>
 
 <FAQ q="Eval 23/23 diyorsa ticket nereden geliyor?">
-Gold set yalnızca içindeki soruları bilir. T1 ve T5 eval'dan geldi, çünkü o sorular gold set'teydi; T6, T7 ve T8 gold set'te olmayan soru türleri. Kullanımda gelen her yeni hata türü, gold set'e yeni bir satır olmalı.
+Gold set yalnızca içindeki soruları ve kontrolleri bilir. T1 ve T5 eval'dan geldi, çünkü o sorular gold set'teydi. T8'in sorusu da gold set'te (q13), ama eval yalnızca cevapta 400 geçtiğine ve şifre istenmediğine bakar; duyuru ilk 3'ten düşerse ne olacağını sormaz. T6 ve T7 gold set'te olmayan soru türleri. Kullanımda gelen her yeni hata türü, gold set'e yeni bir satır olmalı.
 </FAQ>
 
 <FAQ q="Ticket'lar gerçek mi?">

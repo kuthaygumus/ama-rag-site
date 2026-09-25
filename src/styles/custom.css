@@ -16,7 +16,7 @@
   --rag-gate-low: rgba(242, 184, 75, 0.16);
   --rag-ink: var(--sl-color-white);
   --rag-line: var(--sl-color-gray-3);
-  --rag-hand: 'Caveat', 'Comic Sans MS', cursive;
+  --rag-hand: 'Kalam', 'Comic Sans MS', cursive;
 }
 :root[data-theme='light'] {
   --rag-accent: #0d8a7a;
@@ -84,6 +84,7 @@
   border-radius: 0.5rem;
 }
 .yourturn::before { content: 'SIRA SENDE'; color: var(--rag-accent); }
+.yourturn.yourturn-optional::before { content: 'SIRA SENDE · İSTEĞE BAĞLI'; }
 .example {
   margin: 1.4rem 0;
   padding: 0.8rem 1rem;
@@ -315,9 +316,11 @@
 .fbox-bad { fill: var(--rag-bad-low); stroke: var(--rag-bad); stroke-width: 2; }
 .fbox-good { fill: var(--rag-good-low); stroke: var(--rag-good); stroke-width: 2; }
 .fbox-gate { fill: var(--rag-gate-low); stroke: var(--rag-gate); stroke-width: 2; }
-.flbl { font-size: 22px; font-weight: 700; }
-.fsub { font-size: 17px; fill: var(--sl-color-gray-2) !important; }
-.fmono { font-family: var(--sl-font-system-mono) !important; font-size: 13px; }
+.flbl { font-size: 24px; font-weight: 700; }
+/* A label in a tight grid of boxes: one step smaller, still well above .fsub. */
+.flbl.tight { font-size: 22px; }
+.fsub { font-size: 19px; fill: var(--sl-color-gray-2) !important; }
+.fmono { font-family: var(--sl-font-system-mono) !important; font-size: 15px; }
 .fnum { fill: var(--rag-accent) !important; font-weight: 700; }
 .fbad-t { fill: var(--rag-bad) !important; }
 .fgood-t { fill: var(--rag-good) !important; }
@@ -334,7 +337,7 @@
 .whereami { margin: 0.2rem 0 1.2rem; }
 .whereami svg { width: 100%; height: auto; }
 .whereami .fbox { stroke-width: 1.2; }
-.whereami text { font-family: var(--rag-hand); fill: var(--rag-ink); font-size: 17px; }
+.whereami text { font-family: var(--rag-hand); fill: var(--rag-ink); font-size: 18px; }
 
 /* Starlight spaces sibling blocks in page content with margin-top; inside the deck's own furniture that
    pushed the second dot and the "İleri" button off the row. */

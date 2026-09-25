@@ -27,10 +27,10 @@ import Term from '../../../components/Term.astro';
 <Deck>
   <DeckFigure slot="figure" stage="v">
     <svg viewBox="0 0 1000 290" role="img" aria-label="Chunk metni ve soru aynı embedding modelinden geçip 1024 sayılık vektörlere dönüşüyor">
-      <rect x="20" y="40" width="260" height="80" rx="10" class="fbox-on" />
+      <rect x="5" y="40" width="290" height="80" rx="10" class="fbox-on" />
       <text x="150" y="72" text-anchor="middle" class="flbl">chunk metni</text>
       <text x="150" y="100" text-anchor="middle" class="fsub">announcement-meal-card@2025#1</text>
-      <path d="M285 80 H352" class="farrow" marker-end="url(#ce-a)" />
+      <path d="M299 80 H352" class="farrow" marker-end="url(#ce-a)" />
       <rect x="360" y="30" width="230" height="230" rx="12" class="fbox-frozen" />
       <text x="475" y="112" text-anchor="middle" class="flbl">bge-m3</text>
       <text x="475" y="142" text-anchor="middle" class="fsub">embedding modeli</text>
@@ -78,7 +78,7 @@ import Term from '../../../components/Term.astro';
       <g class="ph ph1">
         <text x="480" y="80" class="flbl">cosine</text>
         <text x="480" y="108" class="fsub">a·b / (|a|·|b|) — aradaki açı</text>
-        <text x="480" y="134" class="fsub">1 = aynı yön · 0 = ilgisiz · retriever bunu kullanır</text>
+        <text x="480" y="134" class="fsub">−1 ile 1 arası · 1 = aynı yön · ilgisiz ≠ 0</text>
       </g>
       <g class="ph ph2">
         <text x="480" y="190" class="flbl fbad-t">L2</text>
@@ -108,7 +108,7 @@ import Term from '../../../components/Term.astro';
     Soru da 1024 sayıya döner; yoksa chunk'larla karşılaştırılamaz. Model aynı olmalı: başka bir modelin vektörleri başka bir uzayda yaşar. Model değişirse bütün chunk'lar yeniden embed edilir.
   </Step>
   <Step title="Yakınlığı ölçmek: cosine" stage="m" phase="1">
-    İki vektör arasındaki açı. Uzunluğa bakmaz, yöne bakar: 1 = aynı yön, 0 = ilgisiz. Retriever'ımız da, Chroma koleksiyonumuz da bunu kullanıyor: <Term id="cosine">cosine benzerliği</Term>.
+    İki vektör arasındaki açı. Uzunluğa bakmaz, yöne bakar; sonuç −1 ile 1 arasında, 1 = aynı yön. İlgisiz metinler bile 0'a inmez, birazdan göreceğiz. Retriever'ımız da, Chroma koleksiyonumuz da bunu kullanıyor: <Term id="cosine">cosine benzerliği</Term>.
   </Step>
   <Step title="L2: uçlar arası mesafe" stage="m" phase="2">
     İki noktanın düz çizgi uzaklığı. Dikkat, yönü ters: küçük sayı = yakın. `npm run similar -- --metric l2` aynı cümle çiftlerini mesafe olarak gösterir.
@@ -283,13 +283,13 @@ Retriever'ın kullandığı ölçü ve mesafe versiyonu `src/lib/similarity.ts` 
     Türkçe soru, İngilizce kural: 0.701. Ortak kelime yok, dil bile farklı; model anlamdan yakın koydu. İlgisiz çift 0.456 aldı: "ilgisiz" bile 0 değil. Skorlar mutlak değil, görelidir.
   </Step>
   <Step title="Şaşırtan: paraphrase düşük kaldı" stage="p" phase="2">
-    "Tatil hakkım kaç gün?" ile "Yıllık ücretli izin süresi kıdeme göre belirlenir." 0.526 aldı: ilgisiz çiftin yalnızca 0.070 üstünde. Anlam yakın, skor pek değil.
+    "Tatil hakkım kaç gün?" ile "Yıllık ücretli izin …": ortak kelime yok, model yine de ilgisiz çiftten yakın koydu. Ama fark küçük: 0.526, ilgisiz çiftin (0.456) yalnızca 0.070 üstünde. Aramada skor değil sıra önemli; E sayfasında böyle bir soruda izin tablosu ancak 5. sıraya çıkıyor.
   </Step>
   <Step title="Tuzak: olumsuzluk" stage="p" phase="3">
     "… uzaktan çalışabilir" ile "… uzaktan çalışamaz": 0.841. Zıt anlam, çok yakın vektör. Embedding konuyu yakalar, evet mi hayır mı olduğunu kaçırabilir. Bu ayrımı cevabı yazan model metni okuyarak yapmalı.
   </Step>
   <Step title="İkiz tablolar" stage="p" phase="4">
-    Yurt içi ve yurt dışı harcırah soruları: 0.940. Farklı tablo, farklı sayı; vektörler neredeyse aynı. Değerlendirmede 3 ikiz-tablo sorusunun 1'inde doğru bölüm ilk sıraya çıkamadı.
+    Yurt içi ve yurt dışı harcırah soruları: 0.940. Farklı tablo, farklı sayı; vektörler neredeyse aynı. Günün sonunda kullanacağımız soru setinde bu türden 3 soru var; birinde doğru tablo ancak 2. sıraya çıktı.
   </Step>
   <Step title="1024 boyutu 2'ye indirmek" stage="map">
     `npm run map`, <Term id="pca">PCA</Term> ile 60 chunk'ı düzleme yansıtır. Yatay yön yayılımın %11,8'ini, dikey yön %8,3'ünü tutuyor; geri kalan yaklaşık %80 bu resimde yok. Her nokta bir chunk, işaret dokümanı gösteriyor.

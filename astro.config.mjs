@@ -19,7 +19,7 @@ export default defineConfig({
       defaultLocale: 'root',
       locales: { root: { label: 'Türkçe', lang: 'tr' } },
       tableOfContents: false,
-      customCss: ['@fontsource/caveat/400.css', '@fontsource/caveat/700.css', './src/styles/custom.css'],
+      customCss: ['@fontsource/kalam/400.css', '@fontsource/kalam/700.css', './src/styles/custom.css'],
       head: [
         { tag: 'script', content: presentScript },
         { tag: 'script', content: termScript },
@@ -33,8 +33,8 @@ export default defineConfig({
           items: items([
             ['neden-rag/model-bilmiyor', 'Model bilmiyor'],
             ['neden-rag/ragsiz-ragli', 'RAG’siz / RAG’li'],
-            ['neden-rag/rag-mi-fine-tune-mu', 'RAG mı fine-tune mı?'],
             ['neden-rag/rag-nedir', 'RAG nedir?'],
+            ['neden-rag/rag-mi-fine-tune-mu', 'RAG mı fine-tune mı?'],
           ]),
         },
         { label: '2 · Mimari', items: items([['mimari', 'İki şerit, bir vektör uzayı']]) },

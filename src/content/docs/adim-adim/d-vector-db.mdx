@@ -268,12 +268,12 @@ Bruno'daki `01-chroma` klasörü, kodumuzun yaptığı HTTP çağrılarının ay
 **4 · Bruno ile içeri bakın** (`local` ortamını seçin, `01-chroma` klasörü, sırayla):
 
 - `heartbeat` → bir sayı dönüyorsa Chroma ayakta.
-- `collections` → `kraken-policies`; `configuration` içinde `hnsw` ve `space: cosine`.
-- `count` → 60, adım 5'in log'uyla aynı.
+- `collections` → `kraken-policies`; `configuration` içinde `hnsw` ve `space: cosine`. Bu istek koleksiyonun id'sini de hatırlar.
+- `count` → 60, adım 5'in log'uyla aynı (A'daki İngilizce gizlilik kuralını yazdıysanız 59). `count` bu id'yi kullanır; catchup ya da sıfırlama sonrası id değişir, o zaman önce `collections`'ı yeniden gönderin.
 - `peek at three records` → `ids`, `documents`, `metadatas`. `include` listesine `"embeddings"` ekleyip tekrar gönderin: 1024 sayı da gelir.
 - `filter on metadata` → `where` içine `{ "access": "hr-only" }` yazın. Maaş bantları geliyor. Bu isteği kim gönderebilmeli? (Güvenlik sayfası.)
 
-**5 · Kalıcılık.** `podman compose down`, sonra `podman compose up -d` ve Bruno'da `count`: kayıtlar volume'da, hâlâ 60 olmalı.
+**5 · Kalıcılık.** `podman compose down`, sonra `podman compose up -d` ve Bruno'da önce `collections`, sonra `count`: kayıtlar volume'da, sayı değişmemeli (60, kuralı yazdıysanız 59).
 
 Podman çalışmıyorsa: `env.example` dosyasını `.env` adıyla kopyalayıp içine `STORE=json` yazın (ya da her komuta `--store json` ekleyin); gün boyunca JSON deposuyla devam edebilirsiniz.
 

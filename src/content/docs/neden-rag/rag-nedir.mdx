@@ -43,7 +43,7 @@ adı var; adı da ne yaptığını söylüyor.
         <text x="552" y="190" text-anchor="middle" class="fsub">kurallar + kaynaklar + soru</text>
       </g>
       <path d="M672 155 H697" class="farrow" marker-end="url(#rn-h)" />
-      <g class="ph ph3">
+      <g class="ph ph2">
         <rect x="705" y="90" width="175" height="130" rx="14" class="fbox fbox-frozen" />
         <text x="792" y="128" text-anchor="middle" class="flbl">G · Generation</text>
         <text x="792" y="156" text-anchor="middle" class="fsub">üret: model yazar</text>
@@ -56,23 +56,21 @@ adı var; adı da ne yaptığını söylüyor.
     </svg>
   </DeckFigure>
   <Step title="Adın açılımı">
-    <Term id="rag">RAG</Term> = Retrieval-Augmented Generation. Türkçesiyle: getirerek zenginleştirilmiş üretim. Üç kelime, sırayla çalışan üç iş; üçü de bugün bir dosya olarak karşınıza çıkacak.
+    <Term id="rag">RAG</Term> = Retrieval-Augmented Generation. Türkçesiyle: getirerek zenginleştirilmiş üretim. Üç kelime, sırayla çalışan üç iş. Repoda üç dosya: getirme iki dosya, zenginleştirme ile üretim tek dosya.
   </Step>
   <Step title="R · Retrieval: getir" phase="1">
-    Soru, dokümanlardan önceden hazırlanmış parçalar arasında aranır ve en ilgili birkaçı seçilir. Bizde üç iş: soruyu embed et, vector DB'de ara, <Term id="rerank">rerank</Term> ile yeniden sırala.
+    Soru, dokümanlardan önceden hazırlanmış parçalar arasında aranır ve en ilgili birkaçı seçilir. Bizde iki dosya: `6-retrieve.ts` soruyu embed edip vector DB'de arar, `7-rerank.ts` bulunanları <Term id="rerank">rerank</Term> ile yeniden sıralar.
   </Step>
-  <Step title="A · Augmented: zenginleştir" phase="2">
-    Seçilen parçalar numaralanıp sorunun önüne konur, üstüne kurallar eklenir. Modelin gördüğü girdi artık yalnızca soru değil: kurallar, kaynaklar ve soru.
-  </Step>
-  <Step title="G · Generation: üret" phase="3">
-    Model cevabı bu girdiden yazar ve kullandığı kaynağın numarasını ekler. Model, başlamadan önce kaynaksız sorduğumuz aynı gemma3:4b; ağırlıklarına kimse dokunmadı.
+  <Step title="A + G · zenginleştir ve üret" phase="2">
+    Seçilen parçalar numaralanıp sorunun önüne konur, üstüne kurallar eklenir. Model cevabı bu girdiden yazar ve kaynağın numarasını ekler. İkisi tek dosyada, `8-answer.ts`. Model, başlamadan önce kaynaksız sorduğumuz aynı gemma3:4b; ağırlıklarına kimse dokunmadı.
   </Step>
   <Step title="Tek cümlede">
     <p class="key">RAG, soruyu cevaplamadan önce ilgili doküman parçalarını bulup modelin önüne koyan ve cevabı bu parçalardan yazdıran düzenektir.</p>
   </Step>
 </Deck>
 
-Aynı üç iş kodda üç satır. `npm run ask` bir soruyu adım 6, 7 ve 8'den geçirir:
+Kodda üç satır: `retrieve`, `rerank`, `answer`. İlk ikisi R, üçüncüsü A ile G. `npm run ask` bir soruyu adım 6, 7 ve
+8'den geçirir:
 
 <RepoCode file="src/cli/ask.ts" />
 
@@ -88,8 +86,8 @@ Aynı üç iş kodda üç satır. `npm run ask` bir soruyu adım 6, 7 ve 8'den g
 
 ## Neyi çözmez?
 
-- **Stil ve format.** Modelin nasıl konuştuğu RAG'in işi değil: prompt ya da
-  [fine-tune](/neden-rag/rag-mi-fine-tune-mu/).
+- **Stil ve format.** Modelin nasıl konuştuğu RAG'in işi değil: prompt ya da fine-tune. Modeli değiştiren bu
+  ikinci yol sıradaki sayfada: [RAG mı fine-tune mı?](/neden-rag/rag-mi-fine-tune-mu/)
 - **Hesap.** Model yine bir dil modeli; kaynaktaki sayılarla işlem yaparken yanılabilir. Bunu bugün ölçmedik.
 - **Kötü veri.** Yanlış, eski ya da birbiriyle çelişen doküman, doğru getirilse de yanlış cevap üretir.
 - **Modelin okuma hatası.** Doğru parça önündeyken bile model yanlış satırı okuyabilir. Bu corpus'ta ölçtük:

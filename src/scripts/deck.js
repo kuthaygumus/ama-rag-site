@@ -94,7 +94,7 @@ export const deckScript = `
         d.classList.toggle('on', i === cur);
         d.classList.toggle('done', i < cur);
       });
-      count.textContent = 'ADIM ' + n + ' / ' + steps.length;
+      count.textContent = n + ' / ' + steps.length;
       fill.style.width = (n / steps.length * 100) + '%';
       prev.disabled = cur === 0;
       next.disabled = cur === steps.length - 1;

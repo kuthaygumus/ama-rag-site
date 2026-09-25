@@ -1,3 +1,6 @@
 ---
+/** `optional` marks an exercise that can be skipped without losing the thread: label "SIRA SENDE · İSTEĞE BAĞLI". */
+interface Props { optional?: boolean }
+const { optional = false } = Astro.props;
 ---
-<div class="yourturn"><slot /></div>
+<div class:list={['yourturn', { 'yourturn-optional': optional }]}><slot /></div>

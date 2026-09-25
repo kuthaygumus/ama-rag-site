@@ -11,8 +11,9 @@ import Takeaway from '../../../components/Takeaway.astro';
 Günden önce, bir kez. Her şey kendi dizüstünüzde çalışır: dil modelleri **Ollama**'da, vector DB (Chroma)
 **Podman**'da bir container olarak, pipeline'ın kendisi **Node.js** ile TypeScript olarak. Hiçbir veri dışarı çıkmaz.
 
-İnecekler (bu Mac'te `ollama list` ve `podman image ls` ile ölçüldü): `gemma3:4b` 3,3 GB · `bge-m3` 1,2 GB ·
-Chroma imajı 649 MB. Günden önce, iyi bir bağlantıda indirin.
+İnecekler (M serisi bir Mac'te `ollama list` ve `podman image ls` ile ölçüldü): `gemma3:4b` 3,3 GB · `bge-m3` 1,2 GB ·
+Chroma imajı 649 MB. Günden önce, iyi bir bağlantıda indirin. Şirket ağındaysanız önce
+[Kurulum sorunları › Şirket ağı](/kurulum-sorunlari/#şirket-ağı).
 
 | Ne | Ne işe yarar | Kontrol |
 |---|---|---|
@@ -89,6 +90,10 @@ Chroma imajı 649 MB. Günden önce, iyi bir bağlantıda indirin.
 
 <Log name="doctor" title="npm run doctor" />
 
+İlk çalıştırmada iki süre de modellerin belleğe yüklenmesini içerir: yukarıdaki çıktı soğuk başlangıçta, M serisi
+bir Mac'te alındı (embedding 1924 ms, cevap 4590 ms). Ollama bir modeli kullandıktan sonra birkaç dakika bellekte
+tutar; o arada ikinci kez çalıştırırsanız yükleme olmaz, süreler kısalır.
+
 Bir satırda `✗` varsa, yanında ne yapılacağı yazar. Hepsi tek tek:
 [Kurulum sorunları](/kurulum-sorunlari/).
 
@@ -141,9 +146,10 @@ Gerekmez. Aynı `compose.yaml` ile `docker compose up -d` çalışır; tek satı
 </FAQ>
 
 <FAQ q="GPU gerekir mi?">
-Hayır. Ollama varsa GPU'yu kullanır, yoksa işlemcide çalışır. `npm run doctor` bir cevabın süresini ölçer; bu
-Mac'te 391 ms sürdü (yukarıdaki çıktı). 20 saniyeyi geçerse "slow laptop" uyarısı çıkar: adımlar yine çalışır,
-yalnızca beklersiniz. Windows dizüstülerinde süreyi ölçmedik.
+Hayır. Ollama varsa GPU'yu kullanır, yoksa işlemcide çalışır. `npm run doctor` bir cevabın süresini ölçer; M
+serisi bir Mac'te, model yüklemesi dahil, 4590 ms sürdü (yukarıdaki çıktı). Süre 20 saniyeyi geçerse "slow laptop"
+uyarısı çıkar: adımlar yine çalışır, yalnızca beklersiniz. Uyarıyı ilk çalıştırmada gördüyseniz `npm run doctor`'u
+hemen bir kez daha çalıştırın; ikinci ölçümde model zaten bellektedir. Süreler donanıma göre değişir.
 </FAQ>
 
 <FAQ q="Ollama neden container'da değil?">

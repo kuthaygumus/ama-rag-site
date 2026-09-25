@@ -18,8 +18,8 @@ import Takeaway from '../../../components/Takeaway.astro';
 <DaysQuestion answer="50 iş günü (15 + 35)" how="bare model, no documents" />
 
 <Gate>
-Model, Kraken Air'in izin politikasını hiç görmedi. Yine de günün sorusuna tereddüt etmeden bir sayı söyledi:
-50 iş günü. Politikadaki sayı başka.
+Model, Kraken Air'in izin politikasını hiç görmedi. Günün sorusuna önce "işverenine bağlı olarak değişir" dedi,
+sonra yine de bir sayı uydurdu: 50 iş günü. Politikadaki sayı başka.
 </Gate>
 
 <Deck>
@@ -130,14 +130,14 @@ Model, Kraken Air'in izin politikasını hiç görmedi. Yine de günün sorusuna
         <path d="M758 265 H680" class="farrow" marker-end="url(#mb-b)" />
       </g>
       <g data-from="6">
-        <text x="30" y="219" class="fsub ffrozen-t">① ağırlıklara yaz: fine-tune</text>
+        <text x="30" y="219" class="fsub ffrozen-t">① ağırlıkları değiştir: fine-tune</text>
         <path d="M140 327 V378 H865 V315" class="farrow-on" marker-end="url(#mb-on)" />
         <text x="500" y="368" text-anchor="middle" class="fsub fnum">② soruyla birlikte önüne koy: RAG</text>
       </g>
     </svg>
   </DeckFigure>
   <Step title="Kaynaksız soru" stage="a">
-    Günün sorusunu modele tek başına sorduk. Tereddüt etmedi: 50 iş günü, üstelik hesabıyla (15 + 35). Model Kraken Air'in politikasını hiç görmedi; bu sayı o politikadan gelmiyor.
+    Günün sorusunu modele tek başına sorduk. Önce "işverenine bağlı olarak değişir" dedi, sonra yine de bir sayı verdi: 50 iş günü, üstelik hesabıyla (15 + 35). Model Kraken Air'in politikasını hiç görmedi; bu sayı o politikadan gelmiyor.
   </Step>
   <Step title="Nasıl yazdı?" stage="a">
     Model cevabı <Term id="token">token</Term> token yazar: her adımda, o ana kadarki metne en olası devamı seçer. "Kaç iş günü?" sorusundan sonra metinlerde hep bir sayı gelir. Sayının doğruluğunu kontrol eden bir adım yok.
@@ -152,7 +152,7 @@ Model, Kraken Air'in izin politikasını hiç görmedi. Yine de günün sorusuna
     Politika 22 iş günü diyor. Modelin içinde "bunu bilmiyorum" diye yanan bir ışık yok: uydurulan cevap da doğru cevap kadar akıcı çıkar. Buna <Term id="hallucination">halüsinasyon</Term> denir.
   </Step>
   <Step title="Bilgiyi modele vermenin iki yolu" stage="b">
-    Ya ağırlıklara yeniden yazarız (<Term id="finetune">fine-tune</Term>) ya da her soruda ilgili metni soruyla birlikte modelin önüne koyarız (<Term id="rag">RAG</Term>). Bu bölümün geri kalanı bu seçim üzerine.
+    Ya modeli kendi örneklerimizle yeniden eğitip ağırlıklarını değiştiririz (<Term id="finetune">fine-tune</Term>) ya da her soruda ilgili metni soruyla birlikte modelin önüne koyarız (<Term id="rag">RAG</Term>). Önce ikincisini deneyeceğiz; fine-tune'un neyi iyi öğrettiğine bölümün sonunda döneceğiz.
   </Step>
 </Deck>
 

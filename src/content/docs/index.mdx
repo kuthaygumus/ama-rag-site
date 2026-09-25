@@ -74,7 +74,7 @@ Gün boyu tek bir soru soracağız. Cevabı, pipeline büyüdükçe değişecek.
     Kurulumu bitirip `npm run doctor` çalıştırırız; "Ready." yazmalı. Sonra günün sorusunu modele tek başına, hiç doküman vermeden sorar ve cevabını not ederiz.
   </Step>
   <Step title="1 · Neden RAG?">
-    Model şirketimizin politikasını hiç görmedi, yine de kendinden emin bir sayı söylüyor. Bilgiyi modele vermenin iki yolu var: fine-tune ve RAG. Hangisi, ne zaman?
+    Model şirketimizin politikasını hiç görmedi, yine de bir sayı uyduruyor. Bilgiyi modele vermenin iki yolu var: RAG ve fine-tune. Hangisi, ne zaman?
   </Step>
   <Step title="2 · Mimari">
     Bütün pipeline tek çizimde: dokümanları bir kere hazırlayan şerit, her soruda çalışan şerit ve ikisinin buluştuğu vektör uzayı. Her kutu repodaki bir dosya.
@@ -93,10 +93,10 @@ Gün boyu tek bir soru soracağız. Cevabı, pipeline büyüdükçe değişecek.
   </Step>
 </Deck>
 
-## Akşam şunları yapabileceksiniz
+## Gün sonunda şunları yapabileceksiniz
 
-Bu gün, büyük dil modellerinin kurum verisini **güvenli ve doğru** kullanmasını sağlayan RAG mimarileri üzerine:
-veri hazırlama, chunking, embedding, retrieval, rerank, cevap üretimi ve kalite ölçümü. Akşam:
+Bugün, büyük dil modellerinin kurum verisini **güvenli ve doğru** kullanmasını sağlayan RAG mimarileri üzerine:
+veri hazırlama, chunking, embedding, retrieval, rerank, cevap üretimi ve kalite ölçümü. Gün sonunda:
 
 - Kurumsal bir kullanım için **uçtan uca bir RAG pipeline'ı tasarlayabileceksiniz** — [iki şeridin her kutusunu](/mimari/) kendi elinizle çalıştırmış olarak.
 - Veriyi hazırlayabileceksiniz: [ham dokümanı temizlemek](/adim-adim/a-ham-veri/) ve [doğru yerden bölmek](/adim-adim/b-chunking/).
@@ -113,7 +113,7 @@ veri hazırlama, chunking, embedding, retrieval, rerank, cevap üretimi ve kalit
 
 Kod: [github.com/kuthaygumus/ama-rag-workshop](https://github.com/kuthaygumus/ama-rag-workshop).
 
-Kraken Air ve bütün dokümanları **kurgudur**: şirket, politikalar ve rakamlar bu gün için yazıldı; gerçek bir
+Kraken Air ve bütün dokümanları **kurgudur**: şirket, politikalar ve rakamlar bu eğitim için yazıldı; gerçek bir
 şirketle ilgisi yoktur.
 
 <Takeaway>Bugün hiçbir adımı ezberden anlatmıyoruz: her ara çıktıyı açıp bakıyoruz.</Takeaway>

@@ -273,7 +273,7 @@ Retrieval, soru anında depodan en ilgili chunk'ları bulmaktır. Retriever bu i
 
 <h3 id="sibling">Sibling (kardeş fonksiyon)</h3>
 
-Repoda benzeri yazılmış bir fonksiyonun altına sizin yazacağınız fonksiyon: `englishFooter`, `dot`, `byParagraph`. `npm run check:sibling` test eder.
+Repoda benzeri yazılmış bir kuralın ya da fonksiyonun altına sizin yazacağınız kardeşi: `englishConfidential` bir kural (RegExp), `dot` ve `byParagraph` birer fonksiyon. `npm run check:sibling` üçünü de test eder.
 
 <h3 id="threshold">Skor eşiği</h3>
 
@@ -287,7 +287,7 @@ Modelin her soruda gördüğü sabit kurallar. Bizde 7 satır: rol, yalnızca ka
 
 <h3 id="temperature">Temperature ve seed</h3>
 
-Temperature modelin ne kadar rastgele seçeceğini, seed rastgeleliğin başlangıç noktasını belirler. Bizde temperature 0 ve sabit bir seed: aynı prompt, her dizüstünde aynı cevap.
+Temperature modelin ne kadar rastgele seçeceğini, seed rastgeleliğin başlangıç noktasını belirler. Bizde temperature 0 ve sabit bir seed: aynı makinede aynı prompt aynı cevabı verir. Farklı donanımlarda küçük farklar görülebilir.
 
 <h3 id="toggle">Toggle</h3>
 
@@ -299,7 +299,7 @@ Modelin okuduğu ve yazdığı en küçük metin parçası; kabaca bir kelimenin
 
 <h3 id="topk">Top-k</h3>
 
-Aramanın döndürdüğü en yakın k parça. Bizde k = 5; prompt'a bunların en iyi 3'ü girer. k küçükse cevap kaçabilir, büyükse prompt ve rerank büyür.
+Aramanın döndürdüğü en yakın k parça. Bizde k = 5; rerank bu 5'i sıralar, prompt'a en iyi 3'ü girer. k küçükse doğru parça kaçabilir; büyükse rerank çağrıları artar (her aday bir LLM çağrısı), prompt'a yine 3 parça girer.
 
 ## V
 

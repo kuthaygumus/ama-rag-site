@@ -1,6 +1,6 @@
 ---
 title: RAG mı fine-tune mı?
-description: Kısa düz yol mu, uzun tırmanış mı — bilgiyi modelin önüne koymak ile ağırlıklarına yazmak arasındaki seçim.
+description: Kısa düz yol mu, uzun tırmanış mı — bilgiyi modelin önüne koymak ile modelin ağırlıklarını değiştirmek arasındaki seçim.
 ---
 import Deck from '../../../components/Deck.astro';
 import DeckFigure from '../../../components/DeckFigure.astro';
@@ -12,8 +12,8 @@ import Term from '../../../components/Term.astro';
 import Takeaway from '../../../components/Takeaway.astro';
 
 <Gate>
-Model politikayı bilmiyor. Bilgiyi ona vermenin iki yolu var: her soruda önüne koymak ya da yeniden eğitip
-ağırlıklarına yazmak. İkisi aynı işi yapmaz.
+RAG'i gördük: model aynı kaldı, değişen önüne konan metindi. Öbür yol modelin kendisini değiştirmek: yeniden
+eğitip ağırlıklarını ayarlamak. İkisi aynı işi yapmaz.
 </Gate>
 
 <Deck>
@@ -42,29 +42,23 @@ ağırlıklarına yazmak. İkisi aynı işi yapmaz.
         <text x="790" y="300" text-anchor="end" class="fsub">② GPU'da eğit</text>
         <text x="875" y="215" text-anchor="end" class="fsub">③ ölç, tutmazsa tekrar</text>
       </g>
-      <g class="ph ph3" data-from="4">
+      <g class="ph ph3" data-from="3">
         <path d="M530 356 V136" class="farrow" stroke-dasharray="5 6" />
         <path d="M540 130 H915" class="faxis" stroke-dasharray="5 6" />
         <text x="545" y="178" class="fsub ffrozen-t">yükseklik:</text>
-        <text x="545" y="201" class="fsub ffrozen-t">ağırlıklara yazılan,</text>
-        <text x="545" y="224" class="fsub ffrozen-t">kalıcı bilgi</text>
+        <text x="545" y="201" class="fsub ffrozen-t">ağırlıklara işlenen</text>
+        <text x="545" y="224" class="fsub ffrozen-t">davranış</text>
       </g>
     </svg>
   </DeckFigure>
-  <Step title="İki yol, iki yolculuk">
-    Politikayı modele vermek istiyoruz. İki yol var: bilgiyi her soruda modelin önüne koymak (RAG) ya da modeli yeniden eğitip ağırlıklarına yazmak (<Term id="finetune">fine-tune</Term>).
-  </Step>
   <Step title="RAG: kısa, düz yol" phase="1">
     Hazır modelle yola çıkarsınız. Tek tümsek, dokümanları bir kere hazırlamak: <Term id="ingest">ingest</Term>. Bayrak zeminde, çünkü bilgi modelin içinde değil, önünde. Doküman değişirse yeniden ingest edilir; model hiç değişmez.
   </Step>
   <Step title="Fine-tune: uzun tırmanış" phase="2">
-    Örnek çiftleri hazırlanır, model GPU'da eğitilir, ölçülür, tutmazsa baştan. Uzun ve pahalı bir yol, ve bilgi her değiştiğinde yeniden tırmanılır.
+    Öbür yol modeli yeniden eğitmek: <Term id="finetune">fine-tune</Term>. Örnek çiftleri hazırlanır, model GPU'da eğitilir, ölçülür, tutmazsa baştan. Uzun bir yol; öğretilen şey değişirse yeniden tırmanılır.
   </Step>
-  <Step title="Bayrak neden daha yüksekte?" phase="3">
-    Tırmanışın sonunda bilgi ağırlıklara yazılır: kalıcıdır. Her soruda prompt'a eklenmez, context window'a takılmaz, soru başına ucuzdur. Yükseklik bu kalıcılığın hem ödülü hem bedeli.
-  </Step>
-  <Step title="Ne öğretir?">
-    Fine-tune en iyi davranış öğretir: ton, format, şirket terimleri. Olguları yarım hatırlayabilir ve kaynak gösteremez. RAG olguyu metinden okur ve kaynağını yazar.
+  <Step title="Bayrak neden yüksekte? Ne öğretir?" phase="3">
+    Tırmanışın sonunda ağırlıklar değişir. En iyi işlenen davranıştır: ton, format, şirket terimleri; her soruda prompt'a eklenmez. Olgular güvenilmez işlenir: model yarım hatırlar, benzer sayıları karıştırabilir, kaynak gösteremez. RAG olguyu metinden okur ve kaynağını yazar.
   </Step>
   <Step title="Birlikte">
     Rakip değiller: olgun bir kurulumda davranış fine-tune ile, değişen bilgi RAG ile verilir. Bugün yalnızca RAG kuruyoruz, çünkü bizim bilgimiz, politikalar, her yıl yeni sürümle geliyor.
@@ -75,18 +69,14 @@ ağırlıklarına yazmak. İkisi aynı işi yapmaz.
 
 | | RAG | Fine-tune |
 |---|---|---|
-| **Ne öğretir?** | Bilgi: politika ne diyor, kaç gün | Davranış: ton, format, terminoloji |
-| **Bilgi kalıcı mı?** | Hayır: her soruda prompt'a yeniden konur | Evet: ağırlıklara yazılır |
-| **Veri değişince** | Çok kolay: yeniden ingest, model aynı kalır ([Veri değişince](/adim-adim/veri-degisince/)) | Çok zor: yeniden eğitim — veri, GPU, ölçüm |
-| **Kaynak gösterir mi?** | Evet: `[1] hr-leave §3` | Hayır: nereden bildiğini gösteremez |
-| **Olgular** | Metinden okur | Yarım hatırlayabilir, karıştırabilir |
+| **Neyi değiştirir?** | Modele giden girdiyi; model aynı kalır | Modelin ağırlıklarını |
+| **En iyi öğrettiği** | Olgu: politika ne diyor, kaç gün | Davranış: ton, format, terminoloji |
+| **Olgular** | Metinden okur, kaynağını yazar: `[1] hr-leave §3` | Güvenilmez: yarım hatırlayabilir, karıştırabilir, kaynak gösteremez |
+| **Veri değişince** | Yeniden ingest, model aynı kalır ([Veri değişince](/adim-adim/veri-degisince/)) | Yeniden eğitim: veri, GPU, ölçüm |
 | **Soru başına maliyet** | Yüksek: kaynaklar da okunur (günün sorusunda 1155 prompt token; kaynaksız 34) | Düşük: yalnızca soru |
-| **Kurulum maliyeti** | Düşük: bir dizüstü yeter, eğitim yok | Yüksek: eğitim verisi, GPU, değerlendirme |
-| **Veri boyutu** | Sınırsız büyür; prompt'a yalnızca birkaç parça gider | Küçük, seçilmiş bir örnek seti |
-| **Prompt sınırı** | Var: context window (bu repoda `num_ctx: 8192`) | Yok: bilgi prompt'ta değil |
-| **Erişim kontrolü** | Metadata filtresi: kim neyi görebilir | Yok: ağırlığa yazılan bilgiyi her kullanıcı sorabilir |
+| **Erişim kontrolü** | Metadata filtresi: kim neyi görebilir | Yok: ağırlığa işlenen bilgiyi her kullanıcı sorabilir |
 
-RAG sütunundaki sayılar bu Mac'te ölçüldü (`npm run step -- 8` ve `npm run step -- 0`). Fine-tune sütununu bugün
+RAG sütunundaki token sayıları `npm run step -- 8` ve `npm run step -- 0` çıktılarından. Fine-tune sütununu bugün
 ölçmedik; oradaki satırlar genel deneyimdir.
 
 ## Fine-tune ne zaman doğru seçim?
@@ -105,7 +95,7 @@ fine-tune'dan değil, şu satırlardan alıyor:
 ## Sık sorulan
 
 <FAQ q="Politikayı fine-tune ile öğretsem olmaz mı?">
-Denenebilir, ama zayıf çalışır: model olguları yaklaşık hatırlar, benzer sayıları karıştırabilir ve kaynak
+Denenebilir, ama güvenilmez çalışır: model olguları yaklaşık hatırlar, benzer sayıları karıştırabilir ve kaynak
 gösteremez. Üstelik politikanın her yeni sürümü yeni bir eğitim demektir. Bunu bugün ölçmedik; olgular için
 RAG, davranış için fine-tune genel kuraldır.
 </FAQ>
@@ -120,4 +110,4 @@ süreyi düşürür; "ne öğretir" sorusunun cevabını değiştirmez — yine 
 uzar ya da model onlara güvenilir biçimde uymazsa fine-tune düşünülür.
 </FAQ>
 
-<Takeaway>Değişen gerçekler için RAG, değişmeyen davranış için FT.</Takeaway>
+<Takeaway>Değişen gerçekler için RAG, değişmeyen davranış için fine-tune.</Takeaway>

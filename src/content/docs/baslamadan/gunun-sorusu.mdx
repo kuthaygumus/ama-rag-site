@@ -14,38 +14,43 @@ import Takeaway from '../../../components/Takeaway.astro';
 
 <DaysQuestion />
 
-Kraken Air'de 7 yıldır çalışan biri, bu yıl kaç iş günü yıllık izin kullanabilir? Siz olsanız ne derdiniz?
-Bir sayı yazın; akşam, gün boyu çıkan cevaplarla karşılaştıracaksınız.
+Şirket Kraken Air, soru yukarıda: 7 yıllık bir çalışanın yıllık izni kaç iş günü? Siz olsanız ne derdiniz?
+Bir sayı yazın; gün sonunda, gün boyu çıkan cevaplarla karşılaştıracaksınız.
 
 <Deck>
   <DeckFigure slot="figure">
-    <svg viewBox="0 0 1000 300" role="img" aria-label="Günün sorusunun cevabı dört durakta yeniden sorulur">
-      <text x="30" y="40" class="flbl">npm run soru — dört durak, aynı soru</text>
+    <svg viewBox="0 0 1000 300" role="img" aria-label="Günün sorusunun cevabı beş durakta yeniden sorulur">
+      <text x="30" y="40" class="flbl">npm run soru — beş durak, aynı soru</text>
       <path d="M60 150 H940" class="farrow" />
-      <circle cx="120" cy="150" r="20" class="fbox fbox-on" />
-      <text x="120" y="96" text-anchor="middle" class="flbl">Başlamadan</text>
-      <text x="120" y="120" text-anchor="middle" class="fsub">model tek başına</text>
-      <circle cx="380" cy="150" r="20" class="fbox" />
-      <text x="380" y="96" text-anchor="middle" class="flbl">B · Chunking</text>
-      <text x="380" y="120" text-anchor="middle" class="fsub">chunk'lar hazır</text>
-      <circle cx="640" cy="150" r="20" class="fbox" />
-      <text x="640" y="96" text-anchor="middle" class="flbl">F · Cevap</text>
-      <text x="640" y="120" text-anchor="middle" class="fsub">bütün pipeline</text>
-      <circle cx="880" cy="150" r="20" class="fbox" />
-      <text x="880" y="96" text-anchor="middle" class="flbl">Veri değişince</text>
-      <text x="880" y="120" text-anchor="middle" class="fsub">2026 sürümü</text>
+      <circle cx="100" cy="150" r="20" class="fbox fbox-on" />
+      <text x="100" y="96" text-anchor="middle" class="flbl">Başlamadan</text>
+      <text x="100" y="120" text-anchor="middle" class="fsub">model tek başına</text>
+      <circle cx="300" cy="150" r="20" class="fbox" />
+      <text x="300" y="96" text-anchor="middle" class="flbl">B · fixed</text>
+      <text x="300" y="120" text-anchor="middle" class="fsub">300 karakterde kes</text>
+      <circle cx="500" cy="150" r="20" class="fbox" />
+      <text x="500" y="96" text-anchor="middle" class="flbl">B · section</text>
+      <text x="500" y="120" text-anchor="middle" class="fsub">başlıklardan kes</text>
+      <circle cx="700" cy="150" r="20" class="fbox" />
+      <text x="700" y="96" text-anchor="middle" class="flbl">D · Vector DB</text>
+      <text x="700" y="120" text-anchor="middle" class="fsub">Chroma dolunca</text>
+      <circle cx="900" cy="150" r="20" class="fbox" />
+      <text x="900" y="96" text-anchor="middle" class="flbl">Veri değişince</text>
+      <text x="900" y="120" text-anchor="middle" class="fsub">2026 sürümü</text>
       <g data-from="3">
-        <rect x="30" y="190" width="180" height="70" rx="10" class="fbox fbox-frozen" />
-        <text x="120" y="222" text-anchor="middle" class="flbl">50 iş günü</text>
-        <text x="120" y="247" text-anchor="middle" class="fsub">(15 + 35)</text>
+        <rect x="15" y="190" width="170" height="70" rx="10" class="fbox fbox-frozen" />
+        <text x="100" y="222" text-anchor="middle" class="flbl">50 iş günü</text>
+        <text x="100" y="247" text-anchor="middle" class="fsub">(15 + 35)</text>
       </g>
       <g data-from="4">
-        <rect x="290" y="190" width="180" height="70" rx="10" class="fbox" />
-        <text x="380" y="234" text-anchor="middle" class="flbl">?</text>
-        <rect x="550" y="190" width="180" height="70" rx="10" class="fbox" />
-        <text x="640" y="234" text-anchor="middle" class="flbl">?</text>
-        <rect x="790" y="190" width="180" height="70" rx="10" class="fbox" />
-        <text x="880" y="234" text-anchor="middle" class="flbl">?</text>
+        <rect x="215" y="190" width="170" height="70" rx="10" class="fbox" />
+        <text x="300" y="234" text-anchor="middle" class="flbl">?</text>
+        <rect x="415" y="190" width="170" height="70" rx="10" class="fbox" />
+        <text x="500" y="234" text-anchor="middle" class="flbl">?</text>
+        <rect x="615" y="190" width="170" height="70" rx="10" class="fbox" />
+        <text x="700" y="234" text-anchor="middle" class="flbl">?</text>
+        <rect x="815" y="190" width="170" height="70" rx="10" class="fbox" />
+        <text x="900" y="234" text-anchor="middle" class="flbl">?</text>
       </g>
     </svg>
   </DeckFigure>
@@ -53,13 +58,13 @@ Bir sayı yazın; akşam, gün boyu çıkan cevaplarla karşılaştıracaksını
     Doğru cevap için iki şey gerekir: Kraken Air'in izin politikası ve 7 yıllık kıdemin o politikada nereye düştüğü. İkisi de modelin eğitiminde yoktu.
   </Step>
   <Step title="Önce tahmin">
-    Bir sayı yazın. Soru gün boyunca her durakta yeniden sorulacak; akşam kendi tahmininizi bütün cevapların yanına koyacaksınız.
+    Bir sayı yazın. Soru gün boyunca beş durakta yeniden sorulacak; gün sonunda kendi tahmininizi bütün cevapların yanına koyacaksınız.
   </Step>
   <Step title="Model tek başına">
-    `npm run soru`, pipeline'da henüz hiçbir şey yokken soruyu doğrudan gemma3:4b'ye sorar. Model 50 iş günü dedi, hesabını da yaptı: 15 + 35. Doğru mu? Bir sonraki bölümde.
+    `npm run soru`, pipeline'da henüz hiçbir şey yokken soruyu doğrudan gemma3:4b'ye sorar. Model önce "işverenine bağlı olarak değişir" dedi, sonra yine de bir sayı verdi: 50 iş günü (15 + 35). Doğru mu? Bir sonraki bölümde.
   </Step>
   <Step title="Cevap gün boyu değişecek">
-    Her durakta aynı komut. Soru aynı, model aynı; değişen yalnızca modele ne verdiğimiz. Her cevap bir deftere yazılır ve komut her seferinde defterin tamamını gösterir.
+    Aynı komut dört kez daha çalışır: B'de dokümanlar iki farklı yoldan bölününce, D'de vector DB dolunca, en son politikanın 2026 sürümü gelince. Soru aynı, model aynı; değişen yalnızca modele ne verdiğimiz. Her cevap bir deftere yazılır.
   </Step>
 </Deck>
 
@@ -85,7 +90,7 @@ npm run step -- 0 "7 yıldır çalışıyorum, kaç gün yıllık iznim var?"
 ```
 </YourTurn>
 
-## Akşam şunları yapabileceksiniz
+## Gün sonunda şunları yapabileceksiniz
 
 - Bu sorunun cevabının **neden** değiştiğini adım adım gösterebileceksiniz: hangi parça bulundu, modele ne gitti,
   model ne yazdı.
@@ -105,7 +110,7 @@ değiştirmiyor mu? Tek soru yine de bir ölçü değildir; kaliteyi bir soru se
 </FAQ>
 
 <FAQ q="Model her seferinde aynı cevabı mı verir?">
-Aynı prompt'la, bu Mac'te evet: `npm run step -- 0` ile `npm run soru` aynı cevabı kelimesi kelimesine verdi.
+Aynı prompt'la, aynı makinede evet; M serisi bir Mac'te `npm run step -- 0` ile `npm run soru` aynı cevabı kelimesi kelimesine verdi.
 Repo bunu bilerek sağlar: `temperature: 0` ve sabit bir `seed`. Farklı donanımlarda küçük farklar görülebilir;
 bunu ölçmedik.
 </FAQ>

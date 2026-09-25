@@ -65,19 +65,19 @@ import Term from '../../../components/Term.astro';
     `corpus/2026/`: aynı 8 doküman, `edition: "2026"`. İzin tablosunda 5–9. yıllar 22'den 24 iş gününe, 10–14. yıllar 25'ten 26'ya çıktı. Model bundan habersiz; ağırlıkları hiç değişmedi.
   </Step>
   <Step title="Yeniden eğitim yok, yeniden ingest var">
-    `npm run ingest -- --edition 2026`: adım 1–5, yalnızca yeni dosyalar. Depoda artık 120 kayıt var: 2025'in 60'ı ve 2026'nın 60'ı yan yana. Model dosyasına dokunulmadı.
+    `npm run ingest -- --edition 2026`: adım 1–5, yalnızca yeni dosyalar. Depoda artık 120 kayıt var: 2025'in 60'ı ve 2026'nın 60'ı yan yana (İngilizce gizlilik kuralını yazdıysanız 59 + 59 = 118). Model dosyasına dokunulmadı.
   </Step>
   <Step title="Hangi sürüm cevap verecek?">
-    Adım 6'daki edition filtresi varsayılan olarak "latest": depodaki en yeni sürüm. Filtre aramanın içinde çalışıyor; 2025 kayıtları yarışa hiç girmiyor. Bu, E sayfasında adını koyduğumuz <Term id="metadata">metadata</Term> filtresi.
+    Adım 6'daki sürüm filtresi (`EDITION_FILTER`) varsayılan olarak "latest": depodaki en yeni sürüm. Filtre aramanın içinde çalışıyor; 2025 kayıtları yarışa hiç girmiyor. Bu, E sayfasında adını koyduğumuz <Term id="metadata">metadata</Term> filtresi.
   </Step>
   <Step title="Cevap değişti">
     `npm run soru`: "Tablodan, 7 tam yıl kıdeminde 24 iş günü …", kaynak `hr-leave@2026#3`. LEDGER, günün sorusunun sabahtan beri verdiği bütün cevapları sırayla gösteriyor.
   </Step>
   <Step title="Filtre olmasa?">
-    EDITION = "all": iki sürüm yarışıyor. Tablonun 2026 hâli 0.632, 2025 hâli 0.631 aldı; ikisi de prompt'a girdi, 24 ve 22 yan yana. Model bu kez 24 dedi; KAYNAK 1 2026'ydı. Sıra tersine dönerse ne olur? Ölçmedik.
+    Toggle `EDITION_FILTER = "all"` yapılınca iki sürüm yarışıyor. Tablonun 2026 hâli 0.632, 2025 hâli 0.631 aldı; ikisi de prompt'a girdi, 24 ve 22 yan yana. Model bu kez 24 dedi; KAYNAK 1 2026'ydı. Hangi sayının önde duracağını 0.001'lik bir fark belirledi.
   </Step>
   <Step title="Silmek mi, filtrelemek mi?">
-    Eski sürümü tutmak geçmişe dönük soruları ve denetimi mümkün kılar; bedeli, filtreyi her aramada doğru kurmak. Silmek de bir seçim: `replaceEdition` bir sürümü yerinde yeniler. Hangisi, bir tasarım kararı.
+    Eski sürümü tutmak geçmişe dönük soruları ve denetimi mümkün kılar; bedeli, filtreyi her aramada doğru kurmak. `replaceEdition` yalnızca aynı sürümü yerinde yeniler; 2026 gelince 2025'e dokunmaz. 2025'i silmek, `edition` koşuluyla ayrı bir silme; repoda bunun komutu yok. Hangisi, bir tasarım kararı.
   </Step>
 </Deck>
 
@@ -89,26 +89,26 @@ Yeni sürümün ingest'i: adım 3 izin tablosunun 2026 hâlini gösteriyor, adı
 
 <Log name="ingest-2026" title="… aynı komut, adım 4 ve 5" from={74} />
 
-Adım 4 hiçbir vektörü yeniden hesaplamadı: bu metinler bu Mac'te daha önce embed edilmişti. Önbelleğin anahtarı model ile metnin kendisi; sizde de yalnızca metni değişen chunk'lar yeniden hesaplanır, gerisi `.cache/` klasöründen gelir. Adımların süreleri toplamı bir saniyenin altında.
+Adım 4 hiçbir vektörü yeniden hesaplamadı: bu metinler, log'un alındığı makinede daha önce embed edilmişti. Önbelleğin anahtarı model ile metnin kendisi; sizde de yalnızca metni değişen chunk'lar yeniden hesaplanır, gerisi `.cache/` klasöründen gelir. Adımların süreleri toplamı bir saniyenin altında.
 
 <Log name="soru-4-2026" title="npm run soru" />
 
 Filtreyi kapatınca ikisi birden geliyor:
 
-<Log name="edition-all" title='npm run soru   (EDITION = "all")' />
+<Log name="edition-all" title='npm run soru   (toggle: sürüm filtresi EDITION_FILTER = "all")' />
 
-Hangi sürümün yarışacağını adım 6'daki toggle belirliyor:
+Hangi sürümün yarışacağını adım 6'daki toggle belirliyor. `.env` dosyasındaki `EDITION` başka bir şey: adım 1'in hangi `corpus/` klasörünü okuyacağını seçer.
 
 <RepoCode file="src/steps/6-retrieve.ts" from="// TOGGLE edition filter" to="alternative" />
 
 "latest", depodaki sürümlerin en yenisi demek: `retrieve()` içinde `(await o.store.editions()).at(-1)`.
 
 <YourTurn>
-**1 · Yeni sürümü ekleyin.** `npm run ingest -- --edition 2026`. Log'un sonunda: `120 in the store · editions: 2025, 2026`.
+**1 · Yeni sürümü ekleyin.** `npm run ingest -- --edition 2026`. Log'un sonunda: `120 in the store · editions: 2025, 2026` (İngilizce gizlilik kuralını yazdıysanız 118).
 
 **2 · Günün sorusu.** `npm run soru` → 24 iş günü, kaynak `hr-leave@2026#3`. LEDGER'da sabahtan bu yana bütün cevaplar.
 
-**3 · Bruno ile bakın.** `01-chroma` → `count`: 120. `filter on metadata` içinde `"edition": "2026"` yazıp gönderin.
+**3 · Bruno ile bakın.** `01-chroma` → önce `collections`, sonra `count`: 120 (kuralı yazdıysanız 118). `count`, koleksiyonun id'sini `collections` isteğinden alır; catchup ya da sıfırlama sonrası bu id değişir. `filter on metadata` içinde `"edition": "2026"` yazıp gönderin.
 
 **4 · Filtreyi kapatın.** `src/steps/6-retrieve.ts` → `TOGGLE edition filter` bloğunda `"all"; // alternative` satırını açın, varsayılanı kapatın. `npm run soru`: kaynaklarda iki sürüm yan yana mı? Toggle'ı geri alın.
 

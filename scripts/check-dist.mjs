@@ -5,7 +5,7 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
-const STAGE = /\b(eğitmen|projektör|salon|katılımcılar?|trainer|presenter|sunumda de|sorulabilir|fikri olan|el kaldır|odanın)/i;
+const STAGE = /\b(eğitmen|projektör|salon|katılımcılar?|trainer|presenter|sunumda de|sorulabilir|fikri olan|el kaldır|odanın|odada|the room)/i;
 const walk = (d) => readdirSync(d).flatMap((n) => (statSync(join(d, n)).isDirectory() ? walk(join(d, n)) : [join(d, n)]));
 let problems = 0, svgs = 0;
 for (const f of walk('dist').filter((f) => f.endsWith('.html'))) {
