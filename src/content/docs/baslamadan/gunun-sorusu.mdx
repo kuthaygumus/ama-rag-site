@@ -1,21 +1,24 @@
 ---
 title: Günün sorusu
-description: Bütün gün aynı soru. Cevabı, pipeline büyüdükçe değişecek.
+description: Bütün gün aynı soru. Önce sizin tahmininiz, sonra modelin hiç doküman görmeden verdiği cevap.
 ---
 import Deck from '../../../components/Deck.astro';
 import DeckFigure from '../../../components/DeckFigure.astro';
 import Step from '../../../components/Step.astro';
 import DaysQuestion from '../../../components/DaysQuestion.astro';
+import Guess from '../../../components/Guess.astro';
 import RepoCode from '../../../components/RepoCode.astro';
 import Log from '../../../components/Log.astro';
 import YourTurn from '../../../components/YourTurn.astro';
 import FAQ from '../../../components/FAQ.astro';
 import Takeaway from '../../../components/Takeaway.astro';
 
-<DaysQuestion />
+<DaysQuestion>
+  <Guess />
+</DaysQuestion>
 
-Şirket Kraken Air, soru yukarıda: 7 yıllık bir çalışanın yıllık izni kaç iş günü? Siz olsanız ne derdiniz?
-Bir sayı yazın; gün sonunda, gün boyu çıkan cevaplarla karşılaştıracaksınız.
+Şirketimiz kurgusal bir havayolu, Kraken Air. Bugün kuracağımız her parçayı bu tek soruyla deneyeceğiz.
+Başlamadan önce iki cevabı kaydediyoruz: sizin tahmininiz ve modelin, hiç doküman görmeden verdiği cevap.
 
 <Deck>
   <DeckFigure slot="figure">
@@ -33,7 +36,7 @@ Bir sayı yazın; gün sonunda, gün boyu çıkan cevaplarla karşılaştıracak
       <text x="500" y="120" text-anchor="middle" class="fsub">başlıklardan kes</text>
       <circle cx="700" cy="150" r="20" class="fbox" />
       <text x="700" y="96" text-anchor="middle" class="flbl">D · Vector DB</text>
-      <text x="700" y="120" text-anchor="middle" class="fsub">Chroma dolunca</text>
+      <text x="700" y="120" text-anchor="middle" class="fsub">veritabanına yükle</text>
       <circle cx="900" cy="150" r="20" class="fbox" />
       <text x="900" y="96" text-anchor="middle" class="flbl">Veri değişince</text>
       <text x="900" y="120" text-anchor="middle" class="fsub">2026 sürümü</text>
@@ -42,7 +45,7 @@ Bir sayı yazın; gün sonunda, gün boyu çıkan cevaplarla karşılaştıracak
         <text x="100" y="222" text-anchor="middle" class="flbl">50 iş günü</text>
         <text x="100" y="247" text-anchor="middle" class="fsub">(15 + 35)</text>
       </g>
-      <g data-from="4">
+      <g data-from="5">
         <rect x="215" y="190" width="170" height="70" rx="10" class="fbox" />
         <text x="300" y="234" text-anchor="middle" class="flbl">?</text>
         <rect x="415" y="190" width="170" height="70" rx="10" class="fbox" />
@@ -58,20 +61,28 @@ Bir sayı yazın; gün sonunda, gün boyu çıkan cevaplarla karşılaştıracak
     Doğru cevap için iki şey gerekir: Kraken Air'in izin politikası ve 7 yıllık kıdemin o politikada nereye düştüğü. İkisi de modelin eğitiminde yoktu.
   </Step>
   <Step title="Önce tahmin">
-    Bir sayı yazın. Soru gün boyunca beş durakta yeniden sorulacak; gün sonunda kendi tahmininizi bütün cevapların yanına koyacaksınız.
+    Siz olsanız ne derdiniz? Sayıyı yukarıdaki kutuya yazın. Bu tarayıcıda saklanır ve Kapanış'ta günün bütün cevaplarının yanına gelir.
   </Step>
   <Step title="Model tek başına">
-    `npm run question`, pipeline'da henüz hiçbir şey yokken soruyu doğrudan gemma3:4b'ye sorar. Model önce "işverenine bağlı olarak değişir" dedi, sonra yine de bir sayı verdi: 50 iş günü (15 + 35). Doğru mu? Bir sonraki bölümde.
+    `npm run question` soruyu gemma3:4b'ye tek başına sorar; yanında hiçbir doküman yok. Model önce "işverenine bağlı olarak değişir" dedi, sonra yine de bir sayı verdi: 50 iş günü (15 + 35).
   </Step>
-  <Step title="Cevap gün boyu değişecek">
-    Aynı komut dört kez daha çalışır: B'de dokümanlar iki farklı yoldan bölününce, D'de vector DB dolunca, en son politikanın 2026 sürümü gelince. Soru aynı, model aynı; değişen yalnızca modele ne verdiğimiz. Her cevap bir deftere yazılır.
+  <Step title="İki tahmin">
+    Sizin sayınız da modelin 50'si de tahmin: ikisi de genel bilgiden geliyor. Kraken Air'in izin politikasını ne siz gördünüz ne model; doğru cevap o dokümanda. Günün geri kalanında o dokümanın doğru parçasını bulup modele veren bir pipeline kuracağız.
+  </Step>
+  <Step title="Aynı komut, beş durak">
+    Bu komutu gün içinde dört kez daha çalıştıracağız ve her seferinde modele bir şey daha vermiş olacağız: B'de dokümanları iki farklı yoldan parçalara bölünce (iki kez), D'de parçalar bir veritabanına yüklenince, en son politikanın 2026 sürümü gelince. Soru da model de hep aynı kalıyor; cevap değişirse onu o adımda eklediğimiz şey değiştirmiştir. Her cevap bir deftere, `LEDGER`'a yazılır.
   </Step>
 </Deck>
 
 <Log name="question-0-bare" title="npm run question" />
 
-`HOW` satırı cevabın nasıl üretildiğini söyler: şimdilik `bare model, no documents`. Alttaki `LEDGER` defterdir;
-her çalıştırma bir satır ekler.
+Çıktıda dört parça var:
+
+- `GÜNÜN SORUSU`: sorulan soru, her çalıştırmada aynı.
+- `HOW`: cevabın nasıl üretildiği. Şimdilik `bare model, no documents`: model yalnızca soruyu gördü.
+- Cevap: modelin yazdığı metin. Altında kaynak listesi yok, çünkü modele kaynak verilmedi. Pipeline kurulunca
+  cevabın altına kullandığı parçalar gelir, örneğin `[1] hr-leave@2025#3`.
+- `LEDGER`: defter. Her çalıştırma bir satır ekler; gün bitince her durağın cevabı burada alt alta durur.
 
 Soru kodda tek bir satır:
 
@@ -90,16 +101,11 @@ npm run step -- 0 "7 yıldır çalışıyorum, kaç gün yıllık iznim var?"
 ```
 </YourTurn>
 
-## Gün sonunda şunları yapabileceksiniz
+## Elimizde ne var?
 
-- Bu sorunun cevabının **neden** değiştiğini adım adım gösterebileceksiniz: hangi parça bulundu, modele ne gitti,
-  model ne yazdı.
-- Kurumsal bir kullanım için **uçtan uca bir RAG pipeline'ı tasarlayabileceksiniz**: veri hazırlama, chunking,
-  embedding, retrieval, rerank, cevap üretimi.
-- Kaliteyi tek bir soruyla değil, bir **soru setiyle ölçebileceksiniz**.
-- Kritik kararları dört eksende tartabileceksiniz: **doğruluk, güvenlik, performans, maliyet**.
-
-Günün bütün haritası [ana sayfada](/).
+- Sizin tahmininiz, sayfanın başındaki kutuda.
+- Modelin hiç doküman görmeden verdiği cevap: 50 iş günü. Doğru mu? Cevabı [Model bilmiyor](/neden-rag/model-bilmiyor/) sayfasında.
+- Bu cevabı ve bundan sonrakileri sırayla tutan defter.
 
 ## Sık sorulan
 
@@ -113,6 +119,10 @@ değiştirmiyor mu? Tek soru yine de bir ölçü değildir; kaliteyi bir soru se
 Aynı prompt'la, aynı makinede evet; M serisi bir Mac'te `npm run step -- 0` ile `npm run question` aynı cevabı kelimesi kelimesine verdi.
 Repo bunu bilerek sağlar: `temperature: 0` ve sabit bir `seed`. Farklı donanımlarda küçük farklar görülebilir;
 bunu ölçmedik.
+</FAQ>
+
+<FAQ q="Tahminim nerede duruyor?">
+Bu tarayıcıda. Başka bir tarayıcıda ya da gizli pencerede kutu boş görünür; sayı hiçbir yere gönderilmez.
 </FAQ>
 
 <FAQ q="Defter nerede duruyor?">

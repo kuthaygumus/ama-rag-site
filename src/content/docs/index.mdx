@@ -18,7 +18,7 @@ Kuracağımız şey iki şerit: dokümanları bir kere hazırlayan şerit (üstt
 
 <WhereAmI at="load clean chunk embed store question qembed search rerank prompt answer" />
 
-Gün boyu tek bir soru soracağız. Cevabı, pipeline büyüdükçe değişecek.
+Gün boyu tek bir soru soracağız. Pipeline'a her parça eklendiğinde aynı soruyu yeniden soracak ve cevabın nasıl değiştiğine bakacağız.
 
 <DaysQuestion />
 
@@ -71,7 +71,7 @@ Gün boyu tek bir soru soracağız. Cevabı, pipeline büyüdükçe değişecek.
     </svg>
   </DeckFigure>
   <Step title="Başlamadan">
-    Kurulumu bitirip `npm run doctor` çalıştırırız; "Ready." yazmalı. Sonra günün sorusunu modele tek başına, hiç doküman vermeden sorar ve cevabını not ederiz.
+    Kurulumu bitirip `npm run doctor` çalıştırırız; "Ready." yazmalı. Sonra günün sorusu için bir tahmin yazar, aynı soruyu modele hiç doküman vermeden sorarız.
   </Step>
   <Step title="1 · Neden RAG?">
     Model şirketimizin politikasını hiç görmedi, yine de bir sayı uyduruyor. Bilgiyi modele vermenin iki yolu var: RAG ve fine-tune. Hangisi, ne zaman?

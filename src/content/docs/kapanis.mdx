@@ -6,6 +6,7 @@ import Deck from '../../components/Deck.astro';
 import DeckFigure from '../../components/DeckFigure.astro';
 import Step from '../../components/Step.astro';
 import DaysQuestion from '../../components/DaysQuestion.astro';
+import Guess from '../../components/Guess.astro';
 import Gate from '../../components/Gate.astro';
 import Figure from '../../components/Figure.astro';
 import Log from '../../components/Log.astro';
@@ -104,7 +105,7 @@ Bir günde bir RAG pipeline'ı kurduk ve her ara çıktısını açtık. Kurumsa
     Her değişiklikten sonra aynı gold set: retrieval için hit@1, recall@5, MRR; cevap için `--answers`. 2025 gold set üzerinde 23 cevabın 23'ü doğru. Sıradaki iş: gold set'i kullanımdan gelen zor sorularla, 2026 için de yeni beklenen değerlerle büyütmek.
   </Step>
   <Step title="Günün sorusu, bütün gün">
-    `npm run question` defteri: RAG'siz model "işverenine bağlı" dedi, yine de 50 uydurdu; fixed chunk'larla "yer almıyor"; section'la 22; Chroma'yla yine 22; 2026 sürümüyle 24. Model beş seferde de aynı gemma3:4b'ydi; cevabı değiştiren pipeline. Sabah yazdığınız sayı hangisine yakın?
+    `npm run question` defteri: RAG'siz model "işverenine bağlı" dedi, yine de 50 uydurdu; fixed chunk'larla "yer almıyor"; section'la 22; Chroma'yla yine 22; 2026 sürümüyle 24. Model beş seferde de aynı gemma3:4b'ydi; cevabı değiştiren pipeline. <Guess echo />
   </Step>
 </Deck>
 

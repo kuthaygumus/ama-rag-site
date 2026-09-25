@@ -1,0 +1,13 @@
+---
+/** The reader's guess for the day's question, kept in this browser by guess.js. `echo` shows it back later in the day. */
+interface Props { echo?: boolean }
+const { echo } = Astro.props;
+---
+{echo ? (
+  <span class="guess-echo" data-guess-echo hidden>Sabahki tahmininiz <b data-guess-value></b> iş günüydü; hangisine yakın?</span>
+) : (
+  <label class="guess">
+    Tahmininiz <input type="number" inputmode="numeric" min="0" max="365" data-guess /> iş günü
+    <span class="guess-note">bu tarayıcıda saklanır</span>
+  </label>
+)}
