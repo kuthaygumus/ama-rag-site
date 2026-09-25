@@ -147,7 +147,7 @@ Bir dokümanın tamamını her soruda modele veremeyiz. Günün sorusunun cevab�
     `bySection(doc)`: her `## n.` başlığında keser ve her parçanın önüne `[Yıllık İzin Politikası › 3. Yıllık Ücretli İzin]` ekler. Tablo, onu açıklayan başlıkla aynı parçada kalır.
   </Step>
   <Step title="Aynı soru, doğru cevap" stage="b">
-    Chunker'ı `section` yapıp adım 3'ü yeniden çalıştırınca `npm run soru`: "Tablodan, 7 tam yıl kıdeminde 22 iş günü …" ve kaynak `hr-leave@2025#3`. Model aynı, arama kodu aynı, kurallar aynı. Değişen tek şey makasın yeri.
+    Chunker'ı `section` yapıp adım 3'ü yeniden çalıştırınca `npm run question`: "Tablodan, 7 tam yıl kıdeminde 22 iş günü …" ve kaynak `hr-leave@2025#3`. Model aynı, arama kodu aynı, kurallar aynı. Değişen tek şey makasın yeri.
   </Step>
   <Step title="Bedeli: büyük parça, ortak ön ek" stage="b">
     Section: 60 chunk, ortalama 688 karakter (fixed: 139, ortalama 287); büyük parça prompt'ta daha çok yer kaplar. `[Doküman › Bölüm]` ön eki, A'da attığımız sayfa başlığına benziyor; ama o bilgi taşımıyordu, bu taşıyor. Bedeli: aynı dokümanın chunk'ları birbirine yaklaşır. E sayfasında göreceğiz.
@@ -155,18 +155,18 @@ Bir dokümanın tamamını her soruda modele veremeyiz. Günün sorusunun cevab�
 </Deck>
 
 <Example>
-c08'in başlıksız satırları, log'da tam olarak böyle görünüyor. `soru` bu adımda bir kara kutu ile arıyor (vektörler ve depo henüz yok, C ve D sayfalarında açacağız) ama sonuç açık: cevap satırı prompt'a ulaşmadı.
+c08'in başlıksız satırları, log'da tam olarak böyle görünüyor. `npm run question` bu adımda bir kara kutu ile arıyor (vektörler ve depo henüz yok, C ve D sayfalarında açacağız) ama sonuç açık: cevap satırı prompt'a ulaşmadı.
 </Example>
 
 <Log name="03-chunk-fixed" title="npm run step -- 3   (CHUNKER = fixed)" />
 
-<Log name="soru-1-fixed" title="npm run soru" to={10} />
+<Log name="question-1-fixed" title="npm run question" to={10} />
 
 Aynı adım, chunker `section`. Cevap satırı artık başlığıyla ve bölüm adıyla aynı parçada:
 
 <Log name="03-chunk-section" title="npm run step -- 3   (CHUNKER = section)" />
 
-<Log name="soru-2-section" title="npm run soru" />
+<Log name="question-2-section" title="npm run question" />
 
 LEDGER satırları günün sorusunun cevabını adım adım kaydediyor: modelin tek başına uydurması, fixed chunk'larla "yer almıyor", section chunk'larla 22 iş günü.
 
@@ -183,9 +183,9 @@ LEDGER satırları günün sorusunun cevabını adım adım kaydediyor: modelin 
 
 **2 · Parçaları açın.** `data/3-chunks.json` içinde `hr-leave@2025#c07` ve `hr-leave@2025#c08` kayıtlarını bulun. Tablo başlığı hangisinde, `| 7 | 22 |` hangisinde? `sections` alanı ne diyor?
 
-**3 · Cevabı sorun.** `npm run soru` → "Bu bilgi politikalarda yer almıyor." İlk çalıştırmada biraz sürer: kara kutu chunk'ları o an embed ediyor.
+**3 · Cevabı sorun.** `npm run question` → "Bu bilgi politikalarda yer almıyor." İlk çalıştırmada biraz sürer: kara kutu chunk'ları o an embed ediyor.
 
-**4 · Geri alın.** Toggle'ı `section`'a döndürün, `npm run step -- 3` ve yeniden `npm run soru` → 22 iş günü, kaynak `[1] hr-leave@2025#3`. LEDGER'da cevabın nasıl değiştiğini görün.
+**4 · Geri alın.** Toggle'ı `section`'a döndürün, `npm run step -- 3` ve yeniden `npm run question` → 22 iş günü, kaynak `[1] hr-leave@2025#3`. LEDGER'da cevabın nasıl değiştiğini görün.
 
 **Ev ödevi · Üçüncü yol.** Dosyanın altında `byParagraph` bekliyor: boş satırlardan kes, paragrafları en fazla `max` karakterlik parçalara topla (bunu `packParagraphs()` zaten yapıyor), her parçanın önüne `[${doc.title}]` ekle. Kontrol: `npm run check:sibling` → `step 3 · byParagraph (homework)` yeşil.
 

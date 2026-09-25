@@ -95,7 +95,7 @@ B sayfasında chunker'ı değiştirdik ve günün sorusu "yer almıyor"dan "22 i
     23 sorudan 4'ü puanlanmaz: erişim ve kapsam dışı sorularda doğru bölüm yoktur. Kalan 19 soruda section chunker'la hit@1 0.842: 19 sorunun 16'sında doğru bölüm birinci. Her soru ≈ 0.05 (1/19). Ölçüm rerank'tan önce; q02 burada ıskalamış sayılır.
   </Step>
   <Step title="Aynı sınav, fixed chunker">
-    Fixed chunk'larla, cömert puanlamaya rağmen: hit@1 0.368, 19 sorunun 7'si. recall@5 0.895: q01 ve q02'de doğru bölüm ilk 5'e hiç girmedi. q01 günün sorusu; B sayfasında fixed'le `soru`'nun "yer almıyor" demesi aynı sonucun cevaptaki izi.
+    Fixed chunk'larla, cömert puanlamaya rağmen: hit@1 0.368, 19 sorunun 7'si. recall@5 0.895: q01 ve q02'de doğru bölüm ilk 5'e hiç girmedi. q01 günün sorusu; B sayfasında fixed'le `npm run question`'ın "yer almıyor" demesi aynı sonucun cevaptaki izi.
   </Step>
   <Step title="Zayıf yer nerede?">
     Section chunker'la türe göre hit@1: 8 doğrudan soruda 1.00, 4 TR→EN soruda 1.00; 3 ikiz tablo sorusunda (yurt içi / yurt dışı) 0.67, 2 tablo sorusunda 0.50, başka kelimelerle sorulan 1 soruda (paraphrase) 0.00. Bir sonraki iyileştirme buradan başlar.
@@ -121,7 +121,7 @@ Aynı 23 soru, aynı model, aynı k = 5; tek fark chunker. `fixed` her 300 karak
 | doğrudan sorular, hit@1 (8 soru) | 0.63 | 1.00 |
 | TR→EN soruları, hit@1 (4 soru) | 0.25 | 1.00 |
 
-B sayfasında gördüğümüz tek soruluk düzelme tesadüf değilmiş. Doğru bölümü birinci getirilen soru sayısı 19 soruda 7'den 16'ya çıktı (0.368 → 0.842): section chunker 9 soru kazandırdı, hiçbirini kaybettirmedi. Fark yalnızca sırada değil: fixed'de q01 ve q02'nin doğru bölümü ilk 5'e hiç girmedi (recall@5 0.895 = 19 sorunun 17'si). q01 günün sorusu; fixed chunk'larla `soru`'nun "yer almıyor" demesi bununla uyumlu.
+B sayfasında gördüğümüz tek soruluk düzelme tesadüf değilmiş. Doğru bölümü birinci getirilen soru sayısı 19 soruda 7'den 16'ya çıktı (0.368 → 0.842): section chunker 9 soru kazandırdı, hiçbirini kaybettirmedi. Fark yalnızca sırada değil: fixed'de q01 ve q02'nin doğru bölümü ilk 5'e hiç girmedi (recall@5 0.895 = 19 sorunun 17'si). q01 günün sorusu; fixed chunk'larla `npm run question`'ın "yer almıyor" demesi bununla uyumlu.
 
 Bu fark, fixed'e cömert bir puanlamayla bile çıktı: bölüm 3'e değen her fixed chunk bölüm 3 sayılır, `| 7 | 22 |` satırını taşıyan ama tablonun başlığını taşımayan c08 dahil.
 </Example>

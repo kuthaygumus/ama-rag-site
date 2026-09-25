@@ -71,7 +71,7 @@ import Term from '../../../components/Term.astro';
     Adım 6'daki sürüm filtresi (`EDITION_FILTER`) varsayılan olarak "latest": depodaki en yeni sürüm. Filtre aramanın içinde çalışıyor; 2025 kayıtları yarışa hiç girmiyor. Bu, E sayfasında adını koyduğumuz <Term id="metadata">metadata</Term> filtresi.
   </Step>
   <Step title="Cevap değişti">
-    `npm run soru`: "Tablodan, 7 tam yıl kıdeminde 24 iş günü …", kaynak `hr-leave@2026#3`. LEDGER, günün sorusuna sabahtan beri verilen bütün cevapları sırayla gösteriyor.
+    `npm run question`: "Tablodan, 7 tam yıl kıdeminde 24 iş günü …", kaynak `hr-leave@2026#3`. LEDGER, günün sorusuna sabahtan beri verilen bütün cevapları sırayla gösteriyor.
   </Step>
   <Step title="Filtre olmasa?">
     Toggle `EDITION_FILTER = "all"` yapılınca iki sürüm yarışıyor. Tablonun 2026 hâli 0.632, 2025 hâli 0.631 aldı; ikisi de prompt'a girdi, 24 ve 22 yan yana. Model bu kez 24 dedi; KAYNAK 1 2026'ydı. Hangi sayının önde duracağını 0.001'lik bir fark belirledi.
@@ -91,11 +91,11 @@ Yeni sürümün ingest'i: adım 3 izin tablosunun 2026 hâlini gösteriyor, adı
 
 Adım 4 hiçbir vektörü yeniden hesaplamadı: bu metinler, log'un alındığı makinede daha önce embed edilmişti. Önbelleğin anahtarı model ile metnin kendisi; sizde de yalnızca metni değişen chunk'lar yeniden hesaplanır, gerisi `.cache/` klasöründen gelir. Adımların süreleri toplamı bir saniyenin altında.
 
-<Log name="soru-4-2026" title="npm run soru" />
+<Log name="question-4-2026" title="npm run question" />
 
 Filtreyi kapatınca ikisi birden geliyor:
 
-<Log name="edition-all" title='npm run soru   (toggle: sürüm filtresi EDITION_FILTER = "all")' />
+<Log name="edition-all" title='npm run question   (toggle: sürüm filtresi EDITION_FILTER = "all")' />
 
 Hangi sürümün yarışacağını adım 6'daki toggle belirliyor. `.env` dosyasındaki `EDITION` başka bir şey: adım 1'in hangi `corpus/` klasörünü okuyacağını seçer.
 
@@ -106,11 +106,11 @@ Hangi sürümün yarışacağını adım 6'daki toggle belirliyor. `.env` dosyas
 <YourTurn>
 **1 · Yeni sürümü ekleyin.** `npm run ingest -- --edition 2026`. Log'un sonunda: `120 in the store · editions: 2025, 2026` (İngilizce gizlilik kuralını yazdıysanız 118).
 
-**2 · Günün sorusu.** `npm run soru` → 24 iş günü, kaynak `hr-leave@2026#3`. LEDGER'da sabahtan bu yana bütün cevaplar.
+**2 · Günün sorusu.** `npm run question` → 24 iş günü, kaynak `hr-leave@2026#3`. LEDGER'da sabahtan bu yana bütün cevaplar.
 
 **3 · Bruno ile bakın.** `01-chroma` → önce `collections`, sonra `count`: 120 (kuralı yazdıysanız 118). `count`, koleksiyonun id'sini `collections` isteğinden alır; catchup ya da sıfırlama sonrası bu id değişir. `filter on metadata` içinde `"edition": "2026"` yazıp gönderin.
 
-**4 · Filtreyi kapatın.** `src/steps/6-retrieve.ts` → `TOGGLE edition filter` bloğunda `"all"; // alternative` satırını açın, varsayılanı kapatın. `npm run soru`: kaynaklarda iki sürüm yan yana mı? Toggle'ı geri alın.
+**4 · Filtreyi kapatın.** `src/steps/6-retrieve.ts` → `TOGGLE edition filter` bloğunda `"all"; // alternative` satırını açın, varsayılanı kapatın. `npm run question`: kaynaklarda iki sürüm yan yana mı? Toggle'ı geri alın.
 
 **5 · Başka bir değişiklik.** 2026'da bilgi güvenliği politikasında şifre değiştirme süresi de değişti. `npm run ask -- "Şifremi ne sıklıkla değiştirmem gerekiyor?"`: cevap hangi sürümden geldi, kaynak hangi dilde?
 

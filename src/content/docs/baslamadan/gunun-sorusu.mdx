@@ -20,7 +20,7 @@ Bir sayı yazın; gün sonunda, gün boyu çıkan cevaplarla karşılaştıracak
 <Deck>
   <DeckFigure slot="figure">
     <svg viewBox="0 0 1000 300" role="img" aria-label="Günün sorusunun cevabı beş durakta yeniden sorulur">
-      <text x="30" y="40" class="flbl">npm run soru — beş durak, aynı soru</text>
+      <text x="30" y="40" class="flbl">npm run question — beş durak, aynı soru</text>
       <path d="M60 150 H940" class="farrow" />
       <circle cx="100" cy="150" r="20" class="fbox fbox-on" />
       <text x="100" y="96" text-anchor="middle" class="flbl">Başlamadan</text>
@@ -61,14 +61,14 @@ Bir sayı yazın; gün sonunda, gün boyu çıkan cevaplarla karşılaştıracak
     Bir sayı yazın. Soru gün boyunca beş durakta yeniden sorulacak; gün sonunda kendi tahmininizi bütün cevapların yanına koyacaksınız.
   </Step>
   <Step title="Model tek başına">
-    `npm run soru`, pipeline'da henüz hiçbir şey yokken soruyu doğrudan gemma3:4b'ye sorar. Model önce "işverenine bağlı olarak değişir" dedi, sonra yine de bir sayı verdi: 50 iş günü (15 + 35). Doğru mu? Bir sonraki bölümde.
+    `npm run question`, pipeline'da henüz hiçbir şey yokken soruyu doğrudan gemma3:4b'ye sorar. Model önce "işverenine bağlı olarak değişir" dedi, sonra yine de bir sayı verdi: 50 iş günü (15 + 35). Doğru mu? Bir sonraki bölümde.
   </Step>
   <Step title="Cevap gün boyu değişecek">
     Aynı komut dört kez daha çalışır: B'de dokümanlar iki farklı yoldan bölününce, D'de vector DB dolunca, en son politikanın 2026 sürümü gelince. Soru aynı, model aynı; değişen yalnızca modele ne verdiğimiz. Her cevap bir deftere yazılır.
   </Step>
 </Deck>
 
-<Log name="soru-0-bare" title="npm run soru" />
+<Log name="question-0-bare" title="npm run question" />
 
 `HOW` satırı cevabın nasıl üretildiğini söyler: şimdilik `bare model, no documents`. Alttaki `LEDGER` defterdir;
 her çalıştırma bir satır ekler.
@@ -77,12 +77,12 @@ Soru kodda tek bir satır:
 
 <RepoCode file="src/lib/config.ts" from="dayQuestion:" to="dayQuestion" />
 
-`npm run soru` her seferinde elindeki en eksiksiz pipeline'ı seçer:
+`npm run question` her seferinde elindeki en eksiksiz pipeline'ı seçer:
 
-<RepoCode file="src/cli/soru.ts" from="// npm run soru" to="the store is filled" />
+<RepoCode file="src/cli/question.ts" from="// npm run question" to="the store is filled" />
 
 <YourTurn>
-Kendi makinenizde çalıştırın: `npm run soru`. Sonra aynı soruyu kendi kelimelerinizle, yine hiç doküman
+Kendi makinenizde çalıştırın: `npm run question`. Sonra aynı soruyu kendi kelimelerinizle, yine hiç doküman
 vermeden sorun ve sayının değişip değişmediğine bakın:
 
 ```sh
@@ -110,13 +110,13 @@ değiştirmiyor mu? Tek soru yine de bir ölçü değildir; kaliteyi bir soru se
 </FAQ>
 
 <FAQ q="Model her seferinde aynı cevabı mı verir?">
-Aynı prompt'la, aynı makinede evet; M serisi bir Mac'te `npm run step -- 0` ile `npm run soru` aynı cevabı kelimesi kelimesine verdi.
+Aynı prompt'la, aynı makinede evet; M serisi bir Mac'te `npm run step -- 0` ile `npm run question` aynı cevabı kelimesi kelimesine verdi.
 Repo bunu bilerek sağlar: `temperature: 0` ve sabit bir `seed`. Farklı donanımlarda küçük farklar görülebilir;
 bunu ölçmedik.
 </FAQ>
 
 <FAQ q="Defter nerede duruyor?">
-`.cache/soru-ledger.jsonl` dosyasında, her çalıştırma bir satır. `npm run soru` son 12 satırı gösterir.
+`.cache/question-ledger.jsonl` dosyasında, her çalıştırma bir satır. `npm run question` son 12 satırı gösterir.
 `npm run catchup` defteri silmez.
 </FAQ>
 

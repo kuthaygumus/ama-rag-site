@@ -18,6 +18,7 @@ const MARKERS = [
   /\bHelios\b/i,
   /\bIRIS\b/,
   /\blab\b/i,
+  /npm run soru\b|soru\.ts\b|soru-ledger/, // renamed to question on 25 Sep 2026
 ];
 const SKIP = new Set(['node_modules', '.git', '.astro', '.vercel', 'dist']);
 const TEXT = /\.(ts|js|mjs|cjs|json|jsonl|md|mdx|astro|css|html|svg|yaml|yml|bru|txt|xml)$|^\.[a-z]+$/;

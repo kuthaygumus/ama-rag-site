@@ -182,7 +182,7 @@ Erişim ve injection kodda çözülür. Şu üçü kurumun kurallarıyla:
 | Konu | Ne sorulur | Bu repoda |
 |---|---|---|
 | KVKK ve verinin yeri | API'li model ya da embedding sağlayıcısı yurt dışındaysa soru, rerank adayları ve prompt'taki chunk'lar ülke dışına çıkar. Kişisel veri varsa bunun hukuki dayanağı ve sözleşmesi gerekir. | Her şey yerel: Ollama ve Chroma dizüstünde. |
-| Denetim logu ve saklama süresi | Kim, ne zaman, ne sordu; hangi kaynaklarla ne cevap aldı? Her cevap kaynağını taşır (`[1] hr-leave@2025#3`), bu yüzden denetlenebilir. Soru ve cevap logu da veridir: erişimi ve saklama süresi kaynak dokümanlarınki gibi belirlenir. | Denetim logu yok. `data/8-answer.json` her koşuda üzerine yazılır; `.cache/soru-ledger.jsonl` cevapları biriktirir. |
+| Denetim logu ve saklama süresi | Kim, ne zaman, ne sordu; hangi kaynaklarla ne cevap aldı? Her cevap kaynağını taşır (`[1] hr-leave@2025#3`), bu yüzden denetlenebilir. Soru ve cevap logu da veridir: erişimi ve saklama süresi kaynak dokümanlarınki gibi belirlenir. | Denetim logu yok. `data/8-answer.json` her koşuda üzerine yazılır; `.cache/question-ledger.jsonl` cevapları biriktirir. |
 | Ara dosyalar | `data/*.json` chunk metinlerini, `.cache/embeddings.json` vektörleri taşır; maaş dokümanınınkiler dahil. Bu dosyalar kaynağın sınıfını miras alır: hr-only bir dokümandan çıkan dosya da hr-only'dir. | Diskte düz dosya, erişim kontrolü yok. |
 
 <YourTurn>

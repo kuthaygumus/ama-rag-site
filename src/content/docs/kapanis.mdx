@@ -64,7 +64,7 @@ Bir günde bir RAG pipeline'ı kurduk ve her ara çıktısını açtık. Kurumsa
         <text x="490" y="306" text-anchor="middle" class="flbl">Eval: her değişiklikten sonra aynı 23 soru</text>
       </g>
       <g data-from="8">
-        <text x="20" y="362" class="fsub">npm run soru defteri: aynı soru, aynı model, beş cevap</text>
+        <text x="20" y="362" class="fsub">npm run question defteri: aynı soru, aynı model, beş cevap</text>
         <rect x="20" y="374" width="176" height="56" rx="10" class="fbox fbox-bad" />
         <text x="108" y="410" text-anchor="middle" class="flbl fbad-t">50</text>
         <rect x="216" y="374" width="176" height="56" rx="10" class="fbox fbox-gate" />
@@ -104,7 +104,7 @@ Bir günde bir RAG pipeline'ı kurduk ve her ara çıktısını açtık. Kurumsa
     Her değişiklikten sonra aynı gold set: retrieval için hit@1, recall@5, MRR; cevap için `--answers`. 2025 gold set üzerinde 23 cevabın 23'ü doğru. Sıradaki iş: gold set'i kullanımdan gelen zor sorularla, 2026 için de yeni beklenen değerlerle büyütmek.
   </Step>
   <Step title="Günün sorusu, bütün gün">
-    `npm run soru` defteri: RAG'siz model "işverenine bağlı" dedi, yine de 50 uydurdu; fixed chunk'larla "yer almıyor"; section'la 22; Chroma'yla yine 22; 2026 sürümüyle 24. Model beş seferde de aynı gemma3:4b'ydi; cevabı değiştiren pipeline. Sabah yazdığınız sayı hangisine yakın?
+    `npm run question` defteri: RAG'siz model "işverenine bağlı" dedi, yine de 50 uydurdu; fixed chunk'larla "yer almıyor"; section'la 22; Chroma'yla yine 22; 2026 sürümüyle 24. Model beş seferde de aynı gemma3:4b'ydi; cevabı değiştiren pipeline. Sabah yazdığınız sayı hangisine yakın?
   </Step>
 </Deck>
 
@@ -126,7 +126,7 @@ Her satır bir pipeline adımı, her sütun bir eksen. Sayılar bu sitenin logla
 
 Aynı soru, aynı model. Cevabı değiştiren her seferinde pipeline'dı:
 
-<Figure caption="Kaynak: npm run soru ledger'ı (aşağıdaki log)">
+<Figure caption="Kaynak: npm run question ledger'ı (aşağıdaki log)">
   <svg viewBox="0 0 1000 230" role="img" aria-label="Günün sorusunun gün boyunca aldığı beş cevap">
     <defs><marker id="kp-l" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker></defs>
     <text x="108" y="40" text-anchor="middle" class="fsub">RAG'siz model</text>
@@ -157,7 +157,7 @@ Aynı soru, aynı model. Cevabı değiştiren her seferinde pipeline'dı:
   </svg>
 </Figure>
 
-<Log name="soru-4-2026" title="npm run soru   (son koşu ve ledger)" from={11} />
+<Log name="question-4-2026" title="npm run question   (son koşu ve ledger)" from={11} />
 
 ## 10 soru
 
