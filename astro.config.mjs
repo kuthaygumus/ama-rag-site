@@ -51,7 +51,7 @@ export default defineConfig({
           ]),
         },
         {
-          label: '4 · Üretime hazır mı?',
+          label: '4 · Canlıya hazır mı?',
           items: items([
             ['uretim/kaliteyi-olcmek', 'Kaliteyi ölçmek'],
             ['uretim/guvenlik', 'Güvenlik'],
@@ -66,7 +66,7 @@ export default defineConfig({
           ]),
         },
         { label: 'Kapanış', items: items([['kapanis', 'Kapanış']]) },
-        { label: 'Başvuru', items: items([['sozluk', 'Sözlük'], ['kurulum-sorunlari', 'Kurulum sorunları']]) },
+        { label: 'Ekler', items: items([['sozluk', 'Sözlük'], ['kurulum-sorunlari', 'Kurulum sorunları']]) },
       ],
     }),
   ],

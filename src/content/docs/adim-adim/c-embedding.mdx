@@ -99,13 +99,13 @@ import Term from '../../../components/Term.astro';
     Adım 4 her chunk'ı bge-m3 modeline gönderir; geri 1024 sayılık bir liste, yani bir <Term id="vektor">vektör</Term> gelir. Bu, metnin <Term id="embedding">embedding</Term>'i. Log'daki ilk chunk'ın ilk sayıları: -0.0538, -0.0108, -0.0047 …
   </Step>
   <Step title="Sayıların tek tek anlamı yok" stage="v">
-    1024 sayının hiçbiri "izin" ya da "tarih" demek değil. Anlam, iki vektörün birbirine göre konumunda: yakın anlam, yakın vektör. Bruno'da bir cümleyi embed edip bakın; rakamlar okunmaz.
+    1024 sayının hiçbiri "izin" ya da "tarih" demek değil. Anlam, iki vektörün birbirine göre konumunda: yakın anlam, yakın vektör. Bruno'da bir cümleyi embed edip bakın; sayılardan bir anlam çıkmaz.
   </Step>
   <Step title="Yakınlığa kim karar verdi?" stage="v">
     Biz değil, model. bge-m3, çok sayıda "bu iki metin aynı şeyi söylüyor" örneğiyle eğitilmiş bir neural network. Hangi metinleri yakın koyacağını eğitimde öğrendi; ağırlıkları artık donmuş.
   </Step>
   <Step title="Soru da aynı modelden geçer" stage="v">
-    Soru da 1024 sayıya döner; yoksa chunk'larla karşılaştırılamaz. Model aynı olmalı: başka bir modelin vektörleri başka bir uzayda yaşar. Model değişirse bütün chunk'lar yeniden embed edilir.
+    Soru da 1024 sayıya döner; yoksa chunk'larla karşılaştırılamaz. Model aynı olmalı: başka bir modelin vektörleri başka bir uzaydadır. Model değişirse bütün chunk'lar yeniden embed edilir.
   </Step>
   <Step title="Yakınlığı ölçmek: cosine" stage="m" phase="1">
     İki vektör arasındaki açı. Uzunluğa bakmaz, yöne bakar; sonuç −1 ile 1 arasında, 1 = aynı yön. İlgisiz metinler bile 0'a inmez, birazdan göreceğiz. Retriever'ımız da, Chroma koleksiyonumuz da bunu kullanıyor: <Term id="cosine">cosine benzerliği</Term>.
@@ -124,7 +124,7 @@ Log'daki ilk chunk bir duyuru; vektörünün ilk 6 sayısı ve uzunluğu log'da.
 
 <Log name="04-embed" title="npm run step -- 4" />
 
-Retriever'ın kullandığı ölçü ve mesafe versiyonu `src/lib/similarity.ts` içinde, birkaç satır:
+Retriever'ın kullandığı benzerlik ölçüsü ve onun mesafe karşılığı `src/lib/similarity.ts` içinde, birkaç satır:
 
 <RepoCode file="src/lib/similarity.ts" from="export function cosine" />
 
@@ -277,10 +277,10 @@ Retriever'ın kullandığı ölçü ve mesafe versiyonu `src/lib/similarity.ts` 
     </svg>
   </DeckFigure>
   <Step title="Önce birkaç çift" stage="p">
-    `npm run similar` hazırladığımız 5 cümle çiftini embed eder ve her çiftin cosine benzerliğini yazar. Her çift bir soruyu sınıyor: model neyi yakın, neyi uzak koydu?
+    `npm run similar` hazırladığımız 5 cümle çiftini embed eder ve her çiftin cosine benzerliğini yazar. Her çiftle bir şeyi sınıyoruz: model neyi yakın, neyi uzak koydu?
   </Step>
   <Step title="Beklenen: dil engel değil" stage="p" phase="1">
-    Türkçe soru, İngilizce kural: 0.701. Ortak kelime yok, dil bile farklı; model anlamdan yakın koydu. İlgisiz çift 0.456 aldı: "ilgisiz" bile 0 değil. Skorlar mutlak değil, görelidir.
+    Türkçe soru, İngilizce kural: 0.701. Ortak kelime yok, dil bile farklı; model anlama bakarak yakın koydu. İlgisiz çift 0.456 aldı: "ilgisiz" bile 0 değil. Skorlar mutlak değil, görelidir.
   </Step>
   <Step title="Şaşırtan: paraphrase düşük kaldı" stage="p" phase="2">
     "Tatil hakkım kaç gün?" ile "Yıllık ücretli izin …": ortak kelime yok, model yine de ilgisiz çiftten yakın koydu. Ama fark küçük: 0.526, ilgisiz çiftin (0.456) yalnızca 0.070 üstünde. Aramada skor değil sıra önemli; E sayfasında böyle bir soruda izin tablosu ancak 5. sıraya çıkıyor.
@@ -289,10 +289,10 @@ Retriever'ın kullandığı ölçü ve mesafe versiyonu `src/lib/similarity.ts` 
     "… uzaktan çalışabilir" ile "… uzaktan çalışamaz": 0.841. Zıt anlam, çok yakın vektör. Embedding konuyu yakalar, evet mi hayır mı olduğunu kaçırabilir. Bu ayrımı cevabı yazan model metni okuyarak yapmalı.
   </Step>
   <Step title="İkiz tablolar" stage="p" phase="4">
-    Yurt içi ve yurt dışı harcırah soruları: 0.940. Farklı tablo, farklı sayı; vektörler neredeyse aynı. Günün sonunda kullanacağımız soru setinde bu türden 3 soru var; birinde doğru tablo ancak 2. sıraya çıktı.
+    Yurt içi ve yurt dışı harcırah soruları: 0.940. Farklı tablo, farklı sayı; vektörler neredeyse aynı. Günün son bölümünde kullanacağımız soru setinde bu türden 3 soru var; birinde doğru tablo ancak 2. sıraya çıktı.
   </Step>
   <Step title="1024 boyutu 2'ye indirmek" stage="map">
-    `npm run map`, <Term id="pca">PCA</Term> ile 60 chunk'ı düzleme yansıtır. Yatay yön yayılımın %11,8'ini, dikey yön %8,3'ünü tutuyor; geri kalan yaklaşık %80 bu resimde yok. Her nokta bir chunk, işaret dokümanı gösteriyor.
+    `npm run map`, <Term id="pca">PCA</Term> ile 60 chunk'ı düzleme yansıtır. Yatay yön yayılımın %11,8'ini, dikey yön %8,3'ünü açıklıyor; geri kalan yaklaşık %80 bu resimde yok. Her nokta bir chunk, işaret dokümanı gösteriyor.
   </Step>
   <Step title="Ne görüyoruz?" stage="map">
     İngilizce doküman solda, ayrı duruyor. 6 Türkçe politikanın "Amaç ve Kapsam" bölümleri üstte yan yana: farklı dokümanlardan ama aynı türde metinler. Geri kalan Türkçe bölümler sağda iç içe.
@@ -315,7 +315,7 @@ Sıra sizde. `dot()` henüz yazılmadı; `similarity.ts` dosyasının sonunda be
 <YourTurn>
 **1 · Vektöre bakın.** `npm run step -- 4`, sonra `data/4-vectors.json`: her chunk'ın `vector` alanında 1024 sayı var, `embedModel` alanında modelin adı. Bruno'da `00-ollama` → `embed one sentence` isteğini gönderin: aynı işi elle yapar. `input` içindeki bir kelimeyi değiştirip tekrar gönderin.
 
-**2 · Kardeşini yazın.** `src/lib/similarity.ts` dosyasında `cosine()` ve `l2()` yazılı; altlarındaki `dot()` boş. `cosine()` içindeki döngüye bakın: `dot` orada zaten hesaplanıyor. Uzunluklara bölmeden aynısını yazın. Kontrol: `npm run check:sibling` → `similarity · dot` testleri yeşil olmalı.
+**2 · Benzerini yazın.** `src/lib/similarity.ts` dosyasında `cosine()` ve `l2()` yazılı; altlarındaki `dot()` boş. `cosine()` içindeki döngüye bakın: `dot` orada zaten hesaplanıyor. Uzunluklara bölmeden aynısını yazın. Kontrol: `npm run check:sibling` → `similarity · dot` testleri yeşil olmalı.
 
 **3 · Ölçüleri karşılaştırın.** `npm run similar -- --metric dot` ve `npm run similar -- --metric l2`. Dot çıktısını cosine çıktısıyla (yukarıdaki log) yan yana koyun: neden böyle? İpucu: adım 4'ün log'undaki uzunluk.
 
@@ -337,7 +337,7 @@ Bizim vektörler dense: 1024 sayının hepsi dolu, anlamı taşıyor. Sparse bir
 </FAQ>
 
 <FAQ q="Hangi embedding modelini seçmeliyim?">
-Dil desteği (bizde Türkçe ve İngilizce), vektör boyutu (1024 sayı, her chunk için depolama demek), okuyabildiği metin uzunluğu ve çalıştığı yer (yerel mi, bir API mi: veri nereye gidiyor?). Genel sıralama tabloları bir başlangıç verir; karar kendi soru setinizde ölçerek verilir (Kaliteyi ölçmek).
+Dil desteği (bizde Türkçe ve İngilizce), vektör boyutu (1024 sayı, her chunk için depolama demek), okuyabildiği metin uzunluğu ve çalıştığı yer (yerel mi, bir API mi: veri nereye gidiyor?). Genel sıralama tabloları fikir verir; karar kendi soru setinizde ölçülerek verilir (Kaliteyi ölçmek).
 </FAQ>
 
 <FAQ q="Modeli değiştirirsem ne olur?">
@@ -349,7 +349,7 @@ Her model kendi ölçeğini kurar; bir modelde 0.45 ilgisiz, başka bir modelde 
 </FAQ>
 
 <FAQ q="Haritada yıldız neden yanlış yerde?">
-Harita 1024 boyuttaki yayılımın yaklaşık beşte birini tutuyor (%11,8 + %8,3). İki boyuta indirirken bazı uzak noktalar yakın, bazı yakın noktalar uzak görünür. Kararı her zaman 1024 boyuttaki ölçüm verir.
+Harita 1024 boyuttaki yayılımın yaklaşık beşte birini açıklıyor (%11,8 + %8,3). İki boyuta indirirken bazı uzak noktalar yakın, bazı yakın noktalar uzak görünür. Kararı her zaman 1024 boyuttaki ölçüm verir.
 </FAQ>
 
 <Takeaway>Yakınlığı model belirler, veritabanı değil.</Takeaway>

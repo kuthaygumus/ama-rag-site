@@ -14,7 +14,7 @@ import Takeaway from '../../../components/Takeaway.astro';
 <DaysQuestion answer="24 iş günü [1] ✓" how="chroma · section · rerank on · sürüm 2026" />
 
 <Gate>
-Günün sorusu çözüldü; eval'da 23 sorunun 23'ünün cevabı doğru. Her şey yolunda mı? Gün boyunca pipeline'ın dört farklı yoldan yanıldığını gördük. 23/23, sınavın bu yanılmaları artık yakalamadığını söyler; RAG'in yanılmadığını değil.
+Günün sorusu çözüldü; eval'da 23 sorunun 23'ünün cevabı doğru. Her şey yolunda mı? Gün boyunca pipeline'ın dört farklı şekilde yanıldığını gördük. 23/23, sınavın bu yanılmaları artık yakalamadığını gösterir; RAG'in yanılmadığını değil.
 </Gate>
 
 <Deck>
@@ -37,7 +37,7 @@ Günün sorusu çözüldü; eval'da 23 sorunun 23'ünün cevabı doğru. Her şe
         <rect x="20" y="220" width="470" height="140" rx="12" class="fbox fbox-bad" />
         <text x="44" y="258" class="flbl">3 · LLM</text>
         <text x="44" y="296" class="fsub">maaş sorusu, maaş chunk'ı yok (filtre)</text>
-        <text x="44" y="324" class="fsub">çekinmedi → "harcırah 70 EUR [1]"</text>
+        <text x="44" y="324" class="fsub">"bilmiyorum" demedi → "harcırah 70 EUR [1]"</text>
       </g>
       <g data-from="4">
         <rect x="510" y="220" width="470" height="140" rx="12" class="fbox fbox-bad" />
@@ -74,8 +74,8 @@ Günün sorusu çözüldü; eval'da 23 sorunun 23'ünün cevabı doğru. Her şe
   <Step title="Chunk: başlığını kaybeden satır" phase="2">
     Fixed chunker her 300 karakterde keser: `| 7 | 22 |` satırı tablonun başlığından ayrı bir chunk'a düştü. O chunk prompt'a girmedi, model "Bu bilgi politikalarda yer almıyor." dedi. Bilgi politikadaydı; chunker onu başlığından kopardı.
   </Step>
-  <Step title="LLM: çekinmesi gerekirken" phase="3">
-    Maaş sorusu, erişim filtresi açık: maaş chunk'ı prompt'a girmedi; doğrusu buydu. Model "yer almıyor" demek yerine seyahat chunk'ından "günlük harcırah 70 EUR ve otel üst limiti 155 EUR'dur [1]" yazdı. Çöp girdi, çöp çıktı; kaynak göstermek yanlış cevabı bitirmez.
+  <Step title="LLM: bilmiyorum demesi gerekirken" phase="3">
+    Maaş sorusu, erişim filtresi açık: maaş chunk'ı prompt'a girmedi; doğrusu buydu. Model "yer almıyor" demek yerine seyahat chunk'ından "günlük harcırah 70 EUR ve otel üst limiti 155 EUR'dur [1]" yazdı. Çöp girdi, çöp çıktı; kaynak göstermek yanlış cevabı önlemez.
   </Step>
   <Step title="Context: bedel" phase="4">
     Dördüncüsü bir çarpan değil, bedel. El kitabının tamamı 11358 token, RAG'in 3 chunk'ı 1155. 11358, bizim num_ctx ayarımız olan 8192'lik <Term id="context">pencereye</Term> sığmaz; 32768'e açınca cevap doğru, ama bedel her soruda. Yanlış cevapta ilk soru: prompt'ta ne vardı? `--prompt` bunun için.
@@ -89,8 +89,8 @@ Dört yanılmanın logları bu sitenin sayfalarında: retriever için [Kaliteyi 
 1. İzin tablosu önce kıdem aralıklarıyla yazılmıştı (`| 5 – 10 yıl | 22 |`). Model aralık satırlarını yanlış okudu.
 2. Satırlar yılları listeleyecek biçime getirilince, model cevap yerine satırın etiketini tekrarladı.
 3. Her kıdem yılı ayrı satıra yazıldı (`| 7 | 22 |`). Tablo prompt'ta olduğu hâlde model günün sorusunda yanlış satırı seçti.
-4. İki prompt değişikliği düzeltti. Kaynak çitinde artık yalnızca doküman adı var; çitteki id ve bölüm numaraları modeli yanlış satıra çekiyordu. Bir de kural eklendi: "Cevap bir tablodan geliyorsa önce kullandığın satırı aynen yaz, sonra cevabı tek cümleyle ver."
-5. Dürüst not: bu hikâyenin denemeleri loglanmadı; bugünkü loglarda tablo soruları doğru. Küçük bir model tablo okumada kırılgandır: veriyi ve prompt'u ona göre biçimlendirirsiniz, ve yine de ölçersiniz.
+4. İki prompt değişikliği düzeltti. Kaynak işaretinde artık yalnızca doküman adı var; işaretteki id ve bölüm numaraları modeli yanlış satıra çekiyordu. Bir de kural eklendi: "Cevap bir tablodan geliyorsa önce kullandığın satırı aynen yaz, sonra cevabı tek cümleyle ver."
+5. Açıkçası, bu hikâyenin denemeleri loglanmadı; bugünkü loglarda tablo soruları doğru. Küçük bir model tablo okumada kırılgandır: veriyi ve prompt'u ona göre biçimlendirirsiniz, ama yine de ölçersiniz.
 
 ## Bir tane mi RAG var?
 
@@ -179,7 +179,7 @@ Hepsi aynı iskelet: bul → prompt'a koy → cevaplat. Fark, "bul" adımının 
         <rect x="506" y="481" width="130" height="58" rx="10" class="fbox" />
         <text x="571" y="517" text-anchor="middle" class="flbl">3 arama</text>
         <rect x="668" y="481" width="130" height="58" rx="10" class="fbox fbox-on" />
-        <text x="733" y="517" text-anchor="middle" class="flbl tight">sıra füzyonu</text>
+        <text x="733" y="517" text-anchor="middle" class="flbl tight">birleştir</text>
         <rect x="830" y="481" width="130" height="58" rx="10" class="fbox fbox-frozen" />
         <text x="895" y="517" text-anchor="middle" class="flbl">LLM</text>
         <path d="M152 510 H178" class="farrow" marker-end="url(#rt-h)" />
@@ -223,7 +223,7 @@ Naive RAG ve bir gold set ile. Eval'da bir soru tipi düşük çıkınca (bizde 
 Hayır. Günün sorusunda doğru chunk zaten 1. sıradaydı; rerank yalnızca arkadakilerin yerini değiştirdi. Maaş sorusunda ise seyahat bölümüne 10 üzerinden 10 verip onu 5. sıradan 1. sıraya taşıdı; yanlış cevap da o bölümden geldi. Aynı soruda 5 chunk'tan 3'üne aynı puanı verdi (ties 3 of 5). Reranker da bir modeldir, yanılır; `npm run eval -- --answers` ile ölçün.
 </FAQ>
 
-<FAQ q="Daha büyük bir model halüsinasyonu bitirir mi?">
+<FAQ q="Daha büyük bir model halüsinasyonu ortadan kaldırır mı?">
 Garantisi yok; daha büyük modelleri ölçmedik. Bizde işe yarayan, veriyi ve prompt'u modelin okuyabileceği biçime getirmek oldu (yukarıdaki üçüncü çarpan hikâyesi).
 </FAQ>
 

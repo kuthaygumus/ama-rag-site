@@ -117,8 +117,8 @@ versek?
   <Step title="Hepsini prompt'a koysak?" stage="b">
     El kitabının 8 dokümanını tek prompt'a koyduk: 11358 token; RAG'in prompt'u 1155. Repodaki <Term id="context">context window</Term> ayarı 8192 token, sığmazdı; bu deneme için 32768'e açtık. Cevap yine 22 iş günü, ama M serisi bir Mac'te 29983 ms sürdü. RAG'in bütün yolu, arama ve <Term id="rerank">rerank</Term> dahil, yaklaşık 3 saniye.
   </Step>
-  <Step title="Seçmek, işin kendisi" stage="b">
-    Hepsini koymak her soruda bütün el kitabının bedelini öder, büyüyen bir corpus'ta bir gün sığmaz ve yalnızca İK'nın görebileceği ücret tablosunu herkese okutur. RAG'in işi seçmektir.
+  <Step title="Asıl iş seçmek" stage="b">
+    Hepsini koyarsanız her soruda bütün el kitabının bedelini ödersiniz; corpus büyüdükçe bir gün sığmaz; yalnızca İK'nın görebileceği ücret tablosunu da herkes okur. RAG'in işi seçmektir.
   </Step>
 </Deck>
 
@@ -148,7 +148,7 @@ RAG tarafının süreleri adım loglarından, M serisi bir Mac'te: arama 21 ms (
 
 <FAQ q="Model yüz binlerce token okuyabiliyorsa neden seçelim?">
 Cevap aynı çıksa bile üç sebep var, üçü de bu sayfada: **maliyet** — her soru bütün el kitabını okutur (11358
-token, RAG'de 1155); token başına ödeyen bir API'de prompt faturası yaklaşık on kat büyür. **Süre** — hepsini
+token, RAG'de 1155); token başına ücret alan bir API'de prompt faturası yaklaşık on kat büyür. **Süre** — hepsini
 koymak 29983 ms sürdü; RAG'in bütün yolu yaklaşık 3 saniye. **Erişim** — prompt'a giren her şey cevaba sızabilir,
 yalnızca İK'ya açık ücret bantları da dahil. Bizim corpus'umuz 8 doküman, 40092 karakter; corpus büyüdükçe
 dördüncü sebep gelir: sığmaz.

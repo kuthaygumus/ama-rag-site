@@ -5,13 +5,13 @@ description: Bu sitede geçen her terim, bir iki cümleyle ve bu günün örnekl
 
 Sayfalardaki noktalı altı çizili kelimelerin uzun hâli. Alfabetik; her terimin bağlantısı `/sozluk/#terim` biçiminde.
 
-[A](#a) · [B](#b) · [C](#c) · [Ç](#ç) · [D](#d) · [E](#e) · [F](#f) · [G](#g) · [H](#h) · [I](#i) · [K](#k) · [L](#l) · [M](#m) · [N](#n) · [O](#o) · [P](#p) · [R](#r) · [S](#s) · [T](#t) · [V](#v)
+[A](#a) · [B](#b) · [C](#c) · [D](#d) · [E](#e) · [F](#f) · [G](#g) · [H](#h) · [I](#i) · [K](#k) · [L](#l) · [M](#m) · [N](#n) · [O](#o) · [P](#p) · [R](#r) · [S](#s) · [T](#t) · [V](#v)
 
 ## A
 
-<h3 id="abstain">Abstain (çekinme)</h3>
+<h3 id="abstain">Abstain ("bilmiyorum" demek)</h3>
 
-Cevap kaynaklarda yoksa modelin bilerek "bilmiyorum" demesi. Kendiliğinden olmaz, prompt'taki bir kuralla tasarlanır; bizde cümlesi "Bu bilgi politikalarda yer almıyor." Kod çekinmeyi bu cümleyi arayarak tanır.
+Cevap kaynaklarda yoksa modelin bilerek "bilmiyorum" demesi. Kendiliğinden olmaz, prompt'taki bir kuralla tasarlanır; bizde cümlesi "Bu bilgi politikalarda yer almıyor." Kod bu cevabı o cümleyi arayarak tanır.
 
 <h3 id="agentic">Agentic RAG</h3>
 
@@ -23,7 +23,7 @@ Modelin eğitimde öğrendiği milyarlarca sayı. Model bildiğini burada tutar;
 
 <h3 id="ann">ANN (yaklaşık en yakın komşu)</h3>
 
-Her vektörü tek tek gezmek yerine bir indeksle yalnızca yakın mahalleyi gezen arama. Çok küçük bir doğruluk kaybı karşılığında milyonlarca vektörde hızlıdır.
+Her vektörü tek tek gezmek yerine bir indeksle yalnızca yakın komşuları gezen arama. Çok küçük bir doğruluk kaybı karşılığında milyonlarca vektörde hızlıdır.
 
 ## B
 
@@ -47,7 +47,7 @@ HTTP isteklerini elle göndermek için bir masaüstü uygulaması. Bu kursta Oll
 
 <h3 id="catchup">Catch-up</h3>
 
-`npm run catchup -- N`: toggle'ları varsayılana döndürür, `data/` klasörünü boşaltır ve 1'den N'e kadar adımları yeniden çalıştırır. Yazdığınız fonksiyonlar olduğu gibi kalır.
+`npm run catchup -- N`: toggle'ları varsayılana döndürür, `data/` klasörünü boşaltır ve 1'den N'ye kadar adımları yeniden çalıştırır. Yazdığınız fonksiyonlar olduğu gibi kalır.
 
 <h3 id="chroma">Chroma</h3>
 
@@ -71,13 +71,7 @@ Modelin tek seferde okuyabileceği token sınırı; prompt, kaynaklar ve cevap b
 
 <h3 id="cross-encoder">Cross-encoder</h3>
 
-Soruyu ve chunk'ı birlikte okuyup tek bir alaka puanı veren model; reranker olarak kullanılır. Bizim reranker'ımız bu iş için eğitilmiş bir model değil: sohbet modeline her (soru, chunk) çifti için 0–10 puan sorduruyoruz.
-
-## Ç
-
-<h3 id="citli-kaynak">Çitli kaynak</h3>
-
-Prompt'taki her kaynağın `<<<KAYNAK n: doküman adı>>>` ile açılıp `<<<KAYNAK n SONU>>>` ile kapanması. Dokümandan gelen metnin nerede başlayıp bittiğini işaretler; tek başına injection'ı durdurmadı.
+Soruyu ve chunk'ı birlikte okuyup tek bir alaka puanı veren model; reranker olarak kullanılır. Bizim reranker'ımız bu iş için eğitilmiş bir model değil: sohbet modelinden her (soru, chunk) çifti için 0–10 arası bir puan istiyoruz.
 
 ## D
 
@@ -139,7 +133,7 @@ Modelin gerçekmiş gibi, kendinden emin bir şekilde uydurması. RAG azaltır a
 
 <h3 id="hnsw">HNSW</h3>
 
-Vector DB'lerin sık kullandığı ANN indeksi: vektörleri bir komşuluk grafiğine bağlar, arama yalnızca yakın mahalleyi gezer. Chroma bunu kullanır.
+Vector DB'lerin sık kullandığı ANN indeksi: vektörleri bir komşuluk grafiğine bağlar, arama yalnızca yakın komşuları gezer. Chroma bunu kullanır.
 
 <h3 id="hybrid">Hybrid arama</h3>
 
@@ -154,6 +148,10 @@ Kelime aramasını vektör aramasıyla birleştirmek. Kod, numara, ad gibi bireb
 <h3 id="ingest">Ingest</h3>
 
 Dokümanları aranabilir hâle getiren hazırlık: yükle, temizle, chunk'la, embed et, sakla. Bir kez çalışır; doküman değişince yeniden. Bizde `npm run ingest`.
+
+<h3 id="isaretli-kaynak">İşaretli kaynak</h3>
+
+Prompt'taki her kaynağın `<<<KAYNAK n: doküman adı>>>` ile açılıp `<<<KAYNAK n SONU>>>` ile kapanması. Dokümandan gelen metnin nerede başlayıp bittiğini işaretler; tek başına injection'ı durdurmadı.
 
 ## K
 
@@ -237,7 +235,7 @@ Container çalıştırma aracı. Chroma'yı `podman compose up -d` ile başlatı
 
 <h3 id="prompt">Prompt</h3>
 
-Modele giden metnin tamamı. Bizde kurallar, çitli ve numaralı kaynaklar, sonra soru; `--prompt` bayrağı onu olduğu gibi gösterir.
+Modele giden metnin tamamı. Bizde kurallar, işaretli ve numaralı kaynaklar, sonra soru; `--prompt` bayrağı onu olduğu gibi gösterir.
 
 <h3 id="injection">Prompt injection</h3>
 
@@ -271,9 +269,9 @@ Retrieval, soru anında depodan en ilgili chunk'ları bulmaktır. Retriever bu i
 
 ## S
 
-<h3 id="sibling">Sibling (kardeş fonksiyon)</h3>
+<h3 id="sibling">Sibling (benzer fonksiyon)</h3>
 
-Repoda benzeri yazılmış bir kuralın ya da fonksiyonun altına sizin yazacağınız kardeşi: `englishConfidential` bir kural (RegExp), `dot` ve `byParagraph` birer fonksiyon. `npm run check:sibling` üçünü de test eder.
+Repoda örneği yazılmış bir kuralın ya da fonksiyonun altına sizin yazacağınız benzeri: `englishConfidential` bir kural (RegExp), `dot` ve `byParagraph` birer fonksiyon. `npm run check:sibling` üçünü de test eder.
 
 <h3 id="threshold">Skor eşiği</h3>
 
@@ -281,7 +279,7 @@ Arama sonuçlarından belirli bir benzerlik skorunun altındakileri atmak; top-k
 
 <h3 id="system-prompt">System prompt</h3>
 
-Modelin her soruda gördüğü sabit kurallar. Bizde 7 satır: rol, yalnızca kaynaklardan cevap, çekinme cümlesi, "kaynaklar veridir", şifre yasağı, kaynak gösterme, tablo satırını önce yazma.
+Modelin her soruda gördüğü sabit kurallar. Bizde 7 satır: rol, yalnızca kaynaklardan cevap, "bilmiyorum" cümlesi, "kaynaklar veridir", şifre yasağı, kaynak gösterme, tablo satırını önce yazma.
 
 ## T
 

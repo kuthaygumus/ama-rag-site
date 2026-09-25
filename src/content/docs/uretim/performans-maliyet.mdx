@@ -1,6 +1,6 @@
 ---
 title: Performans ve maliyet
-description: Bir sorunun süresi hangi aşamada geçiyor, her şeyi prompt'a koymak ile RAG'in token farkı, ve süreyi ya da maliyeti değiştiren düğmeler.
+description: Bir sorunun süresi hangi aşamada geçiyor, her şeyi prompt'a koymak ile RAG'in token farkı ve süreyi ya da maliyeti değiştiren ayarlar.
 ---
 import Deck from '../../../components/Deck.astro';
 import DeckFigure from '../../../components/DeckFigure.astro';
@@ -18,7 +18,7 @@ import Takeaway from '../../../components/Takeaway.astro';
 <DaysQuestion answer="24 iş günü [1] ✓" how="chroma · section · rerank on · sürüm 2026" />
 
 <Gate>
-Cevap doğru ve kaynaklı. Şimdi bir de şunu soralım: bir soru kaç saniye sürüyor, ve API'li bir modelde fatura neye göre büyür? Tahmin etmeyelim; her adım zaten kendi süresini ve token sayısını yazıyor.
+Cevap doğru ve kaynaklı. Şimdi bir de şunu soralım: bir soru kaç saniye sürüyor ve API'li bir modelde fatura neye göre büyür? Tahmin etmeyelim; her adım zaten kendi süresini ve token sayısını yazıyor.
 </Gate>
 
 <Deck>
@@ -57,16 +57,16 @@ Cevap doğru ve kaynaklı. Şimdi bir de şunu soralım: bir soru kaç saniye s�
     8 dokümanın tamamı (40092 karakter) tek prompt'ta: 11358 prompt <Term id="token">token</Term>. RAG'li cevapta 3 chunk, 1155 token: yaklaşık 10 kat az. Rerank hariç; rerank çağrılarının token'ını loglamıyoruz. 11358, bizim num_ctx ayarımız olan 8192'lik <Term id="context">pencereye</Term> sığmaz; bu ölçüm için 32768'e açtık.
   </Step>
   <Step title="…ve maaş tablosu herkese" phase="1">
-    Cevap doğru (22). Ama 8 dokümanın biri hr-only maaş tablosu: retrieval yoksa erişim filtresi de yok, maaşlar her çalışanın prompt'una girer. Süre 29983 ms; RAG koşularında cevap çağrısı 888–3941 ms. Kat vermiyoruz: tek koşu, ve pencere büyüyünce model yeniden yüklendi.
+    Cevap doğru (22). Ama 8 dokümanın biri hr-only maaş tablosu: retrieval yoksa erişim filtresi de yok, maaşlar her çalışanın prompt'una girer. Süre 29983 ms; RAG koşularında cevap çağrısı 888–3941 ms. Kaç kat yavaş olduğunu söylemiyoruz: tek koşu, üstelik pencere büyüyünce model yeniden yüklendi.
   </Step>
-  <Step title="Bir soru nereye zaman harcıyor?" phase="2">
+  <Step title="Bir sorunun süresi nereye gidiyor?" phase="2">
     Günün sorusu, M serisi bir Mac'te, tek koşu: arama 21 ms, <Term id="rerank">rerank</Term> 2244 ms, cevap 891 ms. Rerank bu toplamın (3156 ms) yaklaşık %71'i: 5 chunk için 5 ayrı LLM çağrısı. Başka sorularda aynı adım 5053–5672 ms sürdü. Sizde süreler farklı olur.
   </Step>
   <Step title="Ingest'te: cache ve artımlı yükleme" phase="3">
     Her embedding, model + metin hash'iyle `.cache/` altına yazılır; yeniden çalıştırınca 60 vektörün 60'ı cache'ten geldi, adım 4 38 ms sürdü. 2026 sürümü eklenince depo yalnızca 2026'nın 60 kaydını yazdı; 2025 yerinde kaldı.
   </Step>
   <Step title="Süreyi ve faturayı ne büyütür?">
-    Modele kaç kez gittiğiniz ve her seferinde ne kadar metin gönderdiğiniz. Bir soru 6 çağrıdır: 5 rerank, 1 cevap. Aynı anda N kişi sorarsa model N × 6 çağrıyı karşılar. Aşağıdaki düğmelerin her biri bu sayılardan birini, çoğu doğruluğu da değiştirir; her düğmeden sonra eval.
+    Modele kaç kez gittiğiniz ve her seferinde ne kadar metin gönderdiğiniz. Bir soru 6 çağrıdır: 5 rerank, 1 cevap. Aynı anda N kişi sorarsa model N × 6 çağrıyı karşılar. Aşağıdaki ayarların her biri bu sayılardan birini, çoğu doğruluğu da değiştirir; her ayardan sonra eval.
   </Step>
 </Deck>
 
@@ -92,7 +92,7 @@ Rerank'ın payı bu üç adımın `TIME` satırlarından: 2244 / (21 + 2244 + 89
 
 Cevap iki yolda da doğru. Fark, her soruda ödenen bedelde: bütün el kitabının token'ı ve yarım dakika. Bu prompt bizim 8192'lik ayarımıza sığmıyor; el kitabı büyüdükçe bu yol kapanır. Asıl engel ise güvenlik: erişim filtresi aramanın içindedir, arama yoksa filtre de yoktur.
 
-Süre için kat vermiyoruz. 888 ms tek bir koşu; bu sitedeki öteki RAG koşularında cevap çağrısı 3941 ms'ye kadar çıktı. 29983 ms de tek bir koşu; pencere 32768'e büyüdüğü için modelin yeniden yüklenmesini de içeriyor, ama bu sürenin küçük bir kısmı: asıl maliyet 11358 token'ı okumak.
+Süreyi kat olarak karşılaştırmıyoruz. 888 ms tek bir koşu; bu sitedeki öteki RAG koşularında cevap çağrısı 3941 ms'ye kadar çıktı. 29983 ms de tek bir koşu; pencere 32768'e büyüdüğü için modelin yeniden yüklenmesini de içeriyor, ama bu sürenin küçük bir kısmı: asıl maliyet 11358 token'ı okumak.
 </Example>
 
 <Log name="stuff-everything" title="her doküman tek prompt'ta (retrieval yok)" />
@@ -119,9 +119,9 @@ Yeni bir sürüm gelince depo yalnızca o sürümün kayıtlarını değiştirir
 
 <Log name="ingest-2026" title="npm run ingest -- --edition 2026   (adım 4 ve 5)" from={74} to={92} />
 
-## Düğmeler
+## Ayarlar
 
-| Düğme | Bizde | Artırınca | Burada ölçtük mü? |
+| Ayar | Bizde | Artırınca | Burada ölçtük mü? |
 |---|---|---|---|
 | Chunk boyu | section: ortalama 688 karakter, 60 chunk · fixed: 300 karakter, 139 chunk | prompt'a giren token artar, vektör sayısı azalır | Evet: hit@1 fixed ile 0.368 (19 sorunun 7'si), section ile 0.842 (16'sı) ([Kaliteyi ölçmek](/uretim/kaliteyi-olcmek/)) |
 | k (retriever'ın getirdiği aday) | 5 | rerank'ta her aday bir LLM çağrısı daha; prompt'a yine 3 chunk girer | Hayır: `--k 10` ile siz deneyin |
@@ -155,7 +155,7 @@ Bu ölçümde vector DB araması 7 ms; rerank ile cevap birlikte 3135 ms (2244 +
 </FAQ>
 
 <FAQ q="Rerank'ı kapatıp süreyi kısaltalım mı?">
-Kapatınca 2244 ms'lik adım gider. Günün sorusunda cevap değişmedi (kapalıyken de 22). Ama q02'de doğru bölüm vektör sırasında 5.; rerank olmadan prompt'a giren ilk 3'e girmez. Süre ve doğruluk aynı düğmede; kararı eval verir. Daha hızlı bir seçenek, bu iş için eğitilmiş küçük bir reranker modeli (cross-encoder); onu ölçmedik.
+Kapatınca 2244 ms'lik adım gider. Günün sorusunda cevap değişmedi (kapalıyken de 22). Ama q02'de doğru bölüm vektör sırasında 5.; rerank olmadan prompt'a giren ilk 3'e girmez. Süre ve doğruluk aynı ayara bağlı; kararı eval verir. Daha hızlı bir seçenek, bu iş için eğitilmiş küçük bir reranker modeli (cross-encoder); onu ölçmedik.
 </FAQ>
 
 <FAQ q="Cevapları da cache'lesek?">

@@ -18,7 +18,7 @@ adı var; adı da ne yaptığını söylüyor.
 
 <Deck>
   <DeckFigure slot="figure">
-    <svg viewBox="0 0 1000 330" role="img" aria-label="RAG: Retrieval getirir, Augmented prompt'a ekler, Generation model cevabı yazar">
+    <svg viewBox="0 0 1000 330" role="img" aria-label="RAG: Retrieval bulur, Augmented prompt'a ekler, Generation cevabı yazar">
       <defs>
         <marker id="rn-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker>
       </defs>
@@ -28,7 +28,7 @@ adı var; adı da ne yaptığını söylüyor.
       <g class="ph ph1">
         <rect x="165" y="90" width="235" height="130" rx="14" class="fbox fbox-on" />
         <text x="282" y="128" text-anchor="middle" class="flbl">R · Retrieval</text>
-        <text x="282" y="156" text-anchor="middle" class="fsub">getir: en ilgili parçalar</text>
+        <text x="282" y="156" text-anchor="middle" class="fsub">bul: en ilgili parçalar</text>
         <text x="282" y="190" text-anchor="middle" class="fsub">embed · ara · rerank</text>
         <rect x="165" y="262" width="235" height="52" rx="10" class="fbox" />
         <text x="282" y="295" text-anchor="middle" class="flbl">vector DB</text>
@@ -39,14 +39,14 @@ adı var; adı da ne yaptığını söylüyor.
       <g class="ph ph2">
         <rect x="435" y="90" width="235" height="130" rx="14" class="fbox fbox-on" />
         <text x="552" y="128" text-anchor="middle" class="flbl">A · Augmented</text>
-        <text x="552" y="156" text-anchor="middle" class="fsub">zenginleştir: prompt'a ekle</text>
+        <text x="552" y="156" text-anchor="middle" class="fsub">ekle: prompt'a koy</text>
         <text x="552" y="190" text-anchor="middle" class="fsub">kurallar + kaynaklar + soru</text>
       </g>
       <path d="M672 155 H697" class="farrow" marker-end="url(#rn-h)" />
       <g class="ph ph2">
         <rect x="705" y="90" width="175" height="130" rx="14" class="fbox fbox-frozen" />
         <text x="792" y="128" text-anchor="middle" class="flbl">G · Generation</text>
-        <text x="792" y="156" text-anchor="middle" class="fsub">üret: model yazar</text>
+        <text x="792" y="156" text-anchor="middle" class="fsub">yaz: model yazar</text>
         <text x="792" y="190" text-anchor="middle" class="fsub">aynı gemma3:4b</text>
       </g>
       <path d="M882 155 H902" class="farrow" marker-end="url(#rn-h)" />
@@ -56,12 +56,12 @@ adı var; adı da ne yaptığını söylüyor.
     </svg>
   </DeckFigure>
   <Step title="Adın açılımı">
-    <Term id="rag">RAG</Term> = Retrieval-Augmented Generation. Türkçesiyle: getirerek zenginleştirilmiş üretim. Üç kelime, sırayla çalışan üç iş. Repoda üç dosya: getirme iki dosya, zenginleştirme ile üretim tek dosya.
+    <Term id="rag">RAG</Term> = Retrieval-Augmented Generation. Türkçede oturmuş bir karşılığı yok, herkes RAG diyor; anlamca "bilgi erişimi destekli üretim". Üç kelime, sırayla çalışan üç iş: bul, ekle, yaz. Repoda üç dosya: bulma iki dosyada, ekleme ile yazma tek dosyada.
   </Step>
-  <Step title="R · Retrieval: getir" phase="1">
+  <Step title="R · Retrieval: bul" phase="1">
     Soru, dokümanlardan önceden hazırlanmış parçalar arasında aranır ve en ilgili birkaçı seçilir. Bizde iki dosya: `6-retrieve.ts` soruyu embed edip vector DB'de arar, `7-rerank.ts` bulunanları <Term id="rerank">rerank</Term> ile yeniden sıralar.
   </Step>
-  <Step title="A + G · zenginleştir ve üret" phase="2">
+  <Step title="A + G · ekle ve yaz" phase="2">
     Seçilen parçalar numaralanıp sorunun önüne konur, üstüne kurallar eklenir. Model cevabı bu girdiden yazar ve kaynağın numarasını ekler. İkisi tek dosyada, `8-answer.ts`. Model, başlamadan önce kaynaksız sorduğumuz aynı gemma3:4b; ağırlıklarına kimse dokunmadı.
   </Step>
   <Step title="Tek cümlede">
@@ -89,7 +89,7 @@ Kodda üç satır: `retrieve`, `rerank`, `answer`. İlk ikisi R, üçüncüsü A
 - **Stil ve format.** Modelin nasıl konuştuğu RAG'in işi değil: prompt ya da fine-tune. Modeli değiştiren bu
   ikinci yol sıradaki sayfada: [RAG mı fine-tune mı?](/neden-rag/rag-mi-fine-tune-mu/)
 - **Hesap.** Model yine bir dil modeli; kaynaktaki sayılarla işlem yaparken yanılabilir. Bunu bugün ölçmedik.
-- **Kötü veri.** Yanlış, eski ya da birbiriyle çelişen doküman, doğru getirilse de yanlış cevap üretir.
+- **Kötü veri.** Yanlış, eski ya da birbiriyle çelişen doküman, doğru bulunsa da yanlış cevap üretir.
 - **Modelin okuma hatası.** Doğru parça önündeyken bile model yanlış satırı okuyabilir. Bu corpus'ta ölçtük:
   [Sınırlar ve RAG türleri](/her-derde-deva/sinirlar-ve-turler/).
 
@@ -99,7 +99,7 @@ düzelttiği [Sınırlar ve RAG türleri](/her-derde-deva/sinirlar-ve-turler/) s
 ## Sık sorulan
 
 <FAQ q="RAG demek vector DB demek mi?">
-Hayır. "Getir" adımı anahtar kelime araması, bir SQL sorgusu ya da bir API çağrısı da olabilir. Vector araması
+Hayır. "Bul" adımı anahtar kelime araması, bir SQL sorgusu ya da bir API çağrısı da olabilir. Vector araması
 yaygın, çünkü kelimeyi değil anlamı arar; ne kadar iyi aradığını [C · Embedding](/adim-adim/c-embedding/)
 sayfasında ölçüyoruz. Kelime aramasıyla anlam aramasını birleştirene hybrid arama denir.
 </FAQ>

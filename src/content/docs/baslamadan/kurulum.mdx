@@ -1,6 +1,6 @@
 ---
 title: Kurulum
-description: Günden önce, bir kez — Node 22, git, Ollama ve iki model, Podman ile Chroma, repo ve npm run doctor.
+description: Eğitimden önce, bir kez — Node 22, git, Ollama ve iki model, Podman ile Chroma, repo ve npm run doctor.
 ---
 import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
 import RepoCode from '../../../components/RepoCode.astro';
@@ -8,11 +8,11 @@ import Log from '../../../components/Log.astro';
 import FAQ from '../../../components/FAQ.astro';
 import Takeaway from '../../../components/Takeaway.astro';
 
-Günden önce, bir kez. Her şey kendi dizüstünüzde çalışır: dil modelleri **Ollama**'da, vector DB (Chroma)
+Eğitimden önce, bir kez. Her şey kendi dizüstünüzde çalışır: dil modelleri **Ollama**'da, vector DB (Chroma)
 **Podman**'da bir container olarak, pipeline'ın kendisi **Node.js** ile TypeScript olarak. Hiçbir veri dışarı çıkmaz.
 
 İnecekler (M serisi bir Mac'te `ollama list` ve `podman image ls` ile ölçüldü): `gemma3:4b` 3,3 GB · `bge-m3` 1,2 GB ·
-Chroma imajı 649 MB. Günden önce, iyi bir bağlantıda indirin. Şirket ağındaysanız önce
+Chroma imajı 649 MB. Eğitimden önce, iyi bir bağlantıda indirin. Şirket ağındaysanız önce
 [Kurulum sorunları › Şirket ağı](/kurulum-sorunlari/#şirket-ağı).
 
 | Ne | Ne işe yarar | Kontrol |
@@ -146,7 +146,7 @@ Gerekmez. Aynı `compose.yaml` ile `docker compose up -d` çalışır; tek satı
 </FAQ>
 
 <FAQ q="GPU gerekir mi?">
-Hayır. Ollama varsa GPU'yu kullanır, yoksa işlemcide çalışır. `npm run doctor` bir cevabın süresini ölçer; M
+Hayır. Ollama, GPU varsa onu kullanır, yoksa işlemcide çalışır. `npm run doctor` bir cevabın süresini ölçer; M
 serisi bir Mac'te, model yüklemesi dahil, 4590 ms sürdü (yukarıdaki çıktı). Süre 20 saniyeyi geçerse "slow laptop"
 uyarısı çıkar: adımlar yine çalışır, yalnızca beklersiniz. Uyarıyı ilk çalıştırmada gördüyseniz `npm run doctor`'u
 hemen bir kez daha çalıştırın; ikinci ölçümde model zaten bellektedir. Süreler donanıma göre değişir.
@@ -163,7 +163,7 @@ Değil. Pipeline terminalde çalışır. Bruno yalnızca Chroma'nın ve Ollama'n
 </FAQ>
 
 <FAQ q="Şirket dizüstümde yönetici yetkim yok.">
-Node, git ve Ollama kurulabildiyse gün yürür: Podman kurulamazsa JSON store'u kullanın (yukarıda). Ayrıntılar ve
+Node, git ve Ollama kurulabildiyse eğitimi takip edebilirsiniz: Podman kurulamazsa JSON store'u kullanın (yukarıda). Ayrıntılar ve
 Windows'a özgü durumlar: [Kurulum sorunları](/kurulum-sorunlari/).
 </FAQ>
 

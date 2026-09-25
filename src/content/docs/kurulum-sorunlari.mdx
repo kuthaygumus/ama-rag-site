@@ -7,7 +7,7 @@ import RepoCode from '../../components/RepoCode.astro';
 import Log from '../../components/Log.astro';
 import Takeaway from '../../components/Takeaway.astro';
 
-Önce `npm run doctor`. Her `✗` satırı sorunu ve çözümünü birlikte yazar. Sağlıklı bir makinede çıktı şöyle:
+Önce `npm run doctor`. Her `✗` satırı sorunu ve çözümünü birlikte yazar. Sorunsuz bir makinede çıktı şöyle:
 
 <Log name="doctor" title="npm run doctor" />
 
@@ -91,7 +91,7 @@ Bir adım bilinen bir sorunla karşılaşınca tek satır yazar: `✗` ve mesaj.
 | `looking up compose provider failed` | `podman compose` bir Compose aracı bulamadı. Podman Desktop'tan Compose'u kurun ya da tek satırlık komutu kullanın (aşağıda). |
 | `the container name "chroma" is already in use by <id>. You have to remove that container to be able to reuse that name: …` | Container zaten var. Başlatın: `podman start chroma`. |
 | `>>>> Executing external compose provider "…/podman-compose". Please see podman-compose(1) for how to disable this message. <<<<` | Hata değil, bilgi. `podman compose` dış bir Compose aracını çağırdığında her seferinde bunu yazar; ardından Chroma normal başlar. |
-| 8000 portu başka bir programda | Chroma'yı başka bir porta alın ve `.env`'e söyleyin (aşağıda). |
+| 8000 portu başka bir programda | Chroma'yı başka bir porta alın ve yeni adresi `.env`'e yazın (aşağıda). |
 
 Compose olmadan, aynı Chroma tek satırda (`compose.yaml`'ın başındaki yorumdan):
 
@@ -99,7 +99,7 @@ Compose olmadan, aynı Chroma tek satırda (`compose.yaml`'ın başındaki yorum
 podman run -d --name chroma -p 8000:8000 -v chroma-data:/data docker.io/chromadb/chroma:1.5.9
 ```
 
-8000 portu doluysa, 8001'e alın ve pipeline'a söyleyin:
+8000 portu doluysa, 8001'e alın ve yeni adresi pipeline'a bildirin:
 
 <Tabs syncKey="os">
 <TabItem label="Mac">
@@ -176,8 +176,8 @@ Zaten OneDrive'a klonladıysanız en temizi: klasörü silin, `$HOME\dev` altın
 
 ## Geride kaldıysanız: `npm run catchup -- N`
 
-Bir adımda takıldınız ya da kodu bozdunuz ve örneğin 5. adımın sonundan devam etmek istiyorsunuz. Tek komut sizi
-oraya getirir:
+Bir adımda takıldınız ya da kodu bozdunuz ve örneğin 5. adımın sonundan devam etmek istiyorsunuz. Tek komut
+yeter:
 
 ```sh
 npm run catchup -- 5

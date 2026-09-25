@@ -184,7 +184,7 @@ Aynı sıralama, terminalde. Önce retriever'ın listesi ve kesme çizgisi, sonr
 
 <Log name="07-rerank" title="npm run step -- 7" />
 
-Rerank kapalıyken de cevap 22; yalnızca "gündür" yerine "gundur" yazıyor. İki cevap da, F'de göreceğimiz tablo kuralının istediği gibi, kullandığı satırı aynen yazmadı. Cevabın kendisine F sayfasında bakacağız.
+Rerank kapalıyken de cevap 22; yalnızca "gündür" yerine "gundur" yazıyor. F'de göreceğimiz tablo kuralı, kullanılan satırın aynen yazılmasını istiyor; iki cevap da bunu yapmadı. Cevabın kendisine F sayfasında bakacağız.
 
 Retriever'ın bütün işi: filtreyi kur, soruyu embed et, `k + 3` sonuç iste (fazlası kesme çizgisinin altını göstermek için).
 
@@ -210,7 +210,7 @@ Soru: "Kıdemli uzman unvanında aylık brüt maaş bandının üst sınırı ne
 
 <Log name="ask-access-off" title="ASKER_MAY_READ = undefined (kimse kontrol etmiyor)" />
 
-Filtre kapalıyken ilk 5'in hepsi maaş dokümanından ve cevap maaş rakamını veriyor: yetkisi olmayan birine yetkisi olmayan bilgi. Filtre açıkken maaş rakamı hiçbir yerde yok; güvenlik tuttu. Ama cevap da doğru değil: reranker seyahat politikasının otel ve harcırah tablosuna 10 puan verdi, model de maaş sorusuna harcırahla cevap verdi. Hangi katman suçlu? Erişim doğru katmanda, retrieval'da, kodla korundu. Yanlış cevap ise reranker ile modelin hatası: "yer almıyor" demeleri gerekirdi.
+Filtre kapalıyken ilk 5'in hepsi maaş dokümanından ve cevap maaş rakamını veriyor: yetkisi olmayan birine göremeyeceği bilgi. Filtre açıkken maaş rakamı hiçbir yerde yok; güvenlik tuttu. Ama cevap da doğru değil: reranker seyahat politikasının otel ve harcırah tablosuna 10 puan verdi, model de maaş sorusuna harcırahla cevap verdi. Hangi katman suçlu? Erişim doğru katmanda, retrieval'da, kodla korundu. Yanlış cevap ise reranker ile modelin hatası: "yer almıyor" demeleri gerekirdi.
 
 <YourTurn>
 **1 · Listeyi açın.** `npm run step -- 6` ve `data/6-retrieved.json`: `hits` (prompt'a aday 5 chunk), `below` (kesme çizgisinin altındaki 3), `filter`. Başka bir soru: `npm run step -- 6 "Tatil hakkım kaç gün?"`.

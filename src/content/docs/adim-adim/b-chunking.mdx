@@ -135,7 +135,7 @@ Bir dokümanın tamamını her soruda modele veremeyiz. Günün sorusunun cevab�
     Her soruda 8 dokümanın hepsini modele vermek pahalı ve gürültülü. Dokümanları parçalara böleriz; arama yalnızca soruya en yakın birkaç parçayı seçer. Bu parçaların adı <Term id="chunk">chunk</Term>.
   </Step>
   <Step title="Birinci yol: her 300 karakterde bir kes" stage="b">
-    `fixedSize(doc, 300)`: içerik ne olursa olsun, 300 karakterde bir makas. Başlığa, tabloya, kelimeye bakmaz. Herkesin başladığı yer; kodu on satır. 300 bizim seçimimiz.
+    `fixedSize(doc, 300)`: içerik ne olursa olsun, 300 karakterde bir makas. Başlığa, tabloya, kelimeye bakmaz. Herkes işe bununla başlar; kodu on satır. 300 bizim seçimimiz.
   </Step>
   <Step title="Makas tabloya denk geliyor" stage="b">
     c06, bölüm başlığını "Yıllık Ü" harfinde kesiyor. c07, 5. yılın satırını "| 5 | 2" diye bitiriyor; c08 "2 |" ile başlıyor. Tablonun başlık satırı c07'de kaldı.
@@ -198,7 +198,7 @@ Geride kaldıysanız: `npm run catchup -- 3`.
 300 bizim seçimimiz. Başka bir sayı makası başka bir yere düşürür ama sorun aynı kalır: makas içeriğe bakmıyor. Hangi sayıyı seçerseniz seçin bir gün bir tablonun, bir listenin ya da bir cümlenin ortasına denk gelir.
 </FAQ>
 
-<FAQ q="Parçalar birbirine biraz taşsa (overlap)?">
+<FAQ q="Parçalar biraz örtüşse (overlap)?">
 Komşu parçaların birkaç yüz karakteri paylaşması yaygın bir yöntem: kesikte kalan başlık bazen komşu parçaya da düşer. Garantisi yoktur, parça sayısı ve depolama artar. Bu korpusta ölçmedik.
 </FAQ>
 
@@ -214,4 +214,4 @@ Hayır. Büyük parça prompt'u uzatır (maliyet ve süre) ve farklı konuları 
 Makas bir bölüm başlığının üstünden geçtiğinde parça iki bölüme birden dokunur; `sections` alanı bunu kaydeder. Değerlendirme (Kaliteyi ölçmek) doğru cevabı bölüm düzeyinde kontrol ettiği için bu alan önemli.
 </FAQ>
 
-<Takeaway>Bunu bir splitter kazandı, model değil.</Takeaway>
+<Takeaway>Bu farkı model değil, splitter yarattı.</Takeaway>

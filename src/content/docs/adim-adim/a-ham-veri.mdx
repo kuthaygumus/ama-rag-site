@@ -1,6 +1,6 @@
 ---
 title: A · Ham veri ve temizlik
-description: Dosyaları okumak, her dokümanın kendisi hakkında söylediğini (metadata) almak ve PDF'ten kalma gürültüyü atmak — adım 1 ve 2.
+description: Dosyaları okumak, her dokümanın kendisi hakkındaki bilgileri (metadata) okumak ve PDF'ten kalma gürültüyü atmak — adım 1 ve 2.
 ---
 import WhereAmI from '../../../components/WhereAmI.astro';
 import DaysQuestion from '../../../components/DaysQuestion.astro';
@@ -88,16 +88,16 @@ Model bu dosyaları hiç görmedi. Görse de ham hâlleri kirli: her sayfada ayn
     Gerçek hayatta bu metin bir PDF'ten ya da Word'den çıkarılır. Bizimki zaten metin ama aynı izleri taşıyor: her sayfanın başında aynı başlık ve gizlilik satırı, sonunda bir sayfa numarası.
   </Step>
   <Step title="Gürültü neden sorun?" phase="2">
-    Başlık satırı hr-leave'in 4 sayfasının her birinde tekrar ediyor. Metni parçalara bölünce parçalar bu ortak satırı taşır ve birbirine içerikleri yüzünden değil, gürültü yüzünden benzer.
+    Başlık satırı hr-leave'in 4 sayfasının her birinde tekrar ediyor. Metni parçalara bölünce parçalar bu ortak satırı taşır ve içerikleri yüzünden değil, gürültü yüzünden birbirine benzer.
   </Step>
   <Step title="Bir de bölünmüş satırlar" phase="3">
-    Sayfa genişliği cümleleri de bölmüş: "mazeret" bir satırın sonunda, "izni" sonrakinin başında. Kelime kelime okuyan için sorun yok; satır satır işleyen bir program için bu iki ayrı parça.
+    Sayfa genişliği cümleleri de bölmüş: "mazeret" bir satırın sonunda, "izni" sonrakinin başında. Metni okuyan bir insan için sorun yok; satır satır işleyen bir program için bu iki ayrı parça.
   </Step>
   <Step title="Temizlik: birkaç kural ve bir birleştirici">
-    Adım 2 önce gürültü satırlarını 4 kuralla (regex) atar, sonra sayfa genişliğinin böldüğü düz yazı satırlarını birleştirir. Başlıklar, tablo satırları ve boş satırlar olduğu gibi kalır. Akıllı bir şey yok; bilinçli olarak basit.
+    Adım 2 önce gürültü satırlarını 4 kuralla (regex) atar, sonra sayfa genişliğinin böldüğü düz yazı satırlarını birleştirir. Başlıklar, tablo satırları ve boş satırlar olduğu gibi kalır. Akıllıca bir numara yok; bilerek basit tutuldu.
   </Step>
   <Step title="Sonuç">
-    8 doküman: 1074 satır 512 satıra indi. Bunun 74'ü atılan gürültü satırı; gerisi birleştirilen satırlar ve fazla boş satırlar. İki adım birkaç milisaniye sürdü ve çıktısını `data/` klasörüne yazdı: açıp bakabilirsiniz.
+    8 doküman: 1074 satır 512 satıra indi. Bunun 74'ü atılan gürültü satırı; gerisi birleştirilen satırlar ve fazla boş satırlar. İki adım birkaç milisaniye sürdü ve çıktılarını `data/` klasörüne yazdı: açıp bakabilirsiniz.
   </Step>
 </Deck>
 
@@ -130,7 +130,7 @@ Log'un sonundaki "before / after", hr-leave'in ilk satırlarını gösteriyor: b
 
 **2 · Bir kuralı kapatın.** `src/steps/2-clean.ts` içinde `NOISE` listesinin ilk satırını (sayfa başlığı kuralı) başına `//` koyarak kapatın ve `npm run step -- 2` çalıştırın. Log'da `hr-leave` satırı −12 yerine −8 göstermeli. `data/2-clean.json` içinde `Sürüm 2025` arayın: başlık metne geri döndü. Satırı geri açıp adım 2'yi yeniden çalıştırın.
 
-**3 · Kardeşini yazın.** Aynı dosyada `englishConfidential` şimdilik boş. Türkçe gizlilik kuralı `/^GİZLİ – .+$/` nasıl yazıldıysa İngilizce gizlilik satırı için de öyle yazın. İpucu: satırdaki tire uzun tire (–); dosyadan kopyalayın. Sonra:
+**3 · Benzerini yazın.** Aynı dosyada `englishConfidential` şimdilik boş. Türkçe gizlilik kuralı `/^GİZLİ – .+$/` nasıl yazıldıysa İngilizce gizlilik satırı için de öyle yazın. İpucu: satırdaki tire uzun tire (–); dosyadan kopyalayın. Sonra:
 
 - `npm run step -- 2` → `it-security` satırı −8 yerine −12 göstermeli.
 - `npm run check:sibling` → `step 2 · englishConfidential` testi yeşil olmalı. `dot` ve `byParagraph` testleri şimdilik kırmızı kalır; onlar C sayfasında ve B sayfasının ev ödevinde.
@@ -163,4 +163,4 @@ Bu yüzden kurallar satırın başına ve sonuna bağlı (`^` … `$`): yalnızc
 Model ne verirsek onu kodlar; gürültüyü ayırt etmek onun işi değil. Kalan gürültünün nereye gittiğini yukarıda gördük: kendi chunk'ı oldu.
 </FAQ>
 
-<Takeaway>Arama, ona verdiğimiz metinden daha iyi olamaz.</Takeaway>
+<Takeaway>Kirli metinle iyi arama olmaz.</Takeaway>

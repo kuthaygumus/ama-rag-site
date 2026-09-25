@@ -71,13 +71,13 @@ import Term from '../../../components/Term.astro';
     Adım 6'daki sürüm filtresi (`EDITION_FILTER`) varsayılan olarak "latest": depodaki en yeni sürüm. Filtre aramanın içinde çalışıyor; 2025 kayıtları yarışa hiç girmiyor. Bu, E sayfasında adını koyduğumuz <Term id="metadata">metadata</Term> filtresi.
   </Step>
   <Step title="Cevap değişti">
-    `npm run soru`: "Tablodan, 7 tam yıl kıdeminde 24 iş günü …", kaynak `hr-leave@2026#3`. LEDGER, günün sorusunun sabahtan beri verdiği bütün cevapları sırayla gösteriyor.
+    `npm run soru`: "Tablodan, 7 tam yıl kıdeminde 24 iş günü …", kaynak `hr-leave@2026#3`. LEDGER, günün sorusuna sabahtan beri verilen bütün cevapları sırayla gösteriyor.
   </Step>
   <Step title="Filtre olmasa?">
     Toggle `EDITION_FILTER = "all"` yapılınca iki sürüm yarışıyor. Tablonun 2026 hâli 0.632, 2025 hâli 0.631 aldı; ikisi de prompt'a girdi, 24 ve 22 yan yana. Model bu kez 24 dedi; KAYNAK 1 2026'ydı. Hangi sayının önde duracağını 0.001'lik bir fark belirledi.
   </Step>
   <Step title="Silmek mi, filtrelemek mi?">
-    Eski sürümü tutmak geçmişe dönük soruları ve denetimi mümkün kılar; bedeli, filtreyi her aramada doğru kurmak. `replaceEdition` yalnızca aynı sürümü yerinde yeniler; 2026 gelince 2025'e dokunmaz. 2025'i silmek, `edition` koşuluyla ayrı bir silme; repoda bunun komutu yok. Hangisi, bir tasarım kararı.
+    Eski sürümü tutmak geçmişe dönük soruları ve denetimi mümkün kılar; bedeli, filtreyi her aramada doğru kurmak. `replaceEdition` yalnızca aynı sürümü yerinde yeniler; 2026 gelince 2025'e dokunmaz. 2025'i silmek, `edition` koşuluyla ayrı bir silme; repoda bunun komutu yok. Hangisini seçeceğiniz bir tasarım kararı.
   </Step>
 </Deck>
 

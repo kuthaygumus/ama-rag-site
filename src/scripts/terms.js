@@ -18,7 +18,7 @@ export const terms = {
   context: { title: 'Context window', body: 'Modelin tek seferde okuyabileceği token sınırı. Prompt (kaynaklar dahil) ve cevap bu sınıra sığmak zorunda.' },
   abstain: { title: 'Abstain', body: 'Cevap kaynaklarda yoksa modelin bilerek “bilmiyorum” demesi. Kendiliğinden olmaz; tasarlanır.' },
   injection: { title: 'Prompt injection', body: 'Modelin okuduğu bir metnin içine talimat gizlemek. RAG’de bu metin bir doküman olabilir.' },
-  finetune: { title: 'Fine-tuning', body: 'Hazır bir modeli kendi örneklerinizle biraz daha eğitmek; modelin ağırlıklarını değiştirir. Davranışı (ton, format, terim) iyi öğretir, olguları güvenilmez. Öğretileni değiştirmek yeniden eğitim ister.' },
+  finetune: { title: 'Fine-tuning', body: 'Hazır bir modeli kendi örneklerinizle biraz daha eğitmek; modelin ağırlıklarını değiştirir. Davranışı (ton, format, terim) iyi öğretir; olgularda güvenilmezdir. Öğretileni değiştirmek yeniden eğitim ister.' },
   weights: { title: 'Ağırlıklar', body: 'Modelin eğitimde öğrendiği milyarlarca sayı. Model bildiğini burada tutar; eğitim bitince donarlar.' },
   pca: { title: 'PCA', body: '1024 boyutu çizilebilir 2 boyuta indirmek: parçaların en çok farklılaştığı iki yönü bulur. Bilginin çoğu kaybolur, kaba yerleşim kalır.' },
   mrr: { title: 'MRR', body: 'Her soru için 1 / (ilk doğru sonucun sırası), sonra bütün soruların ortalaması. 1.0 = doğru sonuç hep ilk sırada.' },

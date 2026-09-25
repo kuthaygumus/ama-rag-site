@@ -58,7 +58,7 @@ import Term from '../../../components/Term.astro';
   <DeckFigure slot="figure" stage="a">
     <svg viewBox="0 0 1000 380" role="img" aria-label="Şematik: brute force her vektöre bakar; HNSW bir giriş noktasından komşudan komşuya atlayarak soruya yaklaşır">
       <text x="240" y="30" text-anchor="middle" class="flbl">JSON · hepsine bak</text>
-      <text x="760" y="30" text-anchor="middle" class="flbl">Chroma · mahalleye bak</text>
+      <text x="760" y="30" text-anchor="middle" class="flbl">Chroma · komşulara bak</text>
       <g data-from="5">
         <path d="M240 200 L70 90" class="faxis" />
         <path d="M240 200 L140 65" class="faxis" />
@@ -201,7 +201,7 @@ import Term from '../../../components/Term.astro';
   <Step title="Brute force: hepsine bak" stage="a">
     JSON deposu her soruda 60 vektörün hepsiyle cosine hesaplar ve sıralar. Sonuç kesindir; ama iş chunk sayısıyla birlikte büyür. Bu yöntemin adı <Term id="bruteforce">brute force</Term>.
   </Step>
-  <Step title="Vector DB: mahalleye bak" stage="a">
+  <Step title="Vector DB: komşulara bak" stage="a">
     Chroma bir indeks kurar: <Term id="hnsw">HNSW</Term>, vektörleri komşuluk grafiğine bağlar. Arama bir giriş noktasından başlar, soruya doğru komşudan komşuya atlar ve yalnızca yakın mahalleyi gezer.
   </Step>
   <Step title="Bedeli: yaklaşık" stage="a">
@@ -241,16 +241,16 @@ Kaydın dört parçası tek çağrıda gidiyor: `ids`, `embeddings`, `documents`
 
 ## `podman compose up`, satır satır
 
-Günün başında çalıştırdığımız komutun anlattığı şey bu dosya:
+Günün başında çalıştırdığımız komut bu dosyayı okuyor:
 
 <RepoCode file="compose.yaml" />
 
 - `image: docker.io/chromadb/chroma:1.5.9` — sürüm sabit. Herkesin makinesinde aynı Chroma, aynı API.
-- `ports: "8000:8000"` — Chroma'nın HTTP API'si `localhost:8000`'de. Kodumuz da Bruno da buraya konuşuyor.
+- `ports: "8000:8000"` — Chroma'nın HTTP API'si `localhost:8000`'de. Kodumuz da Bruno da buraya bağlanıyor.
 - `volumes: chroma-data:/data` — kayıtlar container'ın içinde değil, adlandırılmış bir volume'da. `podman compose down` veriyi korur; `down -v` siler.
 - `ANONYMIZED_TELEMETRY: "false"` — Chroma dışarıya kullanım istatistiği göndermez.
 - `healthcheck` — her 5 saniyede `/api/v2/heartbeat` adresini yoklar. `podman compose ps` "healthy" diyorsa Chroma hazır.
-- Ollama burada yok: modeller zaten sizin makinenizde, GPU'nun yanında çalışıyor.
+- Ollama burada yok: modeller doğrudan sizin makinenizde çalışıyor ve GPU'yu oradan kullanıyor.
 
 ## İçeri Bruno ile bakın
 
@@ -283,7 +283,7 @@ Geride kaldıysanız: `npm run catchup -- 5`. Depo da sıfırlanıp yeniden dold
 ## Sık sorulan
 
 <FAQ q="Chroma mı, pgvector mı, Qdrant mı?">
-Hepsi aynı üç şeyi saklar: vektör, metin, metadata. Farklar işletmede: zaten Postgres kullanıyorsanız pgvector yeni bir sistem getirmez; ölçek, filtre gücü, hybrid arama desteği ve yönetilen servis seçenekleri değişir. Bu gün için Chroma bizim seçimimiz: tek container ve Bruno'dan okunabilen bir HTTP API.
+Hepsi aynı üç şeyi saklar: vektör, metin, metadata. Farklar operasyon tarafında: zaten Postgres kullanıyorsanız pgvector yeni bir sistem getirmez; ölçek, filtre gücü, hybrid arama desteği ve yönetilen servis seçenekleri değişir. Bugün için Chroma bizim seçimimiz: tek container ve Bruno'dan okunabilen bir HTTP API.
 </FAQ>
 
 <FAQ q="Chroma embedding'i kendisi yapamaz mı?">
