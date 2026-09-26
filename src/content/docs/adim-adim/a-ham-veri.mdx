@@ -124,6 +124,56 @@ Model bu dosyaları hiç görmedi. Görse de ham hâlleri kirli: her sayfada ayn
       </g>
     </svg>
   </DeckFigure>
+  <DeckFigure slot="figure" stage="c">
+    <svg viewBox="0 0 1000 440" role="img" aria-label="Adım 1: corpus/2025 klasöründeki 8 dosya src/steps/1-load.ts içinden geçer ve data/1-docs.json olur. Adım 2: data/1-docs.json src/steps/2-clean.ts içinden geçer ve data/2-clean.json olur">
+      <g class="ph ph1">
+        <rect x="10" y="62" width="210" height="120" rx="10" class="fbox" />
+        <text x="115" y="100" text-anchor="middle" class="flbl">ham veri</text>
+        <text x="115" y="132" text-anchor="middle" class="fmono">corpus/2025/</text>
+        <text x="115" y="162" text-anchor="middle" class="fsub">8 .md dosyası</text>
+        <path d="M224 122 H282" class="farrow" marker-end="url(#ch-a)" />
+        <rect x="290" y="30" width="440" height="170" rx="10" class="fbox-on" />
+        <text x="310" y="62" class="fmono fnum">src/steps/1-load.ts</text>
+        <text x="310" y="102" class="fmono">loadCorpus()</text>
+        <text x="492" y="102" class="fsub">her .md dosyasını okur</text>
+        <text x="310" y="136" class="fmono">parseFrontMatter()</text>
+        <text x="492" y="136" class="fsub">--- bloğunu ayırır</text>
+        <text x="310" y="170" class="fmono">writeStep()</text>
+        <text x="492" y="170" class="fsub">JSON dosyasına yazar</text>
+        <path d="M734 122 H772" class="farrow" marker-end="url(#ch-a)" />
+        <rect x="780" y="62" width="210" height="120" rx="10" class="fbox" />
+        <text x="885" y="100" text-anchor="middle" class="fmono">data/1-docs.json</text>
+        <text x="885" y="132" text-anchor="middle" class="fsub">8 kayıt (Doc)</text>
+        <text x="885" y="162" text-anchor="middle" class="fsub">metadata + body</text>
+      </g>
+      <g class="ph ph2">
+        <path d="M885 186 V234 H115 V268" class="farrow" marker-end="url(#ch-a)" />
+        <text x="500" y="226" text-anchor="middle" class="fsub">adım 1'in çıktısı, adım 2'nin girdisi</text>
+        <rect x="10" y="277" width="210" height="120" rx="10" class="fbox" />
+        <text x="115" y="315" text-anchor="middle" class="fmono">data/1-docs.json</text>
+        <text x="115" y="347" text-anchor="middle" class="fsub">8 kayıt (Doc)</text>
+        <text x="115" y="377" text-anchor="middle" class="fsub">body = ham metin</text>
+        <path d="M224 337 H282" class="farrow" marker-end="url(#ch-a)" />
+        <rect x="290" y="255" width="440" height="170" rx="10" class="fbox-on" />
+        <text x="310" y="287" class="fmono fnum">src/steps/2-clean.ts</text>
+        <text x="310" y="324" class="fmono">readStep()</text>
+        <text x="492" y="324" class="fsub">1-docs.json'ı okur</text>
+        <text x="310" y="356" class="fmono">cleanText()</text>
+        <text x="492" y="356" class="fsub">gürültüyü atar,</text>
+        <text x="492" y="380" class="fsub">satırları birleştirir</text>
+        <text x="310" y="410" class="fmono">writeStep()</text>
+        <text x="492" y="410" class="fsub">JSON dosyasına yazar</text>
+        <path d="M734 337 H772" class="farrow" marker-end="url(#ch-a)" />
+        <rect x="780" y="277" width="210" height="120" rx="10" class="fbox-good" />
+        <text x="885" y="315" text-anchor="middle" class="fmono">data/2-clean.json</text>
+        <text x="885" y="347" text-anchor="middle" class="fsub">8 kayıt (CleanDoc)</text>
+        <text x="885" y="377" text-anchor="middle" class="fsub">metadata + text</text>
+      </g>
+      <defs>
+        <marker id="ch-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker>
+      </defs>
+    </svg>
+  </DeckFigure>
   <Step title="Ham veri nedir?" stage="a">
     Şirketin bilgisi PDF, Word ya da HTML dosyalarında durur. Bir program bu dosyalardan metni çıkarır; pipeline'a ilk giren şey bu metindir. Buna **ham veri** diyoruz. İçeriği doğrudur ama geldiği dosyanın izlerini taşır: PDF'ten sayfa başlıkları ve sayfa numaraları, HTML'den menüler ve alt bilgiler.
   </Step>
@@ -157,6 +207,12 @@ Model bu dosyaları hiç görmedi. Görse de ham hâlleri kirli: her sayfada ayn
   <Step title="Sonuç: ham veri girdi, temiz metin çıktı" stage="b">
     8 dokümanda 1074 satır 512 satıra indi. Eksilen 562 satırın 74'ü atılan gürültü; gerisi birleşen satırlar ve silinen fazla boş satırlar. İki adım birkaç milisaniye sürdü ve çıktılarını `data/` klasörüne yazdı: açıp bakabilirsiniz.
   </Step>
+  <Step title="Adım 1 kodda: corpus → 1-docs.json" stage="c" phase="1">
+    Class yok: her adım tek bir dosyada, düz fonksiyonlarla yazıldı. `npm run step -- 1`, `src/steps/1-load.ts` dosyasını çalıştırır. İçindeki `loadCorpus()` 8 dosyayı okur, her birini `parseFrontMatter()` ile metadata ve `body` olarak ayırır; `writeStep()` bu 8 kaydı `data/1-docs.json` dosyasına yazar.
+  </Step>
+  <Step title="Adım 2 kodda: 1-docs.json → 2-clean.json" stage="c" phase="2">
+    `npm run step -- 2`, `src/steps/2-clean.ts` dosyasını çalıştırır. Adım 2 adım 1'i çağırmaz; onun yazdığı `data/1-docs.json` dosyasını `readStep()` ile okur. `cleanText()` her kaydın `body` alanını temizleyip `text` alanına koyar, metadata olduğu gibi kopyalanır. `writeStep()` sonucu `data/2-clean.json` dosyasına yazar.
+  </Step>
 </Deck>
 
 <Example>
@@ -165,13 +221,37 @@ Günün sorusunun cevabı §3'te. Ham dosyada §3'ün ilk paragrafı üç satır
 
 <RepoCode file="corpus/2025/hr-leave.md" from="## 3. Yıllık Ücretli İzin" to="^\| 2 \|" title="corpus/2025/hr-leave.md — ham hâli" />
 
-Adım 1, dosyanın üstündeki bloğu tek fonksiyonla okur. YAML kütüphanesi yok; `key: value` satırları yetiyor:
+## Adım 1 · corpus/ → data/1-docs.json
+
+`npm run step -- 1`, `src/steps/1-load.ts` içindeki `run()` fonksiyonunu çalıştırır; `run()` işi `loadCorpus()` fonksiyonuna verir. `loadCorpus()` klasördeki her `.md` dosyasını okur, her birini `parseFrontMatter()` ile ikiye ayırır ve dosya başına bir kayıt döndürür. Metadata alanlarından biri eksikse hata burada çıkar:
+
+<RepoCode file="src/steps/1-load.ts" from="export async function loadCorpus" />
+
+`parseFrontMatter()` dosyanın üstündeki bloğu okur. YAML kütüphanesi yok; `key: value` satırları yetiyor:
 
 <RepoCode file="src/steps/1-load.ts" from="export function parseFrontMatter" />
 
+Dönen kayıt bir `Doc`. Bu bir class değil, `src/lib/types.ts` içindeki bir TypeScript interface'i; kayıtlar düz JSON nesneleri olarak dolaşır. `DocMeta` üstteki bloğun alanlarıdır, `body` ise dosyanın geri kalanı, olduğu gibi:
+
+<RepoCode file="src/lib/types.ts" from="Step 1 output" />
+
+`run()` en sonda `writeStep()` ile 8 kaydı `data/1-docs.json` dosyasına yazar. Dosyayı açtığınızda kayıtlar `data` dizisinin içinde durur; üstteki `hash` ve `inputHash` alanları, adım 2'nin eski bir dosyayla çalışmasını engeller.
+
 <Log name="01-load" title="npm run step -- 1" />
 
-Adım 2'nin kuralları bir listede duruyor. Her satırın sonundaki `// default` işareti, o satırın varsayılan olarak açık olduğunu söyler; üstündeki boş `englishConfidential` birazdan sizin işiniz:
+## Adım 2 · data/1-docs.json → data/2-clean.json
+
+`npm run step -- 2`, `src/steps/2-clean.ts` içindeki `run()` fonksiyonunu çalıştırır. Adım 2 adım 1'i çağırmaz: `readStep()` ile `data/1-docs.json` dosyasını okur. Her kayıt şu satırdan geçer:
+
+<RepoCode file="src/steps/2-clean.ts" from="const docs: CleanDoc[]" to="^\s*$" />
+
+`path` ve `body` kayıttan ayrılır (`path`, `_path` adıyla alınıp kullanılmaz, yani düşer). Geri kalan metadata (`...meta`) olduğu gibi kopyalanır. `cleanText(body)` da temiz `text` alanını ve atılan satır sayısını (`noiseLines`) ekler. Çıkan kaydın şekli `CleanDoc`, aynı `types.ts` dosyasında `Doc`'un hemen altında.
+
+`cleanText()` iki iş yapar: önce gürültü satırlarını atar, sonra bölünmüş düz yazı satırlarını birleştirir. Başlık, tablo satırı, boş satır ve liste maddesi hiçbir satıra eklenmez:
+
+<RepoCode file="src/steps/2-clean.ts" from="const closed" />
+
+Gürültü kuralları bir listede duruyor. Her satırın sonundaki `// default` işareti, o satırın varsayılan olarak açık olduğunu söyler; üstündeki boş `englishConfidential` birazdan sizin işiniz:
 
 <RepoCode file="src/steps/2-clean.ts" from="// ── YOUR TURN" to="^\];" />
 
