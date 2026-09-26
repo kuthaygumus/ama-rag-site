@@ -27,8 +27,53 @@ Model bu dosyaları hiç görmedi. Görse de ham hâlleri kirli: her sayfada ayn
 </Gate>
 
 <Deck>
-  <DeckFigure slot="figure">
-    <svg viewBox="0 0 820 430" role="img" aria-label="hr-leave.md dosyasının üst kısmı: metadata bloğu, gürültü satırları ve bölünmüş satırlar">
+  <DeckFigure slot="figure" stage="a">
+    <svg viewBox="0 0 1000 290" role="img" aria-label="Gerçek projede önce PDF, Word ya da HTML dosyasından metin çıkarılır. Atölye bu ham veriyle, corpus/2025/hr-leave.md ile başlar: adım 1 okur, adım 2 temizler">
+      <text x="102" y="36" text-anchor="middle" class="fsub">gerçek projede</text>
+      <text x="102" y="60" text-anchor="middle" class="fsub">buradan başlar</text>
+      <rect x="12" y="76" width="180" height="124" rx="10" class="fbox" />
+      <text x="102" y="124" text-anchor="middle" class="flbl">dokümanlar</text>
+      <text x="102" y="158" text-anchor="middle" class="fsub">PDF · Word · HTML</text>
+      <text x="234" y="116" text-anchor="middle" class="fsub">metni</text>
+      <text x="234" y="138" text-anchor="middle" class="fsub">çıkar</text>
+      <path d="M197 150 H270" class="farrow" marker-end="url(#ah-a)" />
+      <rect x="277" y="76" width="180" height="124" rx="10" class="fbox" />
+      <text x="367" y="124" text-anchor="middle" class="flbl">ham veri</text>
+      <g data-from="2">
+        <text x="367" y="36" text-anchor="middle" class="fsub fnum">atölye</text>
+        <text x="367" y="60" text-anchor="middle" class="fsub fnum">buradan başlar</text>
+        <rect x="277" y="76" width="180" height="124" rx="10" class="fbox-on" />
+        <text x="367" y="124" text-anchor="middle" class="flbl">ham veri</text>
+        <text x="367" y="158" text-anchor="middle" class="fmono">corpus/2025/</text>
+        <text x="367" y="180" text-anchor="middle" class="fmono">hr-leave.md</text>
+        <text x="140" y="234" text-anchor="middle" class="fsub">atölyede atlandı:</text>
+        <text x="140" y="258" text-anchor="middle" class="fsub">metin hazır geldi</text>
+      </g>
+      <g data-from="3">
+        <text x="499" y="116" text-anchor="middle" class="fsub">adım 1</text>
+        <text x="499" y="138" text-anchor="middle" class="fsub">oku</text>
+        <path d="M462 150 H535" class="farrow-on" marker-end="url(#ah-b)" />
+        <rect x="542" y="76" width="180" height="124" rx="10" class="fbox" />
+        <text x="632" y="120" text-anchor="middle" class="flbl">metadata</text>
+        <text x="632" y="148" text-anchor="middle" class="fsub">+ metin</text>
+        <text x="632" y="180" text-anchor="middle" class="fmono">data/1-docs.json</text>
+        <text x="764" y="116" text-anchor="middle" class="fsub">adım 2</text>
+        <text x="764" y="138" text-anchor="middle" class="fsub">temizle</text>
+        <path d="M727 150 H800" class="farrow-on" marker-end="url(#ah-b)" />
+        <rect x="807" y="76" width="180" height="124" rx="10" class="fbox-good" />
+        <text x="897" y="124" text-anchor="middle" class="flbl">temiz metin</text>
+        <text x="897" y="180" text-anchor="middle" class="fmono">data/2-clean.json</text>
+        <path d="M282 218 V228 H982 V218" class="faxis" />
+        <text x="632" y="258" text-anchor="middle" class="fsub">bu sayfa: bizim kodumuz, model yok</text>
+      </g>
+      <defs>
+        <marker id="ah-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker>
+        <marker id="ah-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead-on" /></marker>
+      </defs>
+    </svg>
+  </DeckFigure>
+  <DeckFigure slot="figure" stage="b">
+    <svg viewBox="0 0 820 430" role="img" aria-label="Ham veri hr-leave.md dosyasının üst kısmı: metadata bloğu, gürültü satırları ve bölünmüş satırlar">
       <rect x="10" y="10" width="560" height="410" rx="10" class="fbox" />
       <g class="ph ph1">
         <rect x="18" y="20" width="544" height="180" rx="6" class="fbox-on" />
@@ -56,48 +101,61 @@ Model bu dosyaları hiç görmedi. Görse de ham hâlleri kirli: her sayfada ayn
       <text x="28" y="346" class="fmono">izni ve ücretsiz izin haklarını, bu hakların …</text>
       <text x="28" y="372" class="fmono">…</text>
       <text x="28" y="401" class="fmono">Sayfa 1 / 4</text>
-      <g data-from="2">
+      <text x="608" y="36" class="fsub">ham veri:</text>
+      <text x="608" y="60" class="fmono">hr-leave.md</text>
+      <g data-from="4">
         <path d="M575 110 H600" class="farrow-on" />
         <text x="608" y="104" class="flbl">metadata</text>
         <text x="608" y="128" class="fsub">→ data/1-docs.json</text>
       </g>
-      <g data-from="4">
+      <g data-from="7">
         <path d="M575 230 H600" class="farrow" />
         <text x="608" y="226" class="flbl fbad-t">gürültü</text>
         <text x="608" y="250" class="fsub">4 kural → atılır</text>
       </g>
-      <g data-from="6">
+      <g data-from="9">
         <path d="M575 330 H600" class="farrow" />
         <text x="608" y="326" class="flbl fgate-t">bölünmüş satır</text>
         <text x="608" y="350" class="fsub">→ tek satıra birleşir</text>
+      </g>
+      <g data-from="10">
         <text x="608" y="398" class="fsub">temiz metin →</text>
         <text x="608" y="420" class="fsub">data/2-clean.json</text>
       </g>
     </svg>
   </DeckFigure>
-  <Step title="Önce dosyayı açalım" phase="1">
-    `corpus/2025/hr-leave.md` iki kısımdan oluşuyor: üstte iki `---` çizgisi arasında kısa bir blok, altta asıl metin. Adım 1'in işi bu ikisini ayırmak.
+  <Step title="Ham veri nedir?" stage="a">
+    Şirketin bilgisi PDF, Word ya da HTML dosyalarında durur. Bir program bu dosyalardan metni çıkarır; pipeline'a ilk giren şey bu metindir. Buna **ham veri** diyoruz. İçeriği doğrudur ama geldiği dosyanın izlerini taşır: PDF'ten sayfa başlıkları ve sayfa numaraları, HTML'den menüler ve alt bilgiler.
   </Step>
-  <Step title="Üstteki blok: metadata" phase="1">
-    Doküman kendini tanıtıyor: kimliği (`id`), sürümü (`edition`), bölümü, kimin okuyabileceği (`access`), dili (`lang`). Buna <Term id="metadata">metadata</Term> diyoruz. Kimlik dosya adından değil buradan gelir: dosya adı değişir, `id` kalır.
+  <Step title="Bizim ham verimiz: hr-leave.md" stage="a">
+    Atölyede metni çıkarma işini atladık: `corpus/` klasöründeki her dosya, bir PDF'ten çıkmış metin gibi yazıldı. Sayfa başlıkları, sayfa numaraları ve bölünmüş satırlar, temizlenecek gerçek bir şey olsun diye bilerek eklendi. Yani `corpus/2025/hr-leave.md` bir PDF değil; PDF'ten çıkmış metnin yerini tutuyor.
   </Step>
-  <Step title="Metadata daha sonra filtre olur" phase="1">
+  <Step title="Bu sayfada iki adım var" stage="a">
+    Adım 1 dosyayı okur ve ikiye ayırır: üstteki etiket bloğu ve asıl metin. Adım 2 metni temizler. İki adımda da model çalışmıyor, yalnızca bizim kodumuz. Çıktılar `data/1-docs.json` ve `data/2-clean.json` dosyalarına yazılır.
+  </Step>
+  <Step title="Üstteki blok: metadata" stage="b" phase="1">
+    Dosyanın en üstünde, iki `---` çizgisi arasında doküman kendini tanıtıyor: kimliği (`id`), sürümü (`edition`), bölümü, kimin okuyabileceği (`access`), dili (`lang`). Buna <Term id="metadata">metadata</Term> diyoruz. Adım 1 bu bloğu metinden ayırıp alan alan saklar.
+  </Step>
+  <Step title="Gerçek bir PDF'te bu blok olur mu?" stage="b" phase="1">
+    Olmaz. Gerçek projede bu bilgiler dosyanın durduğu sistemden okunur: SharePoint, Confluence ya da bir doküman arşivi, dokümanın sürümünü ve kimin okuyabileceğini zaten tutar. Biz her şey tek dosyada dursun diye bu bilgileri dosyanın başına yazdık.
+  </Step>
+  <Step title="Metadata sonra filtre olur" stage="b" phase="1">
     8 dokümandan biri, `hr-salary-bands`, `access: hr-only` taşıyor: yalnızca İK okuyabilir. Etiketi şimdi okuyoruz, soru anında kontrol ediyoruz (E sayfası). Etiket en baştan kayıtta olmazsa sonra filtrelenecek bir şey kalmaz.
   </Step>
-  <Step title="Alttaki metin: PDF'ten çıkmış gibi" phase="2">
-    Gerçek hayatta bu metin bir PDF'ten ya da Word'den çıkarılır. Bizimki zaten metin ama aynı izleri taşıyor: her sayfanın başında aynı başlık ve gizlilik satırı, sonunda bir sayfa numarası.
+  <Step title="Alttaki metin: PDF'in izleri" stage="b" phase="2">
+    hr-leave 4 sayfalık bir PDF'ten çıkmış gibi: her sayfanın başında aynı başlık ve gizlilik satırı, sonunda `Sayfa 1 / 4` gibi bir sayfa numarası var. İçerikle ilgisi olmayan bu satırlara gürültü diyoruz.
   </Step>
-  <Step title="Gürültü neden sorun?" phase="2">
-    Başlık satırı hr-leave'in 4 sayfasının her birinde tekrar ediyor. Metni parçalara bölünce parçalar bu ortak satırı taşır ve içerikleri yüzünden değil, gürültü yüzünden birbirine benzer.
+  <Step title="Gürültü neden sorun?" stage="b" phase="2">
+    Bir sonraki adımda metni parçalara böleceğiz. Başlık satırı her sayfada tekrar ettiği için birçok parçanın içine girer. Parçalar içerikleri yüzünden değil, bu ortak satır yüzünden birbirine benzer; arama da onları ayırt etmekte zorlanır.
   </Step>
-  <Step title="Bir de bölünmüş satırlar" phase="3">
-    Sayfa genişliği cümleleri de bölmüş: "mazeret" bir satırın sonunda, "izni" sonrakinin başında. Metni okuyan bir insan için sorun yok; satır satır işleyen bir program için bu iki ayrı parça.
+  <Step title="Bir de bölünmüş satırlar" stage="b" phase="3">
+    PDF'in sayfa genişliği cümleleri de bölmüş: "mazeret" bir satırın sonunda, "izni" sonrakinin başında. Metni okuyan bir insan için sorun yok; satır satır işleyen bir program için bu iki ayrı parça.
   </Step>
-  <Step title="Temizlik: birkaç kural ve bir birleştirici">
-    Adım 2 önce gürültü satırlarını 4 kuralla (regex) atar, sonra sayfa genişliğinin böldüğü düz yazı satırlarını birleştirir. Başlıklar, tablo satırları ve boş satırlar olduğu gibi kalır. Akıllıca bir numara yok; bilerek basit tutuldu.
+  <Step title="Temizlik: 4 kural ve bir birleştirici" stage="b">
+    Adım 2 önce gürültü satırlarını 4 kuralla (regex) atar: sayfa başlığı, Türkçe gizlilik satırı, Türkçe ve İngilizce sayfa numarası. Sonra bölünmüş düz yazı satırlarını birleştirir. Başlıklar, tablo satırları ve boş satırlar olduğu gibi kalır. Bilerek basit tutuldu.
   </Step>
-  <Step title="Sonuç">
-    8 doküman: 1074 satır 512 satıra indi. Bunun 74'ü atılan gürültü satırı; gerisi birleştirilen satırlar ve fazla boş satırlar. İki adım birkaç milisaniye sürdü ve çıktılarını `data/` klasörüne yazdı: açıp bakabilirsiniz.
+  <Step title="Sonuç: ham veri girdi, temiz metin çıktı" stage="b">
+    8 dokümanda 1074 satır 512 satıra indi. Eksilen 562 satırın 74'ü atılan gürültü; gerisi birleşen satırlar ve silinen fazla boş satırlar. İki adım birkaç milisaniye sürdü ve çıktılarını `data/` klasörüne yazdı: açıp bakabilirsiniz.
   </Step>
 </Deck>
 
@@ -144,7 +202,7 @@ Geride kaldıysanız: `npm run catchup -- 2`. Toggle satırlarını varsayılana
 ## Sık sorulan
 
 <FAQ q="Gerçek PDF'lerde bu adım nasıl olur?">
-Adım 1'in yerine bir PDF ya da Word okuyucu gelir ve metni çıkarır. Asıl emek istenen kısım tablolar, iki sütunlu sayfalar ve taranmış belgelerdir. Bizim korpus o çıkarma işinin sonucunu taklit ediyor: sayfa başlıkları, sayfa numaraları, bölünmüş satırlar.
+Adım 1 orada daha çok iş yapar: önce bir PDF ya da Word okuyucu metni çıkarır, metadata da dosyanın durduğu sistemden okunur. Asıl emek istenen kısım tablolar, iki sütunlu sayfalar ve taranmış belgelerdir. Bizim korpus o çıkarma işinin sonucunu taklit ediyor: sayfa başlıkları, sayfa numaraları, bölünmüş satırlar.
 </FAQ>
 
 <FAQ q="Metadata'yı neden şimdi okuyoruz, soru anında değil?">
