@@ -8,6 +8,7 @@ import Gate from '../../../components/Gate.astro';
 import Deck from '../../../components/Deck.astro';
 import DeckFigure from '../../../components/DeckFigure.astro';
 import Step from '../../../components/Step.astro';
+import Now from '../../../components/Now.astro';
 import Example from '../../../components/Example.astro';
 import RepoCode from '../../../components/RepoCode.astro';
 import Log from '../../../components/Log.astro';
@@ -151,6 +152,8 @@ Depo dolu. Şimdi soru soruyoruz: soru vektöre dönüşüyor, depodan en yakın
   </Step>
   <Step title="Kesme çizgisi: k" stage="list">
     k = 5: 6. sıradaki hr-working-hours §5 (0.607) dışarıda kaldı. k küçükse cevap kaçabilir, büyükse sonraki adımlara gürültü taşınır. En yakın k tanesini almaya <Term id="topk">top-k</Term> denir.
+
+    <Now n="1">`npm run step -- 6`, sonra `data/6-retrieved.json`: `hits`, `below` ve `filter` alanları.</Now>
   </Step>
   <Step title="Prompt'a yalnızca 3 chunk girer" stage="list">
     Rerank kapalıyken vektör sırasındaki ilk 3 gider: §3, §4, §5. §5 mazeret izinleri (evlilik, vefat, taşınma): soruyla ilgisi yok ama prompt'ta yer kaplıyor.
@@ -163,12 +166,18 @@ Depo dolu. Şimdi soru soruyoruz: soru vektöre dönüşüyor, depodan en yakın
   </Step>
   <Step title="Bedeli" stage="list">
     Arama 7 ms sürdü; rerank 2243 ms. Bu soruda cevap değişmedi: iki yolda da 22 iş günü. Rerank'ın asıl işi, doğru chunk ilk 3'ün dışında kaldığında başlıyor.
+
+    <Now n="2">`src/steps/7-rerank.ts` içinde rerank'ı kapatın, `npm run step -- 7` ve `npm run step -- 8`. Sonra toggle'ı geri alıp ikisini yeniden çalıştırın.</Now>
   </Step>
   <Step title="Doğru chunk hep önde değil" stage="list">
     "Tatil hakkım kaç gün, 4 yıldır çalışıyorum?" sorusunda izin tablosu vektör sırasında ancak 5. geldi. Rerank olmasa prompt'a hiç girmezdi. Rerank açıkken cevap doğru çıktı: 18 iş günü. Bu soruyu Kaliteyi ölçmek sayfasında yeniden göreceğiz.
+
+    <Now n="3">`npm run ask -- "Tatil hakkım kaç gün, 4 yıldır çalışıyorum?"`: izin tablosu vektör sırasında kaçıncı, rerank sonrası kaçıncı?</Now>
   </Step>
   <Step title="Top-k tek yol değil" stage="yol">
     Eşik: sabit k yerine bir skor sınırı; ama C'de "ilgisiz" çift bile 0.456 aldı, eşik kendi verinizde ölçülerek seçilir. Metadata filtresi (`access`, `edition`) bu repoda var: aşağıda ve "Veri değişince" sayfasında. <Term id="mmr">MMR</Term> neredeyse aynı chunk'lardan birini alır; hybrid, vektörü kelime aramasıyla (BM25) birleştirir. İkisi bu repoda yok.
+
+    <Now n="4">`src/steps/6-retrieve.ts` içinde erişim filtresini kapatın ve `npm run ask -- "Kıdemli uzman unvanında aylık brüt maaş bandının üst sınırı nedir?"`. Sonra filtreyi mutlaka geri açın.</Now>
   </Step>
 </Deck>
 

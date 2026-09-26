@@ -257,6 +257,24 @@
   background: var(--rag-accent-low);
   font-weight: 600;
 }
+/* The moment to leave the deck and do one item of the page's SIRA SENDE box (<Now>). */
+.deck-now {
+  margin-top: 0.7rem;
+  padding: 0.5rem 0.8rem 0.6rem;
+  border: 1.5px dashed var(--rag-accent);
+  border-radius: 0.5rem;
+  font-size: 0.95em;
+  line-height: 1.55;
+}
+.deck-now::before {
+  content: '▶ ŞİMDİ · SIRA SENDE ' attr(data-n);
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--rag-accent);
+  font-size: 0.74em;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+}
 
 .deck-foot {
   display: flex;

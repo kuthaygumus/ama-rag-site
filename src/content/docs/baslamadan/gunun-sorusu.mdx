@@ -5,6 +5,7 @@ description: Bütün gün aynı soru. Önce sizin tahmininiz, sonra modelin hiç
 import Deck from '../../../components/Deck.astro';
 import DeckFigure from '../../../components/DeckFigure.astro';
 import Step from '../../../components/Step.astro';
+import Now from '../../../components/Now.astro';
 import DaysQuestion from '../../../components/DaysQuestion.astro';
 import Guess from '../../../components/Guess.astro';
 import RepoCode from '../../../components/RepoCode.astro';
@@ -65,9 +66,13 @@ Başlamadan önce iki cevabı kaydediyoruz: sizin tahmininiz ve modelin, hiç do
   </Step>
   <Step title="Model tek başına">
     `npm run question` soruyu gemma3:4b'ye tek başına sorar; yanında hiçbir doküman yok. Model önce "işverenine bağlı olarak değişir" dedi, sonra yine de bir sayı verdi: 50 iş günü (15 + 35).
+
+    <Now n="1">`npm run question` çalıştırın: `HOW` satırı `bare model, no documents` demeli.</Now>
   </Step>
   <Step title="İki tahmin">
     Sizin sayınız da modelin 50'si de tahmin: ikisi de genel bilgiden geliyor. Kraken Air'in izin politikasını ne siz gördünüz ne model; doğru cevap o dokümanda. Günün geri kalanında o dokümanın doğru parçasını bulup modele veren bir pipeline kuracağız.
+
+    <Now n="2">Aynı soruyu kendi kelimelerinizle, yine doküman vermeden sorun: `npm run step -- 0 "7 yıldır çalışıyorum, kaç gün yıllık iznim var?"`. Sayı değişiyor mu?</Now>
   </Step>
   <Step title="Aynı komut, beş durak">
     Bu komutu gün içinde dört kez daha çalıştıracağız ve her seferinde modele bir şey daha vermiş olacağız: B'de dokümanları iki farklı yoldan parçalara bölünce (iki kez), D'de parçalar bir veritabanına yüklenince, en son politikanın 2026 sürümü gelince. Soru da model de hep aynı kalıyor; cevap değişirse onu o adımda eklediğimiz şey değiştirmiştir. Her cevap bir deftere, `LEDGER`'a yazılır.

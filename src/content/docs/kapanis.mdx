@@ -5,6 +5,7 @@ description: Uçtan uca tasarım kontrol listesi (doğruluk, güvenlik, performa
 import Deck from '../../components/Deck.astro';
 import DeckFigure from '../../components/DeckFigure.astro';
 import Step from '../../components/Step.astro';
+import Now from '../../components/Now.astro';
 import DaysQuestion from '../../components/DaysQuestion.astro';
 import Guess from '../../components/Guess.astro';
 import Gate from '../../components/Gate.astro';
@@ -106,6 +107,8 @@ Bir günde bir RAG pipeline'ı kurduk ve her ara çıktısını açtık. Kurumsa
   </Step>
   <Step title="Günün sorusu, bütün gün">
     `npm run question` defteri: RAG'siz model "işverenine bağlı" dedi, yine de 50 uydurdu; fixed chunk'larla "yer almıyor"; section'la 22; Chroma'yla yine 22; 2026 sürümüyle 24. Model beş seferde de aynı gemma3:4b'ydi; cevabı değiştiren pipeline. <Guess echo />
+
+    <Now n="1">`npm run question`: günün sorusuna sabahtan beri verilen bütün cevaplar alt alta.</Now>
   </Step>
 </Deck>
 

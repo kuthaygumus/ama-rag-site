@@ -8,6 +8,7 @@ import Gate from '../../../components/Gate.astro';
 import Deck from '../../../components/Deck.astro';
 import DeckFigure from '../../../components/DeckFigure.astro';
 import Step from '../../../components/Step.astro';
+import Now from '../../../components/Now.astro';
 import Example from '../../../components/Example.astro';
 import RepoCode from '../../../components/RepoCode.astro';
 import Log from '../../../components/Log.astro';
@@ -66,18 +67,28 @@ import Term from '../../../components/Term.astro';
   </Step>
   <Step title="Yeniden eğitim yok, yeniden ingest var">
     `npm run ingest -- --edition 2026`: adım 1–5, yalnızca yeni dosyalar. Depoda artık 120 kayıt var: 2025'in 60'ı ve 2026'nın 60'ı yan yana (İngilizce gizlilik kuralını yazdıysanız 59 + 59 = 118). Model dosyasına dokunulmadı.
+
+    <Now n="1">`npm run ingest -- --edition 2026`: log'un sonunda `120 in the store` yazmalı.</Now>
   </Step>
   <Step title="Hangi sürüm cevap verecek?">
     Adım 6'daki sürüm filtresi (`EDITION_FILTER`) varsayılan olarak "latest": depodaki en yeni sürüm. Filtre aramanın içinde çalışıyor; 2025 kayıtları yarışa hiç girmiyor. Bu, E sayfasında adını koyduğumuz <Term id="metadata">metadata</Term> filtresi.
   </Step>
   <Step title="Cevap değişti">
     `npm run question`: "Tablodan, 7 tam yıl kıdeminde 24 iş günü …", kaynak `hr-leave@2026#3`. LEDGER, günün sorusuna sabahtan beri verilen bütün cevapları sırayla gösteriyor.
+
+    <Now n="2">`npm run question`: 24 iş günü, kaynak `hr-leave@2026#3`.</Now>
+
+    <Now n="3">Bruno'da `01-chroma` → önce `collections`, sonra `count`: 120.</Now>
   </Step>
   <Step title="Filtre olmasa?">
     Toggle `EDITION_FILTER = "all"` yapılınca iki sürüm yarışıyor. Tablonun 2026 hâli 0.632, 2025 hâli 0.631 aldı; ikisi de prompt'a girdi, 24 ve 22 yan yana. Model bu kez 24 dedi; KAYNAK 1 2026'ydı. Hangi sayının önde duracağını 0.001'lik bir fark belirledi.
+
+    <Now n="4">`src/steps/6-retrieve.ts` içinde sürüm filtresini `"all"` yapın ve `npm run question`: kaynaklarda iki sürüm yan yana mı? Sonra toggle'ı geri alın.</Now>
   </Step>
   <Step title="Silmek mi, filtrelemek mi?">
     Eski sürümü tutmak geçmişe dönük soruları ve denetimi mümkün kılar; bedeli, filtreyi her aramada doğru kurmak. `replaceEdition` yalnızca aynı sürümü yerinde yeniler; 2026 gelince 2025'e dokunmaz. 2025'i silmek, `edition` koşuluyla ayrı bir silme; repoda bunun komutu yok. Hangisini seçeceğiniz bir tasarım kararı.
+
+    <Now n="5">`npm run ask -- "Şifremi ne sıklıkla değiştirmem gerekiyor?"`: cevap hangi sürümden geldi, kaynak hangi dilde?</Now>
   </Step>
 </Deck>
 

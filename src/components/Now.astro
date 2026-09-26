@@ -1,0 +1,10 @@
+---
+/**
+ * Inside a deck <Step>: the moment to leave the deck and do item `n` of the page's SIRA SENDE box.
+ * Write the action as one sentence with the commands in backticks. `check:now` fails the build unless
+ * item `n` exists and every command in the sentence is also written in that page's box.
+ */
+interface Props { n?: number | string }
+const { n } = Astro.props;
+---
+<div class="deck-now" data-n={n ?? ''}><slot /></div>

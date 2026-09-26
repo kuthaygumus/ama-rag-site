@@ -5,6 +5,7 @@ description: Kaynaksız sorulan günün sorusu, sıradaki token'ı tahmin eden m
 import Deck from '../../../components/Deck.astro';
 import DeckFigure from '../../../components/DeckFigure.astro';
 import Step from '../../../components/Step.astro';
+import Now from '../../../components/Now.astro';
 import DaysQuestion from '../../../components/DaysQuestion.astro';
 import Gate from '../../../components/Gate.astro';
 import Example from '../../../components/Example.astro';
@@ -150,6 +151,8 @@ sonra yine de bir sayı uydurdu: 50 iş günü. Politikadaki sayı başka.
   </Step>
   <Step title="Bilmediğini bilmiyor" stage="a">
     Politika 22 iş günü diyor. Modelin içinde "bunu bilmiyorum" diye yanan bir ışık yok: uydurulan cevap da doğru cevap kadar akıcı çıkar. Buna <Term id="hallucination">halüsinasyon</Term> denir.
+
+    <Now>Politikada cevabı olan başka bir soruyu kaynaksız sorun: `npm run step -- 0 "Seyahat dönüşü fişlerimi en geç kaç gün içinde sisteme yüklemem gerekiyor?"`. Sonra cevabı `corpus/2025/travel-expenses.md` 7. bölümle karşılaştırın.</Now>
   </Step>
   <Step title="Bilgiyi modele vermenin iki yolu" stage="b">
     Ya modeli kendi örneklerimizle yeniden eğitip ağırlıklarını değiştiririz (<Term id="finetune">fine-tune</Term>) ya da her soruda ilgili metni soruyla birlikte modelin önüne koyarız (<Term id="rag">RAG</Term>). Önce ikincisini deneyeceğiz; fine-tune'un neyi iyi öğrettiğine bölümün sonunda döneceğiz.

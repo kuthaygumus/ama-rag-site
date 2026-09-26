@@ -8,6 +8,7 @@ import Gate from '../../../components/Gate.astro';
 import Deck from '../../../components/Deck.astro';
 import DeckFigure from '../../../components/DeckFigure.astro';
 import Step from '../../../components/Step.astro';
+import Now from '../../../components/Now.astro';
 import Example from '../../../components/Example.astro';
 import RepoCode from '../../../components/RepoCode.astro';
 import Log from '../../../components/Log.astro';
@@ -188,6 +189,8 @@ import Term from '../../../components/Term.astro';
   </DeckFigure>
   <Step title="Bir kayıtta ne var?" stage="r">
     Adım 5 her chunk'ı Chroma'ya bir kayıt olarak yazar: id, embedding (vektör), document (metin) ve metadata. Üçünün ayrı ayrı görevi var; sırayla bakalım.
+
+    <Now n="1">`podman compose ps` → `healthy` olmalı. Değilse `podman compose up -d`.</Now>
   </Step>
   <Step title="Vektör: aramak için" stage="r" phase="1">
     Soru vektörüne en yakın kayıtları bulmanın tek yolu. 1024 sayı; Chroma onları kendisi üretmiyor, adım 4'ün hesapladığı vektörleri olduğu gibi alıyor.
@@ -200,15 +203,23 @@ import Term from '../../../components/Term.astro';
   </Step>
   <Step title="Brute force: hepsine bak" stage="a">
     JSON deposu her soruda 60 vektörün hepsiyle cosine hesaplar ve sıralar. Sonuç kesindir; ama iş chunk sayısıyla birlikte büyür. Bu yöntemin adı <Term id="bruteforce">brute force</Term>.
+
+    <Now n="2">`npm run step -- 5 --store json`, sonra `data/store.json`: her kayıt bir chunk ve 1024 sayılık `vector` alanı.</Now>
   </Step>
   <Step title="Vector DB: komşulara bak" stage="a">
     Chroma bir indeks kurar: <Term id="hnsw">HNSW</Term>, vektörleri komşuluk grafiğine bağlar. Arama bir giriş noktasından başlar, soruya doğru komşudan komşuya atlar ve yalnızca yakın mahalleyi gezer.
+
+    <Now n="3">`npm run step -- 5`: log'da "identical ✓" yazmalı.</Now>
   </Step>
   <Step title="Bedeli: yaklaşık" stage="a">
     Bu aramanın adı <Term id="ann">ANN</Term>: approximate nearest neighbor. En yakınları çok büyük olasılıkla bulur ama garanti etmez. Hız için kesinlikten biraz vazgeçilir; indeksin ayarları bu dengeyi belirler.
+
+    <Now n="4">Bruno'da `local` ortamını seçin, `01-chroma` klasöründeki istekleri kutudaki sırayla gönderin; `collections` içinde `hnsw` ayarlarını bulun.</Now>
   </Step>
   <Step title="Bizde sıralama değişti mi?" stage="a">
     Aynı soru, iki depo: JSON'un ve Chroma'nın ilk 5 id'si aynı, aynı sırada. 60 kayıtta yaklaşıklık görünmüyor. Veritabanı ölçeği değiştirdi, sıralamayı değil.
+
+    <Now n="5">`podman compose down`, sonra `podman compose up -d`; Bruno'da önce `collections`, sonra `count`: sayı değişmemeli.</Now>
   </Step>
 </Deck>
 

@@ -8,6 +8,7 @@ import Gate from '../../../components/Gate.astro';
 import Deck from '../../../components/Deck.astro';
 import DeckFigure from '../../../components/DeckFigure.astro';
 import Step from '../../../components/Step.astro';
+import Now from '../../../components/Now.astro';
 import Example from '../../../components/Example.astro';
 import RepoCode from '../../../components/RepoCode.astro';
 import Log from '../../../components/Log.astro';
@@ -185,6 +186,8 @@ Model bu dosyaları hiç görmedi. Görse de ham hâlleri kirli: her sayfada ayn
   </Step>
   <Step title="Üstteki blok: metadata" stage="b" phase="1">
     Dosyanın en üstünde, iki `---` çizgisi arasında doküman kendini tanıtıyor: kimliği (`id`), sürümü (`edition`), bölümü, kimin okuyabileceği (`access`), dili (`lang`). Buna <Term id="metadata">metadata</Term> diyoruz. Adım 1 bu bloğu metinden ayırıp alan alan saklar.
+
+    <Now n="1">`corpus/2025/hr-leave.md` dosyasını açıp üstteki bloğu bulun. Sonra `npm run step -- 1` ve `data/1-docs.json`: `hr-salary-bands` dokümanının hangi alanı farklı?</Now>
   </Step>
   <Step title="Gerçek bir PDF'te bu blok olur mu?" stage="b" phase="1">
     Olmaz. Gerçek projede bu bilgiler dosyanın durduğu sistemden okunur: SharePoint, Confluence ya da bir doküman arşivi, dokümanın sürümünü ve kimin okuyabileceğini zaten tutar. Biz her şey tek dosyada dursun diye bu bilgileri dosyanın başına yazdık.
@@ -203,6 +206,8 @@ Model bu dosyaları hiç görmedi. Görse de ham hâlleri kirli: her sayfada ayn
   </Step>
   <Step title="Temizlik: 4 kural ve bir birleştirici" stage="b">
     Adım 2 önce gürültü satırlarını 4 kuralla (regex) atar: sayfa başlığı, Türkçe gizlilik satırı, Türkçe ve İngilizce sayfa numarası. Sonra bölünmüş düz yazı satırlarını birleştirir. Başlıklar, tablo satırları ve boş satırlar olduğu gibi kalır. Bilerek basit tutuldu.
+
+    <Now n="2">`src/steps/2-clean.ts` içinde `NOISE` listesinin ilk kuralını `//` ile kapatın, `npm run step -- 2`: `hr-leave` −12 yerine −8 gösterir. Sonra kuralı geri açıp adım 2'yi yeniden çalıştırın.</Now>
   </Step>
   <Step title="Sonuç: ham veri girdi, temiz metin çıktı" stage="b">
     8 dokümanda 1074 satır 512 satıra indi. Eksilen 562 satırın 74'ü atılan gürültü; gerisi birleşen satırlar ve silinen fazla boş satırlar. İki adım birkaç milisaniye sürdü ve çıktılarını `data/` klasörüne yazdı: açıp bakabilirsiniz.
@@ -212,6 +217,8 @@ Model bu dosyaları hiç görmedi. Görse de ham hâlleri kirli: her sayfada ayn
   </Step>
   <Step title="Adım 2 kodda: 1-docs.json → 2-clean.json" stage="c" phase="2">
     `npm run step -- 2`, `src/steps/2-clean.ts` dosyasını çalıştırır. Adım 2 adım 1'i çağırmaz; onun yazdığı `data/1-docs.json` dosyasını `readStep()` ile okur. `cleanText()` her kaydın `body` alanını temizleyip `text` alanına koyar, metadata olduğu gibi kopyalanır. `writeStep()` sonucu `data/2-clean.json` dosyasına yazar.
+
+    <Now n="3">Aşağıdaki "Kaçan gürültü nereye gider?" bölümünü okuyun ve `englishConfidential` kuralını yazın. Sonra `npm run step -- 2` ve `npm run check:sibling`.</Now>
   </Step>
 </Deck>
 

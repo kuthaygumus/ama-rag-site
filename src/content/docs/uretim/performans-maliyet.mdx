@@ -5,6 +5,7 @@ description: Bir sorunun süresi hangi aşamada geçiyor, her şeyi prompt'a koy
 import Deck from '../../../components/Deck.astro';
 import DeckFigure from '../../../components/DeckFigure.astro';
 import Step from '../../../components/Step.astro';
+import Now from '../../../components/Now.astro';
 import DaysQuestion from '../../../components/DaysQuestion.astro';
 import Gate from '../../../components/Gate.astro';
 import Example from '../../../components/Example.astro';
@@ -61,12 +62,18 @@ Cevap doğru ve kaynaklı. Şimdi bir de şunu soralım: bir soru kaç saniye s�
   </Step>
   <Step title="Bir sorunun süresi nereye gidiyor?" phase="2">
     Günün sorusu, M serisi bir Mac'te, tek koşu: arama 21 ms, <Term id="rerank">rerank</Term> 2244 ms, cevap 891 ms. Rerank bu toplamın (3156 ms) yaklaşık %71'i: 5 chunk için 5 ayrı LLM çağrısı. Başka sorularda aynı adım 5053–5672 ms sürdü. Sizde süreler farklı olur.
+
+    <Now n="1">`npm run ask -- "Frankfurt'a iki günlük toplantıya gidiyorum, uzmanım. Günlük harcırahım ne kadar?"`: arama, rerank ve cevap sürelerini not edin.</Now>
   </Step>
   <Step title="Ingest'te: cache ve artımlı yükleme" phase="3">
     Her embedding, model + metin hash'iyle `.cache/` altına yazılır; yeniden çalıştırınca 60 vektörün 60'ı cache'ten geldi, adım 4 38 ms sürdü. 2026 sürümü eklenince depo yalnızca 2026'nın 60 kaydını yazdı; 2025 yerinde kaldı.
   </Step>
   <Step title="Süreyi ve faturayı ne büyütür?">
     Modele kaç kez gittiğiniz ve her seferinde ne kadar metin gönderdiğiniz. Bir soru 6 çağrıdır: 5 rerank, 1 cevap. Aynı anda N kişi sorarsa model N × 6 çağrıyı karşılar. Aşağıdaki ayarların her biri bu sayılardan birini, çoğu doğruluğu da değiştirir; her ayardan sonra eval.
+
+    <Now n="2">Aynı soruyu `--k 10` ile sorun: rerank kaç chunk puanladı, süre nasıl değişti?</Now>
+
+    <Now n="3">`src/steps/7-rerank.ts` içinde rerank'ı kapatıp soruyu tekrar sorun; süreyi ve cevabı karşılaştırın, sonra toggle'ı geri alın.</Now>
   </Step>
 </Deck>
 
