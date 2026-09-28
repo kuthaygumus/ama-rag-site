@@ -117,9 +117,12 @@ export const deckScript = `
   }
 
   // The deck whose middle is closest to the middle of the screen gets the arrow keys.
+  // An open side panel takes the keys for its own deck; a closed panel's deck never gets them.
   function focused() {
     var mid = window.innerHeight / 2, best = null, dist = Infinity;
+    var panel = document.querySelector('dialog[open]');
     decks.forEach(function (d) {
+      if (panel ? !panel.contains(d.el) : d.el.closest('dialog')) return;
       var r = d.el.getBoundingClientRect();
       if (r.bottom < 0 || r.top > window.innerHeight) return;
       var x = Math.abs((r.top + r.bottom) / 2 - mid);

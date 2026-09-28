@@ -5,6 +5,7 @@ import { terms, termPopoverScript } from './src/scripts/terms.js';
 import { deckScript } from './src/scripts/deck.js';
 import { presentScript } from './src/scripts/present.js';
 import { guessScript } from './src/scripts/guess.js';
+import { panelScript } from './src/scripts/panel.js';
 
 const termScript = termPopoverScript.replace('__TERM_DEFS__', JSON.stringify(terms));
 
@@ -26,6 +27,7 @@ export default defineConfig({
         { tag: 'script', content: termScript },
         { tag: 'script', content: deckScript },
         { tag: 'script', content: guessScript },
+        { tag: 'script', content: panelScript },
       ],
       social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/kuthaygumus/ama-rag-workshop' }],
       sidebar: [

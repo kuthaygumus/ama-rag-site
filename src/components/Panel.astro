@@ -1,0 +1,17 @@
+---
+/**
+ * A side panel over the page, for an explanation too long for a term popover. Opened by
+ * <PanelLink to="id">; a <Deck> inside it gets the arrow keys while it is open. Wiring: src/scripts/panel.js.
+ */
+interface Props { id: string; title: string }
+const { id, title } = Astro.props;
+---
+<dialog class="panel" id={`panel-${id}`} aria-label={title}>
+  <div class="panel-inner">
+    <div class="panel-head">
+      <strong>{title}</strong>
+      <button type="button" class="panel-close" data-panel-close aria-label="Kapat">✕</button>
+    </div>
+    <slot />
+  </div>
+</dialog>

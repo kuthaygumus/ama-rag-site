@@ -144,6 +144,52 @@
 .term-popover strong { display: block; margin-bottom: 0.25rem; color: var(--sl-color-white); }
 .term-popover p { margin: 0; color: var(--sl-color-gray-2); }
 
+/* ── Side panel ────────────────────────────────────────────────────────────
+   A native <dialog> docked to the right edge, over a dimmed page. The inner box fills the dialog, so
+   a click on the dialog element itself is a click on the backdrop (src/scripts/panel.js). */
+.panel-link {
+  padding: 0;
+  border: 0;
+  border-bottom: 2px solid var(--rag-accent);
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.panel-link::after { content: ' ⊕'; color: var(--rag-accent); font-size: 0.85em; }
+.panel-link:hover, .panel-link:focus-visible { background: var(--rag-accent-low); border-radius: 0.2rem; outline: none; }
+.panel {
+  inset: 0 0 0 auto;
+  width: min(44rem, 100vw);
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid var(--sl-color-gray-5);
+  background: var(--sl-color-bg);
+  color: var(--sl-color-white);
+  box-shadow: -12px 0 32px rgba(0, 0, 0, 0.25);
+}
+.panel::backdrop { background: rgba(0, 0, 0, 0.45); }
+:root[data-present] .panel { width: min(56rem, 100vw); }
+.panel-inner { height: 100%; overflow-y: auto; padding: 1rem 1.2rem; }
+.panel-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.panel-head strong { font-size: 1.2rem; }
+.panel-close {
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.4rem;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* The word an argument turns on ("AMA"): big enough to be heard from the back row. */
+.turn { color: var(--rag-gate); font-size: 1.35em; font-weight: 800; letter-spacing: 0.04em; }
+
 /* ── Figures ───────────────────────────────────────────────────────────────
    Inline SVG drawn with the tokens above, so light and dark are the same drawing.
    Labels use the hand-drawn face; lines stay clean. */

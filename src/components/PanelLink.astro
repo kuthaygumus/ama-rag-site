@@ -1,0 +1,6 @@
+---
+/** The phrase that opens <Panel id="…">: a solid underline and a mark, so it does not read as a term popover. */
+interface Props { to: string }
+const { to } = Astro.props;
+---
+<button type="button" class="panel-link" data-panel-open={`panel-${to}`}><slot /></button>
