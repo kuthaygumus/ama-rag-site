@@ -76,7 +76,9 @@
   font-weight: 700;
   letter-spacing: 0.09em;
 }
-.gate::before { content: 'NE BOZULDU?'; color: var(--rag-gate); }
+.gate::before { content: 'SORUN'; color: var(--rag-gate); }
+.gate.gate-bridge { border-left-color: var(--sl-color-gray-3); background: var(--sl-color-gray-6); }
+.gate.gate-bridge::before { content: 'BU SAYFADA'; color: var(--sl-color-gray-2); }
 .yourturn {
   margin: 1.4rem 0;
   padding: 0.8rem 1rem;

@@ -1,3 +1,10 @@
 ---
+/**
+ * Why this page exists. By default a problem the page solves (amber, "SORUN"); `bridge` marks a page
+ * that answers the next question without anything being wrong (grey, "BU SAYFADA"), so amber keeps
+ * meaning "something is off".
+ */
+interface Props { bridge?: boolean }
+const { bridge } = Astro.props;
 ---
-<div class="gate"><slot /></div>
+<div class:list={['gate', { 'gate-bridge': bridge }]}><slot /></div>
