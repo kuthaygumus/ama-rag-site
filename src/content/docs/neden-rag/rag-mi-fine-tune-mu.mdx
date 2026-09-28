@@ -6,6 +6,8 @@ import Deck from '../../../components/Deck.astro';
 import DeckFigure from '../../../components/DeckFigure.astro';
 import Step from '../../../components/Step.astro';
 import Gate from '../../../components/Gate.astro';
+import Panel from '../../../components/Panel.astro';
+import PanelLink from '../../../components/PanelLink.astro';
 import RepoCode from '../../../components/RepoCode.astro';
 import FAQ from '../../../components/FAQ.astro';
 import Term from '../../../components/Term.astro';
@@ -13,8 +15,91 @@ import Takeaway from '../../../components/Takeaway.astro';
 
 <Gate>
 RAG'i gördük: model aynı kaldı, değişen önüne konan metindi. Öbür yol modelin kendisini değiştirmek: yeniden
-eğitip ağırlıklarını ayarlamak. İkisi aynı işi yapmaz.
+eğitip <PanelLink to="agirlik">ağırlıklarını ayarlamak</PanelLink>. İkisi aynı işi yapmaz.
 </Gate>
+
+<Panel id="agirlik" title="Ağırlıklar nasıl ayarlanır?">
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 600 330" role="img" aria-label="Üç özellik, üç ağırlık ve bir puan: husky örneğinde her düzeltme ağırlıkları köpek yönüne biraz kaydırır">
+      <text x="20" y="36" class="fsub">özellik</text>
+      <text x="300" y="36" text-anchor="middle" class="fsub" data-from="2">husky'de</text>
+      <text x="470" y="36" text-anchor="middle" class="fsub">ağırlık</text>
+      <text x="20" y="85" class="flbl">sivri kulak</text>
+      <text x="20" y="131" class="flbl">uzun burun</text>
+      <text x="20" y="177" class="flbl">havlar</text>
+      <rect x="410" y="58" width="120" height="38" rx="8" class="fbox fbox-frozen" />
+      <rect x="410" y="104" width="120" height="38" rx="8" class="fbox fbox-frozen" />
+      <rect x="410" y="150" width="120" height="38" rx="8" class="fbox fbox-frozen" />
+      <g data-from="2">
+        <text x="300" y="85" text-anchor="middle" class="flbl">var</text>
+        <text x="300" y="131" text-anchor="middle" class="flbl">var</text>
+        <text x="300" y="177" text-anchor="middle" class="flbl">var</text>
+        <text x="20" y="250" class="flbl">puan</text>
+      </g>
+      <g data-from="1" data-to="2">
+        <text x="470" y="85" text-anchor="middle" class="flbl">+0.8</text>
+        <text x="470" y="131" text-anchor="middle" class="flbl">−0.2</text>
+        <text x="470" y="177" text-anchor="middle" class="flbl">−0.1</text>
+      </g>
+      <g data-from="1" data-to="1">
+        <text x="20" y="250" class="fsub">+ cevabı kediye iter · − köpeğe iter</text>
+        <text x="20" y="282" class="fsub">sıfırdan uzaklaştıkça etkisi büyür</text>
+      </g>
+      <g data-from="2" data-to="2">
+        <text x="110" y="250" class="flbl">+0.8 − 0.2 − 0.1 = +0.5<tspan class="fbad-t"> → kedi ✗</tspan></text>
+      </g>
+      <g data-from="3" data-to="3">
+        <text x="470" y="85" text-anchor="middle" class="flbl">+0.7</text>
+        <text x="470" y="131" text-anchor="middle" class="flbl">−0.3</text>
+        <text x="470" y="177" text-anchor="middle" class="flbl">−0.2</text>
+        <text x="470" y="214" text-anchor="middle" class="fsub fgate-t">her biri köpek yönüne 0.1</text>
+        <text x="110" y="250" class="flbl">+0.7 − 0.3 − 0.2 = +0.2<tspan class="fbad-t"> → hâlâ kedi ✗</tspan></text>
+      </g>
+      <g data-from="4" data-to="4">
+        <text x="470" y="85" text-anchor="middle" class="flbl">+0.6</text>
+        <text x="470" y="131" text-anchor="middle" class="flbl">−0.4</text>
+        <text x="470" y="177" text-anchor="middle" class="flbl">−0.3</text>
+        <text x="110" y="250" class="flbl">+0.6 − 0.4 − 0.3 = −0.1<tspan class="fgood-t"> → köpek ✓</tspan></text>
+        <text x="20" y="295" class="fsub">sıradan kedi (yalnız sivri kulak): +0.6<tspan class="fgood-t"> → kedi ✓</tspan></text>
+      </g>
+      <g data-from="5" data-to="5">
+        <text x="470" y="85" text-anchor="middle" class="flbl fbad-t">−0.2</text>
+        <text x="470" y="131" text-anchor="middle" class="flbl fbad-t">−1.2</text>
+        <text x="470" y="177" text-anchor="middle" class="flbl fbad-t">−1.1</text>
+        <text x="470" y="214" text-anchor="middle" class="fsub fgate-t">tek seferde 1.0 kaydırsaydık</text>
+        <text x="110" y="250" class="flbl">−0.2 − 1.2 − 1.1 = −2.5<tspan class="fgood-t"> → köpek ✓</tspan></text>
+        <text x="20" y="295" class="fsub">sıradan kedi (yalnız sivri kulak): −0.2<tspan class="fbad-t"> → köpek ✗</tspan></text>
+      </g>
+      <g data-from="6">
+        <text x="470" y="85" text-anchor="middle" class="flbl">+0.6</text>
+        <text x="470" y="131" text-anchor="middle" class="flbl">−0.4</text>
+        <text x="470" y="177" text-anchor="middle" class="flbl">−0.3</text>
+        <text x="110" y="250" class="flbl">+0.6 − 0.4 − 0.3 = −0.1<tspan class="fgood-t"> → köpek ✓</tspan></text>
+        <text x="20" y="295" class="fsub fnum">dil modeli: aynı döngü, yaklaşık 4 milyar ağırlık</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="Görev">
+    Model bir hayvanın üç özelliğine bakıp kedi mi köpek mi olduğunu söyleyecek. Her özelliğin bir ağırlığı var: pozitif ağırlık cevabı kediye, negatif ağırlık köpeğe iter; sıfırdan uzaklaştıkça model o özelliğe daha çok güvenir. Bu model yarı eğitilmiş: havlamanın ne kadar önemli olduğunu henüz öğrenmemiş (−0.1).
+  </Step>
+  <Step title="Tahmin">
+    Bir husky geliyor: sivri kulaklı, uzun burunlu ve havlıyor. Model, husky'de var olan özelliklerin ağırlıklarını toplar: +0.8 − 0.2 − 0.1 = +0.5. Puan pozitif, cevap "kedi". Yanlış: husky bir köpek.
+  </Step>
+  <Step title="Ufak oynatma">
+    Hata, cevabı kediye itmekti. Husky'de var olan her ağırlık köpek yönüne biraz, 0.1 kaydırılır: +0.8 → +0.7, −0.2 → −0.3, −0.1 → −0.2. Yeni puan +0.2: cevap hâlâ yanlış, ama doğru yöne gitti.
+  </Step>
+  <Step title="Tekrar">
+    Aynı düzeltme bir kez daha: puan −0.1, cevap "köpek". Sıradan bir kedi, yalnızca sivri kulaklı olan, hâlâ +0.6 alıyor ve doğru bilinmeye devam ediyor. Küçük adımlar eski doğruları bozmadan yenisini öğretti.
+  </Step>
+  <Step title="Neden küçük adım?">
+    Tek seferde 1.0 kaydırsaydık husky hemen düzelirdi, ama sivri kulağın ağırlığı −0.2'ye düşer ve sıradan kedi de "köpek" çıkardı: yeni örnek, eskilerin öğrettiğini silerdi. Adım büyüklüğüne learning rate denir; 0.1 bizim seçimimiz, kural değil. Hatayı ölçüp her ağırlığı hatayı azaltan yöne biraz kaydırmanın adı gradient descent.
+  </Step>
+  <Step title="Dil modeli ve fine-tune">
+    Bir dil modelinde de aynı döngü çalışır: soru "sıradaki token ne?", ağırlıklar yaklaşık 4 milyar (gemma3:4b). Fine-tune, hazır modele kendi örneklerinizle bu küçük adımları attırmaktır. Her örnekte tekrar eden ton ya da format binlerce adımda kalıcı olur; birkaç örnekte geçen bir sayı yalnızca küçük bir iz bırakır. Model onu yarım hatırlar.
+  </Step>
+</Deck>
+</Panel>
 
 <Deck>
   <DeckFigure slot="figure">
@@ -58,7 +143,9 @@ eğitip ağırlıklarını ayarlamak. İkisi aynı işi yapmaz.
     Öbür yol modeli yeniden eğitmek: <Term id="finetune">fine-tune</Term>. Örnek çiftleri hazırlanır, model GPU'da eğitilir, ölçülür, tutmazsa baştan. Uzun bir yol; öğretilen şey değişirse yeniden tırmanılır.
   </Step>
   <Step title="Bayrak neden yüksekte? Ne öğretir?" phase="3">
-    Tırmanışın sonunda ağırlıklar değişir. En iyi işlenen davranıştır: ton, format, şirket terimleri; her soruda prompt'a eklenmez. Olgular güvenilir biçimde işlenmez: model yarım hatırlar, benzer sayıları karıştırabilir, kaynak gösteremez. RAG olguyu metinden okur ve kaynağını yazar.
+    Tırmanışın sonunda ağırlıklar değişir. En iyi işlenen davranıştır: ton, format, şirket terimleri; her soruda prompt'a eklenmez.
+
+    <strong class="turn">AMA</strong> olgular güvenilir biçimde işlenmez. Her eğitim örneği bütün ağırlıkları azıcık oynatır: binlerce örnekte tekrar eden bir desen kalıcı olur, birkaç örnekte geçen bir sayı ise küçük bir iz bırakır. Sonuç olarak model olguyu yarım hatırlar, benzer sayıları karıştırabilir ve kaynak gösteremez. RAG olguyu metinden okur ve kaynağını yazar.
   </Step>
   <Step title="Birlikte">
     Rakip değiller: oturmuş bir sistemde davranış fine-tune ile, değişen bilgi RAG ile verilir. Bugün yalnızca RAG kuruyoruz, çünkü bizim bilgimiz, yani politikalar, her yıl yeni sürümle geliyor.
