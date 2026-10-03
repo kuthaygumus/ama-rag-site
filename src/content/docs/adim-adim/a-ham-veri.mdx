@@ -19,7 +19,7 @@ import Term from '../../../components/Term.astro';
 
 <WhereAmI at="load clean" />
 
-<DaysQuestion answer="“… 7 yıllık bir çalışanın yıllık izni genellikle 50 iş günü (15 gün ücretli izin + 35 gün yıllık izin) olur.” ✗ uydurma" how="bare model, no documents — henüz tek bir doküman okumadık" />
+<DaysQuestion answer="“Typically, an employee with 7 years of service gets 25-30 working days of annual leave, depending on the company's policy.” ✗ uydurma" how="bare model, no documents — henüz tek bir doküman okumadık" />
 
 <Gate>
 Model bu dosyaları hiç görmedi; görse de ham hâlleri kirli. Bu metni olduğu gibi parçalara bölersek gürültü de parçaların içine girer.
@@ -86,20 +86,20 @@ Model bu dosyaları hiç görmedi; görse de ham hâlleri kirli. Bu metni olduğ
       </g>
       <text x="28" y="40" class="fmono">---</text>
       <text x="28" y="62" class="fmono">id: hr-leave</text>
-      <text x="28" y="84" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote">title: Yıllık İzin Politikası</text>
+      <text x="28" y="84" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote">title: Annual Leave Policy</text>
       <text x="28" y="106" class="fmono" data-q="const">edition: "2025"</text>
-      <text x="28" y="128" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote">department: İnsan Kaynakları</text>
+      <text x="28" y="128" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote">department: Human Resources</text>
       <text x="28" y="150" class="fmono">access: all</text>
-      <text x="28" y="172" class="fmono" data-q="corpus:2025/hr-leave.md">lang: tr</text>
+      <text x="28" y="172" class="fmono" data-q="corpus:2025/hr-leave.md">lang: en</text>
       <text x="28" y="194" class="fmono">---</text>
-      <text x="28" y="226" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote">Kraken Air | Yıllık İzin Politikası | Sürüm 2025</text>
-      <text x="28" y="248" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote">GİZLİ – Yalnızca şirket içi kullanım içindir</text>
-      <text x="28" y="274" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote"># Yıllık İzin Politikası</text>
-      <text x="28" y="296" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote">## 1. Amaç ve Kapsam</text>
-      <text x="28" y="324" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote">Bu politika, … yıllık ücretli izin, mazeret</text>
-      <text x="28" y="346" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote">izni ve ücretsiz izin haklarını, bu hakların …</text>
+      <text x="28" y="226" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote">Kraken Air | Annual Leave Policy | Edition 2025</text>
+      <text x="28" y="248" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote">CONFIDENTIAL – Internal use only</text>
+      <text x="28" y="274" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote"># Annual Leave Policy</text>
+      <text x="28" y="296" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote">## 1. Purpose and Scope</text>
+      <text x="28" y="324" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote">This policy … annual paid leave, special</text>
+      <text x="28" y="346" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote">leave and unpaid leave. It also says …</text>
       <text x="28" y="372" class="fmono">…</text>
-      <text x="28" y="401" class="fmono" data-q="corpus:2025/hr-leave.md">Sayfa 1 / 4</text>
+      <text x="28" y="401" class="fmono" data-q="corpus:2025/hr-leave.md">Page 1 of 4</text>
       <text x="608" y="36" class="fsub">ham veri:</text>
       <text x="608" y="60" class="fmono">hr-leave.md</text>
       <g data-from="4">
@@ -194,21 +194,21 @@ Model bu dosyaları hiç görmedi; görse de ham hâlleri kirli. Bu metni olduğ
     `hr-salary-bands` dokümanı `access: hr-only` taşıyor: yalnızca İK okuyabilir. Etiketi şimdi okuyoruz, soru anında kontrol ediyoruz (E sayfası). Etiket en baştan kayıtta olmazsa sonra filtrelenecek bir şey kalmaz.
   </Step>
   <Step title="Alttaki metin: PDF'in izleri" stage="b" phase="2">
-    hr-leave 4 sayfalık bir PDF'ten çıkmış gibi: her sayfanın başında aynı başlık ve gizlilik satırı, sonunda `Sayfa 1 / 4` gibi bir numara. İçerikle ilgisi olmayan bu satırlara gürültü diyoruz.
+    hr-leave 4 sayfalık bir PDF'ten çıkmış gibi: her sayfanın başında aynı başlık ve gizlilik satırı, sonunda `Page 1 of 4` gibi bir numara. İçerikle ilgisi olmayan bu satırlara gürültü diyoruz.
   </Step>
   <Step title="Gürültü neden sorun?" stage="b" phase="2">
     Başlık satırı her sayfada tekrar eder; metni bölünce birçok parçanın içine girer. Parçalar içerik yüzünden değil bu ortak satır yüzünden birbirine benzer ve arama onları ayırt etmekte zorlanır.
   </Step>
   <Step title="Bir de bölünmüş satırlar" stage="b" phase="3">
-    Sayfa genişliği cümleleri de bölmüş: "mazeret" bir satırın sonunda, "izni" sonrakinin başında. İnsan için sorun yok; satır satır işleyen bir program için bunlar iki ayrı parça.
+    Sayfa genişliği cümleleri de bölmüş: "special" bir satırın sonunda, "leave" sonrakinin başında. İnsan için sorun yok; satır satır işleyen bir program için bunlar iki ayrı parça.
   </Step>
   <Step title="Temizlik: 4 kural ve bir birleştirici" stage="b">
-    Adım 2 gürültüyü 4 kuralla (regex) atar: sayfa başlığı, Türkçe gizlilik satırı, Türkçe ve İngilizce sayfa numarası. Sonra bölünmüş düz yazı satırlarını birleştirir; başlık, tablo ve boş satırlar olduğu gibi kalır.
+    Adım 2 gürültüyü 4 kuralla (regex) atar: sayfa başlığı, İngilizce gizlilik satırı, İngilizce ve Türkçe sayfa numarası. Sonra bölünmüş düz yazı satırlarını birleştirir; başlık, tablo ve boş satırlar olduğu gibi kalır.
 
     <Now n="2">`src/steps/2-clean.ts` içinde `NOISE` listesinin ilk kuralını kapatın, `npm run step -- 2`: `hr-leave` −8 göstermeli.</Now>
   </Step>
   <Step title="Sonuç: ham veri girdi, temiz metin çıktı" stage="b">
-    8 dokümanda 1074 satır 512 satıra indi. Eksilen 562 satırın 74'ü atılan gürültü; gerisi birleşen satırlar ve silinen fazla boş satırlar. İki adım birkaç milisaniye sürdü.
+    8 dokümanda 1078 satır 512 satıra indi. Eksilen 566 satırın 74'ü atılan gürültü; gerisi birleşen satırlar ve silinen fazla boş satırlar. İki adım birkaç milisaniye sürdü.
   </Step>
   <Step title="Adım 1 kodda: corpus → 1-docs.json" stage="c" phase="1">
     Class yok: her adım tek dosyada, düz fonksiyonlarla yazıldı. `npm run step -- 1`, `src/steps/1-load.ts` dosyasını çalıştırır; 8 dosya okunur, 8 kayıt `data/1-docs.json` dosyasına yazılır.
@@ -216,7 +216,7 @@ Model bu dosyaları hiç görmedi; görse de ham hâlleri kirli. Bu metni olduğ
   <Step title="Adım 2 kodda: 1-docs.json → 2-clean.json" stage="c" phase="2">
     Adım 2 adım 1'i çağırmaz; onun yazdığı `data/1-docs.json` dosyasını okur. Temizlenen metin `text` alanına girer, metadata olduğu gibi kopyalanır, sonuç `data/2-clean.json` dosyasına yazılır.
 
-    <Now n="3">Aşağıdaki "Kaçan gürültü nereye gider?" bölümünü okuyup `englishConfidential` kuralını yazın. Kontrol: `npm run check:sibling`.</Now>
+    <Now n="3">Aşağıdaki "Kaçan gürültü nereye gider?" bölümünü okuyup `turkishConfidential` kuralını yazın. Kontrol: `npm run check:sibling`.</Now>
   </Step>
 </Deck>
 
@@ -256,7 +256,7 @@ Birleştirmenin sınırı: başlık, tablo satırı, boş satır ve liste maddes
 
 <RepoCode file="src/steps/2-clean.ts" from="const closed" />
 
-Gürültü kuralları bir listede; `// default` işaretli satırlar varsayılan olarak açık. Boş `englishConfidential` sizin işiniz:
+Gürültü kuralları bir listede; `// default` işaretli satırlar varsayılan olarak açık. Boş `turkishConfidential` sizin işiniz:
 
 <RepoCode file="src/steps/2-clean.ts" from="// ── YOUR TURN" to="^\];" />
 
@@ -264,20 +264,20 @@ Gürültü kuralları bir listede; `// default` işaretli satırlar varsayılan 
 
 ## Kaçan gürültü nereye gider?
 
-İngilizce doküman (`it-security`) her sayfada `CONFIDENTIAL – Internal use only` satırını taşıyor ve onu atan kural yok. Log'da `it-security` yanında −8 var: 4 sayfa başlığı ve 4 sayfa numarası gitti, 4 gizlilik satırı kaldı. Kalan gürültü kaybolmaz: B sayfasının bölme yöntemiyle `it-security@2025#0` adlı bir chunk olur ve içinde doküman başlığıyla bu satırdan başka bir şey yoktur. Embed edilir, saklanır, aramada yarışır.
+Türkçe doküman (`it-security`) her sayfada `GİZLİ – Yalnızca şirket içi kullanım içindir` satırını taşıyor ve onu atan kural yok. Log'da `it-security` yanında −8 var: 4 sayfa başlığı ve 4 sayfa numarası gitti, 4 gizlilik satırı kaldı. Kalan gürültü kaybolmaz: B sayfasının bölme yöntemiyle `it-security@2025#0` adlı bir chunk olur ve içinde doküman başlığıyla bu satırdan başka bir şey yoktur. Embed edilir, saklanır, aramada yarışır.
 
 <YourTurn>
-**1 · Ham veriye bakın.** `corpus/2025/hr-leave.md` dosyasını açın: `---` bloğunu, sayfa başlığını ve `Sayfa 1 / 4` satırını bulun. Sonra `npm run step -- 1` ve `data/1-docs.json`: her dokümanın `access` ve `lang` alanlarına bakın. `hr-salary-bands` dokümanının hangi alanı farklı?
+**1 · Ham veriye bakın.** `corpus/2025/hr-leave.md` dosyasını açın: `---` bloğunu, sayfa başlığını ve `Page 1 of 4` satırını bulun. Sonra `npm run step -- 1` ve `data/1-docs.json`: her dokümanın `access` ve `lang` alanlarına bakın. `hr-salary-bands` dokümanının hangi alanı farklı?
 
-**2 · Bir kuralı kapatın.** `src/steps/2-clean.ts` içinde `NOISE` listesinin ilk satırını (sayfa başlığı kuralı) başına `//` koyarak kapatın ve `npm run step -- 2` çalıştırın. Log'da `hr-leave` satırı −12 yerine −8 göstermeli. `data/2-clean.json` içinde `Sürüm 2025` arayın: başlık metne geri döndü. Satırı geri açıp adım 2'yi yeniden çalıştırın.
+**2 · Bir kuralı kapatın.** `src/steps/2-clean.ts` içinde `NOISE` listesinin ilk satırını (sayfa başlığı kuralı) başına `//` koyarak kapatın ve `npm run step -- 2` çalıştırın. Log'da `hr-leave` satırı −12 yerine −8 göstermeli. `data/2-clean.json` içinde `Edition 2025` arayın: başlık metne geri döndü. Satırı geri açıp adım 2'yi yeniden çalıştırın.
 
-**3 · Benzerini yazın.** Aynı dosyada `englishConfidential` boş. Türkçe kural `/^GİZLİ – .+$/` gibi, İngilizce gizlilik satırı için yazın. İpucu: tire uzun tire (–); dosyadan kopyalayın. Sonra:
+**3 · Benzerini yazın.** Aynı dosyada `turkishConfidential` boş. İngilizce kural `/^CONFIDENTIAL – .+$/` gibi, Türkçe gizlilik satırı için yazın. İpucu: tire uzun tire (–), `İ` harfi noktalı; satırı dosyadan kopyalayın, `GIZLI` yazmayın. Sonra:
 
 - `npm run step -- 2` → `it-security` satırı −8 yerine −12 göstermeli.
-- `npm run check:sibling` → `step 2 · englishConfidential` testi yeşil olmalı. `dot` ve `byParagraph` testleri şimdilik kırmızı kalır; onlar C sayfasında ve B sayfasının ev ödevinde.
+- `npm run check:sibling` → `step 2 · turkishConfidential` testi yeşil olmalı. `dot` ve `byParagraph` testleri şimdilik kırmızı kalır; onlar C sayfasında ve B sayfasının ev ödevinde.
 - İsterseniz `npm run step -- 3` ve `data/3-chunks.json`: `it-security@2025#0` artık yok.
 
-Kural yazılınca adım 2, 74 yerine 78 gürültü satırı atar ve 1074 satır 504'e iner. Sonraki sayfaların log'ları kural yazılmadan alındı: log 60 chunk (iki sürümle 120 kayıt) gösterir, sizde 59 chunk (118 kayıt) olur; bu fark beklenen.
+Kural yazılınca adım 2, 74 yerine 78 gürültü satırı atar ve 1078 satır 504 satıra iner. Sonraki sayfaların log'ları kural yazılmadan alındı: log 60 chunk (iki sürümle 120 kayıt) gösterir, sizde 59 chunk (118 kayıt) olur; bu fark beklenen.
 
 Geride kaldıysanız: `npm run catchup -- 2`.
 </YourTurn>
@@ -289,7 +289,7 @@ Filtre metinleri karşılaştırır: `"2025"` metni ile `2025` sayısı eşleşm
 </FAQ>
 
 <FAQ q="Bir temizlik kuralı yanlışlıkla içerik silerse?">
-Bu yüzden kurallar satırın başına ve sonuna bağlı (`^` … `$`): yalnızca bütün satır kalıba uyarsa silinir. `check:sibling` testi bunu da kontrol ediyor: `englishConfidential`, "Confidential data must be encrypted." cümlesini silmemeli.
+Bu yüzden kurallar satırın başına ve sonuna bağlı (`^` … `$`): yalnızca bütün satır kalıba uyarsa silinir. `check:sibling` testi bunu da kontrol ediyor: `turkishConfidential`, "Gizli veriler şifrelenmelidir." cümlesini silmemeli.
 </FAQ>
 
 <Takeaway>Kirli metinle iyi arama olmaz.</Takeaway>
