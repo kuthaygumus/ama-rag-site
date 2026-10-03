@@ -1,0 +1,142 @@
+---
+title: Question of the day
+description: The same question all day. First your guess, then the model's answer without seeing any document.
+---
+import Deck from '../../../../components/Deck.astro';
+import DeckFigure from '../../../../components/DeckFigure.astro';
+import Step from '../../../../components/Step.astro';
+import Now from '../../../../components/Now.astro';
+import DaysQuestion from '../../../../components/DaysQuestion.astro';
+import Guess from '../../../../components/Guess.astro';
+import RepoCode from '../../../../components/RepoCode.astro';
+import Log from '../../../../components/Log.astro';
+import YourTurn from '../../../../components/YourTurn.astro';
+import FAQ from '../../../../components/FAQ.astro';
+import Takeaway from '../../../../components/Takeaway.astro';
+
+<DaysQuestion>
+  <Guess />
+</DaysQuestion>
+
+Our company is a fictional airline, Kraken Air. We test every part we build today with this one question.
+
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 1000 300" role="img" aria-label="The question of the day is asked again at five stops">
+      <text x="30" y="40" class="flbl">npm run question: one question, five stops</text>
+      <path d="M60 150 H940" class="farrow" />
+      <circle cx="100" cy="150" r="20" class="fbox fbox-on" />
+      <text x="100" y="96" text-anchor="middle" class="flbl">Before we start</text>
+      <text x="100" y="120" text-anchor="middle" class="fsub">the model alone</text>
+      <circle cx="300" cy="150" r="20" class="fbox" />
+      <text x="300" y="96" text-anchor="middle" class="flbl">B · fixed</text>
+      <text x="300" y="120" text-anchor="middle" class="fsub" data-q="code:src/steps/3-chunk.ts corpus:2025/hr-leave.md">cut every 300 characters</text>
+      <circle cx="500" cy="150" r="20" class="fbox" />
+      <text x="500" y="96" text-anchor="middle" class="flbl">B · section</text>
+      <text x="500" y="120" text-anchor="middle" class="fsub">cut at headings</text>
+      <circle cx="700" cy="150" r="20" class="fbox" />
+      <text x="700" y="96" text-anchor="middle" class="flbl">D · Vector DB</text>
+      <text x="700" y="120" text-anchor="middle" class="fsub">load into the DB</text>
+      <circle cx="900" cy="150" r="20" class="fbox" />
+      <text x="900" y="96" text-anchor="middle" class="flbl">Data changes</text>
+      <text x="900" y="120" text-anchor="middle" class="fsub" data-q="const">2026 edition</text>
+      <g data-from="3">
+        <rect x="5" y="190" width="190" height="70" rx="10" class="fbox fbox-frozen" />
+        <text x="100" y="222" text-anchor="middle" class="flbl" data-q="log:question-0-bare">25-30</text>
+        <text x="100" y="247" text-anchor="middle" class="fsub" data-q="log:question-0-bare">working days</text>
+      </g>
+      <g data-from="5">
+        <rect x="215" y="190" width="170" height="70" rx="10" class="fbox" />
+        <text x="300" y="234" text-anchor="middle" class="flbl">?</text>
+        <rect x="415" y="190" width="170" height="70" rx="10" class="fbox" />
+        <text x="500" y="234" text-anchor="middle" class="flbl">?</text>
+        <rect x="615" y="190" width="170" height="70" rx="10" class="fbox" />
+        <text x="700" y="234" text-anchor="middle" class="flbl">?</text>
+        <rect x="815" y="190" width="170" height="70" rx="10" class="fbox" />
+        <text x="900" y="234" text-anchor="middle" class="flbl">?</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="The question">
+    The right answer needs two things. The first is Kraken Air's leave policy. The second is where 7 years of service fits in that policy. The model never saw either one in training.
+  </Step>
+  <Step title="Guess first">
+    What would you say? Type your number in the box above. In the Wrap-up, it appears next to every answer of the day.
+  </Step>
+  <Step title="The model alone">
+    `npm run question` asks the model alone, with no documents. The model says "depending on the company's policy". But it still gives numbers: 25-30 working days.
+
+    <Now n="1">Run `npm run question`. The `HOW` line should say `bare model, no documents`.</Now>
+  </Step>
+  <Step title="Two guesses">
+    Your number and the model's 25-30 are both guesses from general knowledge. The right answer is in the policy. You didn't see it, and the model didn't either.
+
+    <Now n="2">Ask it in other words: `npm run step -- 0 "I have worked here for 7 years. How many days of annual leave do I get?"`. Does the number change?</Now>
+  </Step>
+  <Step title="Same command, five stops">
+    We run this command four more times today. Each time, the model gets one more thing. Every answer is saved in the `LEDGER`, one line per run.
+  </Step>
+</Deck>
+
+<Log name="question-0-bare" title="npm run question" />
+
+The output has four parts:
+
+- `QUESTION OF THE DAY`: the question we ask. It is the same on every run.
+- `HOW`: how the answer was made. For now it says `bare model, no documents`: the model saw only the question.
+- The answer: the text the model writes. There is no source list, because the model got no sources. Once the pipeline
+  is built, the chunks it used appear below the answer, for example `[1] hr-leave@2025#3`.
+- `LEDGER`: the ledger. Every run adds one line. When the day ends, it holds the answer from every stop, one under the other.
+
+In code, the question is one line:
+
+<RepoCode file="src/lib/config.ts" from="dayQuestion:" to="dayQuestion" />
+
+Each time, `npm run question` picks the most complete pipeline you have:
+
+<RepoCode file="src/cli/question.ts" from="// npm run question" to="the store is filled" />
+
+<YourTurn>
+**1 · Run it.** `npm run question`. The `HOW` line should say `bare model, no documents`. If it says something else, see "Common questions" below.
+
+**2 · Ask it in other words.** Again with no documents. Does the number change?
+
+```sh
+npm run step -- 0 "I have worked here for 7 years. How many days of annual leave do I get?"
+```
+</YourTurn>
+
+## What do we have now?
+
+We have two guesses. Yours is in the box at the top of the page. The model's is 25-30 working days.
+The right answer is on the page [The model doesn't know](/en/neden-rag/model-bilmiyor/).
+
+## Common questions
+
+<FAQ q="Why the same question all day?">
+The same question shows what each step does to one answer. Does a step fix the answer, break it, or not change it at all?
+One question is still not a measurement. We measure quality with a set of questions on the
+[Measuring quality](/en/uretim/kaliteyi-olcmek/) page.
+</FAQ>
+
+<FAQ q="Does the model give the same answer every time?">
+With the same prompt on the same machine, yes. On an M-series Mac, `npm run step -- 0` and `npm run question` gave the same answer, word for word.
+The repo does this on purpose: `temperature: 0` and a fixed `seed`. You can see small differences on other hardware.
+We didn't measure this.
+</FAQ>
+
+<FAQ q="The HOW line says “chroma store”, not “bare model”. Why?">
+Your `data/` folder still holds the output of earlier steps. `npm run question` picks the most complete pipeline you have.
+To start the day again, run `npm run catchup -- 0`. It empties `data/` and resets the vector DB. Then the command asks the model alone again.
+</FAQ>
+
+<FAQ q="Where is my guess stored?">
+In this browser. In another browser or a private window, the box is empty. The number is never sent anywhere.
+</FAQ>
+
+<FAQ q="Where is the ledger kept?">
+In the `.cache/question-ledger.jsonl` file, one line per run. `npm run question` shows the last 12 lines.
+`npm run catchup` doesn't delete the ledger.
+</FAQ>
+
+<Takeaway>Same question, same model. Only what we give the model changes.</Takeaway>

@@ -1,0 +1,205 @@
+---
+title: The model doesn't know, but thinks it does
+description: The question of the day asked with no sources, a machine that predicts the next token, and where the knowledge lives — frozen weights.
+---
+import Deck from '../../../../components/Deck.astro';
+import DeckFigure from '../../../../components/DeckFigure.astro';
+import Step from '../../../../components/Step.astro';
+import Now from '../../../../components/Now.astro';
+import DaysQuestion from '../../../../components/DaysQuestion.astro';
+import Gate from '../../../../components/Gate.astro';
+import Example from '../../../../components/Example.astro';
+import RepoCode from '../../../../components/RepoCode.astro';
+import Log from '../../../../components/Log.astro';
+import YourTurn from '../../../../components/YourTurn.astro';
+import FAQ from '../../../../components/FAQ.astro';
+import Term from '../../../../components/Term.astro';
+import Takeaway from '../../../../components/Takeaway.astro';
+
+<DaysQuestion answer="25-30 working days" how="bare model, no documents" />
+
+<Gate>
+The model made up numbers for the question of the day. The policy says a different number.
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure" stage="a">
+    <svg viewBox="0 0 1000 360" role="img" aria-label="The question, the model with no documents, and the answer the model made up">
+      <defs>
+        <marker id="mb-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker>
+      </defs>
+      <rect x="20" y="40" width="330" height="100" rx="14" class="fbox" />
+      <text x="185" y="70" text-anchor="middle" class="flbl tight" data-q="code:src/lib/config.ts" data-q-mode="quote"><tspan x="185" y="70">How many working days of</tspan><tspan x="185" y="96">annual leave does an employee</tspan></text>
+      <text x="185" y="122" text-anchor="middle" class="flbl tight" data-q="code:src/lib/config.ts" data-q-mode="quote">with 7 years of service get?</text>
+      <path d="M352 90 H402" class="farrow" marker-end="url(#mb-a)" />
+      <rect x="410" y="40" width="180" height="100" rx="14" class="fbox fbox-frozen" />
+      <text x="500" y="82" text-anchor="middle" class="flbl" data-q="const">gemma3:4b</text>
+      <text x="500" y="110" text-anchor="middle" class="fsub">no documents</text>
+      <path d="M592 90 H642" class="farrow" marker-end="url(#mb-a)" />
+      <rect x="650" y="40" width="330" height="100" rx="14" class="fbox" />
+      <text x="815" y="82" text-anchor="middle" class="flbl" data-q="log:question-0-bare">25-30 working days</text>
+      <text x="815" y="110" text-anchor="middle" class="fsub" data-q="log:question-0-bare" data-q-mode="quote">“depending on the company's policy”</text>
+      <g data-from="2">
+        <text x="30" y="205" class="fsub">token by token — always the most likely next:</text>
+        <rect x="30" y="222" width="140" height="54" rx="10" class="fbox" />
+        <text x="100" y="256" text-anchor="middle" class="flbl" data-q="log:question-0-bare">… service</text>
+        <path d="M172 249 H192" class="farrow" marker-end="url(#mb-a)" />
+        <rect x="200" y="222" width="150" height="54" rx="10" class="fbox" />
+        <text x="275" y="256" text-anchor="middle" class="flbl" data-q="log:question-0-bare">gets</text>
+        <path d="M352 249 H372" class="farrow" marker-end="url(#mb-a)" />
+        <rect x="380" y="222" width="130" height="54" rx="10" class="fbox fbox-gate" />
+        <text x="445" y="256" text-anchor="middle" class="flbl" data-q="log:question-0-bare">25-30</text>
+        <path d="M512 249 H532" class="farrow" marker-end="url(#mb-a)" />
+        <rect x="540" y="222" width="110" height="54" rx="10" class="fbox" />
+        <text x="595" y="256" text-anchor="middle" class="flbl" data-q="log:question-0-bare">working</text>
+        <path d="M652 249 H672" class="farrow" marker-end="url(#mb-a)" />
+        <rect x="680" y="222" width="120" height="54" rx="10" class="fbox" />
+        <text x="740" y="256" text-anchor="middle" class="flbl" data-q="log:question-0-bare">days</text>
+        <text x="830" y="256" class="flbl">…</text>
+        <text x="445" y="305" text-anchor="middle" class="fsub fgate-t">a number likely comes next</text>
+        <text x="445" y="328" text-anchor="middle" class="fsub fgate-t">nothing checks if it is right</text>
+      </g>
+      <g data-from="5">
+        <path d="M665 128 L965 52" class="fbox-bad" />
+        <text x="815" y="180" text-anchor="middle" class="flbl fgood-t" data-q="corpus:2025/hr-leave.md">policy: 22 working days</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <DeckFigure slot="figure" stage="b">
+    <svg viewBox="0 0 1000 400" role="img" aria-label="The model's weights: set in training, then frozen. The company policy is not in them">
+      <defs>
+        <marker id="mb-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker>
+        <marker id="mb-on" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead-on" /></marker>
+      </defs>
+      <rect x="330" y="95" width="340" height="200" rx="14" class="fbox fbox-frozen" />
+      <text x="500" y="130" text-anchor="middle" class="flbl" data-q="const">gemma3:4b</text>
+      <rect x="365" y="148" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="393" y="148" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="421" y="148" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="449" y="148" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="477" y="148" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="505" y="148" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="533" y="148" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="561" y="148" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="589" y="148" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="617" y="148" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="365" y="176" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="393" y="176" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="421" y="176" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="449" y="176" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="477" y="176" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="505" y="176" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="533" y="176" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="561" y="176" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="589" y="176" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="617" y="176" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="365" y="204" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="393" y="204" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="421" y="204" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="449" y="204" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="477" y="204" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="505" y="204" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="533" y="204" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="561" y="204" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="589" y="204" width="20" height="20" rx="3" class="fbox-frozen" />
+      <rect x="617" y="204" width="20" height="20" rx="3" class="fbox-frozen" />
+      <text x="500" y="256" text-anchor="middle" class="fsub" data-q="const">weights: about 4 billion numbers</text>
+      <text x="500" y="279" text-anchor="middle" class="fsub">all it knows is spread across them</text>
+      <g data-from="3">
+        <rect x="30" y="95" width="220" height="90" rx="12" class="fbox" />
+        <text x="140" y="132" text-anchor="middle" class="flbl">training data</text>
+        <text x="140" y="160" text-anchor="middle" class="fsub">web · books · code</text>
+        <path d="M252 140 H322" class="farrow" marker-end="url(#mb-b)" />
+        <text x="287" y="128" text-anchor="middle" class="fsub">training</text>
+      </g>
+      <g data-from="4">
+        <text x="500" y="78" text-anchor="middle" class="flbl ffrozen-t">training ended: numbers froze</text>
+        <rect x="30" y="235" width="220" height="90" rx="12" class="fbox fbox-bad" />
+        <text x="140" y="272" text-anchor="middle" class="flbl">Kraken Air</text>
+        <text x="140" y="300" text-anchor="middle" class="fsub">leave policy</text>
+        <path d="M252 280 H300" class="farrow" stroke-dasharray="6 6" />
+        <text x="314" y="288" text-anchor="middle" class="flbl fbad-t">✗</text>
+        <text x="290" y="348" text-anchor="middle" class="fsub fbad-t">not in training</text>
+        <rect x="760" y="95" width="210" height="80" rx="12" class="fbox" />
+        <text x="865" y="130" text-anchor="middle" class="flbl">answer</text>
+        <text x="865" y="157" text-anchor="middle" class="fsub">only read, never written</text>
+        <path d="M672 135 H752" class="farrow" marker-end="url(#mb-b)" />
+        <rect x="760" y="225" width="210" height="80" rx="12" class="fbox" />
+        <text x="865" y="260" text-anchor="middle" class="flbl">question</text>
+        <text x="865" y="287" text-anchor="middle" class="fsub">same numbers always</text>
+        <path d="M758 265 H680" class="farrow" marker-end="url(#mb-b)" />
+      </g>
+      <g data-from="6">
+        <text x="30" y="219" class="fsub ffrozen-t">① change the weights: fine-tune</text>
+        <path d="M140 327 V378 H865 V315" class="farrow-on" marker-end="url(#mb-on)" />
+        <text x="500" y="368" text-anchor="middle" class="fsub fnum">② add it to the question: RAG</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="Asked with no sources" stage="a">
+    We asked the model the question of the day, with no sources. It said "depending on the company's policy". But it still gave numbers: 25-30 working days. The model never saw Kraken Air's policy. So these numbers don't come from there.
+  </Step>
+  <Step title="How did it write that?" stage="a">
+    The model writes the answer <Term id="token">token</Term> by token. At each step, it picks the most likely next token for the text so far. After "How many working days?", texts always go on with a number. No step checks that the number is right.
+  </Step>
+  <Step title="Where does the knowledge live?" stage="b">
+    Everything the model knows is in its <Term id="weights">weights</Term>. In gemma3:4b, that is about 4 billion numbers. Training changes these numbers in tiny steps, so the model predicts text better. The knowledge is not in one place. It is spread over all the numbers.
+  </Step>
+  <Step title="Training ended, the numbers froze" stage="b">
+    When training ends, the weights freeze. Every question reads them, and no question writes to them. Chatting doesn't teach the model anything either. Kraken Air's policy was not in the training data. So it is not in these numbers.
+  </Step>
+  <Step title="It doesn't know that it doesn't know" stage="a">
+    The policy says 22 working days. Inside the model, no warning light comes on for "I don't know this". A made-up answer sounds as fluent as a right one. This is called a <Term id="hallucination">hallucination</Term>.
+
+    <Now>Another question with no sources: `npm run step -- 0 "How many days do I have to upload my receipts after a trip?"`</Now>
+  </Step>
+  <Step title="Two ways to give the model knowledge" stage="b">
+    We can retrain the model on our own examples and change its weights. That is <Term id="finetune">fine-tuning</Term>. Or, with every question, we put the related text in front of the model. That is <Term id="rag">RAG</Term>. We try RAG first. Fine-tuning comes back at the end of this section.
+  </Step>
+</Deck>
+
+<Example>
+Model: "… gets **25-30 working days** of annual leave, depending on the company's policy."
+The policy itself is in `corpus/2025/hr-leave.md`. Each year of service has its own row:
+
+<RepoCode file="corpus/2025/hr-leave.md" from="| Years of service (full years)" to="15 or more" mark={["| 7 | 22 |"]} />
+</Example>
+
+This is all the code of step 0. It sends the model the question, with no documents and no search.
+
+<RepoCode file="src/steps/0-bare.ts" />
+
+<Log name="00-bare" title="npm run step -- 0" />
+
+Look at the prompt token count on the `OUT` line. With RAG, the sources go to the model with the question, so this
+number grows.
+
+<YourTurn>
+Ask the model another question that the policy answers. Give it no sources:
+
+```sh
+npm run step -- 0 "How many days do I have to upload my receipts after a trip?"
+```
+
+Then compare the answer with the policy: `corpus/2025/travel-expenses.md`, section 7. How sure does the model
+sound?
+</YourTurn>
+
+## Common questions
+
+<FAQ q="Does any model say “I don’t know” with no setup?">
+Not reliably. Some models sometimes don't answer, but you can't know in advance when.
+In RAG, you **design** "I don't know". How we design it: [F · Generating the answer](/en/adim-adim/f-cevap/).
+</FAQ>
+
+<FAQ q="Does a bigger model know?">
+On public topics, it knows more. But Kraken Air is fictional, and no model has a company's internal documents in
+its training data. On this question, a big model also makes something up or stays silent. You can't choose which.
+</FAQ>
+
+<FAQ q="Doesn’t it learn while we chat?">
+No. The earlier messages go into the prompt again every time. That is why it seems to remember. When the chat
+ends, nothing stays, and the weights don't change.
+</FAQ>
+
+<Takeaway>It doesn't know, and it doesn't know that it doesn't know.</Takeaway>
