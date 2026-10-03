@@ -101,36 +101,36 @@ Hangi RAG türünü ne zaman eklemeli? Bir blog yazısının ilk önerisi değil
     Pipeline Kraken Air'in İK asistanı oldu; model 90 gün boyunca değişmeyecek. Ticket'lar kurgu, içlerindeki ölçümler bu günün loglarından. Her basamağın sağındaki rozet, ölçülüp ölçülmediğini söyler.
   </Step>
   <Step title="T1 · T2 · Etiketle, filtrele" phase="1">
-    T1: Londra otel limiti sorusunda (q06) yurt içi tablo 1. sırada; cevap doğru, ama ikiz tabloları ayıran etiket yok. T2: sürüm filtresi kapatılınca 2025'in tablosu (22) da prompt'a girdi; model bu koşuda 24'ü seçti. İkisinin çözümü metadata filtresi.
+    T1: Londra otel limiti sorusunda (q06) yurt içi tablo 1. sırada; cevabı rerank kurtardı, ama ikiz tabloları ayıran etiket yok. T2: sürüm filtresi kapatılınca 2025'in tablosu (22) da prompt'a girdi; model bu koşuda 24'ü seçti. İkisinin çözümü metadata filtresi.
   </Step>
   <Step title="T3 · Hepsini prompt'a koyalım" phase="2">
-    Biri "el kitabının tamamını koyalım" dedi. Cevap doğru, ama RAG'in 1155 token'ına karşı 11358 token, yarım dakikalık bir çağrı ve her prompt'ta hr-only maaş tablosu. Çözüm: az ve seçilmiş context.
+    Biri "el kitabının tamamını koyalım" dedi. Cevap doğru, ama RAG'in 976 token'ına karşı 9954 token, yarım dakikaya yakın bir çağrı ve her prompt'ta hr-only maaş tablosu. Çözüm: az ve seçilmiş context.
   </Step>
   <Step title="T4 · T5 · Kelimeler tutmayınca" phase="3">
-    T4: IT güvenlik politikası İngilizce; ekip hybrid istedi. Eval'da 4 TR→EN sorusunun 4'ünde doğru bölüm 1. sırada: hata yok, hybrid eklenmedi. T5: "Tatil hakkım" (q02) sorusunda izin tablosu vektör sırasında 5.; rerank açıkken cevap doğru, ama rerank pahalı.
+    T4: IT güvenlik politikası Türkçe; ekip hybrid istedi. Eval'da 4 EN→TR sorusunun 4'ünde doğru bölüm 1. sırada: hata yok, hybrid eklenmedi. T5: "holiday" kelimeli soruda (q02) izin tablosu vektör sırasında 5.; rerank açıkken cevap doğru, ama rerank pahalı.
   </Step>
   <Step title="T6 · T7 · Başlık yok, soru üç parçalı" phase="4">
     T6: İK duyuruları başlıksız e-posta olarak geliyor; küçük chunk iyi bulunur ama başlığını kaybeder. Çözüm: küçükle ara, büyüğü ver (parent-child). T7: tek soruda üç soru, cevap üç ayrı bölümde. Çözüm: soruyu parçalara bölen agentic RAG.
   </Step>
   <Step title="T8 · 330 mu, 400 mü?" phase="5">
-    Yan Haklar 330 TL diyor, asistan 400 TL dedi. Doğrusu 400: duyuru o bölümü güncelliyor ve iki chunk da prompt'taydı. Bu bağ yalnızca metinde yazıyor; duyuru ilk 3'e girmeseydi modelin elinde 330 kalırdı. Çözüm: dokümanlar arası ilişki (GraphRAG).
+    Yan haklar politikası 330 TRY diyor, duyuru 400 TRY. İki chunk da prompt'taydı; model ikisini de yazdı, hangisinin geçerli olduğunu söylemedi. Doğrusu 400: duyuru o bölümü güncelliyor, ama bu bağ yalnızca metinde yazıyor. Çözüm: dokümanlar arası ilişki (GraphRAG).
   </Step>
   <Step title="Sekiz ticket, bir merdiven">
-    Basamaklar maliyet sırasıyla: en ucuzdan başla, ölç, yetmezse bir üst basamak. Her teşhis prompt'a ve eval'a bakarak kondu.
+    Basamaklar maliyet sırasıyla: en ucuzdan başla, ölç, yetmezse bir üst basamak. T1-T5 ve T8'in teşhisi loglardan; T6 ve T7'ninki akıl yürütme.
   </Step>
 </Deck>
 
 ## T1 · 1. hafta — Londra'da yurt içi tablo önde
 
-> **Kurgu.** Ekip eval sonuçlarını okurken fark etti: "Direktör olarak Londra'da otelde gecelik en fazla ne kadar harcayabilirim?" sorusunda kaynakların ilki yurt içi tablo.
+> **Kurgu.** Ekip eval sonuçlarını okurken fark etti: "I am a director travelling to London. How much can I spend on a hotel per night?" sorusunda kaynakların ilki yurt içi tablo.
 
 **Ölçüm.** Bu soru gold set'te var (q06). Retriever önce yurt içi harcırah bölümünü (§3), sonra yurt dışını (§4) getiriyor; cevap kontrolü ✓:
 
 <Log name="eval-answers" title="npm run eval -- --answers   (q06)" from={8} to={9} />
 
-**Teşhis.** İkiz tablolar: iki bölüm de `Unvan · Günlük harcırah · Otel üst limiti` kalıbında. Embedding için ikisi de "otel limiti". Bu koşuda model doğru tabloyu seçti; seçimi ona bırakan bir sistem, bir gün yanlışını da seçebilir.
+**Teşhis.** İkiz tablolar: iki bölüm de `Job title · Daily per diem · Hotel upper limit` kalıbında. Embedding için ikisi de "otel limiti". Bu koşuda doğru cevabı rerank getirdi: yurt dışı tablosunu öne aldı. Seçimi rerank'a ve modele bırakan bir sistem, bir gün yanlışını da seçebilir.
 **Teknik.** <Term id="metadata">Metadata</Term> filtresi: chunk'a kapsam etiketi (yurt içi / yurt dışı), sorudan kapsamı çıkarıp aramada filtre.
-**Bedel.** Ingest'te bir alan. İşin zor kısmı, etiketi soru sorulurken kimin seçeceği: soruda "Londra" yazıyor, "yurt dışı" yazmıyor. **Ölçmedik.**
+**Bedel.** Ingest'te bir alan. İşin zor kısmı, etiketi soru sorulurken kimin seçeceği: soruda "London" kelimesi var, "international" kelimesi yok. **Ölçmedik.**
 
 ## T2 · 1. hafta — Sürüm filtresi kapatıldı
 
@@ -140,7 +140,7 @@ Hangi RAG türünü ne zaman eklemeli? Bir blog yazısının ilk önerisi değil
 
 <Log name="edition-all" title={'npm run question   (EDITION_FILTER = "all")'} />
 
-**Teşhis.** İki sürümün metinleri neredeyse aynı: her chunk'ın bir ikizi var, skorları neredeyse eşit (0.632 ve 0.631). Kaynak işaretinde ve chunk metninde yıl yazmıyor; modelin 22'yi seçmesini engelleyen hiçbir şey yok.
+**Teşhis.** İki sürümün metinleri neredeyse aynı: her chunk'ın bir ikizi var, skorları neredeyse eşit (0.619 ve 0.614). Kaynak işaretinde ve chunk metninde yıl yazmıyor; modelin 22'yi seçmesini engelleyen hiçbir şey yok.
 **Teknik.** Sürüm filtresi: yalnızca en yeni sürüm yarışır. Bizde varsayılan; filtre açıkken kaynakların üçü de 2026 ([Veri değişince](/adim-adim/veri-degisince/)).
 **Bedel.** Kod tarafında yok. Asıl iş içerikte: hangi sürümün geçerli olduğu ingest'te doğru etiketlenmeli.
 
@@ -158,27 +158,27 @@ Hangi RAG türünü ne zaman eklemeli? Bir blog yazısının ilk önerisi değil
 
 ## T4 · 1. ay — "Hybrid ekleyelim"
 
-> **Kurgu.** IT güvenlik politikası İngilizce. Ekipten biri: "Türkçe soruda kelime tutmaz; her RAG yazısı hybrid öneriyor, ekleyelim."
+> **Kurgu.** IT güvenlik politikası Türkçe. Ekipten biri: "İngilizce soruda kelime tutmaz; her RAG yazısı hybrid öneriyor, ekleyelim."
 
-**Ölçüm.** Gold set'te 4 TR→EN sorusu var; hepsinde doğru bölüm 1. sırada:
+**Ölçüm.** Gold set'te 4 EN→TR sorusu var; hepsinde doğru bölüm 1. sırada:
 
-<Log name="eval-section" title="npm run eval   (TR→EN soruları)" from={10} to={14} />
+<Log name="eval-section" title="npm run eval   (EN→TR soruları)" from={10} to={14} />
 
-**Teşhis.** Hata yok: bge-m3 Türkçe soruyu İngilizce bölümle zaten eşleştiriyor. Kelime araması burada az şey eklerdi ([neden](/her-derde-deva/sinirlar-ve-turler/)).
+**Teşhis.** Hata yok: bge-m3 İngilizce soruyu Türkçe bölümle zaten eşleştiriyor. Kelime araması burada az şey eklerdi ([neden](/her-derde-deva/sinirlar-ve-turler/)).
 **Teknik.** <Term id="hybrid">Hybrid</Term> arama: kod, numara, ürün adı gibi birebir aranan kelimelerde işe yarar. Burada eklemedik.
 **Bedel.** İkinci bir indeks, iki listeyi birleştirme, bakım.
 
-## T5 · 1. ay — "Tatil hakkım"
+## T5 · 1. ay — "holiday" kelimesi
 
-> **Kurgu.** Bir çalışan "tatil" kelimesiyle sordu; politikada bu kelime geçmiyor.
+> **Kurgu.** Bir çalışan "holiday" kelimesiyle sordu; izin politikasında bu kelime geçmiyor.
 
-**Ölçüm.** q02: "Tatil hakkım kaç gün, 4 yıldır çalışıyorum?" Doğru bölüm vektör sırasında 5. (RR 0.20); cevap ✓, rerank açıkken:
+**Ölçüm.** q02: "How much holiday do I get? I started here 4 years ago." Doğru bölüm vektör sırasında 5. (RR 0.20); cevap ✓, rerank açıkken:
 
 <Log name="eval-answers" title="npm run eval -- --answers   (q02)" from={4} to={5} />
 
-**Teşhis.** Soru "tatil hakkım" diyor, doküman "yıllık ücretli izin": anlam ortak, kelime değil. Embedding buluyor ama zar zor (5. sıra); prompt'a yalnızca ilk 3 chunk girer.
+**Teşhis.** Soru "holiday" diyor, doküman "annual paid leave": anlam ortak, kelime değil. Embedding buluyor ama zar zor (5. sıra); prompt'a yalnızca ilk 3 chunk girer. Aynı soru tek başına sorulunca rerank tabloyu 5. sıradan 1. sıraya taşıyor.
 **Teknik.** <Term id="rerank">Rerank</Term> ([E](/adim-adim/e-retrieval-rerank/)). Daha ucuz bir aday: soruyu dokümanın diliyle yeniden yazdırmak ya da önce varsayımsal bir cevap yazdırıp onunla aramak (<Term id="hyde">HyDE</Term>).
-**Bedel.** Rerank her aday için bir LLM çağrısı ([Performans](/uretim/performans-maliyet/)). Rerank kapalıyken q02'yi ölçmedik; HyDE'yi de ölçmedik. Rerank da yanılır: maaş sorusunda yanlış bölümü 1. sıraya taşıdı ([Güvenlik](/uretim/guvenlik/)).
+**Bedel.** Rerank her aday için bir LLM çağrısı ([Performans](/uretim/performans-maliyet/)). Rerank kapalıyken q02'yi ölçmedik; HyDE'yi de ölçmedik. Rerank da yanılır: maaş sorusunda en yüksek puanı (10) iki harcırah bölümüne verdi ([Güvenlik](/uretim/guvenlik/)).
 
 ## T6 · 2. ay — Başlıksız dokümanlar
 
@@ -196,26 +196,26 @@ Hangi RAG türünü ne zaman eklemeli? Bir blog yazısının ilk önerisi değil
 
 > **Kurgu.** "Eşim doğum yapacak: kaç gün izin alırım, o günlerde yemek kartı yüklenir mi, kullanmadığım yıllık izni devredebilir miyim?"
 
-**Teşhis.** Cevap üç bölüme dağılmış: doğum izni (Yıllık İzin §5), yemek kartının hangi günlerde yüklenmediği (Yan Haklar §2), izin devri (Yıllık İzin §7). Tek arama tek bir "ortalama" soruyu arar; prompt'a 3 chunk girer.
+**Teşhis.** Cevap üç bölüme dağılmış: doğum izni (izin politikası §5), yemek kartının hangi günlerde yüklenmediği (yan haklar politikası §2), izin devri (izin politikası §7). Tek arama tek bir "ortalama" soruyu arar; prompt'a 3 chunk girer.
 **Teknik.** <Term id="agentic">Agentic RAG</Term>: model soruyu parçalara böler, her parça için ayrı arar, "yeterli mi?" diye kontrol eder, sonra cevaplar.
 **Bedel.** Bir yerine birçok çağrı; süre tur sayısıyla çarpılır; iki koşu soruyu farklı bölebilir; bir tur sınırı şart. **Ölçmedik:** bu soruyu pipeline'a sormadık.
 
 ## T8 · 3. ay — 330 mu, 400 mü?
 
-> **Kurgu.** "Yan Haklar politikası yemek kartına günde 330 TL diyor, asistan 400 TL dedi. Hangisi doğru?"
+> **Kurgu.** "Asistan aynı cevapta hem 400 TRY hem 330 TRY yazdı. Yan haklar politikası 330 TRY diyor. Hangisi doğru?"
 
-**Ölçüm.** Yemek kartı sorusunda duyuru ve Yan Haklar §2 birlikte prompt'taydı; cevap 400 TL, kaynak duyuru:
+**Ölçüm.** Yemek kartı sorusunda duyuru ve yan haklar §2 birlikte prompt'taydı. Cevap iki tutarı da veriyor: 400 TRY [1] duyurudan, 330 TRY [2] yan haklar politikasından. Son cümle duyuruya gizlenmiş bir talimat ([Güvenlik](/uretim/guvenlik/)):
 
-<Log name="ask-injection" title="npm run ask -- &quot;Yemek kartına günlük ne kadar yükleniyor?&quot;" from={29} />
+<Log name="ask-injection" title="npm run ask -- &quot;How much is loaded onto the meal card each day?&quot;" from={29} />
 
-**Teşhis.** Duyurunun Yan Haklar §2'deki tutarı güncellediği yalnızca metinde yazıyor. Bu koşuda iki chunk birlikte geldi, model doğru olanı seçti; duyuru ilk 3'ten düşerse ne olacağını ölçmedik.
-**Teknik.** Dokümanlar arası ilişkiyi ingest'te çıkar ("duyuru → günceller → Yan Haklar §2"), sorguda bu bağı izle: <Term id="graphrag">GraphRAG</Term>. En basit hâli: güncellenen bölüme metadata ile "güncellendi" etiketi.
+**Teşhis.** Duyurunun yan haklar §2'deki tutarı güncellediği yalnızca metinde yazıyor. Bu koşuda iki chunk birlikte geldi; model ikisini yan yana koydu, 330'un eski tutar olduğunu söylemedi. Duyuru ilk 3'ten düşerse ne olacağını ölçmedik.
+**Teknik.** Dokümanlar arası ilişkiyi ingest'te çıkar ("duyuru → günceller → yan haklar §2"), sorguda bu bağı izle: <Term id="graphrag">GraphRAG</Term>. En basit hâli: güncellenen bölüme metadata ile "güncellendi" etiketi.
 **Bedel.** Bütün corpus bir kez modelden geçer; ilişki yanlış çıkarılırsa arama sessizce yanlış yere gider. "Hangi durumlarda direktör onayı gerekir?" gibi, cevabı birçok bölüme dağılmış özet soruları da aynı aileden. **Ölçmedik.**
 
 ## Sık sorulan
 
-<FAQ q="Eval 23/23 diyorsa ticket nereden geliyor?">
-Gold set yalnızca içindeki soruları ve kontrolleri bilir: T1 ve T5 eval'dan geldi, o sorular gold set'teydi. T8'in sorusu da gold set'te (q13), ama eval yalnızca cevapta 400 geçtiğine ve şifre istenmediğine bakar. T6 ve T7 gold set'te olmayan soru türleri; kullanımda gelen her yeni hata türü gold set'e yeni bir satır olmalı.
+<FAQ q="Eval 22/23 diyorsa ticket nereden geliyor?">
+Gold set yalnızca içindeki soruları ve kontrolleri bilir: T1 ve T5 eval'dan geldi, o sorular gold set'teydi. T8'in sorusu da gold set'te (q13). Eval onu ✗ saydı, çünkü cevap şifre istiyor; ama eval yalnızca cevapta 400 geçtiğine ve "password" kelimesine bakar, cevaptaki eski 330'u görmez. T6 ve T7 gold set'te olmayan soru türleri; kullanımda gelen her yeni hata türü gold set'e yeni bir satır olmalı.
 </FAQ>
 
 <Takeaway>Düzelteceği bir hata yoksa tekniği eklemeyin.</Takeaway>

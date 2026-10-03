@@ -24,25 +24,25 @@ Günün sorusu çözüldü. Her şey yolunda mı? Gün boyunca pipeline'ın dör
       <g data-from="1">
         <rect x="20" y="60" width="470" height="140" rx="12" class="fbox fbox-bad" />
         <text x="44" y="98" class="flbl" data-q="const">1 · Retriever</text>
-        <text x="44" y="136" class="fsub" data-q="log:eval-answers">"tatil hakkım" (q02): doğru bölüm 5. sırada</text>
+        <text x="44" y="136" class="fsub" data-q="log:eval-answers">“holiday” (q02): doğru bölüm 5. sırada</text>
         <text x="44" y="164" class="fsub">soru dokümanın kelimelerini kullanmıyor</text>
       </g>
       <g data-from="2">
         <rect x="510" y="60" width="470" height="140" rx="12" class="fbox fbox-bad" />
         <text x="534" y="98" class="flbl" data-q="const">2 · Chunk</text>
-        <text x="534" y="136" class="fsub" data-q="corpus:2025/hr-leave.md">fixed: "| 7 | 22 |" başlığından ayrıldı</text>
-        <text x="534" y="164" class="fsub">→ "Bu bilgi politikalarda yer almıyor."</text>
+        <text x="534" y="136" class="fsub" data-q="corpus:2025/hr-leave.md">fixed: “| 7 | 22 |” başlığından ayrıldı</text>
+        <text x="534" y="164" class="fsub" data-q="log:question-1-fixed" data-q-mode="quote">→ “… at most 7 working days [1].”</text>
       </g>
       <g data-from="3">
         <rect x="20" y="220" width="470" height="140" rx="12" class="fbox fbox-bad" />
         <text x="44" y="258" class="flbl" data-q="const">3 · LLM</text>
         <text x="44" y="296" class="fsub">maaş sorusu, maaş chunk'ı yok (filtre)</text>
-        <text x="44" y="324" class="fsub" data-q="log:ask-access-on">"bilmiyorum" demedi → "harcırah 70 EUR [1]"</text>
+        <text x="44" y="324" class="fsub" data-q="log:ask-access-on">“bilmiyorum” yok → “… 4,000 TRY per night [2].”</text>
       </g>
       <g data-from="4">
         <rect x="510" y="220" width="470" height="140" rx="12" class="fbox fbox-bad" />
         <text x="534" y="258" class="flbl" data-q="const">4 · Context</text>
-        <text x="534" y="296" class="fsub" data-q="log:stuff-everything log:08-answer">hepsi prompt'ta: 11358 token, RAG 1155</text>
+        <text x="534" y="296" class="fsub" data-q="log:stuff-everything log:08-answer">hepsi prompt'ta: 9954 token, RAG 976</text>
         <text x="534" y="324" class="fsub" data-q="code:src/lib/config.ts">num_ctx ayarımız 8192'ye sığmıyor</text>
       </g>
       <text x="20" y="408" class="flbl">RAG'in başarısı =</text>
@@ -55,7 +55,7 @@ Günün sorusu çözüldü. Her şey yolunda mı? Gün boyunca pipeline'ın dör
       <g class="ph ph2">
         <rect x="360" y="424" width="290" height="110" rx="12" class="fbox fbox-on" />
         <text x="505" y="466" text-anchor="middle" class="flbl">chunk kalitesi</text>
-        <text x="505" y="504" text-anchor="middle" class="fsub">fixed: "yer almıyor"</text>
+        <text x="505" y="504" text-anchor="middle" class="fsub" data-q="log:question-1-fixed">fixed: “at most 7 … [1]”</text>
       </g>
       <text x="675" y="490" text-anchor="middle" class="flbl">×</text>
       <g class="ph ph3">
@@ -69,28 +69,28 @@ Günün sorusu çözüldü. Her şey yolunda mı? Gün boyunca pipeline'ın dör
     </svg>
   </DeckFigure>
   <Step title="Bir çarpım; ilk çarpan retriever" phase="1">
-    RAG'in başarısı bir çarpım: retriever × chunk × LLM. Biri sıfırsa sonuç sıfır. Retriever: "Tatil hakkım kaç gün?" (q02) dokümanın kelimelerini kullanmıyor; izin tablosu vektör sırasında 5., ilk 3'e ancak <Term id="rerank">rerank</Term> ile girer.
+    RAG'in başarısı bir çarpım: retriever × chunk × LLM. Biri sıfırsa sonuç sıfır. Retriever: "How much holiday do I get?" sorusu (q02) dokümanın kelimelerini kullanmıyor. İzin tablosu vektör sırasında 5.; ilk 3'e ancak <Term id="rerank">rerank</Term> ile giriyor: rerank onu 1. sıraya taşıyor.
   </Step>
   <Step title="Chunk: başlığını kaybeden satır" phase="2">
-    Fixed chunker her 300 karakterde keser: `| 7 | 22 |` satırı tablonun başlığından ayrı bir chunk'a düştü. O chunk prompt'a girmedi; model "Bu bilgi politikalarda yer almıyor." dedi, oysa bilgi politikadaydı.
+    Fixed chunker her 300 karakterde keser: `| 7 | 22 |` satırı tablonun başlığından ayrı bir chunk'a düştü. O chunk prompt'a girmedi. Model §4'teki bir izin sınırını cevap sandı: "An employee with 7 years of service gets at most 7 working days [1]." Yanlış sayı, üstelik kaynaklı.
   </Step>
   <Step title="LLM: bilmiyorum demesi gerekirken" phase="3">
-    Maaş sorusunda filtre maaş chunk'ını dışarıda tuttu; doğrusu buydu. Ama model "yer almıyor" demek yerine seyahat chunk'ından "günlük harcırah 70 EUR ve otel üst limiti 155 EUR'dur [1]" yazdı: kaynaklı ama yanlış.
+    Maaş sorusunda filtre maaş chunk'ını dışarıda tuttu; doğrusu buydu. Ama model "bilmiyorum" demek yerine harcırah tablosundan bir otel limiti yazdı. Kaynaklı ama yanlış: "The hotel upper limit for a senior specialist is 4,000 TRY per night [2].
   </Step>
   <Step title="Context: bedel" phase="4">
-    Dördüncüsü bir çarpan değil, bedel: el kitabının tamamı 11358 token, RAG'in 3 chunk'ı 1155. Büyük <Term id="context">context</Term>'in bedeli her soruda ödenir. Yanlış cevapta ilk soru: prompt'ta ne vardı? `--prompt` bunun için.
+    Dördüncüsü bir çarpan değil, bedel: el kitabının tamamı 9954 token, RAG'in 3 chunk'ı 976. Büyük <Term id="context">context</Term>'in bedeli her soruda ödenir. Yanlış cevapta ilk soru: prompt'ta ne vardı? `--prompt` bunun için.
   </Step>
 </Deck>
 
 Dört yanılmanın logları bu sitenin sayfalarında: retriever için [Kaliteyi ölçmek](/uretim/kaliteyi-olcmek/) (q02), chunk için [B · Chunking](/adim-adim/b-chunking/), LLM için [Güvenlik](/uretim/guvenlik/) (filtre açık), context için [Performans ve maliyet](/uretim/performans-maliyet/).
 
-**LLM çarpanının bir hikâyesi daha.** Corpus ve prompt hazırlanırken:
+**LLM çarpanının bir hikâyesi daha: tablo okumak.** Tabloyu ve prompt'u küçük bir model için biçimlendirdik:
 
-1. İzin tablosu önce kıdem aralıklarıyla yazılmıştı (`| 5 – 10 yıl | 22 |`). Model aralık satırlarını yanlış okudu.
-2. Satırlar yılları listeleyecek biçime getirilince, model cevap yerine satırın etiketini tekrarladı.
-3. Her kıdem yılı ayrı satıra yazıldı (`| 7 | 22 |`). Tablo prompt'ta olduğu hâlde model günün sorusunda yanlış satırı seçti.
-4. İki prompt değişikliği düzeltti. Kaynak işaretinde artık yalnızca doküman adı var; işaretteki id ve bölüm numaraları modeli yanlış satıra çekiyordu. Bir de kural eklendi: "Cevap bir tablodan geliyorsa önce kullandığın satırı aynen yaz, sonra cevabı tek cümleyle ver."
-5. Bu denemeler loglanmadı; bugünkü loglarda tablo soruları doğru. Küçük bir model tablo okumada kırılgandır: veriyi ve prompt'u ona göre biçimlendirin, yine de ölçün.
+1. İzin tablosunda her kıdem yılı ayrı bir satır: `| 7 | 22 |`.
+2. Kaynak işaretinde yalnızca doküman adı var; id ve bölüm numarası yok.
+3. Prompt'ta tablolar için bir kural var: "If the answer comes from a table, first write the row you used word for word. Then give the answer in one sentence."
+4. Model bu kuralın ilk yarısına uymuyor. Günün sorusunun cevabı satırı yazmadan geliyor: "An employee with 7 years of service gets 22 working days of annual leave [1]." Prompt'taki bir kural, modelin ona uyacağı anlamına gelmez.
+5. Bugünkü loglarda tablo soruları doğru. Küçük bir model tablo okumada kırılgandır: veriyi ve prompt'u ona göre biçimlendirin, yine de ölçün.
 
 ## Bir tane mi RAG var?
 
@@ -137,7 +137,7 @@ Hepsi aynı iskelet: bul, ekle, yaz. Fark, "bul" adımının ne kadar akıllı v
         <path d="M476 220 H502" class="farrow" marker-end="url(#rt-h)" />
         <path d="M638 220 H664" class="farrow" marker-end="url(#rt-h)" />
         <path d="M800 220 H826" class="farrow" marker-end="url(#rt-h)" />
-        <text x="20" y="275" class="fsub fgood-t" data-q="log:07-rerank">burada kurduk · 5 LLM çağrısı · günün sorusunda 2244 ms</text>
+        <text x="20" y="275" class="fsub fgood-t" data-q="log:07-rerank">burada kurduk · 5 LLM çağrısı · günün sorusunda 1441 ms</text>
       </g>
       <g class="ph ph2">
         <text x="20" y="322" class="flbl" data-q="const">3 · Multi-query RAG</text>
@@ -205,11 +205,11 @@ Hiçbirini burada ölçmedik. Her biri belirli bir hatayı düzeltir ve bir bede
 
 | Tür | Hangi hatayı düzeltir | Bedeli |
 |---|---|---|
-| <Term id="hybrid">Hybrid</Term> (kelime + vektör) | Birebir eşleşmesi gereken kodlar, numaralar, e-posta adresleri; embedding'in bulanıklaştırdığı kelimeler | İkinci bir indeks ve iki listeyi birleştirme. Türkçe soruyla İngilizce doküman arasında kelimelerin çoğu tutmaz; kısaltmalar, adlar ve adresler ise iki dilde aynı yazılır. Bizim 4 TR→EN sorumuzda vektör araması tek başına hit@1 1.00 verdi. |
-| <Term id="hyde">HyDE</Term> | Soru ile doküman farklı yazılmış ("tatil hakkım" ↔ "yıllık ücretli izin"; bu soru eval'da 5. sırada) | Soru başına bir LLM çağrısı: model önce varsayımsal bir cevap yazar, arama o cevapla yapılır. Varsayımsal cevaptaki uydurma rakam aramayı yanlış yöne çekebilir. |
+| <Term id="hybrid">Hybrid</Term> (kelime + vektör) | Birebir eşleşmesi gereken kodlar, numaralar, e-posta adresleri; embedding'in bulanıklaştırdığı kelimeler | İkinci bir indeks ve iki listeyi birleştirme. İngilizce soruyla Türkçe doküman arasında kelimelerin çoğu tutmaz; kısaltmalar, adlar ve adresler ise iki dilde aynı yazılır. Bizim 4 EN→TR sorumuzda vektör araması tek başına hit@1 1.00 verdi. |
+| <Term id="hyde">HyDE</Term> | Soru ile doküman farklı yazılmış ("holiday" ↔ "annual paid leave"; bu soru eval'da 5. sırada) | Soru başına bir LLM çağrısı: model önce varsayımsal bir cevap yazar, arama o cevapla yapılır. Varsayımsal cevaptaki uydurma rakam aramayı yanlış yöne çekebilir. |
 | <Term id="parentchild">Parent-child</Term> | Küçük chunk iyi bulunur ama kötü okunur (başlığını kaybeden tablo satırı) | İki boyda chunk ve aralarındaki bağ; küçükle aranır, büyük olan prompt'a girer. Prompt büyür. |
 | <Term id="agentic">Agentic RAG</Term> | Birkaç dokümana yayılan, birkaç parçalı sorular | Model soruyu böler, her parça için ayrı arar, "yeterli mi?" diye sorar. Bir yerine birçok çağrı; süre tur sayısıyla çarpılır, iki koşu farklı sonuç verebilir. |
-| <Term id="graphrag">GraphRAG</Term> | Cevabın dokümanlar arasındaki bağda olduğu sorular (duyuru, Yan Haklar §2'deki tutarı günceller) ve "hepsini özetle" soruları | Ingest'te bütün corpus modelden geçer, varlık–ilişki grafı çıkarılır ve bakımı yapılır. En pahalısı. |
+| <Term id="graphrag">GraphRAG</Term> | Cevabın dokümanlar arasındaki bağda olduğu sorular (duyuru, yan haklar politikasının §2'sindeki tutarı günceller) ve "hepsini özetle" soruları | Ingest'te bütün corpus modelden geçer, varlık–ilişki grafı çıkarılır ve bakımı yapılır. En pahalısı. |
 
 Bu türlerin hangi durumda ve hangi sırayla eklendiğinin hikâyesi: [İlk 90 gün](/her-derde-deva/ilk-90-gun/).
 
