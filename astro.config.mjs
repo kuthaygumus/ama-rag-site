@@ -81,7 +81,7 @@ export default defineConfig({
         },
         {
           label: '5 · Her derde deva mı?',
-          translations: { en: '5 · A silver bullet?' },
+          translations: { en: '5 · Does RAG fix everything?' },
           items: items([
             ['her-derde-deva/sinirlar-ve-turler', 'Sınırlar ve RAG türleri', 'Limits and RAG variants'],
             ['her-derde-deva/ilk-90-gun', 'İlk 90 gün', 'The first 90 days'],
@@ -93,7 +93,7 @@ export default defineConfig({
           translations: { en: 'Appendix' },
           items: items([
             ['sozluk', 'Sözlük', 'Glossary'],
-            ['kurulum-sorunlari', 'Kurulum sorunları', 'Setup troubleshooting'],
+            ['kurulum-sorunlari', 'Kurulum sorunları', 'Setup problems'],
           ]),
         },
       ],
