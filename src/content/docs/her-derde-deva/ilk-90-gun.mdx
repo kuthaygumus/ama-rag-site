@@ -1,6 +1,6 @@
 ---
 title: İlk 90 gün
-description: Pipeline canlıya çıktı, ticket'lar geliyor. Her ticket bir hata, her hata bir teknik — Kraken Air politika el kitabı üzerinde, ölçülen ve ölçülmeyen ayrı ayrı.
+description: Pipeline canlıya çıktı ve ticket'lar geliyor; her ticket bir hata, her hata bir teknik, ölçülen ve ölçülmeyen ayrı ayrı.
 ---
 import Deck from '../../../components/Deck.astro';
 import DeckFigure from '../../../components/DeckFigure.astro';
@@ -15,7 +15,7 @@ import Takeaway from '../../../components/Takeaway.astro';
 <DaysQuestion answer="24 iş günü [1] ✓" how="chroma · section · rerank on · sürüm 2026" />
 
 <Gate bridge>
-RAG türlerini gördük; hangisini ne zaman eklemeli? Bir blog yazısının ilk önerisi değil, sistemin gerçekten yaptığı bir hata karar verir. Pipeline'ı canlıya aldığımızı düşünelim ve gelen ticket'lara bakalım.
+Hangi RAG türünü ne zaman eklemeli? Bir blog yazısının ilk önerisi değil, sistemin gerçekten yaptığı bir hata karar verir.
 </Gate>
 
 <Deck>
@@ -98,29 +98,27 @@ RAG türlerini gördük; hangisini ne zaman eklemeli? Bir blog yazısının ilk 
     </svg>
   </DeckFigure>
   <Step title="Canlıya çıktık">
-    Pipeline Kraken Air'in İK asistanı oldu; model 90 gün boyunca değişmeyecek (gemma3:4b). Pazartesi ilk ticket geldi. Ticket'lar kurgu; içlerindeki ölçümler bu günün loglarından. Her basamağın sağında, ölçülüp ölçülmediğini söyleyen tek bir rozet var.
+    Pipeline Kraken Air'in İK asistanı oldu; model 90 gün boyunca değişmeyecek. Ticket'lar kurgu, içlerindeki ölçümler bu günün loglarından. Her basamağın sağındaki rozet, ölçülüp ölçülmediğini söyler.
   </Step>
   <Step title="T1 · T2 · Etiketle, filtrele" phase="1">
-    T1: Londra otel limiti sorusunda (q06) yurt içi tablo 1. sırada; cevap doğru, ama ikiz tabloları ayıran bir etiket yok. T2: biri sürüm filtresini kapattı; prompt'a 2025'in tablosu (22) da girdi, model bu koşuda 24'ü seçti. İkisinin çözümü metadata filtresi; sürüm filtresi bizde varsayılan.
+    T1: Londra otel limiti sorusunda (q06) yurt içi tablo 1. sırada; cevap doğru, ama ikiz tabloları ayıran etiket yok. T2: sürüm filtresi kapatılınca 2025'in tablosu (22) da prompt'a girdi; model bu koşuda 24'ü seçti. İkisinin çözümü metadata filtresi.
   </Step>
   <Step title="T3 · Hepsini prompt'a koyalım" phase="2">
-    Biri "el kitabının tamamını koyalım" dedi. 11358 token, bizim num_ctx ayarımız olan 8192'ye sığmıyor; pencere açılınca cevap doğru, ama 29983 ms ve hr-only maaş tablosu her prompt'ta. RAG'in cevap çağrısı 1155 token, 888 ms. Çözüm: az ve seçilmiş context.
+    Biri "el kitabının tamamını koyalım" dedi. Cevap doğru, ama RAG'in 1155 token'ına karşı 11358 token, yarım dakikalık bir çağrı ve her prompt'ta hr-only maaş tablosu. Çözüm: az ve seçilmiş context.
   </Step>
   <Step title="T4 · T5 · Kelimeler tutmayınca" phase="3">
-    T4: IT güvenlik politikası İngilizce; ekip hybrid istedi. Eval: 4 TR→EN sorusunun 4'ünde doğru bölüm 1. sırada; hata yok, hybrid eklenmedi. T5: "Tatil hakkım kaç gün?" sorusunda izin tablosu vektör sırasında 5.; prompt'a ilk 3 girer. Rerank açıkken cevap doğru; bedeli 5 LLM çağrısı, 2244 ms.
+    T4: IT güvenlik politikası İngilizce; ekip hybrid istedi. Eval'da 4 TR→EN sorusunun 4'ünde doğru bölüm 1. sırada: hata yok, hybrid eklenmedi. T5: "Tatil hakkım" (q02) sorusunda izin tablosu vektör sırasında 5.; rerank açıkken cevap doğru, ama rerank pahalı.
   </Step>
   <Step title="T6 · T7 · Başlık yok, soru üç parçalı" phase="4">
-    T6: İK duyuruları başlıksız e-posta olarak geliyor; küçük chunk iyi bulunur ama başlığını kaybeder. Çözüm: küçükle ara, büyüğü ver (parent-child). T7: bir soruda üç soru: doğum izni, o günlerde yemek kartı, izin devri. Cevap üç ayrı bölümde; çözüm soruyu parçalara bölen agentic RAG.
+    T6: İK duyuruları başlıksız e-posta olarak geliyor; küçük chunk iyi bulunur ama başlığını kaybeder. Çözüm: küçükle ara, büyüğü ver (parent-child). T7: tek soruda üç soru, cevap üç ayrı bölümde. Çözüm: soruyu parçalara bölen agentic RAG.
   </Step>
   <Step title="T8 · 330 mu, 400 mü?" phase="5">
     Yan Haklar 330 TL diyor, asistan 400 TL dedi. Doğrusu 400: duyuru o bölümü güncelliyor ve iki chunk da prompt'taydı. Bu bağ yalnızca metinde yazıyor; duyuru ilk 3'e girmeseydi modelin elinde 330 kalırdı. Çözüm: dokümanlar arası ilişki (GraphRAG).
   </Step>
   <Step title="Sekiz ticket, bir merdiven">
-    Basamaklar maliyet sırasıyla: en ucuzdan başla, ölç, yetmezse bir üst basamak. Sekiz ticket'ta model hiç değişmedi; her teşhis prompt'a ve eval'a bakarak kondu. Düzelteceği bir hata yokken teknik eklemek, bedelini boşuna ödemektir.
+    Basamaklar maliyet sırasıyla: en ucuzdan başla, ölç, yetmezse bir üst basamak. Her teşhis prompt'a ve eval'a bakarak kondu.
   </Step>
 </Deck>
-
-Aşağıda her ticket'ın ayrıntısı: şikâyet (kurgu), ölçüm (log) ya da "Ölçmedik", teşhis, teknik ve bedel.
 
 ## T1 · 1. hafta — Londra'da yurt içi tablo önde
 
@@ -142,7 +140,7 @@ Aşağıda her ticket'ın ayrıntısı: şikâyet (kurgu), ölçüm (log) ya da 
 
 <Log name="edition-all" title={'npm run question   (EDITION_FILTER = "all")'} />
 
-**Teşhis.** İki sürümün metinleri neredeyse aynı: her chunk'ın bir ikizi var, skorları neredeyse eşit (0.632 ve 0.631). İki tablo da prompt'a girdi: 2026 (24) ve 2025 (22). Kaynak işaretinde ve chunk metninde yıl yazmıyor; model bu koşuda 24'ü seçti, 22'yi seçmesini engelleyen hiçbir şey yok.
+**Teşhis.** İki sürümün metinleri neredeyse aynı: her chunk'ın bir ikizi var, skorları neredeyse eşit (0.632 ve 0.631). Kaynak işaretinde ve chunk metninde yıl yazmıyor; modelin 22'yi seçmesini engelleyen hiçbir şey yok.
 **Teknik.** Sürüm filtresi: yalnızca en yeni sürüm yarışır. Bizde varsayılan; filtre açıkken kaynakların üçü de 2026 ([Veri değişince](/adim-adim/veri-degisince/)).
 **Bedel.** Kod tarafında yok. Asıl iş içerikte: hangi sürümün geçerli olduğu ingest'te doğru etiketlenmeli.
 
@@ -154,9 +152,9 @@ Aşağıda her ticket'ın ayrıntısı: şikâyet (kurgu), ölçüm (log) ya da 
 
 <Log name="stuff-everything" title="her doküman tek prompt'ta (retrieval yok)" />
 
-**Teşhis.** Cevap doğru, ama 11358 token bizim num_ctx ayarımız olan 8192'ye sığmıyor; ölçmek için pencere 32768'e açıldı. RAG ile aynı cevap 1155 token, cevap çağrısı 888 ms. Asıl sorun güvenlikte: 8 dokümanın biri hr-only maaş tablosu; retrieval yoksa erişim filtresi de yok.
+**Teşhis.** Cevap doğru; sorun bedelde ve güvenlikte: retrieval yoksa erişim filtresi de yok. Ayrıntısı: [Performans ve maliyet](/uretim/performans-maliyet/).
 **Teknik.** Context'i azalt ve sırala: yalnızca seçilmiş chunk'lar, en iyisi başta. RAG'in kendisi bu.
-**Bedel.** Bedava; bedeli olan, yapmamak: her soruda yaklaşık 10 kat prompt token'ı (rerank hariç), yarım dakikalık bir çağrı ve herkesin prompt'unda maaş tablosu. El kitabı büyüdükçe bu yol tamamen kapanır.
+**Bedel.** Bedava; bedeli olan, yapmamak.
 
 ## T4 · 1. ay — "Hybrid ekleyelim"
 
@@ -166,9 +164,9 @@ Aşağıda her ticket'ın ayrıntısı: şikâyet (kurgu), ölçüm (log) ya da 
 
 <Log name="eval-section" title="npm run eval   (TR→EN soruları)" from={10} to={14} />
 
-**Teşhis.** Hata yok. bge-m3 Türkçe soruyu İngilizce bölümle zaten eşleştiriyor. Kelime araması burada az şey eklerdi: Türkçe soruyla İngilizce metin arasında kelimelerin çoğu tutmaz; yalnızca kısaltmalar, adlar ve adresler iki dilde aynı yazılır.
+**Teşhis.** Hata yok: bge-m3 Türkçe soruyu İngilizce bölümle zaten eşleştiriyor. Kelime araması burada az şey eklerdi ([neden](/her-derde-deva/sinirlar-ve-turler/)).
 **Teknik.** <Term id="hybrid">Hybrid</Term> arama: kod, numara, ürün adı gibi birebir aranan kelimelerde işe yarar. Burada eklemedik.
-**Bedel.** İkinci bir indeks, iki listeyi birleştirme, bakım. Düzelteceği bir hata yokken eklenirse bu bedel boşa ödenir.
+**Bedel.** İkinci bir indeks, iki listeyi birleştirme, bakım.
 
 ## T5 · 1. ay — "Tatil hakkım"
 
@@ -178,9 +176,9 @@ Aşağıda her ticket'ın ayrıntısı: şikâyet (kurgu), ölçüm (log) ya da 
 
 <Log name="eval-answers" title="npm run eval -- --answers   (q02)" from={4} to={5} />
 
-**Teşhis.** Soru "tatil hakkım" diyor, doküman "yıllık ücretli izin". Kelime ortak değil, anlam ortak: embedding buluyor ama zar zor. Prompt'a yalnızca ilk 3 chunk girer; 5. sıradaki tablo ancak rerank ile öne geçer.
-**Teknik.** <Term id="rerank">Rerank</Term>: soruyla chunk'ı birlikte okuyan ikinci bir sıralama. Daha ucuz bir aday: soruyu dokümanın diliyle yeniden yazdırmak ya da önce varsayımsal bir cevap yazdırıp onunla aramak (<Term id="hyde">HyDE</Term>).
-**Bedel.** Rerank: 5 LLM çağrısı, günün sorusunda 2244 ms. Rerank kapalıyken q02'yi ölçmedik; HyDE'yi de ölçmedik. Rerank da yanılır: maaş sorusunda seyahat bölümüne 10 üzerinden 10 verdi ([Güvenlik](/uretim/guvenlik/)).
+**Teşhis.** Soru "tatil hakkım" diyor, doküman "yıllık ücretli izin": anlam ortak, kelime değil. Embedding buluyor ama zar zor (5. sıra); prompt'a yalnızca ilk 3 chunk girer.
+**Teknik.** <Term id="rerank">Rerank</Term> ([E](/adim-adim/e-retrieval-rerank/)). Daha ucuz bir aday: soruyu dokümanın diliyle yeniden yazdırmak ya da önce varsayımsal bir cevap yazdırıp onunla aramak (<Term id="hyde">HyDE</Term>).
+**Bedel.** Rerank her aday için bir LLM çağrısı ([Performans](/uretim/performans-maliyet/)). Rerank kapalıyken q02'yi ölçmedik; HyDE'yi de ölçmedik. Rerank da yanılır: maaş sorusunda yanlış bölümü 1. sıraya taşıdı ([Güvenlik](/uretim/guvenlik/)).
 
 ## T6 · 2. ay — Başlıksız dokümanlar
 
@@ -210,22 +208,14 @@ Aşağıda her ticket'ın ayrıntısı: şikâyet (kurgu), ölçüm (log) ya da 
 
 <Log name="ask-injection" title="npm run ask -- &quot;Yemek kartına günlük ne kadar yükleniyor?&quot;" from={29} />
 
-**Teşhis.** Duyuru, Yan Haklar politikasının 2. bölümündeki tutarı güncellediğini söylüyor; bu bağ yalnızca metinde yazıyor. Bu koşuda iki chunk birlikte geldi ve model doğru olanı seçti. Duyuru ilk 3'e girmeseydi modelin elinde yalnızca 330 kalırdı; bunu ölçmedik.
+**Teşhis.** Duyurunun Yan Haklar §2'deki tutarı güncellediği yalnızca metinde yazıyor. Bu koşuda iki chunk birlikte geldi, model doğru olanı seçti; duyuru ilk 3'ten düşerse ne olacağını ölçmedik.
 **Teknik.** Dokümanlar arası ilişkiyi ingest'te çıkar ("duyuru → günceller → Yan Haklar §2"), sorguda bu bağı izle: <Term id="graphrag">GraphRAG</Term>. En basit hâli: güncellenen bölüme metadata ile "güncellendi" etiketi.
 **Bedel.** Bütün corpus bir kez modelden geçer; ilişki yanlış çıkarılırsa arama sessizce yanlış yere gider. "Hangi durumlarda direktör onayı gerekir?" gibi, cevabı birçok bölüme dağılmış özet soruları da aynı aileden. **Ölçmedik.**
 
 ## Sık sorulan
 
-<FAQ q="Bütün basamakları baştan kursak?">
-Her basamak süre, çağrı ya da bakım bedeli ekler, bazıları doğruluğu da düşürebilir: rerank bile maaş sorusunda yanlış bölümü birinci yaptı. Basamak eklemeden önce eval'da o basamağın düzelteceği hatayı görün; ekledikten sonra aynı eval'ı tekrar koşun.
-</FAQ>
-
 <FAQ q="Eval 23/23 diyorsa ticket nereden geliyor?">
-Gold set yalnızca içindeki soruları ve kontrolleri bilir. T1 ve T5 eval'dan geldi, çünkü o sorular gold set'teydi. T8'in sorusu da gold set'te (q13), ama eval yalnızca cevapta 400 geçtiğine ve şifre istenmediğine bakar; duyuru ilk 3'ten düşerse ne olacağını sormaz. T6 ve T7 gold set'te olmayan soru türleri. Kullanımda gelen her yeni hata türü, gold set'e yeni bir satır olmalı.
-</FAQ>
-
-<FAQ q="Ticket'lar gerçek mi?">
-Şikâyetler kurgu; içlerindeki sayılar bu sitenin loglarından. Bir ticket'ın çözümünü ölçmediysek orada "Ölçmedik" yazıyor.
+Gold set yalnızca içindeki soruları ve kontrolleri bilir: T1 ve T5 eval'dan geldi, o sorular gold set'teydi. T8'in sorusu da gold set'te (q13), ama eval yalnızca cevapta 400 geçtiğine ve şifre istenmediğine bakar. T6 ve T7 gold set'te olmayan soru türleri; kullanımda gelen her yeni hata türü gold set'e yeni bir satır olmalı.
 </FAQ>
 
 <Takeaway>Düzelteceği bir hata yoksa tekniği eklemeyin.</Takeaway>

@@ -21,10 +21,8 @@ import Term from '../../../components/Term.astro';
 
 <DaysQuestion answer="“… 7 yıllık bir çalışanın yıllık izni genellikle 50 iş günü (15 gün ücretli izin + 35 gün yıllık izin) olur.” ✗ uydurma" how="bare model, no documents — henüz tek bir doküman okumadık" />
 
-Pipeline'ın ilk iki kutusu: dosyaları okumak ve temizlemek. Burada hiçbir model çalışmıyor; iş tamamen bizim kodumuzda.
-
 <Gate>
-Model bu dosyaları hiç görmedi. Görse de ham hâlleri kirli: her sayfada aynı başlık, bir gizlilik satırı, bir sayfa numarası; cümleler sayfa genişliğinde bölünmüş. Bu metni olduğu gibi parçalara bölersek gürültü de parçaların içine girer.
+Model bu dosyaları hiç görmedi; görse de ham hâlleri kirli. Bu metni olduğu gibi parçalara bölersek gürültü de parçaların içine girer.
 </Gate>
 
 <Deck>
@@ -176,136 +174,122 @@ Model bu dosyaları hiç görmedi. Görse de ham hâlleri kirli: her sayfada ayn
     </svg>
   </DeckFigure>
   <Step title="Ham veri nedir?" stage="a">
-    Şirketin bilgisi PDF, Word ya da HTML dosyalarında durur. Bir program bu dosyalardan metni çıkarır; pipeline'a ilk giren şey bu metindir. Buna **ham veri** diyoruz. İçeriği doğrudur ama geldiği dosyanın izlerini taşır: PDF'ten sayfa başlıkları ve sayfa numaraları, HTML'den menüler ve alt bilgiler.
+    Şirketin bilgisi PDF, Word ya da HTML dosyalarında durur. Bu dosyalardan çıkarılan metne **ham veri** diyoruz. İçeriği doğrudur ama dosyanın izlerini taşır: sayfa başlıkları, sayfa numaraları, menüler.
   </Step>
   <Step title="Bizim ham verimiz: hr-leave.md" stage="a">
-    Atölyede metni çıkarma işini atladık: `corpus/` klasöründeki her dosya, bir PDF'ten çıkmış metin gibi yazıldı. Sayfa başlıkları, sayfa numaraları ve bölünmüş satırlar, temizlenecek gerçek bir şey olsun diye bilerek eklendi. Yani `corpus/2025/hr-leave.md` bir PDF değil; PDF'ten çıkmış metnin yerini tutuyor.
+    Atölyede metni çıkarma işini atladık: `corpus/` klasöründeki her dosya PDF'ten çıkmış metin gibi yazıldı. Sayfa başlıkları, numaralar ve bölünmüş satırlar, temizlenecek gerçek bir şey olsun diye bilerek eklendi.
   </Step>
-  <Step title="Bu sayfada iki adım var" stage="a">
-    Adım 1 dosyayı okur ve ikiye ayırır: üstteki etiket bloğu ve asıl metin. Adım 2 metni temizler. İki adımda da model çalışmıyor, yalnızca bizim kodumuz. Çıktılar `data/1-docs.json` ve `data/2-clean.json` dosyalarına yazılır.
+  <Step title="İki adım, model yok" stage="a">
+    Adım 1 dosyayı okur ve üstteki etiket bloğunu asıl metinden ayırır. Adım 2 metni temizler. İkisinde de model çalışmıyor, yalnızca bizim kodumuz.
   </Step>
   <Step title="Üstteki blok: metadata" stage="b" phase="1">
-    Dosyanın en üstünde, iki `---` çizgisi arasında doküman kendini tanıtıyor: kimliği (`id`), sürümü (`edition`), bölümü, kimin okuyabileceği (`access`), dili (`lang`). Buna <Term id="metadata">metadata</Term> diyoruz. Adım 1 bu bloğu metinden ayırıp alan alan saklar.
+    Dosyanın en üstünde, iki `---` çizgisi arasında doküman kendini tanıtıyor: kimliği (`id`), sürümü (`edition`), bölümü, kimin okuyabileceği (`access`), dili (`lang`). Buna <Term id="metadata">metadata</Term> diyoruz. Adım 1 bu bloğu alan alan saklar.
 
-    <Now n="1">`corpus/2025/hr-leave.md` dosyasını açıp üstteki bloğu bulun. Sonra `npm run step -- 1` ve `data/1-docs.json`: `hr-salary-bands` dokümanının hangi alanı farklı?</Now>
+    <Now n="1">`npm run step -- 1`, sonra `data/1-docs.json`: `hr-salary-bands` hangi alanda farklı?</Now>
   </Step>
   <Step title="Gerçek bir PDF'te bu blok olur mu?" stage="b" phase="1">
-    Olmaz. Gerçek projede bu bilgiler dosyanın durduğu sistemden okunur: SharePoint, Confluence ya da bir doküman arşivi, dokümanın sürümünü ve kimin okuyabileceğini zaten tutar. Biz her şey tek dosyada dursun diye bu bilgileri dosyanın başına yazdık.
+    Olmaz. Gerçek projede sürümü ve okuma yetkisini dokümanın durduğu sistem tutar: SharePoint, Confluence ya da bir arşiv. Biz her şey tek dosyada dursun diye bunları dosyanın başına yazdık.
   </Step>
   <Step title="Metadata sonra filtre olur" stage="b" phase="1">
-    8 dokümandan biri, `hr-salary-bands`, `access: hr-only` taşıyor: yalnızca İK okuyabilir. Etiketi şimdi okuyoruz, soru anında kontrol ediyoruz (E sayfası). Etiket en baştan kayıtta olmazsa sonra filtrelenecek bir şey kalmaz.
+    `hr-salary-bands` dokümanı `access: hr-only` taşıyor: yalnızca İK okuyabilir. Etiketi şimdi okuyoruz, soru anında kontrol ediyoruz (E sayfası). Etiket en baştan kayıtta olmazsa sonra filtrelenecek bir şey kalmaz.
   </Step>
   <Step title="Alttaki metin: PDF'in izleri" stage="b" phase="2">
-    hr-leave 4 sayfalık bir PDF'ten çıkmış gibi: her sayfanın başında aynı başlık ve gizlilik satırı, sonunda `Sayfa 1 / 4` gibi bir sayfa numarası var. İçerikle ilgisi olmayan bu satırlara gürültü diyoruz.
+    hr-leave 4 sayfalık bir PDF'ten çıkmış gibi: her sayfanın başında aynı başlık ve gizlilik satırı, sonunda `Sayfa 1 / 4` gibi bir numara. İçerikle ilgisi olmayan bu satırlara gürültü diyoruz.
   </Step>
   <Step title="Gürültü neden sorun?" stage="b" phase="2">
-    Bir sonraki adımda metni parçalara böleceğiz. Başlık satırı her sayfada tekrar ettiği için birçok parçanın içine girer. Parçalar içerikleri yüzünden değil, bu ortak satır yüzünden birbirine benzer; arama da onları ayırt etmekte zorlanır.
+    Başlık satırı her sayfada tekrar eder; metni bölünce birçok parçanın içine girer. Parçalar içerik yüzünden değil bu ortak satır yüzünden birbirine benzer ve arama onları ayırt etmekte zorlanır.
   </Step>
   <Step title="Bir de bölünmüş satırlar" stage="b" phase="3">
-    PDF'in sayfa genişliği cümleleri de bölmüş: "mazeret" bir satırın sonunda, "izni" sonrakinin başında. Metni okuyan bir insan için sorun yok; satır satır işleyen bir program için bu iki ayrı parça.
+    Sayfa genişliği cümleleri de bölmüş: "mazeret" bir satırın sonunda, "izni" sonrakinin başında. İnsan için sorun yok; satır satır işleyen bir program için bunlar iki ayrı parça.
   </Step>
   <Step title="Temizlik: 4 kural ve bir birleştirici" stage="b">
-    Adım 2 önce gürültü satırlarını 4 kuralla (regex) atar: sayfa başlığı, Türkçe gizlilik satırı, Türkçe ve İngilizce sayfa numarası. Sonra bölünmüş düz yazı satırlarını birleştirir. Başlıklar, tablo satırları ve boş satırlar olduğu gibi kalır. Bilerek basit tutuldu.
+    Adım 2 gürültüyü 4 kuralla (regex) atar: sayfa başlığı, Türkçe gizlilik satırı, Türkçe ve İngilizce sayfa numarası. Sonra bölünmüş düz yazı satırlarını birleştirir; başlık, tablo ve boş satırlar olduğu gibi kalır.
 
-    <Now n="2">`src/steps/2-clean.ts` içinde `NOISE` listesinin ilk kuralını `//` ile kapatın, `npm run step -- 2`: `hr-leave` −12 yerine −8 gösterir. Sonra kuralı geri açıp adım 2'yi yeniden çalıştırın.</Now>
+    <Now n="2">`src/steps/2-clean.ts` içinde `NOISE` listesinin ilk kuralını kapatın, `npm run step -- 2`: `hr-leave` −8 göstermeli.</Now>
   </Step>
   <Step title="Sonuç: ham veri girdi, temiz metin çıktı" stage="b">
-    8 dokümanda 1074 satır 512 satıra indi. Eksilen 562 satırın 74'ü atılan gürültü; gerisi birleşen satırlar ve silinen fazla boş satırlar. İki adım birkaç milisaniye sürdü ve çıktılarını `data/` klasörüne yazdı: açıp bakabilirsiniz.
+    8 dokümanda 1074 satır 512 satıra indi. Eksilen 562 satırın 74'ü atılan gürültü; gerisi birleşen satırlar ve silinen fazla boş satırlar. İki adım birkaç milisaniye sürdü.
   </Step>
   <Step title="Adım 1 kodda: corpus → 1-docs.json" stage="c" phase="1">
-    Class yok: her adım tek bir dosyada, düz fonksiyonlarla yazıldı. `npm run step -- 1`, `src/steps/1-load.ts` dosyasını çalıştırır. İçindeki `loadCorpus()` 8 dosyayı okur, her birini `parseFrontMatter()` ile metadata ve `body` olarak ayırır; `writeStep()` bu 8 kaydı `data/1-docs.json` dosyasına yazar.
+    Class yok: her adım tek dosyada, düz fonksiyonlarla yazıldı. `npm run step -- 1`, `src/steps/1-load.ts` dosyasını çalıştırır; 8 dosya okunur, 8 kayıt `data/1-docs.json` dosyasına yazılır.
   </Step>
   <Step title="Adım 2 kodda: 1-docs.json → 2-clean.json" stage="c" phase="2">
-    `npm run step -- 2`, `src/steps/2-clean.ts` dosyasını çalıştırır. Adım 2 adım 1'i çağırmaz; onun yazdığı `data/1-docs.json` dosyasını `readStep()` ile okur. `cleanText()` her kaydın `body` alanını temizleyip `text` alanına koyar, metadata olduğu gibi kopyalanır. `writeStep()` sonucu `data/2-clean.json` dosyasına yazar.
+    Adım 2 adım 1'i çağırmaz; onun yazdığı `data/1-docs.json` dosyasını okur. Temizlenen metin `text` alanına girer, metadata olduğu gibi kopyalanır, sonuç `data/2-clean.json` dosyasına yazılır.
 
-    <Now n="3">Aşağıdaki "Kaçan gürültü nereye gider?" bölümünü okuyun ve `englishConfidential` kuralını yazın. Sonra `npm run step -- 2` ve `npm run check:sibling`.</Now>
+    <Now n="3">Aşağıdaki "Kaçan gürültü nereye gider?" bölümünü okuyup `englishConfidential` kuralını yazın. Kontrol: `npm run check:sibling`.</Now>
   </Step>
 </Deck>
 
 <Example>
-Günün sorusunun cevabı §3'te. Ham dosyada §3'ün ilk paragrafı üç satıra bölünmüş; temizlikten sonra `data/2-clean.json` içinde tek satır. Tablo satırlarına dokunulmaz: `|` ile başlayan satır zaten tamdır.
+Günün sorusunun cevabı §3'te. Ham dosyada §3'ün ilk paragrafı üç satıra bölünmüş; temizlikten sonra `data/2-clean.json` içinde tek satır.
 </Example>
 
 <RepoCode file="corpus/2025/hr-leave.md" from="## 3. Yıllık Ücretli İzin" to="^\| 2 \|" title="corpus/2025/hr-leave.md — ham hâli" />
 
 ## Adım 1 · corpus/ → data/1-docs.json
 
-`npm run step -- 1`, `src/steps/1-load.ts` içindeki `run()` fonksiyonunu çalıştırır; `run()` işi `loadCorpus()` fonksiyonuna verir. `loadCorpus()` klasördeki her `.md` dosyasını okur, her birini `parseFrontMatter()` ile ikiye ayırır ve dosya başına bir kayıt döndürür. Metadata alanlarından biri eksikse hata burada çıkar:
+`run()` işi `loadCorpus()` fonksiyonuna verir: her `.md` dosyası okunur, `parseFrontMatter()` ile ikiye ayrılır, dosya başına bir kayıt döner. Metadata alanlarından biri eksikse hata burada çıkar:
 
 <RepoCode file="src/steps/1-load.ts" from="export async function loadCorpus" />
 
-`parseFrontMatter()` dosyanın üstündeki bloğu okur. YAML kütüphanesi yok; `key: value` satırları yetiyor:
+`parseFrontMatter()` için YAML kütüphanesi yok; `key: value` satırları yetiyor:
 
 <RepoCode file="src/steps/1-load.ts" from="export function parseFrontMatter" />
 
-Dönen kayıt bir `Doc`. Bu bir class değil, `src/lib/types.ts` içindeki bir TypeScript interface'i; kayıtlar düz JSON nesneleri olarak dolaşır. `DocMeta` üstteki bloğun alanlarıdır, `body` ise dosyanın geri kalanı, olduğu gibi:
+Dönen kayıt bir `Doc`: `src/lib/types.ts` içinde bir TypeScript interface'i, class değil. `DocMeta` üstteki bloğun alanları, `body` dosyanın geri kalanı:
 
 <RepoCode file="src/lib/types.ts" from="Step 1 output" />
 
-`run()` en sonda `writeStep()` ile 8 kaydı `data/1-docs.json` dosyasına yazar. Dosyayı açtığınızda kayıtlar `data` dizisinin içinde durur; üstteki `hash` ve `inputHash` alanları, adım 2'nin eski bir dosyayla çalışmasını engeller.
+`writeStep()` 8 kaydı `data/1-docs.json` içindeki `data` dizisine yazar. Üstteki `hash` ve `inputHash` alanları, adım 2'nin eski bir dosyayla çalışmasını engeller.
 
 <Log name="01-load" title="npm run step -- 1" />
 
 ## Adım 2 · data/1-docs.json → data/2-clean.json
 
-`npm run step -- 2`, `src/steps/2-clean.ts` içindeki `run()` fonksiyonunu çalıştırır. Adım 2 adım 1'i çağırmaz: `readStep()` ile `data/1-docs.json` dosyasını okur. Her kayıt şu satırdan geçer:
+`src/steps/2-clean.ts` içindeki `run()`, `readStep()` ile `data/1-docs.json` dosyasını okur. Her kayıt şu satırdan geçer:
 
 <RepoCode file="src/steps/2-clean.ts" from="const docs: CleanDoc[]" to="^\s*$" />
 
-`path` ve `body` kayıttan ayrılır (`path`, `_path` adıyla alınıp kullanılmaz, yani düşer). Geri kalan metadata (`...meta`) olduğu gibi kopyalanır. `cleanText(body)` da temiz `text` alanını ve atılan satır sayısını (`noiseLines`) ekler. Çıkan kaydın şekli `CleanDoc`, aynı `types.ts` dosyasında `Doc`'un hemen altında.
+`path` düşer (`_path` adıyla alınıp kullanılmaz), metadata (`...meta`) olduğu gibi kopyalanır, `cleanText(body)` temiz `text` alanını ve atılan satır sayısını (`noiseLines`) ekler. Kaydın şekli `CleanDoc`, `types.ts` içinde `Doc`'un hemen altında.
 
-`cleanText()` iki iş yapar: önce gürültü satırlarını atar, sonra bölünmüş düz yazı satırlarını birleştirir. Başlık, tablo satırı, boş satır ve liste maddesi hiçbir satıra eklenmez:
+Birleştirmenin sınırı: başlık, tablo satırı, boş satır ve liste maddesi hiçbir satıra eklenmez.
 
 <RepoCode file="src/steps/2-clean.ts" from="const closed" />
 
-Gürültü kuralları bir listede duruyor. Her satırın sonundaki `// default` işareti, o satırın varsayılan olarak açık olduğunu söyler; üstündeki boş `englishConfidential` birazdan sizin işiniz:
+Gürültü kuralları bir listede; `// default` işaretli satırlar varsayılan olarak açık. Boş `englishConfidential` sizin işiniz:
 
 <RepoCode file="src/steps/2-clean.ts" from="// ── YOUR TURN" to="^\];" />
 
 <Log name="02-clean" title="npm run step -- 2" />
 
-Log'un sonundaki "before / after", hr-leave'in ilk satırlarını gösteriyor: başlık ve gizlilik satırı gitti, doküman başlığı kaldı.
-
 ## Kaçan gürültü nereye gider?
 
-İngilizce doküman (`it-security`) her sayfanın başında, başlığın altında `CONFIDENTIAL – Internal use only` satırını taşıyor. Bu İngilizce gizlilik satırını atan bir kural yok. Log'da `it-security` yanında −8 yazıyor: 4 sayfa başlığı ve 4 sayfa numarası gitti, 4 gizlilik satırı kaldı. Kalan gürültü kaybolmaz: bir sonraki adımda kendi chunk'ına dönüşür. B sayfasının bölme yöntemiyle `it-security@2025#0` adlı bir chunk çıkıyor ve içinde doküman başlığı ile bu satırdan başka bir şey yok. Embed edilir, saklanır, aramada yarışır.
+İngilizce doküman (`it-security`) her sayfada `CONFIDENTIAL – Internal use only` satırını taşıyor ve onu atan kural yok. Log'da `it-security` yanında −8 var: 4 sayfa başlığı ve 4 sayfa numarası gitti, 4 gizlilik satırı kaldı. Kalan gürültü kaybolmaz: B sayfasının bölme yöntemiyle `it-security@2025#0` adlı bir chunk olur ve içinde doküman başlığıyla bu satırdan başka bir şey yoktur. Embed edilir, saklanır, aramada yarışır.
 
 <YourTurn>
-**1 · Ham veriye bakın.** `corpus/2025/hr-leave.md` dosyasını açın. `---` bloğunu, sayfa başlığını ve `Sayfa 1 / 4` satırını bulun. Sonra `npm run step -- 1` ve `data/1-docs.json`: her dokümanın `access` ve `lang` alanlarına bakın. `hr-salary-bands` dokümanının hangi alanı diğerlerinden farklı?
+**1 · Ham veriye bakın.** `corpus/2025/hr-leave.md` dosyasını açın: `---` bloğunu, sayfa başlığını ve `Sayfa 1 / 4` satırını bulun. Sonra `npm run step -- 1` ve `data/1-docs.json`: her dokümanın `access` ve `lang` alanlarına bakın. `hr-salary-bands` dokümanının hangi alanı farklı?
 
 **2 · Bir kuralı kapatın.** `src/steps/2-clean.ts` içinde `NOISE` listesinin ilk satırını (sayfa başlığı kuralı) başına `//` koyarak kapatın ve `npm run step -- 2` çalıştırın. Log'da `hr-leave` satırı −12 yerine −8 göstermeli. `data/2-clean.json` içinde `Sürüm 2025` arayın: başlık metne geri döndü. Satırı geri açıp adım 2'yi yeniden çalıştırın.
 
-**3 · Benzerini yazın.** Aynı dosyada `englishConfidential` şimdilik boş. Türkçe gizlilik kuralı `/^GİZLİ – .+$/` nasıl yazıldıysa İngilizce gizlilik satırı için de öyle yazın. İpucu: satırdaki tire uzun tire (–); dosyadan kopyalayın. Sonra:
+**3 · Benzerini yazın.** Aynı dosyada `englishConfidential` boş. Türkçe kural `/^GİZLİ – .+$/` gibi, İngilizce gizlilik satırı için yazın. İpucu: tire uzun tire (–); dosyadan kopyalayın. Sonra:
 
 - `npm run step -- 2` → `it-security` satırı −8 yerine −12 göstermeli.
 - `npm run check:sibling` → `step 2 · englishConfidential` testi yeşil olmalı. `dot` ve `byParagraph` testleri şimdilik kırmızı kalır; onlar C sayfasında ve B sayfasının ev ödevinde.
 - İsterseniz `npm run step -- 3` ve `data/3-chunks.json`: `it-security@2025#0` artık yok.
 
-Kural yazılınca sayılar değişir: adım 2, 74 yerine 78 gürültü satırı atar ve 1074 satır 504'e iner. Sonraki sayfalardaki log'lar kural yazılmadan alındı: ekranda 60 chunk ve iki sürümle 120 kayıt görürsünüz, sizde her sürüm için 59 chunk, iki sürümle 118 kayıt olur. Bu fark beklenen.
+Kural yazılınca adım 2, 74 yerine 78 gürültü satırı atar ve 1074 satır 504'e iner. Sonraki sayfaların log'ları kural yazılmadan alındı: log 60 chunk (iki sürümle 120 kayıt) gösterir, sizde 59 chunk (118 kayıt) olur; bu fark beklenen.
 
-Geride kaldıysanız: `npm run catchup -- 2`. Toggle satırlarını varsayılana döndürür, `data/` klasörünü boşaltır ve adım 1–2'yi yeniden çalıştırır; yazdığınız `englishConfidential` yerinde kalır.
+Geride kaldıysanız: `npm run catchup -- 2`.
 </YourTurn>
 
 ## Sık sorulan
 
-<FAQ q="Gerçek PDF'lerde bu adım nasıl olur?">
-Adım 1 orada daha çok iş yapar: önce bir PDF ya da Word okuyucu metni çıkarır, metadata da dosyanın durduğu sistemden okunur. Asıl emek istenen kısım tablolar, iki sütunlu sayfalar ve taranmış belgelerdir. Bizim korpus o çıkarma işinin sonucunu taklit ediyor: sayfa başlıkları, sayfa numaraları, bölünmüş satırlar.
-</FAQ>
-
-<FAQ q="Metadata'yı neden şimdi okuyoruz, soru anında değil?">
-Filtre aramanın içinde çalışır (E sayfası). Bunun için her chunk'ın etiketini taşıması gerekir. Adım 3 her chunk'a dokümanının `edition`, `access` ve `lang` alanlarını kopyalar; etiket burada okunmazsa sonra filtrelenecek bir şey olmaz.
-</FAQ>
-
 <FAQ q="edition neden tırnak içinde yazılmış?">
-`edition: "2025"` bir metin, sayı değil. Filtre metinleri karşılaştırır: `"2025"` ile `2025` sayısı eşleşmez. Tırnak, bir YAML okuyucusunun değeri sayıya çevirmesini engeller. Bizim küçük okuyucu zaten her değeri metin olarak alıyor; tırnak dosyayı her okuyucu için güvenli kılar.
+Filtre metinleri karşılaştırır: `"2025"` metni ile `2025` sayısı eşleşmez. Tırnak, bir YAML okuyucusunun değeri sayıya çevirmesini engeller; bizim küçük okuyucu her değeri zaten metin olarak alıyor.
 </FAQ>
 
 <FAQ q="Bir temizlik kuralı yanlışlıkla içerik silerse?">
 Bu yüzden kurallar satırın başına ve sonuna bağlı (`^` … `$`): yalnızca bütün satır kalıba uyarsa silinir. `check:sibling` testi bunu da kontrol ediyor: `englishConfidential`, "Confidential data must be encrypted." cümlesini silmemeli.
-</FAQ>
-
-<FAQ q="Temizliği embedding modeline bıraksak olmaz mı?">
-Model ne verirsek onu kodlar; gürültüyü ayırt etmek onun işi değil. Kalan gürültünün nereye gittiğini yukarıda gördük: kendi chunk'ı oldu.
 </FAQ>
 
 <Takeaway>Kirli metinle iyi arama olmaz.</Takeaway>

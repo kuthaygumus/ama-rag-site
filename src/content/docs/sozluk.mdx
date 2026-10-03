@@ -133,7 +133,7 @@ Modelin gerçekmiş gibi, kendinden emin bir şekilde uydurması. RAG azaltır a
 
 <h3 id="hnsw">HNSW</h3>
 
-Vector DB'lerin sık kullandığı ANN indeksi: vektörleri bir komşuluk grafiğine bağlar, arama yalnızca yakın komşuları gezer. Chroma bunu kullanır.
+Vector DB'lerin sık kullandığı [ANN](#ann) indeksi: vektörleri bir komşuluk grafiğine bağlar. Chroma bunu kullanır.
 
 <h3 id="hybrid">Hybrid arama</h3>
 
@@ -249,7 +249,7 @@ Retrieval-Augmented Generation: soruyu cevaplamadan önce ilgili doküman parça
 
 <h3 id="ragfusion">RAG-fusion</h3>
 
-Multi-query gibi çalışır, ama sonuç listelerini sıralarına göre puanlayarak birleştirir: birkaç listede üstte çıkan parça öne geçer.
+Multi-query gibi çalışır, ama sonuç listelerini [RRF](#rrf) ile birleştirir: birkaç listede üstte çıkan parça öne geçer.
 
 <h3 id="recallk">recall@k</h3>
 
@@ -297,7 +297,7 @@ Modelin okuduğu ve yazdığı en küçük metin parçası; kabaca bir kelimenin
 
 <h3 id="topk">Top-k</h3>
 
-Aramanın döndürdüğü en yakın k parça. Bizde k = 5; rerank bu 5'i sıralar, prompt'a en iyi 3'ü girer. k küçükse doğru parça kaçabilir; büyükse rerank çağrıları artar (her aday bir LLM çağrısı), prompt'a yine 3 parça girer.
+Aramanın döndürdüğü en yakın k parça. Bizde k = 5; rerank bu 5'i sıralar, prompt'a en iyi 3'ü girer. k küçükse doğru parça kaçabilir; büyükse rerank çağrıları artar (her aday bir LLM çağrısı).
 
 ## V
 

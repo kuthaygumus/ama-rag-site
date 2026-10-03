@@ -12,7 +12,7 @@ Eğitimden önce, bir kez. Her şey kendi dizüstünüzde çalışır: dil model
 **Podman**'da bir container olarak, pipeline'ın kendisi **Node.js** ile TypeScript olarak. Hiçbir veri dışarı çıkmaz.
 
 İnecekler (M serisi bir Mac'te `ollama list` ve `podman image ls` ile ölçüldü): `gemma3:4b` 3,3 GB · `bge-m3` 1,2 GB ·
-Chroma imajı 649 MB. Eğitimden önce, iyi bir bağlantıda indirin. Şirket ağındaysanız önce
+Chroma imajı 649 MB. İyi bir bağlantıda indirin. Şirket ağındaysanız önce
 [Kurulum sorunları › Şirket ağı](/kurulum-sorunlari/#şirket-ağı).
 
 | Ne | Ne işe yarar | Kontrol |
@@ -91,8 +91,8 @@ Chroma imajı 649 MB. Eğitimden önce, iyi bir bağlantıda indirin. Şirket a�
 <Log name="doctor" title="npm run doctor" />
 
 İlk çalıştırmada iki süre de modellerin belleğe yüklenmesini içerir: yukarıdaki çıktı soğuk başlangıçta, M serisi
-bir Mac'te alındı (embedding 1924 ms, cevap 4590 ms). Ollama bir modeli kullandıktan sonra birkaç dakika bellekte
-tutar; o arada ikinci kez çalıştırırsanız yükleme olmaz, süreler kısalır.
+bir Mac'te alındı (embedding 1924 ms, cevap 4590 ms). Ollama modeli birkaç dakika bellekte tutar; o arada ikinci
+çalıştırmada yükleme olmaz, süreler kısalır.
 
 Bir satırda `✗` varsa, yanında ne yapılacağı yazar. Hepsi tek tek:
 [Kurulum sorunları](/kurulum-sorunlari/).
@@ -108,8 +108,7 @@ yorumda yazan satırın aynısı:
 podman run -d --name chroma -p 8000:8000 -v chroma-data:/data docker.io/chromadb/chroma:1.5.9
 ```
 
-**Hiç container yok: JSON store** — vektörler Chroma yerine `data/store.json` dosyasına yazılır, geri kalan her
-şey aynı çalışır. Repo klasöründe bir `.env` dosyasına tek satır ekleyin:
+**Hiç container yok: JSON store** — vektörler Chroma yerine `data/store.json` dosyasına yazılır. Repo klasöründe bir `.env` dosyasına tek satır ekleyin:
 
 <Tabs syncKey="os">
 <TabItem label="Mac">
@@ -126,9 +125,8 @@ npm run doctor
 </TabItem>
 </Tabs>
 
-`npm run doctor` artık Chroma'yı sormaz; `store` satırında `json (no Podman needed)` yazar. Bir ayarı tek bir
-komut için değiştirmek isterseniz bayrak da olur: `npm run step -- 5 --store json`. `STORE=json npm run …`
-biçimi Windows'ta çalışmaz; bu yüzden repo hep bayrak ya da `.env` kullanır.
+`npm run doctor` artık Chroma'yı sormaz; `store` satırında `json (no Podman needed)` yazar. Ayarı tek bir komut
+için değiştirmek isterseniz bayrak da olur: `npm run step -- 5 --store json`.
 
 Bütün ayarlar repodaki `env.example` dosyasında yorum satırı olarak durur: `OLLAMA_URL`, `CHROMA_URL`,
 `CHAT_MODEL`, `EMBED_MODEL`, `STORE`, `EDITION`. Birini değiştirmek için satırı `.env` dosyasına kopyalayıp
@@ -146,10 +144,8 @@ Gerekmez. Aynı `compose.yaml` ile `docker compose up -d` çalışır; tek satı
 </FAQ>
 
 <FAQ q="GPU gerekir mi?">
-Hayır. Ollama, GPU varsa onu kullanır, yoksa işlemcide çalışır. `npm run doctor` bir cevabın süresini ölçer; M
-serisi bir Mac'te, model yüklemesi dahil, 4590 ms sürdü (yukarıdaki çıktı). Süre 20 saniyeyi geçerse "slow laptop"
-uyarısı çıkar: adımlar yine çalışır, yalnızca beklersiniz. Uyarıyı ilk çalıştırmada gördüyseniz `npm run doctor`'u
-hemen bir kez daha çalıştırın; ikinci ölçümde model zaten bellektedir. Süreler donanıma göre değişir.
+Hayır. Ollama GPU varsa onu kullanır, yoksa işlemcide çalışır; adımlar yine çalışır, yalnızca beklersiniz.
+"slow laptop" uyarısı için: [Kurulum sorunları](/kurulum-sorunlari/).
 </FAQ>
 
 <FAQ q="Ollama neden container'da değil?">

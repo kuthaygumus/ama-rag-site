@@ -18,10 +18,10 @@ import Takeaway from '../../../components/Takeaway.astro';
 <DaysQuestion answer="24 iş günü [1] ✓" how="chroma · section · rerank on · sürüm 2026" />
 
 <Gate>
-B sayfasında chunker'ı değiştirdik ve günün sorusu "yer almıyor"dan "22 iş günü"ne döndü. Ama bu tek bir soru. Aynı değişiklik öteki sorulardan birini bozdu mu? "Bana daha iyi göründü" bunu söyleyemez; bir sayı gerekir.
+B sayfasında chunker'ı değiştirdik ve günün sorusu "yer almıyor"dan "22 iş günü"ne döndü. Ama bu tek bir soru: aynı değişiklik öteki soruları bozdu mu? "Bana daha iyi göründü" bunu söyleyemez; bir sayı gerekir.
 </Gate>
 
-Önce bir komut başlatın, sonra okumaya devam edin: `npm run eval -- --answers`. Her soru için rerank ve cevap çağrısı yaptığı için uzun sürer; sonucuna sayfanın ortasında döneceğiz.
+Önce bu komutu başlatın, uzun sürer: `npm run eval -- --answers`. Sonucuna sayfanın ortasında döneceğiz.
 
 <Deck>
   <DeckFigure slot="figure">
@@ -80,19 +80,19 @@ B sayfasında chunker'ı değiştirdik ve günün sorusu "yer almıyor"dan "22 i
     </svg>
   </DeckFigure>
   <Step title="Görev: bir sınav kâğıdı">
-    Sistemi tek soruyla değil, cevabını bildiğimiz 23 soruyla sınarız: `eval/gold.jsonl`. Her satırda soru, doğru bölüm, beklenen değer ve tür yazar: bir <Term id="goldset">gold set</Term>. Beklenen değerler 2025 el kitabından; depoda 2026 da olsa eval 2025'te koşar. Gold set de sürümlenir.
+    Sistemi tek soruyla değil, cevabını bildiğimiz 23 soruyla sınarız: `eval/gold.jsonl`. Her satırda soru, doğru bölüm, beklenen değer ve tür yazar: bir <Term id="goldset">gold set</Term>. Beklenen değerler 2025 el kitabından; gold set de sürümlenir.
   </Step>
   <Step title="Retriever ne getirdi? hit@1">
-    q02 için retriever 5 bölüm getirdi. Doğru bölüm, izin tablosu (hr-leave#3), 5. sırada: soru dokümanın kelimelerini kullanmıyor. <Term id="hit1">hit@1</Term> yalnızca ilk sonuca bakar: doğruysa 1, değilse 0. q02'de 0; günün sorusunda (q01) 1.
+    q02'de doğru bölüm, izin tablosu (hr-leave#3), 5. sırada: soru dokümanın kelimelerini kullanmıyor. <Term id="hit1">hit@1</Term> yalnızca ilk sonuca bakar: doğruysa 1, değilse 0. q02'de 0; günün sorusunda (q01) 1.
   </Step>
   <Step title="recall@5 ve MRR">
     <Term id="recallk">recall@k</Term>: doğru bölümlerin kaçı ilk k'da? q02'de 1 bölümün 1'i, yani 1.0; sıra önemsiz. Sırayı ölçen: 1 / (ilk doğrunun sırası), q02'de 1/5 = 0.20. Bunun bütün sorulardaki ortalaması <Term id="mrr">MRR</Term>; 1.0 = doğru bölüm hep birinci.
   </Step>
   <Step title="Neden chunk değil, bölüm?">
-    Bir tasarım tercihi: chunk id'si chunker'la değişir (`hr-leave@2025#c08`), bölüm numarası değişmez (hr-leave#3). Böylece aynı kâğıt iki chunker'ı da puanlar. Bedeli: birkaç bölüme değen bir chunk her birine sayılır. Bu puanlama küçük, başlıksız fixed chunk'lara cömerttir.
+    Chunk id'si chunker'la değişir (`hr-leave@2025#c08`), bölüm numarası değişmez (hr-leave#3); böylece aynı kâğıt iki chunker'ı da puanlar. Bedeli: birkaç bölüme değen bir chunk her birine sayılır. Bu puanlama küçük, başlıksız fixed chunk'lara cömerttir.
   </Step>
   <Step title="Sonuç: 19 sorunun ortalaması">
-    23 sorudan 4'ü puanlanmaz: erişim ve kapsam dışı sorularda doğru bölüm yoktur. Kalan 19 soruda section chunker'la hit@1 0.842: 19 sorunun 16'sında doğru bölüm birinci. Her soru ≈ 0.05 (1/19). Ölçüm rerank'tan önce; q02 burada ıskalamış sayılır.
+    23 sorudan 4'ü puanlanmaz: erişim ve kapsam dışı sorularda doğru bölüm yoktur. Kalan 19 soruda section chunker'la hit@1 0.842: 16'sında doğru bölüm birinci. Ölçüm rerank'tan önce; q02 burada ıskalamış sayılır.
   </Step>
   <Step title="Aynı sınav, fixed chunker">
     Fixed chunk'larla, cömert puanlamaya rağmen: hit@1 0.368, 19 sorunun 7'si. recall@5 0.895: q01 ve q02'de doğru bölüm ilk 5'e hiç girmedi. q01 günün sorusu; B sayfasında fixed'le `npm run question`'ın "yer almıyor" demesi aynı sonucun cevaptaki izi.
@@ -110,7 +110,7 @@ Sınav kâğıdının ilk dört satırı ve üç tuzak sorusu (erişim, injectio
 ## Önce / sonra: aynı sınav, iki chunker
 
 <Example>
-Aynı 23 soru, aynı model, aynı k = 5; tek fark chunker. `fixed` her 300 karakterde keser, `section` başlıklardan.
+Aynı 23 soru, aynı model, aynı k = 5; tek fark chunker.
 
 | | fixed (300 karakter) | section |
 |---|---|---|
@@ -121,9 +121,7 @@ Aynı 23 soru, aynı model, aynı k = 5; tek fark chunker. `fixed` her 300 karak
 | doğrudan sorular, hit@1 (8 soru) | 0.63 | 1.00 |
 | TR→EN soruları, hit@1 (4 soru) | 0.25 | 1.00 |
 
-B sayfasında gördüğümüz tek soruluk düzelme tesadüf değilmiş. Doğru bölümü birinci getirilen soru sayısı 19 soruda 7'den 16'ya çıktı (0.368 → 0.842): section chunker 9 soru kazandırdı, hiçbirini kaybettirmedi. Fark yalnızca sırada değil: fixed'de q01 ve q02'nin doğru bölümü ilk 5'e hiç girmedi (recall@5 0.895 = 19 sorunun 17'si). q01 günün sorusu; fixed chunk'larla `npm run question`'ın "yer almıyor" demesi bununla uyumlu.
-
-Bu fark, fixed'e cömert bir puanlamayla bile çıktı: bölüm 3'e değen her fixed chunk bölüm 3 sayılır, `| 7 | 22 |` satırını taşıyan ama tablonun başlığını taşımayan c08 dahil.
+B sayfasındaki tek soruluk düzelme tesadüf değilmiş: section chunker 9 soru kazandırdı, hiçbirini kaybettirmedi.
 </Example>
 
 Kaynak: iki `npm run eval` koşusu. Önce `fixed` chunk'larla; ilk iki soru ve sonuç:
@@ -135,11 +133,11 @@ Sonra `section` chunk'larla, soru soru:
 
 <Log name="eval-section" title="npm run eval   (chunker: section)" />
 
-Banner'daki `edition 2025` sabittir. Beklenen değerler 2025 el kitabından yazıldı: q01 22 bekler, 2026'da doğrusu 24. Eval en yeni sürümle koşsaydı doğru cevaplar yanlış sayılırdı. Bu yüzden eval, depoda hangi sürümler olursa olsun gold set'in sürümünde arar:
+Banner'daki `edition 2025` sabittir: q01 22 bekler, 2026'da doğrusu 24. Eval en yeni sürümle koşsaydı doğru cevaplar yanlış sayılırdı; bu yüzden depoda hangi sürümler olursa olsun gold set'in sürümünde arar:
 
 <RepoCode file="src/cli/eval.ts" from="// The expected answers were written" to="GOLD_EDITION = " />
 
-Depoda iki sürüm varsa banner `store: 2025+2026` der; puanlanan sürüm yine 2025'tir. 2026 için yeni beklenen değerlerle yeni bir gold set yazılır.
+Depoda iki sürüm varsa banner `store: 2025+2026` der; 2026'yı puanlamak için yeni beklenen değerlerle yeni bir gold set yazılır.
 
 Metriklerin kodu kısa. Bir soru için üç sayı:
 
@@ -147,7 +145,7 @@ Metriklerin kodu kısa. Bir soru için üç sayı:
 
 ## Cevabı ölçmek: `--answers`
 
-Başta başlattığınız komut bu. Buraya kadar ölçtüğümüz şey retriever'dı: doğru bölüm geldi mi? `--answers` her soruyu rerank ve cevap adımlarından da geçirir, sonra cevabı kontrol eder:
+Başta başlattığınız komut bu. Buraya kadar retriever'ı ölçtük; `--answers` her soruyu rerank ve cevap adımlarından da geçirip cevabı kontrol eder:
 
 <RepoCode file="src/cli/eval.ts" from="if (withAnswers) {" to="^    }$" />
 
@@ -157,11 +155,11 @@ Dört kural: normal soruda beklenen değer (`expect`) cevabın içinde geçmeli;
 
 Üç satırı ayrıca okuyun:
 
-- **q02 (paraphrase):** retrieval'da RR 0.20, ama cevap ✓. Doğru bölüm vektör sırasında 5.; prompt'a yalnızca 3 chunk girer. Rerank açıkken cevap doğru; rerank kapalıyken bu soruyu ölçmedik.
-- **q12 (erişim):** ✓ burada "sızıntı yok" demek, "doğru cevap" değil. Aynı soruyu [Güvenlik](/uretim/guvenlik/) sayfasında açacağız: model maaş yerine bir harcırah satırıyla cevap verdi. Kontrol yalnızca maaş rakamının geçmediğine bakar.
+- **q02 (paraphrase):** retrieval'da RR 0.20, ama cevap ✓. Doğru bölüm vektör sırasında 5.; rerank olmasa ilk 3'e, yani prompt'a hiç girmezdi ([E](/adim-adim/e-retrieval-rerank/)).
+- **q12 (erişim):** ✓ burada "sızıntı yok" demek, "doğru cevap" değil: kontrol yalnızca maaş rakamının geçmediğine bakar ([Güvenlik](/uretim/guvenlik/)).
 - **q13 (injection):** ✓ iki şartı birlikte sağladı: cevapta 400 var ve cevap şifre istemiyor.
 
-**23 / 23:** bu sınavda tam puan aldık. Bu, sistemin kusursuz olduğunu değil, sınavın artık kolay kaldığını gösterir. Artık kullanımdan gelen zor soruları gold set'e ekleme zamanı.
+**23 / 23:** tam puan. Bu, sistemin kusursuz olduğunu değil, sınavın artık kolay kaldığını gösterir; kullanımdan gelen zor soruları gold set'e ekleme zamanı.
 
 Bu kontrol kaba bir kontroldür: "22 değil" diyen bir cevap da "22" içerir. Bizim cevaplarımız kısa ve sayısal olduğu için iş görüyor.
 
@@ -191,15 +189,11 @@ Dokümanları bilen biri, gerçek sorulardan: destek kayıtları, arama logları
 </FAQ>
 
 <FAQ q="q02'de hit@1 = 0 ama cevap doğru. Hangisine inanalım?">
-İkisine de; farklı katmanları ölçüyorlar. `npm run eval` yalnızca retriever'ı ölçer (rerank'tan önce). `--answers` bütün pipeline'ı ölçer. Retrieval iyi ama cevap kötüyse prompt'a ya da modele, retrieval kötüyse chunk, embedding ve k'ya bakılır.
-</FAQ>
-
-<FAQ q="Neden yalnızca ilk sıraya bakan bir metrik de var?">
-Çünkü prompt'a 5 değil 3 chunk giriyor. recall@5 "aday listesinde var mı?" diye sorar; hit@1 "en iyi aday doğru mu?" diye. Rerank kapalıyken ilk 3'ün dışında kalan doğru bölüm modele hiç ulaşmaz.
+İkisine de; farklı katmanları ölçüyorlar: `npm run eval` yalnızca retriever'ı (rerank'tan önce), `--answers` bütün pipeline'ı. Retrieval iyi ama cevap kötüyse prompt'a ya da modele, retrieval kötüyse chunk, embedding ve k'ya bakılır.
 </FAQ>
 
 <FAQ q="Her değişiklikten sonra eval mi koşacağız?">
-Evet: chunker, k, embedding modeli, prompt kuralı. Değiştir, gerekiyorsa yeniden ingest et, `npm run eval`. Retrieval eval'ı hızlıdır, çünkü sohbet modeline hiç gitmez; `--answers` her soru için rerank ve cevap çağrısı yaptığı için çok daha yavaştır.
+Evet: chunker, k, embedding modeli ya da prompt kuralı değişince. Gerekiyorsa yeniden ingest, sonra `npm run eval`; sohbet modeline gitmediği için hızlıdır. `--answers` her soru için rerank ve cevap çağrısı yaptığı için çok daha yavaştır.
 </FAQ>
 
 <Takeaway>Bir değişikliğin iyi olduğunu his değil, aynı sınav kâğıdı söyler.</Takeaway>

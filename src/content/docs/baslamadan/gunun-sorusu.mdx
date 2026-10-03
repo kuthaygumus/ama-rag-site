@@ -19,7 +19,6 @@ import Takeaway from '../../../components/Takeaway.astro';
 </DaysQuestion>
 
 Şirketimiz kurgusal bir havayolu, Kraken Air. Bugün kuracağımız her parçayı bu tek soruyla deneyeceğiz.
-Başlamadan önce iki cevabı kaydediyoruz: sizin tahmininiz ve modelin, hiç doküman görmeden verdiği cevap.
 
 <Deck>
   <DeckFigure slot="figure">
@@ -62,20 +61,20 @@ Başlamadan önce iki cevabı kaydediyoruz: sizin tahmininiz ve modelin, hiç do
     Doğru cevap için iki şey gerekir: Kraken Air'in izin politikası ve 7 yıllık kıdemin o politikada nereye düştüğü. İkisi de modelin eğitiminde yoktu.
   </Step>
   <Step title="Önce tahmin">
-    Siz olsanız ne derdiniz? Sayıyı yukarıdaki kutuya yazın. Bu tarayıcıda saklanır ve Kapanış'ta günün bütün cevaplarının yanına gelir.
+    Siz olsanız ne derdiniz? Sayıyı yukarıdaki kutuya yazın; Kapanış'ta günün bütün cevaplarının yanına gelir.
   </Step>
   <Step title="Model tek başına">
-    `npm run question` soruyu gemma3:4b'ye tek başına sorar; yanında hiçbir doküman yok. Model önce "işverenine bağlı olarak değişir" dedi, sonra yine de bir sayı verdi: 50 iş günü (15 + 35).
+    `npm run question` soruyu modele tek başına sorar, yanında hiçbir doküman yok. Model önce "işverenine bağlı olarak değişir" dedi, sonra yine de bir sayı verdi: 50 iş günü (15 + 35).
 
     <Now n="1">`npm run question` çalıştırın: `HOW` satırı `bare model, no documents` demeli.</Now>
   </Step>
   <Step title="İki tahmin">
-    Sizin sayınız da modelin 50'si de tahmin: ikisi de genel bilgiden geliyor. Kraken Air'in izin politikasını ne siz gördünüz ne model; doğru cevap o dokümanda. Günün geri kalanında o dokümanın doğru parçasını bulup modele veren bir pipeline kuracağız.
+    Sizin sayınız da modelin 50'si de genel bilgiden gelen bir tahmin. Doğru cevap politikada; onu ne siz gördünüz ne model.
 
-    <Now n="2">Aynı soruyu kendi kelimelerinizle, yine doküman vermeden sorun: `npm run step -- 0 "7 yıldır çalışıyorum, kaç gün yıllık iznim var?"`. Sayı değişiyor mu?</Now>
+    <Now n="2">Kendi kelimelerinizle sorun: `npm run step -- 0 "7 yıldır çalışıyorum, kaç gün yıllık iznim var?"`. Sayı değişiyor mu?</Now>
   </Step>
   <Step title="Aynı komut, beş durak">
-    Bu komutu gün içinde dört kez daha çalıştıracağız ve her seferinde modele bir şey daha vermiş olacağız: B'de dokümanları iki farklı yoldan parçalara bölünce (iki kez), D'de parçalar bir veritabanına yüklenince, en son politikanın 2026 sürümü gelince. Soru da model de hep aynı kalıyor; cevap değişirse onu o adımda eklediğimiz şey değiştirmiştir. Her cevap bir deftere, `LEDGER`'a yazılır.
+    Bu komutu gün içinde dört kez daha çalıştıracağız; her seferinde modele bir şey daha vermiş olacağız. Her cevap bir deftere, `LEDGER`'a yazılır.
   </Step>
 </Deck>
 
@@ -85,8 +84,8 @@ Başlamadan önce iki cevabı kaydediyoruz: sizin tahmininiz ve modelin, hiç do
 
 - `GÜNÜN SORUSU`: sorulan soru, her çalıştırmada aynı.
 - `HOW`: cevabın nasıl üretildiği. Şimdilik `bare model, no documents`: model yalnızca soruyu gördü.
-- Cevap: modelin yazdığı metin. Altında kaynak listesi yok, çünkü modele kaynak verilmedi. Pipeline kurulunca
-  cevabın altına kullandığı parçalar gelir, örneğin `[1] hr-leave@2025#3`.
+- Cevap: modelin yazdığı metin. Kaynak listesi yok, çünkü modele kaynak verilmedi; pipeline kurulunca altına
+  kullandığı parçalar gelir, örneğin `[1] hr-leave@2025#3`.
 - `LEDGER`: defter. Her çalıştırma bir satır ekler; gün bitince her durağın cevabı burada alt alta durur.
 
 Soru kodda tek bir satır:
@@ -98,7 +97,7 @@ Soru kodda tek bir satır:
 <RepoCode file="src/cli/question.ts" from="// npm run question" to="the store is filled" />
 
 <YourTurn>
-**1 · Çalıştırın.** `npm run question`. `HOW` satırı `bare model, no documents` demeli; cevap yukarıdaki log'daki gibi. Başka bir şey yazıyorsa aşağıdaki "Sık sorulan"a bakın.
+**1 · Çalıştırın.** `npm run question`. `HOW` satırı `bare model, no documents` demeli; başka bir şey yazıyorsa aşağıdaki "Sık sorulan"a bakın.
 
 **2 · Kendi kelimelerinizle sorun.** Yine hiç doküman vermeden; sayı değişiyor mu?
 
@@ -109,9 +108,7 @@ npm run step -- 0 "7 yıldır çalışıyorum, kaç gün yıllık iznim var?"
 
 ## Elimizde ne var?
 
-- Sizin tahmininiz, sayfanın başındaki kutuda.
-- Modelin hiç doküman görmeden verdiği cevap: 50 iş günü. Doğru mu? Cevabı [Model bilmiyor](/neden-rag/model-bilmiyor/) sayfasında.
-- Bu cevabı ve bundan sonrakileri sırayla tutan defter.
+İki tahmin: sizinki (sayfanın başındaki kutuda) ve modelinki (50 iş günü). Doğrusu [Model bilmiyor](/neden-rag/model-bilmiyor/) sayfasında.
 
 ## Sık sorulan
 
@@ -129,8 +126,7 @@ bunu ölçmedik.
 
 <FAQ q="HOW satırında “bare model” yerine “chroma store” yazıyor.">
 `data/` klasöründe önceki adımların çıktısı duruyor; `npm run question` elindeki en eksiksiz pipeline'ı seçer. Güne
-baştan başlamak için `npm run catchup -- 0`: `data/` boşalır ve komut soruyu yine modele tek başına sorar.
-Defterdeki eski satırlar yerinde kalır.
+baştan başlamak için `npm run catchup -- 0`: `data/` boşalır, komut soruyu yine modele tek başına sorar.
 </FAQ>
 
 <FAQ q="Tahminim nerede duruyor?">

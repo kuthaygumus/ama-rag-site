@@ -104,25 +104,25 @@ Kim hazırlıyor, ne zaman, nereye koyuyor?
     Kraken Air'in 8 dokümanı (7 politika ve 1 duyuru, 2025 sürümü), Markdown olarak. Her birinin başında kendisi hakkında bilgi var: hangi doküman, hangi sürüm, kim okuyabilir. Üst şerit onları aranabilir hâle getirir ve bir kere çalışır.
   </Step>
   <Step title="Yükle, temizle, böl">
-    `1-load.ts` dosyaları okur, baştaki bilgiyi <Term id="metadata">metadata</Term>'ya çevirir. `2-clean.ts` her sayfada tekrarlanan başlığı, gizlilik satırını ve sayfa numarasını atar, kırık satırları birleştirir. `3-chunk.ts` dokümanları bölüm başlıklarından böler: arama bütün dokümanı değil, bu <Term id="chunk">chunk</Term>'ları bulur.
+    `1-load.ts` dosyaları okur, baştaki bilgiyi <Term id="metadata">metadata</Term>'ya çevirir. `2-clean.ts` sayfa gürültüsünü atar, kırık satırları birleştirir. `3-chunk.ts` dokümanları bölüm başlıklarından <Term id="chunk">chunk</Term>'lara böler: arama bütün dokümanı değil, chunk'ları bulur.
   </Step>
   <Step title="Embed">
-    `4-embed.ts` her chunk'ı bge-m3'e verir ve 1024 sayılık bir <Term id="embedding">embedding</Term> alır. Anlamca yakın metinlerin sayıları da birbirine yakın çıkar.
+    `4-embed.ts` her chunk'ı bge-m3 ile 1024 sayılık bir <Term id="embedding">embedding</Term>'e çevirir.
   </Step>
   <Step title="Vector DB">
-    `5-store.ts` her chunk'ı vektörü, metni ve metadata'sıyla Chroma'ya yazar: bizim <Term id="vectordb">vector DB</Term>'miz. Vektörlerin nasıl kümelendiğini C · Embedding sayfasında bir haritada göreceğiz.
+    `5-store.ts` her chunk'ı vektörü, metni ve metadata'sıyla Chroma'ya yazar: bizim <Term id="vectordb">vector DB</Term>'miz.
   </Step>
   <Step title="Soru, aynı modelle">
-    Her soruda alt şerit çalışır. Soru da 1024 sayıya çevrilir, üst şeritteki modelin aynısıyla. Başka bir model başka bir uzay demektir: iki modelin vektörleri birbiriyle karşılaştırılamaz.
+    Her soruda alt şerit çalışır. Soru da üst şeritteki modelin aynısıyla 1024 sayıya çevrilir; başka bir model, karşılaştırılamayan başka bir uzay demektir.
   </Step>
   <Step title="Ara ve rerank">
-    `6-retrieve.ts` vector DB'den soruya en yakın 5 chunk'ı ister; eski sürümler ve sorana kapalı dokümanlar metadata filtresiyle aramaya hiç girmez. `7-rerank.ts` bu 5 chunk'ı soruyla birlikte chat modeline okutur, 0–10 arası puan verdirir ve yeniden sıralar.
+    `6-retrieve.ts` soruya en yakın 5 chunk'ı ister; eski sürümler ve sorana kapalı dokümanlar metadata filtresiyle aramaya hiç girmez. `7-rerank.ts` bu 5 chunk'ı chat modeline puanlatıp yeniden sıralar.
   </Step>
   <Step title="Prompt ve cevap">
-    `8-answer.ts` kuralları, en iyi 3 kaynağı ve soruyu tek bir metinde birleştirir; chat modeli bu metnin dışında hiçbir şey görmez. Model cevabı yazar ve kaynağını numarayla gösterir: 22 iş günü, [1] Yıllık İzin Politikası §3.
+    `8-answer.ts` kuralları, en iyi 3 kaynağı ve soruyu tek bir metinde birleştirir. Model cevabı kaynak numarasıyla yazar: 22 iş günü, [1] Yıllık İzin Politikası §3.
   </Step>
   <Step title="İki şerit, iki buluşma noktası">
-    Üst şerit bir kere, alt şerit her soruda çalışır. Yalnızca iki yerde buluşurlar: vector DB ve aynı embedding modeli. Chat modeli yalnızca alt şeritte çalışır: rerank ve cevap.
+    Şeritler yalnızca iki yerde buluşur: vector DB ve aynı embedding modeli. Chat modeli yalnızca alt şeritte çalışır: rerank ve cevap.
   </Step>
 </Deck>
 
@@ -135,16 +135,8 @@ chunking sayfasında:
 
 <FileTree>
 - src/
-  - steps/ her kutu bir dosya, her dosya tek başına çalışır
+  - steps/ her kutu bir dosya, her dosya tek başına çalışır (adım 1–8: aşağıdaki tablo)
     - 0-bare.ts adım 0: model tek başına, doküman yok
-    - 1-load.ts Yükle
-    - 2-clean.ts Temizle
-    - 3-chunk.ts Chunk'la
-    - 4-embed.ts Embed (üst şerit)
-    - 5-store.ts Vector DB'ye yaz
-    - 6-retrieve.ts soruyu embed et ve ara
-    - 7-rerank.ts Rerank
-    - 8-answer.ts Prompt ve cevap
   - lib/
     - ollama.ts modele giden iki çağrı: embed ve generate
     - chroma.ts Chroma'ya yazma ve arama
@@ -187,27 +179,4 @@ Alt şerit `npm run ask -- "soru"`:
 
 <RepoCode file="src/steps/6-retrieve.ts" from="export async function storeReceipt" />
 
-## Sık sorulan
-
-<FAQ q="Chat modeli hangi kutularda çalışıyor?">
-Yalnızca alt şeritte: Rerank ve Cevap. Üst şerit chat modelini hiç çağırmaz; orada yalnızca embedding modeli
-çalışır. Chat modeli aramaya da karışmaz: ona ne gideceğine bizim kodumuz karar verir.
-</FAQ>
-
-<FAQ q="Embedding modelini değiştirirsem ne olur?">
-Bütün chunk'lar yeni modelle yeniden embed edilip yeniden yazılmalı (adım 4 ve 5). İki modelin vektörleri
-farklı uzaylardadır; eski vektörlerle yeni bir soru vektörünü karşılaştırmak anlamsızdır. Yukarıdaki kontrol
-bu yüzden var.
-</FAQ>
-
-<FAQ q="Neden 5 chunk getirip 3'ünü prompt'a koyuyoruz?">
-Bir tasarım seçimi. Arama geniş tutulur (5) ki rerank'in seçecek malzemesi olsun; prompt dar tutulur (3) ki
-model kısa ve ilgili bir metin okusun. İki sayı da `src/lib/config.ts` içinde: `topK` ve `contextK`.
-</FAQ>
-
-<FAQ q="Chroma yerine başka bir vector DB kullanabilir miyim?">
-Evet. Kod bir arayüz üzerinden konuşur (`src/lib/store.ts`); aynı arayüzün JSON dosyası uygulaması da var.
-İkisi aynı sıralamayı verir; fark ölçekte. Ayrıntısı [D · Vector DB](/adim-adim/d-vector-db/) sayfasında.
-</FAQ>
-
-<Takeaway>Bir kere hazırla, her soruda ara: iki şerit yalnızca vector DB'de ve aynı embedding modelinde buluşur.</Takeaway>
+<Takeaway>Bir kere hazırla, her soruda ara.</Takeaway>

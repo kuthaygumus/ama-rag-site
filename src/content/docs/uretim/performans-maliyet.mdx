@@ -19,7 +19,7 @@ import Takeaway from '../../../components/Takeaway.astro';
 <DaysQuestion answer="24 iş günü [1] ✓" how="chroma · section · rerank on · sürüm 2026" />
 
 <Gate bridge>
-Cevap doğru ve kaynaklı. Şimdi bir de şunu soralım: bir soru kaç saniye sürüyor ve API'li bir modelde fatura neye göre büyür? Tahmin etmeyelim; her adım zaten kendi süresini ve token sayısını yazıyor.
+Cevap doğru ve kaynaklı. Peki bir soru kaç saniye sürüyor, API'li bir modelde fatura neye göre büyür? Tahmine gerek yok: her adım kendi süresini ve token sayısını yazıyor.
 </Gate>
 
 <Deck>
@@ -55,13 +55,13 @@ Cevap doğru ve kaynaklı. Şimdi bir de şunu soralım: bir soru kaç saniye s�
     </svg>
   </DeckFigure>
   <Step title="Hepsini prompt'a koysak?" phase="1">
-    8 dokümanın tamamı (40092 karakter) tek prompt'ta: 11358 prompt <Term id="token">token</Term>. RAG'li cevapta 3 chunk, 1155 token: yaklaşık 10 kat az. Rerank hariç; rerank çağrılarının token'ını loglamıyoruz. 11358, bizim num_ctx ayarımız olan 8192'lik <Term id="context">pencereye</Term> sığmaz; bu ölçüm için 32768'e açtık.
+    8 dokümanın tamamı (40092 karakter) tek prompt'ta: 11358 prompt <Term id="token">token</Term>. RAG'de 3 chunk, 1155 token: yaklaşık 10 kat az (rerank hariç). 11358, num_ctx ayarımız olan 8192'lik <Term id="context">pencereye</Term> sığmaz; bu ölçüm için 32768'e açtık.
   </Step>
   <Step title="…ve maaş tablosu herkese" phase="1">
-    Cevap doğru (22). Ama 8 dokümanın biri hr-only maaş tablosu: retrieval yoksa erişim filtresi de yok, maaşlar her çalışanın prompt'una girer. Süre 29983 ms; RAG koşularında cevap çağrısı 888–3941 ms. Kaç kat yavaş olduğunu söylemiyoruz: tek koşu, üstelik pencere büyüyünce model yeniden yüklendi.
+    Cevap doğru (22). Ama 8 dokümanın biri hr-only maaş tablosu: retrieval yoksa erişim filtresi de yok, maaşlar her çalışanın prompt'una girer. Cevap 29983 ms sürdü; RAG koşularında 888–3941 ms. Kat olarak karşılaştırmıyoruz: tek koşu, üstelik pencere büyüyünce model yeniden yüklendi.
   </Step>
   <Step title="Bir sorunun süresi nereye gidiyor?" phase="2">
-    Günün sorusu, M serisi bir Mac'te, tek koşu: arama 21 ms, <Term id="rerank">rerank</Term> 2244 ms, cevap 891 ms. Rerank bu toplamın (3156 ms) yaklaşık %71'i: 5 chunk için 5 ayrı LLM çağrısı. Başka sorularda aynı adım 5053–5672 ms sürdü. Sizde süreler farklı olur.
+    Günün sorusu, M serisi bir Mac'te, tek koşu: arama 21 ms, <Term id="rerank">rerank</Term> 2244 ms, cevap 891 ms. Rerank toplamın (3156 ms) yaklaşık %71'i: 5 chunk için 5 ayrı LLM çağrısı. Başka sorularda 5053–5672 ms sürdü; sizde süreler farklı olur.
 
     <Now n="1">`npm run ask -- "Frankfurt'a iki günlük toplantıya gidiyorum, uzmanım. Günlük harcırahım ne kadar?"`: arama, rerank ve cevap sürelerini not edin.</Now>
   </Step>
@@ -69,23 +69,21 @@ Cevap doğru ve kaynaklı. Şimdi bir de şunu soralım: bir soru kaç saniye s�
     Her embedding, model + metin hash'iyle `.cache/` altına yazılır; yeniden çalıştırınca 60 vektörün 60'ı cache'ten geldi, adım 4 38 ms sürdü. 2026 sürümü eklenince depo yalnızca 2026'nın 60 kaydını yazdı; 2025 yerinde kaldı.
   </Step>
   <Step title="Süreyi ve faturayı ne büyütür?">
-    Modele kaç kez gittiğiniz ve her seferinde ne kadar metin gönderdiğiniz. Bir soru 6 çağrıdır: 5 rerank, 1 cevap. Aynı anda N kişi sorarsa model N × 6 çağrıyı karşılar. Aşağıdaki ayarların her biri bu sayılardan birini, çoğu doğruluğu da değiştirir; her ayardan sonra eval.
+    Modele kaç kez gittiğiniz ve her seferinde ne kadar metin gönderdiğiniz. Bir soru 6 çağrı: 5 rerank, 1 cevap; N kişi aynı anda sorarsa N × 6. Aşağıdaki ayarlar bu sayıları, çoğu doğruluğu da değiştirir; her ayardan sonra eval.
 
     <Now n="2">Aynı soruyu `--k 10` ile sorun: rerank kaç chunk puanladı, süre nasıl değişti?</Now>
 
-    <Now n="3">`src/steps/7-rerank.ts` içinde rerank'ı kapatıp soruyu tekrar sorun; süreyi ve cevabı karşılaştırın, sonra toggle'ı geri alın.</Now>
+    <Now n="3">`src/steps/7-rerank.ts` içinde rerank'ı kapatıp soruyu tekrar sorun: süre ve cevap ne oldu?</Now>
   </Step>
 </Deck>
 
 ## Ölçümler, adım adım
 
-Her adım kendi süresini yazar. Günün sorusu için arama, rerank ve cevap; süreler M serisi bir Mac'te, tek koşudan, sizde farklı olur:
+Günün sorusu için arama, rerank ve cevap; süreler her logun `TIME` satırında:
 
 <Log name="06-retrieve" title="npm run step -- 6" from={0} to={6} />
 <Log name="07-rerank" title="npm run step -- 7" from={0} to={6} />
 <Log name="08-answer" title="npm run step -- 8 --prompt" from={0} to={6} />
-
-Rerank'ın payı bu üç adımın `TIME` satırlarından: 2244 / (21 + 2244 + 891) = 2244 / 3156 ≈ %71. Tek bir koşu; başka bir soruda oran değişir.
 
 <Example>
 **Hepsini prompt'a koymak.** Retrieval yok: 8 dokümanın temiz metni art arda tek prompt'a girer; kurallar ve soru aynı.
@@ -97,9 +95,7 @@ Rerank'ın payı bu üç adımın `TIME` satırlarından: 2244 / (21 + 2244 + 89
 | cevap çağrısı | 888 ms | 29983 ms |
 | cevap | 22 iş günü ✓ | 22 iş günü ✓ |
 
-Cevap iki yolda da doğru. Fark, her soruda ödenen bedelde: bütün el kitabının token'ı ve yarım dakika. Bu prompt bizim 8192'lik ayarımıza sığmıyor; el kitabı büyüdükçe bu yol kapanır. Asıl engel ise güvenlik: erişim filtresi aramanın içindedir, arama yoksa filtre de yoktur.
-
-Süreyi kat olarak karşılaştırmıyoruz. 888 ms tek bir koşu; bu sitedeki öteki RAG koşularında cevap çağrısı 3941 ms'ye kadar çıktı. 29983 ms de tek bir koşu; pencere 32768'e büyüdüğü için modelin yeniden yüklenmesini de içeriyor, ama bu sürenin küçük bir kısmı: asıl maliyet 11358 token'ı okumak.
+Fark, her soruda ödenen bedelde; el kitabı büyüdükçe bu yol kapanır. 29983 ms'deki yeniden yükleme sürenin küçük bir kısmı; asıl maliyet 11358 token'ı okumak.
 </Example>
 
 <Log name="stuff-everything" title="her doküman tek prompt'ta (retrieval yok)" />
@@ -110,17 +106,15 @@ Süreyi kat olarak karşılaştırmıyoruz. 888 ms tek bir koşu; bu sitedeki ö
 
 ## Ingest tarafı: cache ve artımlı yükleme
 
-Aynı metin, aynı modelle her zaman aynı vektörü verir. Bu yüzden her vektör `.cache/embeddings.json` içinde saklanır; anahtar, model adı ile metnin birlikte alınmış hash'idir:
+Aynı metin, aynı modelle her zaman aynı vektörü verir. Cache `.cache/embeddings.json` içinde; anahtar, model adı ile metnin birlikte alınmış hash'i:
 
 <RepoCode file="src/lib/ollama.ts" from="export async function embed" />
 
-Adım 4'ü yeniden çalıştırmak bu yüzden milisaniyeler sürer: 60 vektörün 60'ı cache'ten.
-
 <Log name="04-embed" title="npm run step -- 4   (ikinci kez)" />
 
-Bu sitenin kayıtlarında bütün vektörler cache'ten geliyor; bir chunk'ı ilk kez embed etmenin süresini bu loglar göstermiyor. `npm run doctor` tek bir cümleyi 1924 ms'de embed etti, ama o koşu soğuk başladı: sürenin içinde modelin belleğe yüklenmesi de var. Kendi makinenizde görmek için `.cache/` klasörünü silip `npm run step -- 4` çalıştırın: log, chunk başına milisaniyeyi yazar.
+Bu loglarda bütün vektörler cache'ten; ilk embed süresini göstermiyorlar. `npm run doctor` tek bir cümleyi 1924 ms'de embed etti, ama soğuk başladı: modelin belleğe yüklenmesi de bu sürede. Kendi makinenizde görmek için `.cache/` klasörünü silip `npm run step -- 4` çalıştırın; log chunk başına milisaniyeyi yazar.
 
-Yeni bir sürüm gelince depo yalnızca o sürümün kayıtlarını değiştirir. Öteki sürüm yerinde kalır:
+Depo sürüm başına yazar (`replaceEdition`):
 
 <RepoCode file="src/lib/store.ts" from="export interface VectorStore" />
 
@@ -133,14 +127,14 @@ Yeni bir sürüm gelince depo yalnızca o sürümün kayıtlarını değiştirir
 | Chunk boyu | section: ortalama 688 karakter, 60 chunk · fixed: 300 karakter, 139 chunk | prompt'a giren token artar, vektör sayısı azalır | Evet: hit@1 fixed ile 0.368 (19 sorunun 7'si), section ile 0.842 (16'sı) ([Kaliteyi ölçmek](/uretim/kaliteyi-olcmek/)) |
 | k (retriever'ın getirdiği aday) | 5 | rerank'ta her aday bir LLM çağrısı daha; prompt'a yine 3 chunk girer | Hayır: `--k 10` ile siz deneyin |
 | Prompt'a giren chunk | 3 | prompt token artar | 3 chunk = 1155 prompt token (günün sorusu) |
-| Rerank | açık | kapatınca 5 çağrı gider, sıra vektör skoruna kalır | Kısmen: günün sorusunda cevap iki durumda da 22. q02'de doğru bölüm vektör sırasında 5.; rerank açıkken cevap doğru, kapalıyken ölçmedik |
+| Rerank | açık | kapatınca 5 çağrı gider, sıra vektör skoruna kalır | Kısmen: günün sorusunda cevap iki durumda da 22; q02'de doğru bölüm vektör sırasında 5.; rerank açıkken cevap doğru, kapalıyken ölçmedik |
 | Model boyu | gemma3:4b | RAM ve süre artar | Hayır: süreyi yalnızca gemma3:4b ile ölçtük |
 | Embedding cache | açık | — | Evet: 60 vektörün 60'ı cache'ten, adım 4 = 38 ms |
 | Artımlı ingest | sürüm başına `replaceEdition` | — | Evet: 2026 eklendi, depoda 120 kayıt, 2025'e dokunulmadı |
 
 ## Fatura: fiyatsız bir formül
 
-Fiyatlar sağlayıcıya göre değişir; burada rakam vermiyoruz, formülü veriyoruz. API'li bir modelde:
+Fiyatlar sağlayıcıya göre değişir; rakam yerine formül. API'li bir modelde:
 
 > **günlük maliyet ≈ sorgu/gün × (cevap prompt'u + 5 × rerank prompt'u + çıktı token'ı) × birim fiyat**
 > **+ ingest'te bir kerelik embedding** (yalnızca değişen sürüm; cache aynı metni yeniden embed etmez)
@@ -158,11 +152,11 @@ Fiyatlar sağlayıcıya göre değişir; burada rakam vermiyoruz, formülü veri
 ## Sık sorulan
 
 <FAQ q="Daha hızlı bir vector DB alsak?">
-Bu ölçümde vector DB araması 7 ms; rerank ile cevap birlikte 3135 ms (2244 + 891). Veritabanını iki kat hızlandırmak toplamda fark edilmez; darboğaz modele yapılan çağrılar. 60 vektörde durum bu; milyonlarca vektörde arama da pahalılaşır, D sayfasındaki indeks bunun için.
+Bu ölçümde vector DB araması 7 ms; rerank ile cevap birlikte 3135 ms (2244 + 891). Darboğaz modele yapılan çağrılar. Milyonlarca vektörde arama da pahalılaşır; D sayfasındaki indeks bunun için.
 </FAQ>
 
 <FAQ q="Rerank'ı kapatıp süreyi kısaltalım mı?">
-Kapatınca 2244 ms'lik adım gider. Günün sorusunda cevap değişmedi (kapalıyken de 22). Ama q02'de doğru bölüm vektör sırasında 5.; rerank olmadan prompt'a giren ilk 3'e girmez. Süre ve doğruluk aynı ayara bağlı; kararı eval verir. Daha hızlı bir seçenek, bu iş için eğitilmiş küçük bir reranker modeli (cross-encoder); onu ölçmedik.
+Süre ve doğruluk aynı ayara bağlı (yukarıdaki tabloda Rerank satırı); kararı eval verir. Daha hızlı bir seçenek, bu iş için eğitilmiş küçük bir reranker modeli (cross-encoder); onu ölçmedik.
 </FAQ>
 
 <FAQ q="Cevapları da cache'lesek?">

@@ -12,8 +12,8 @@ import Term from '../../../components/Term.astro';
 import Takeaway from '../../../components/Takeaway.astro';
 
 <Gate bridge>
-Bir önceki sayfada aynı model, önüne doğru parçalar konunca doğru cevabı kaynağıyla verdi. Bu düzeneğin bir
-adı var; adı da ne yaptığını söylüyor.
+Önüne doğru parçalar konan model doğru cevabı kaynağıyla verdi. Bu düzeneğin bir adı var; adı da ne yaptığını
+söylüyor.
 </Gate>
 
 <Deck>
@@ -56,21 +56,20 @@ adı var; adı da ne yaptığını söylüyor.
     </svg>
   </DeckFigure>
   <Step title="Adın açılımı">
-    <Term id="rag">RAG</Term> = Retrieval-Augmented Generation. Türkçede oturmuş bir karşılığı yok, herkes RAG diyor; anlamca "bilgi erişimi destekli üretim". Üç kelime, sırayla çalışan üç iş: bul, ekle, yaz. Repoda üç dosya: bulma iki dosyada, ekleme ile yazma tek dosyada.
+    <Term id="rag">RAG</Term> = Retrieval-Augmented Generation. Türkçede oturmuş bir karşılığı yok, herkes RAG diyor; anlamca "bilgi erişimi destekli üretim". Üç kelime, sırayla çalışan üç iş: bul, ekle, yaz.
   </Step>
   <Step title="R · Retrieval: bul" phase="1">
-    Soru, dokümanlardan önceden hazırlanmış parçalar arasında aranır ve en ilgili birkaçı seçilir. Bizde iki dosya: `6-retrieve.ts` soruyu embed edip vector DB'de arar, `7-rerank.ts` bulunanları <Term id="rerank">rerank</Term> ile yeniden sıralar.
+    Soru, dokümanlardan önceden hazırlanmış parçalar arasında aranır ve en ilgili birkaçı seçilir. Bizde iki dosya: `6-retrieve.ts` (arama) ve `7-rerank.ts` (<Term id="rerank">rerank</Term>).
   </Step>
   <Step title="A + G · ekle ve yaz" phase="2">
-    Seçilen parçalar numaralanıp sorunun önüne konur, üstüne kurallar eklenir. Model cevabı bu girdiden yazar ve kaynağın numarasını ekler. İkisi tek dosyada, `8-answer.ts`. Model, başlamadan önce kaynaksız sorduğumuz aynı gemma3:4b; ağırlıklarına kimse dokunmadı.
+    Seçilen parçalar numaralanıp sorunun önüne konur, üstüne kurallar eklenir. Model cevabı bu girdiden yazar ve kaynağın numarasını ekler. İkisi tek dosyada, `8-answer.ts`.
   </Step>
   <Step title="Tek cümlede">
     <p class="key">RAG, soruyu cevaplamadan önce ilgili doküman parçalarını bulup modelin önüne koyan ve cevabı bu parçalardan yazdıran düzenektir.</p>
   </Step>
 </Deck>
 
-Kodda üç satır: `retrieve`, `rerank`, `answer`. İlk ikisi R, üçüncüsü A ile G. `npm run ask` bir soruyu adım 6, 7 ve
-8'den geçirir:
+`npm run ask` bir soruyu adım 6, 7 ve 8'den geçirir:
 
 <RepoCode file="src/cli/ask.ts" />
 
@@ -93,26 +92,20 @@ Kodda üç satır: `retrieve`, `rerank`, `answer`. İlk ikisi R, üçüncüsü A
 - **Modelin okuma hatası.** Doğru parça önündeyken bile model yanlış satırı okuyabilir. Bu corpus'ta ölçtük:
   [Sınırlar ve RAG türleri](/her-derde-deva/sinirlar-ve-turler/).
 
-Bugün kurduğumuz, RAG'in en sade biçimi (naive RAG) artı rerank. Başka türleri ve her birinin hangi hatayı
-düzelttiği [Sınırlar ve RAG türleri](/her-derde-deva/sinirlar-ve-turler/) sayfasında.
+Bugün kurduğumuz, RAG'in en sade biçimi (naive RAG) artı rerank. Başka türleri ve hangi hatayı düzelttikleri:
+[Sınırlar ve RAG türleri](/her-derde-deva/sinirlar-ve-turler/).
 
 ## Sık sorulan
 
 <FAQ q="RAG demek vector DB demek mi?">
 Hayır. "Bul" adımı anahtar kelime araması, bir SQL sorgusu ya da bir API çağrısı da olabilir. Vector araması
 yaygın, çünkü kelimeyi değil anlamı arar; ne kadar iyi aradığını [C · Embedding](/adim-adim/c-embedding/)
-sayfasında ölçüyoruz. Kelime aramasıyla anlam aramasını birleştirene hybrid arama denir.
+sayfasında ölçüyoruz.
 </FAQ>
 
 <FAQ q="RAG bir kütüphane mi, bir ürün mü?">
 Bir düzenek, bir tasarım kalıbı. Bugün her adımı kendimiz, düz TypeScript'le yazıyoruz; framework'ler aynı
 adımları paketler. Adımları bir kez elle kurmak, framework'ün içinde ne olduğunu görmeyi sağlar.
-</FAQ>
-
-<FAQ q="RAG halüsinasyonu bitirir mi?">
-Azaltır, bitirmez. Model önündeki metinden yazmaya yönlendirilir, ama metni yanlış okuyabilir ya da kaynağın
-söylemediği bir şeyi ekleyebilir. Bu yüzden cevaplar kaynak numarası taşır ve kalite bir soru setiyle ölçülür:
-[Kaliteyi ölçmek](/uretim/kaliteyi-olcmek/).
 </FAQ>
 
 <Takeaway>RAG modeli değiştirmez, modele verilen girdiyi değiştirir.</Takeaway>

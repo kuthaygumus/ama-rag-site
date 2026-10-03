@@ -14,8 +14,8 @@ import Term from '../../../components/Term.astro';
 import Takeaway from '../../../components/Takeaway.astro';
 
 <Gate bridge>
-RAG'i gördük: model aynı kaldı, değişen önüne konan metindi. Öbür yol modelin kendisini değiştirmek: yeniden
-eğitip <PanelLink to="agirlik">ağırlıklarını ayarlamak</PanelLink>. İkisi aynı işi yapmaz.
+Bilgiyi modele vermenin öbür yolu, modelin kendisini değiştirmek: yeniden eğitip
+<PanelLink to="agirlik">ağırlıklarını ayarlamak</PanelLink>. İkisi aynı işi yapmaz.
 </Gate>
 
 <Panel id="agirlik" title="Ağırlıklar nasıl ayarlanır?">
@@ -81,22 +81,22 @@ eğitip <PanelLink to="agirlik">ağırlıklarını ayarlamak</PanelLink>. İkisi
     </svg>
   </DeckFigure>
   <Step title="Görev">
-    Model bir hayvanın üç özelliğine bakıp kedi mi köpek mi olduğunu söyleyecek. Her özelliğin bir ağırlığı var: pozitif ağırlık cevabı kediye, negatif ağırlık köpeğe iter; sıfırdan uzaklaştıkça model o özelliğe daha çok güvenir. Bu model yarı eğitilmiş: havlamanın ne kadar önemli olduğunu henüz öğrenmemiş (−0.1).
+    Model bir hayvanın üç özelliğine bakıp kedi mi köpek mi diyecek. Her özelliğin bir ağırlığı var: pozitif ağırlık cevabı kediye, negatif köpeğe iter. Model yarı eğitilmiş: havlamanın önemini henüz öğrenmemiş (−0.1).
   </Step>
   <Step title="Tahmin">
-    Bir husky geliyor: sivri kulaklı, uzun burunlu ve havlıyor. Model, husky'de var olan özelliklerin ağırlıklarını toplar: +0.8 − 0.2 − 0.1 = +0.5. Puan pozitif, cevap "kedi". Yanlış: husky bir köpek.
+    Bir husky geliyor: sivri kulaklı, uzun burunlu ve havlıyor. Model bu üç ağırlığı toplar: +0.8 − 0.2 − 0.1 = +0.5. Puan pozitif, cevap "kedi". Yanlış: husky bir köpek.
   </Step>
   <Step title="Ufak oynatma">
-    Hata, cevabı kediye itmekti. Husky'de var olan her ağırlık köpek yönüne biraz, 0.1 kaydırılır: +0.8 → +0.7, −0.2 → −0.3, −0.1 → −0.2. Yeni puan +0.2: cevap hâlâ yanlış, ama doğru yöne gitti.
+    Hata, cevabı kediye itmekti. Her ağırlık köpek yönüne 0.1 kaydırılır: +0.7, −0.3, −0.2. Yeni puan +0.2: cevap hâlâ yanlış, ama doğru yöne gitti.
   </Step>
   <Step title="Tekrar">
-    Aynı düzeltme bir kez daha: puan −0.1, cevap "köpek". Sıradan bir kedi, yalnızca sivri kulaklı olan, hâlâ +0.6 alıyor ve doğru bilinmeye devam ediyor. Küçük adımlar eski doğruları bozmadan yenisini öğretti.
+    Aynı düzeltme bir kez daha: puan −0.1, cevap "köpek". Yalnızca sivri kulaklı sıradan bir kedi hâlâ +0.6 alıyor, yani hâlâ kedi. Küçük adımlar eski doğruları bozmadan yenisini öğretti.
   </Step>
   <Step title="Neden küçük adım?">
-    Tek seferde 1.0 kaydırsaydık husky hemen düzelirdi, ama sivri kulağın ağırlığı −0.2'ye düşer ve sıradan kedi de "köpek" çıkardı: yeni örnek, eskilerin öğrettiğini silerdi. Adım büyüklüğüne learning rate denir; 0.1 bizim seçimimiz, kural değil. Hatayı ölçüp her ağırlığı hatayı azaltan yöne biraz kaydırmanın adı gradient descent.
+    Tek seferde 1.0 kaydırsaydık husky düzelirdi, ama sivri kulağın ağırlığı −0.2'ye düşer, sıradan kedi de "köpek" çıkardı. Adım büyüklüğüne learning rate denir, bizde 0.1. Her ağırlığı hatayı azaltan yöne azar azar kaydırmanın adı gradient descent.
   </Step>
   <Step title="Dil modeli ve fine-tune">
-    Bir dil modelinde de aynı döngü çalışır: soru "sıradaki token ne?", ağırlıklar yaklaşık 4 milyar (gemma3:4b). Fine-tune, hazır modele kendi örneklerinizle bu küçük adımları attırmaktır. Her örnekte tekrar eden ton ya da format binlerce adımda kalıcı olur; birkaç örnekte geçen bir sayı yalnızca küçük bir iz bırakır. Model onu yarım hatırlar.
+    Bir dil modelinde de aynı döngü çalışır: soru "sıradaki token ne?", bizim modelde ağırlıklar yaklaşık 4 milyar. Fine-tune, hazır modele kendi örneklerinizle bu küçük adımları attırmaktır.
   </Step>
 </Deck>
 </Panel>
@@ -145,10 +145,10 @@ eğitip <PanelLink to="agirlik">ağırlıklarını ayarlamak</PanelLink>. İkisi
   <Step title="Bayrak neden yüksekte? Ne öğretir?" phase="3">
     Tırmanışın sonunda ağırlıklar değişir. En iyi işlenen davranıştır: ton, format, şirket terimleri; her soruda prompt'a eklenmez.
 
-    <strong class="turn">AMA</strong> olgular güvenilir biçimde işlenmez. Her eğitim örneği bütün ağırlıkları azıcık oynatır: binlerce örnekte tekrar eden bir desen kalıcı olur, birkaç örnekte geçen bir sayı ise küçük bir iz bırakır. Sonuç olarak model olguyu yarım hatırlar, benzer sayıları karıştırabilir ve kaynak gösteremez. RAG olguyu metinden okur ve kaynağını yazar.
+    <strong class="turn">AMA</strong> olgular güvenilir biçimde işlenmez: binlerce örnekte tekrar eden desen kalıcı olur, birkaç örnekte geçen bir sayı küçük bir iz bırakır. Model olguyu yarım hatırlar, benzer sayıları karıştırabilir, kaynak gösteremez.
   </Step>
   <Step title="Birlikte">
-    Rakip değiller: oturmuş bir sistemde davranış fine-tune ile, değişen bilgi RAG ile verilir. Bugün yalnızca RAG kuruyoruz, çünkü bizim bilgimiz, yani politikalar, her yıl yeni sürümle geliyor.
+    Rakip değiller, birlikte de kullanılırlar. Bugün yalnızca RAG kuruyoruz, çünkü bizim bilgimiz, yani politikalar, her yıl yeni sürümle geliyor.
   </Step>
 </Deck>
 
@@ -174,27 +174,16 @@ Değişmeyen bir **davranış** öğretmek istediğinizde:
 - **Ton** — şirketin üslubu: kısa, resmi, belli bir dilde.
 - **Terminoloji** — iç kısaltmalar ve ürün adları, modelin doğru kullanması gereken bir sözlük.
 
-Önce prompt'u deneyin: davranışın çoğu bir kural satırıyla verilir. Bizim cevap adımımız da davranışını
-fine-tune'dan değil, şu satırlardan alıyor:
+Önce prompt'u deneyin: davranışın çoğu bir kural satırıyla verilir. Kurallar çok uzar ya da model onlara
+güvenilir biçimde uymazsa fine-tune düşünülür. Bizim cevap adımımız davranışını şu satırlardan alıyor:
 
 <RepoCode file="src/steps/8-answer.ts" from="export const RULES" to="^\];" />
 
 ## Sık sorulan
 
-<FAQ q="Politikayı fine-tune ile öğretsem olmaz mı?">
-Denenebilir, ama güvenilmez çalışır: model olguları yaklaşık hatırlar, benzer sayıları karıştırabilir ve kaynak
-gösteremez. Üstelik politikanın her yeni sürümü yeni bir eğitim demektir. Bunu bugün ölçmedik; olgular için
-RAG, davranış için fine-tune genel kuraldır.
-</FAQ>
-
 <FAQ q="LoRA nedir?">
 Ucuz bir fine-tune yöntemi: modelin ana ağırlıkları donuk kalır, yanına küçük bir ek eğitilir. Maliyeti ve
 süreyi düşürür; "ne öğretir" sorusunun cevabını değiştirmez — yine davranış.
-</FAQ>
-
-<FAQ q="Prompt'la davranış vermek yetmiyor mu?">
-Çoğu zaman yeter; önce onu deneyin. Bedeli, kuralların her soruda yeniden token olarak okunması. Kurallar çok
-uzar ya da model onlara güvenilir biçimde uymazsa fine-tune düşünülür.
 </FAQ>
 
 <Takeaway>Değişen gerçekler için RAG, değişmeyen davranış için fine-tune.</Takeaway>

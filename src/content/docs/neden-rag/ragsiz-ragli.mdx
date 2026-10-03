@@ -103,31 +103,31 @@ versek?
     </svg>
   </DeckFigure>
   <Step title="RAG'siz" stage="a">
-    Soru doğrudan modele gider. Model yalnızca ağırlıklarında olanı bilir; Kraken Air orada yok. Cevap geliyor ama uydurma: 50 iş günü.
+    Soru doğrudan modele gider; cevap uydurma: 50 iş günü.
   </Step>
   <Step title="Soru önce aranır" stage="a">
-    RAG'li düzende soru önce aranır. bge-m3 soruyu 1024 sayılık bir <Term id="embedding">embedding</Term>'e çevirir; dokümanların parçaları da önceden aynı modelle çevrilip bir <Term id="vectordb">vector DB</Term>'ye konmuştu. Vector DB soruya anlamca en yakın <Term id="chunk">chunk</Term>'ları döndürür. Seçilen üç chunk'tan birinde izin tablosu var: 7 yıl → 22 iş günü.
+    RAG'li düzende soru önce bir <Term id="embedding">embedding</Term>'e çevrilir; <Term id="vectordb">vector DB</Term> el kitabının anlamca en yakın <Term id="chunk">chunk</Term>'larını döndürür. Seçilen üç chunk'tan birinde izin tablosu var: 7 yıl → 22 iş günü.
   </Step>
   <Step title="Prompt: kaynaklar + soru" stage="a">
-    Bulunan parçalar numaralanıp sorunun önüne konur, üstüne kurallar eklenir: yalnızca kaynaklardan cevap ver, kaynağını yaz. Modele giden metnin tamamına <Term id="prompt">prompt</Term> diyoruz.
+    Seçilen parçalar kurallarla birlikte sorunun önüne konur. Modele giden metnin tamamına <Term id="prompt">prompt</Term> diyoruz.
   </Step>
   <Step title="Aynı model, doğru cevap" stage="a">
-    Model yine gemma3:4b. Değişen yalnızca önüne konan metin: cevap 22 iş günü, kaynağı [1] hr-leave §3. Ağırlıklara kimse dokunmadı.
+    Model aynı, ağırlıklarına kimse dokunmadı. Değişen yalnızca önüne konan metin: cevap 22 iş günü, kaynağı [1] hr-leave §3.
   </Step>
   <Step title="Hepsini prompt'a koysak?" stage="b">
-    El kitabının 8 dokümanını tek prompt'a koyduk: 11358 token; RAG'in prompt'u 1155. Repodaki <Term id="context">context window</Term> ayarı 8192 token, sığmazdı; bu deneme için 32768'e açtık. Cevap yine 22 iş günü, ama M serisi bir Mac'te 29983 ms sürdü. RAG'in bütün yolu, arama ve <Term id="rerank">rerank</Term> dahil, yaklaşık 3 saniye.
+    El kitabının 8 dokümanını tek prompt'a koyduk: 11358 token; RAG'in prompt'u 1155. Cevap yine 22 iş günü, ama tek çağrı 29983 ms sürdü. RAG'in bütün yolu, arama ve <Term id="rerank">rerank</Term> dahil, yaklaşık 3 saniye.
   </Step>
   <Step title="Asıl iş seçmek" stage="b">
-    Hepsini koyarsanız her soruda bütün el kitabının bedelini ödersiniz; corpus büyüdükçe bir gün sığmaz; yalnızca İK'nın görebileceği ücret tablosunu da herkes okur. RAG'in işi seçmektir.
+    Hepsini koyarsanız her soruda bütün el kitabının bedelini ödersiniz; corpus büyüdükçe bir gün <Term id="context">context window</Term>'a sığmaz; yalnızca İK'nın görebileceği ücret tablosunu da herkes okur.
   </Step>
 </Deck>
 
 <Example>
-Aynı soru, aynı model. Önce hiçbir şey kurulmamışken:
+Önce hiçbir şey kurulmamışken:
 
 <Log name="question-0-bare" title="npm run question — başlamadan" from={0} to={6} />
 
-Sonra bütün pipeline kurulduğunda — `HOW` satırı cevabın nereden geldiğini, altındaki satırlar kaynakları söyler:
+Sonra bütün pipeline kurulduğunda (`HOW` satırına ve altındaki kaynaklara bakın):
 
 <Log name="question-3-full" title="npm run question — D'den sonra, vector DB dolunca" from={0} to={10} />
 </Example>
@@ -135,39 +135,16 @@ Sonra bütün pipeline kurulduğunda — `HOW` satırı cevabın nereden geldiğ
 Modelin önüne konan metnin tamamı (kurallar, numaralı kaynaklar, soru) [F · Cevap üretimi](/adim-adim/f-cevap/)
 sayfasında.
 
-"Hepsini prompt'a koy" denemesi: el kitabının bütün dokümanları tek prompt'ta, arama yok. 11358 token, repodaki
-`numCtx: 8192` ayarına sığmaz; bu deneme yalnızca bu çağrı için `numCtx: 32768` ile çalıştı.
+"Hepsini prompt'a koy" denemesi: bütün dokümanlar tek prompt'ta, arama yok. Ayrıntısı:
+[Performans ve maliyet](/uretim/performans-maliyet/).
 
 <Log name="stuff-everything" title="bütün dokümanlar tek prompt'ta" />
 
-RAG tarafının süreleri adım loglarından, M serisi bir Mac'te: arama 21 ms (`npm run step -- 6`), rerank 2244 ms
-(`npm run step -- 7`), cevap 891 ms (`npm run step -- 8`); toplam yaklaşık 3,2 saniye. Cevap çağrısının kendisi
-888 ms sürdü; rerank kapalıyken aynı çağrı 1315 token'la 3941 ms. Hepsini koymak tek çağrıda 29983 ms.
-
 ## Sık sorulan
-
-<FAQ q="Model yüz binlerce token okuyabiliyorsa neden seçelim?">
-Cevap aynı çıksa bile üç sebep var, üçü de bu sayfada:
-
-| Sebep | Açıklama |
-|---|---|
-| **Maliyet** | Her soru bütün el kitabını okutur: 11358 token, RAG'de 1155. Token başına ücret alan bir API'de prompt faturası yaklaşık on kat büyür. |
-| **Süre** | Hepsini koymak 29983 ms sürdü; RAG'in bütün yolu yaklaşık 3 saniye. |
-| **Erişim** | Prompt'a giren her şey cevaba sızabilir, yalnızca İK'ya açık ücret bantları da dahil. |
-
-Bizim corpus'umuz 8 doküman, 40092 karakter; corpus büyüdükçe dördüncü sebep gelir: sığmaz.
-</FAQ>
 
 <FAQ q="Arama yanlış parçayı getirirse ne olur?">
 Model yanlış context'le çalışır: ya "bilmiyorum" der ya da yanlış bir cevap yazar. Bunun canlı bir örneği
 [B · Chunking](/adim-adim/b-chunking/) sayfasında: doküman kötü bölündüğünde tablo hiç bulunamıyor.
-</FAQ>
-
-<FAQ q="Bu RAG'in en sade biçimi mi?">
-En sade biçimi bir arama, en yakın birkaç parça ve prompt'tur; buna "naive RAG" denir. Bu sayfadaki cevap bunun
-üstüne bir rerank adımı da içeriyor: aramanın getirdiği 5 parçayı yeniden sıralayıp en iyi 3'ünü seçiyor
-([E · Retrieval ve rerank](/adim-adim/e-retrieval-rerank/)). Başka türleri
-[Sınırlar ve RAG türleri](/her-derde-deva/sinirlar-ve-turler/) sayfasında.
 </FAQ>
 
 <Takeaway>Sorun bilgiyi vermek değil, doğru parçayı seçmek.</Takeaway>

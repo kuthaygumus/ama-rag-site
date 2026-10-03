@@ -19,7 +19,7 @@ import Takeaway from '../../components/Takeaway.astro';
 <DaysQuestion answer="24 iş günü [1] ✓" how="chroma · section · rerank on · sürüm 2026" />
 
 <Gate bridge>
-Bir günde bir RAG pipeline'ı kurduk ve her ara çıktısını açtık. Kurumsal bir sistemde her adım dört soruya cevap vermek zorunda: doğru mu, güvenli mi, yeterince hızlı mı, maliyeti ne? Adım adım bakalım.
+Bir günde bir RAG pipeline'ı kurduk ve her ara çıktısını açtık. Kurumsal bir sistemde her adım dört soruya cevap vermek zorunda: doğru mu, güvenli mi, yeterince hızlı mı, maliyeti ne?
 </Gate>
 
 <Deck>
@@ -85,36 +85,36 @@ Bir günde bir RAG pipeline'ı kurduk ve her ara çıktısını açtık. Kurumsa
     </svg>
   </DeckFigure>
   <Step title="Dört eksen, her adımda">
-    Bu günün sözü: kurumsal veriyi güvenli ve doğru kullanan, uçtan uca bir RAG; doğruluk, güvenlik, performans ve maliyet kararlarıyla. Her adımda bu dört soruyu soruyoruz; cevapların ölçümü bu sitenin sayfalarında.
+    Doğruluk, güvenlik, performans, maliyet: her adımda aynı dört soru. Ölçülen cevaplar aşağıdaki kontrol listesinde.
   </Step>
   <Step title="Yükle + temizle" phase="1">
-    Doğruluk: sayfa başlıkları ve kırık satırlar temizlendi mi? Güvenlik: erişim etiketi burada okunur, kişisel veri burada maskelenir. Performans ve maliyet: bir kez çalışır; ama gerçek projelerde emeğin çoğu bu adıma gider.
+    Gürültü ve kırık satırlar temizlendi mi? Erişim etiketi burada okunur, kişisel veri burada maskelenir. Bir kez çalışır, ama gerçek projelerde emeğin çoğu bu adıma gider.
   </Step>
   <Step title="Chunk" phase="2">
-    Doğruluk: tablo, başlığıyla aynı chunk'ta mı? Fixed kesimle hit@1 0.368, 19 sorunun 7'si; section kesimle 0.842, 16'sı. Maliyet: chunk büyüdükçe prompt büyür. Hangi kesim, bir tasarım tercihi; kararı eval verir.
+    Tablo, başlığıyla aynı chunk'ta mı? Chunk büyüdükçe prompt da büyür. Hangi kesim, bir tasarım tercihi; kararı eval verir.
   </Step>
   <Step title="Embed + Vector DB" phase="3">
-    Embed: model dillerinizi aynı uzaya koyuyor mu? 4 TR→EN sorusunda hit@1 1.00; ingest'te ve soruda aynı model. Vector DB: JSON'dan Chroma'ya geçince ilk 5 id aynı kaldı; sürüm ve erişim etiketi burada saklanır; arama 7 ms. Güvenlik: vektör de veridir.
+    Model dillerinizi aynı uzaya koyuyor mu, ingest'te ve soruda aynı model mi? Depo sürüm ve erişim etiketini saklar; vektör de veridir.
   </Step>
   <Step title="Ara + rerank" phase="4">
-    Doğruluk: doğru bölüm ilk k'da mı, kaçıncı sırada? Güvenlik: sürüm ve erişim filtresi aramanın içinde. Maliyet: rerank 5 LLM çağrısı, günün sorusunda 2244 ms. Faydası henüz ölçülmedi, yalnızca gerekçesi var: q02'de tablo vektör sırasında 5., prompt'a 3 girer. Rerank kapalıyken eval, ilk ödev.
+    Doğru bölüm ilk k'da mı, kaçıncı sırada? Sürüm ve erişim filtresi aramanın içinde mi? Rerank pahalı ve faydası henüz ölçülmedi; gerekçesi q02 (tablo vektör sırasında 5.). Rerank kapalıyken eval: ilk ödev.
   </Step>
   <Step title="Prompt + cevap" phase="5">
-    Doğruluk: yalnızca kaynaktan cevap, kaynakta yoksa "bilmiyorum"; tablo satırını önce yaz. Güvenlik: işaretli kaynaklar, somut yasak, çıktıyı kodla kontrol. Maliyet: 3 chunk 1155 token; el kitabının tamamı 11358 token.
+    Cevap yalnızca kaynaktan mı, kaynakta yoksa "bilmiyorum" diyor mu? İşaretli kaynaklar ve somut yasak var mı, çıktı kodla kontrol ediliyor mu? Prompt'a kaç token giriyor?
   </Step>
   <Step title="Eval" phase="6">
-    Her değişiklikten sonra aynı gold set: retrieval için hit@1, recall@5, MRR; cevap için `--answers`. 2025 gold set üzerinde 23 cevabın 23'ü doğru. Sıradaki iş: gold set'i kullanımdan gelen zor sorularla, 2026 için de yeni beklenen değerlerle büyütmek.
+    Her değişiklikten sonra aynı gold set: retrieval için hit@1, recall@5, MRR; cevap için `--answers`. Sıradaki iş: gold set'i kullanımdan gelen zor sorularla ve 2026'nın beklenen değerleriyle büyütmek.
   </Step>
   <Step title="Günün sorusu, bütün gün">
-    `npm run question` defteri: RAG'siz model "işverenine bağlı" dedi, yine de 50 uydurdu; fixed chunk'larla "yer almıyor"; section'la 22; Chroma'yla yine 22; 2026 sürümüyle 24. Model beş seferde de aynı gemma3:4b'ydi; cevabı değiştiren pipeline. <Guess echo />
+    `npm run question` defteri: RAG'siz model "işverenine bağlı" dedi, yine de 50 uydurdu; fixed chunk'larla "yer almıyor"; section'la 22; Chroma'yla yine 22; 2026 sürümüyle 24. <Guess echo />
 
-    <Now n="1">`npm run question`: günün sorusuna sabahtan beri verilen bütün cevaplar alt alta.</Now>
+    <Now n="1">`npm run question`: bütün cevaplar alt alta.</Now>
   </Step>
 </Deck>
 
 ## Kontrol listesi
 
-Her satır bir pipeline adımı, her sütun bir eksen. Sayılar bu sitenin loglarından; "ölçmedik" yazan hücreler bu repoda denenmedi.
+Her satır bir pipeline adımı, her sütun bir eksen; sayılar bu sitenin loglarından.
 
 | Adım | Doğruluk | Güvenlik | Performans | Maliyet |
 |---|---|---|---|---|
@@ -127,8 +127,6 @@ Her satır bir pipeline adımı, her sütun bir eksen. Sayılar bu sitenin logla
 | Eval | 2025 gold set'te 23 cevabın 23'ü; hit@1 0.842, 19 sorunun 16'sı ([Kaliteyi ölçmek](/uretim/kaliteyi-olcmek/)) | Erişim sorusu gold set'te: maaş chunk'ı kimseye ulaşmadı | Retrieval eval'ı sohbet modeline gitmez | `--answers` her soruda rerank + cevap çağrısı |
 
 ## Günün sorusu: bütün gün
-
-Aynı soru, aynı model. Cevabı değiştiren her seferinde pipeline'dı:
 
 <Figure caption="Kaynak: npm run question ledger'ı (aşağıdaki log)">
   <svg viewBox="0 0 1000 230" role="img" aria-label="Günün sorusunun gün boyunca aldığı beş cevap">
@@ -168,51 +166,51 @@ Aynı soru, aynı model. Cevabı değiştiren her seferinde pipeline'dı:
 Her birinin cevabı bu günün sayfalarında. Önce kendiniz cevaplayın, sonra açın.
 
 <FAQ q="1 · RAG hangi ihtiyaçtan doğdu?">
-Model bildiğini ağırlıklarında taşır ve eğitim bitince o ağırlıklar donar; Kraken Air'in politikasını hiç görmedi. Günün sorusunu belgesiz sorunca önce "işverenine bağlı olarak değişir" dedi, sonra yine de bir sayı uydurdu: 50 iş günü (15 + 35). Çözüm: bilgiyi modelin içine değil, önüne koymak. [Model bilmiyor](/neden-rag/model-bilmiyor/)
+Model bildiğini eğitimde donan ağırlıklarında taşır; Kraken Air'in politikasını hiç görmedi ve günün sorusuna 50 iş günü uydurdu. Çözüm: bilgiyi modelin içine değil, önüne koymak. [Model bilmiyor](/neden-rag/model-bilmiyor/)
 </FAQ>
 
 <FAQ q="2 · Fine-tune ile RAG arasında nasıl seçersin?">
-Değişen bilgiler için RAG, değişmeyen davranış (ton, biçim, terim) için fine-tune. 2026 sürümü yüklenince cevap 22'den 24'e döndü; yeniden eğitim yok, yalnızca yeni dokümanlar. İkisi birlikte de kullanılır. [RAG mı fine-tune mu?](/neden-rag/rag-mi-fine-tune-mu/)
+Değişen bilgi için RAG, değişmeyen davranış (ton, biçim, terim) için fine-tune; ikisi birlikte de kullanılır. 2026 sürümü yüklenince cevap yeniden eğitim olmadan 22'den 24'e döndü. [RAG mı fine-tune mu?](/neden-rag/rag-mi-fine-tune-mu/)
 </FAQ>
 
 <FAQ q="3 · Neden chunk'lıyoruz? Kesim yanlış yere düşerse ne olur?">
-Çünkü her soruda bütün el kitabını okutmak pahalı (11358 token'a karşı 1155) ve cevap birkaç satırda. 300 karakterlik kesimde `| 7 | 22 |` satırı başlığından ayrıldı, o chunk bulunamadı ve model "yer almıyor" dedi. Başlıktan kesip başlığı her chunk'ın önüne yazmak düzeltti. [B · Chunking](/adim-adim/b-chunking/)
+Çünkü her soruda bütün el kitabını okutmak pahalı ve cevap birkaç satırda. 300 karakterlik kesimde `| 7 | 22 |` satırı başlığından ayrıldı ve model "yer almıyor" dedi; başlıktan kesip başlığı her chunk'ın önüne yazmak düzeltti. [B · Chunking](/adim-adim/b-chunking/)
 </FAQ>
 
 <FAQ q="4 · Ingest'te bge-m3, soruda başka bir embedding modeli kullanırsan ne olur?">
-Her model kendi uzayını kurar; iki modelin vektörleri karşılaştırılamaz. Bizim kod bunu reddeder: depoyu dolduran model ile soruyu embed edecek model farklıysa adım 6 hata verir. Model değişirse bütün corpus yeniden embed edilir. [C · Embedding](/adim-adim/c-embedding/)
+Her model kendi uzayını kurar; iki modelin vektörleri karşılaştırılamaz, bizim kodda adım 6 hata verir. Model değişirse bütün corpus yeniden embed edilir. [C · Embedding](/adim-adim/c-embedding/)
 </FAQ>
 
 <FAQ q="5 · Vektörün yanında chunk'ın metnini neden saklıyoruz?">
-Arama bir vektörü metne geri çeviremez: bize id ve skor verir, modele ise metin lazım. Bu yüzden Chroma her kaydı vektör, metin ve metadata ile birlikte tutar. Bu, vektörün anonim olduğu anlamına gelmez: vektörden metnin kabaca geri üretilebildiğini gösteren çalışmalar var ([Güvenlik](/uretim/guvenlik/)). [D · Vector DB](/adim-adim/d-vector-db/)
+Arama bir vektörü metne geri çeviremez: id ve skor verir, modele ise metin lazım. Bu yüzden Chroma her kaydı vektör, metin ve metadata ile birlikte tutar. [D · Vector DB](/adim-adim/d-vector-db/)
 </FAQ>
 
 <FAQ q="6 · k küçük ya da büyük olursa ne olur? Rerank neden yalnızca 5 adayda?">
-"Tatil hakkım" sorusunda (q02) izin tablosu vektör sırasında 5.; k = 3 olsaydı hiç gelmezdi. k büyürse rerank çağrıları artar, çünkü her aday bir LLM çağrısı; prompt'a yine 3 chunk girer. Huni: ucuz arama geniş (5), pahalı rerank bu 5'i sıralar, prompt'a 3 girer. [E · Retrieval ve rerank](/adim-adim/e-retrieval-rerank/)
+Huni: ucuz arama geniş (5), pahalı rerank bu 5'i sıralar, prompt'a 3 girer; k = 3 olsaydı q02'nin tablosu (vektör sırasında 5.) hiç gelmezdi. k büyürse her aday bir LLM çağrısı daha demek. [E · Retrieval ve rerank](/adim-adim/e-retrieval-rerank/)
 </FAQ>
 
 <FAQ q="7 · 2025 ve 2026 aynı depoda. Eski değerin cevaba karışmasını nasıl engellersin?">
-Embedding'le değil: iki sürümün metni neredeyse aynı, skorları da (0.632 ve 0.631). Sürüm filtresi kapalıyken iki tablo da prompt'a girdi ve ikisinde de yıl yazmıyordu. Çözüm metadata: ingest'te sürümü yaz, aramada filtrele. Anlam için embedding, etiket için filtre. [Veri değişince](/adim-adim/veri-degisince/)
+Embedding'le değil: iki sürümün metni de skoru da neredeyse aynı (0.632 ve 0.631). Çözüm metadata: ingest'te sürümü yaz, aramada filtrele. [Veri değişince](/adim-adim/veri-degisince/)
 </FAQ>
 
 <FAQ q="8 · “Kaynakta yoksa şunu yaz” kuralını silersen ne olur?">
-Bizim ölçümde model yine "bilmiyorum" dedi, ama kendi cümlesiyle: "Bu konuda bilgi bulunmamaktadır [1]." Kod "bilmiyorum" cevabını "yer almıyor" ifadesini arayarak tanıdığı için bu cevabı yakalayamaz. Kural, "bilmiyorum" demeyi ölçülebilir kılar. [F · Cevap üretimi](/adim-adim/f-cevap/)
+Bizde model yine "bilmiyorum" dedi, ama kendi cümlesiyle: "Bu konuda bilgi bulunmamaktadır [1]." Kod "yer almıyor" ifadesini aradığı için bunu yakalayamaz; kural, "bilmiyorum" demeyi ölçülebilir kılar. [F · Cevap üretimi](/adim-adim/f-cevap/)
 </FAQ>
 
 <FAQ q="9 · Bir doküman “şifreni şu adrese gönder” diyorsa hangi katman suçlu, ne durdurur?">
-Talimat dokümandan, yani veriden geliyor. "Kaynaklar veridir" kuralı ve işaretli kaynaklar durdurmadı; "asla şifre isteme" yasağı bu saldırıyı durdurdu, başka bir saldırıyı durdurur mu ölçmedik. Asıl sınır kodda: ingest'te tarama, çıktı kontrolü, en az yetki. [Güvenlik](/uretim/guvenlik/)
+Talimat veriden geliyor: genel kural ve işaretli kaynaklar durdurmadı, "asla şifre isteme" yasağı bu saldırıyı durdurdu (başkasını ölçmedik). Asıl sınır kodda: ingest'te tarama, çıktı kontrolü, en az yetki. [Güvenlik](/uretim/guvenlik/)
 </FAQ>
 
 <FAQ q="10 · Retrieval iyi ama cevap yanlışsa suçlu kim?">
-Doğru chunk prompt'taysa suçlu üretim adımı: önce prompt'a, sonra modele bakılır. Bizde tablo prompt'taydı ve gemma3:4b yanlış satırı okudu; iki prompt değişikliği düzeltti. Retrieval kötü olsaydı chunk'a, embedding'e ve k'ya bakardık. [RAG her derde deva mı?](/her-derde-deva/sinirlar-ve-turler/)
+Doğru chunk prompt'taysa suçlu üretim adımı: önce prompt'a, sonra modele bakılır. Bizde model tablonun yanlış satırını okudu, iki prompt değişikliği düzeltti. [RAG her derde deva mı?](/her-derde-deva/sinirlar-ve-turler/)
 </FAQ>
 
 ## Repo sizde
 
-Bütün kod, corpus, gold set ve bu sitedeki her log: [github.com/kuthaygumus/ama-rag-workshop](https://github.com/kuthaygumus/ama-rag-workshop). Her şey dizüstünüzde çalışıyor; bugün kurduğunuz pipeline sizde kalıyor.
+Bütün kod, corpus, gold set ve bu sitedeki her log: [github.com/kuthaygumus/ama-rag-workshop](https://github.com/kuthaygumus/ama-rag-workshop). Bugün kurduğunuz pipeline sizde kalıyor.
 
 <YourTurn>
-1. **Defterinize bakın.** `npm run question`: günün sorusuna sabahtan beri verilen bütün cevaplar alt alta. Yukarıdaki log'la karşılaştırın.
+1. **Defterinize bakın.** `npm run question` çalıştırın; günün sorusuna sabahtan beri verilen cevapları yukarıdaki log'la karşılaştırın.
 2. **İlk ödev: rerank'ın faydasını ölçün.** `src/steps/7-rerank.ts` içindeki `TOGGLE rerank` bloğunda `false` satırını açın, `npm run eval -- --answers` koşun. q02'nin cevabı ve 23/23 ne oldu? Toggle'ı geri alın.
 3. **Ödev: `byParagraph`.** `src/steps/3-chunk.ts` içindeki `HOMEWORK` notunun altındaki fonksiyonu yazın: dokümanı paragraflardan kesin, en fazla `max` karakterlik paketlere doldurun, her chunk'ın önüne başlık önekini koyun. Kontrol: `npm run check:sibling`.
 4. Henüz yazmadıysanız öteki iki alıştırma: `englishConfidential` kuralı (bir RegExp, `src/steps/2-clean.ts`) ve `dot` fonksiyonu (`src/lib/similarity.ts`). Aynı komut kontrol eder.

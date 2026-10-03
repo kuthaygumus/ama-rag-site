@@ -19,8 +19,7 @@ import Takeaway from '../../../components/Takeaway.astro';
 <DaysQuestion answer="50 iş günü (15 + 35)" how="bare model, no documents" />
 
 <Gate>
-Model, Kraken Air'in izin politikasını hiç görmedi. Günün sorusuna önce "işverenine bağlı olarak değişir" dedi,
-sonra yine de bir sayı uydurdu: 50 iş günü. Politikadaki sayı başka.
+Model günün sorusuna bir sayı uydurdu. Politikadaki sayı başka.
 </Gate>
 
 <Deck>
@@ -138,7 +137,7 @@ sonra yine de bir sayı uydurdu: 50 iş günü. Politikadaki sayı başka.
     </svg>
   </DeckFigure>
   <Step title="Kaynaksız soru" stage="a">
-    Günün sorusunu modele tek başına sorduk. Önce "işverenine bağlı olarak değişir" dedi, sonra yine de bir sayı verdi: 50 iş günü, üstelik hesabıyla (15 + 35). Model Kraken Air'in politikasını hiç görmedi; bu sayı o politikadan gelmiyor.
+    Günün sorusunu modele tek başına sorduk. Önce "işverenine bağlı olarak değişir" dedi, sonra yine de bir sayı verdi: 50 iş günü, üstelik hesabıyla (15 + 35). Model Kraken Air'in politikasını hiç görmedi; bu sayı oradan gelmiyor.
   </Step>
   <Step title="Nasıl yazdı?" stage="a">
     Model cevabı <Term id="token">token</Term> token yazar: her adımda, o ana kadarki metne en olası devamı seçer. "Kaç iş günü?" sorusundan sonra metinlerde hep bir sayı gelir. Sayının doğruluğunu kontrol eden bir adım yok.
@@ -152,10 +151,10 @@ sonra yine de bir sayı uydurdu: 50 iş günü. Politikadaki sayı başka.
   <Step title="Bilmediğini bilmiyor" stage="a">
     Politika 22 iş günü diyor. Modelin içinde "bunu bilmiyorum" diye yanan bir ışık yok: uydurulan cevap da doğru cevap kadar akıcı çıkar. Buna <Term id="hallucination">halüsinasyon</Term> denir.
 
-    <Now>Politikada cevabı olan başka bir soruyu kaynaksız sorun: `npm run step -- 0 "Seyahat dönüşü fişlerimi en geç kaç gün içinde sisteme yüklemem gerekiyor?"`. Sonra cevabı `corpus/2025/travel-expenses.md` 7. bölümle karşılaştırın.</Now>
+    <Now>Kaynaksız başka bir soru: `npm run step -- 0 "Seyahat dönüşü fişlerimi en geç kaç gün içinde sisteme yüklemem gerekiyor?"`</Now>
   </Step>
   <Step title="Bilgiyi modele vermenin iki yolu" stage="b">
-    Ya modeli kendi örneklerimizle yeniden eğitip ağırlıklarını değiştiririz (<Term id="finetune">fine-tune</Term>) ya da her soruda ilgili metni soruyla birlikte modelin önüne koyarız (<Term id="rag">RAG</Term>). Önce ikincisini deneyeceğiz; fine-tune'un neyi iyi öğrettiğine bölümün sonunda döneceğiz.
+    Ya modeli kendi örneklerimizle yeniden eğitip ağırlıklarını değiştiririz (<Term id="finetune">fine-tune</Term>) ya da her soruda ilgili metni soruyla birlikte modelin önüne koyarız (<Term id="rag">RAG</Term>). Önce RAG'i deneyeceğiz; fine-tune'a bölümün sonunda döneceğiz.
   </Step>
 </Deck>
 
@@ -172,8 +171,7 @@ Adım 0'ın bütün kodu: modele soruyu verir, başka hiçbir şey vermez.
 
 <Log name="00-bare" title="npm run step -- 0" />
 
-`OUT` satırındaki prompt token sayısına dikkat: modele giden metnin tamamı bu kadar kısa. RAG'de bu sayı
-büyüyecek, çünkü soruyla birlikte kaynaklar da gidecek.
+`OUT` satırındaki prompt token sayısına bakın: RAG'de soruyla birlikte kaynaklar da gideceği için bu sayı büyüyecek.
 
 <YourTurn>
 Politikada cevabı olan başka bir soruyu modele kaynaksız sorun:
@@ -189,11 +187,8 @@ konuşuyor?
 ## Sık sorulan
 
 <FAQ q="Hiç ayar yapmadan “bilmiyorum” diyen model var mı?">
-Güvenilir biçimde yok. Bazı modeller bazen çekimser kalır, ama hangi soruda kalacağını önceden bilemezsiniz.
-RAG'de "bilmiyorum" **tasarlanır**: retrieval'da bir skor eşiği (yeterince yakın parça yoksa soruyu modele hiç
-götürmemek), prompt'ta bir kural ("cevap kaynaklarda yoksa şunu yaz") ve kodda bir kontrol (cevap bir kaynağa
-dayanıyor mu). Bu repoda prompt kuralı ve onu yakalayan kod var; ikisi de
-[F · Cevap üretimi](/adim-adim/f-cevap/) sayfasında. Bedeli de var: kural fazla sıkıysa doğru cevaplar da susar.
+Güvenilir biçimde yok: bazı modeller bazen çekimser kalır, ama hangi soruda kalacağını önceden bilemezsiniz.
+RAG'de "bilmiyorum" **tasarlanır**; nasıl tasarlandığı [F · Cevap üretimi](/adim-adim/f-cevap/) sayfasında.
 </FAQ>
 
 <FAQ q="Daha büyük bir model bilir mi?">

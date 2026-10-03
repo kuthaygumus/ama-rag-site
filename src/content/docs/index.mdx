@@ -14,11 +14,9 @@ import Takeaway from '../../components/Takeaway.astro';
 Bugün bir şirketin politika el kitabı üzerinde bir <Term id="rag">RAG</Term> pipeline'ı kuruyoruz: adım adım,
 kendi dizüstünüzde, her ara çıktıyı açıp bakarak. Modeller Ollama'da, vector DB Podman'da çalışır; kod TypeScript.
 
-Kuracağımız şey iki şerit: dokümanları bir kere hazırlayan şerit (üstte) ve her soruda çalışan şerit (altta).
-
 <WhereAmI at="load clean chunk embed store question qembed search rerank prompt answer" />
 
-Gün boyu tek bir soru soracağız. Pipeline'a her parça eklendiğinde aynı soruyu yeniden soracak ve cevabın nasıl değiştiğine bakacağız.
+Gün boyu tek bir soru soracağız: pipeline'a her parça eklendiğinde aynı soruyu yeniden sorup cevabın nasıl değiştiğine bakacağız.
 
 <DaysQuestion />
 
@@ -71,25 +69,25 @@ Gün boyu tek bir soru soracağız. Pipeline'a her parça eklendiğinde aynı so
     </svg>
   </DeckFigure>
   <Step title="Başlamadan">
-    Kurulumu bitirip `npm run doctor` çalıştırırız; "Ready." yazmalı. Sonra günün sorusu için bir tahmin yazar, aynı soruyu modele hiç doküman vermeden sorarız.
+    Kurulum ve `npm run doctor`. Sonra günün sorusu: önce sizin tahmininiz, sonra modelin dokümansız cevabı.
   </Step>
   <Step title="1 · Neden RAG?">
-    Model şirketimizin politikasını hiç görmedi, yine de bir sayı uyduruyor. Bilgiyi modele vermenin iki yolu var: RAG ve fine-tune. Hangisi, ne zaman?
+    Model politikamızı hiç görmedi, yine de bir sayı uyduruyor. Bilgiyi modele vermenin iki yolu var: RAG ve fine-tune. Hangisi, ne zaman?
   </Step>
   <Step title="2 · Mimari">
     Bütün pipeline tek çizimde: dokümanları bir kere hazırlayan şerit, her soruda çalışan şerit ve ikisinin buluştuğu vektör uzayı. Her kutu repodaki bir dosya.
   </Step>
   <Step title="3 · Adım adım kuralım">
-    Pipeline'ın sekiz adımı tek tek çalışır ve her biri çıktısını `data/` klasörüne yazar. Her adımdan sonra dosyayı açıp bakarız; günün sorusunun cevabı da adım adım değişir.
+    Sekiz adım tek tek çalışır, her biri çıktısını `data/` klasörüne yazar. Her adımdan sonra dosyayı açarız; günün sorusunun cevabı da adım adım değişir.
   </Step>
   <Step title="4 · Canlıya hazır mı?">
     "Bana iyi göründü" bir ölçü değil. Kaliteyi bir soru setiyle sayıya dökeriz, güvenlik açıklarını deneriz, zamanın ve token'ın nereye gittiğine bakarız.
   </Step>
   <Step title="5 · Her derde deva mı?">
-    RAG'in nerede çuvalladığı, hangi RAG türünün hangi hatayı düzelttiği ve sistem canlıya çıktıktan sonraki ilk 90 günde gelecek şikâyetler.
+    RAG nerede çuvallıyor, hangi RAG türü hangi hatayı düzeltiyor ve canlıdaki ilk 90 günde hangi şikâyetler geliyor.
   </Step>
   <Step title="Kapanış">
-    Uçtan uca bir tasarım kontrol listesi: her aşama için doğruluk, güvenlik, performans ve maliyet. Günün sorusunun bütün cevapları yan yana. Repo sizde kalır.
+    Uçtan uca bir tasarım kontrol listesi: her aşama için doğruluk, güvenlik, performans ve maliyet. Günün sorusunun bütün cevapları yan yana.
   </Step>
 </Deck>
 
