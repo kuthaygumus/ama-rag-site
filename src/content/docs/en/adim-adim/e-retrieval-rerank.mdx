@@ -1,0 +1,252 @@
+---
+title: E · Retrieval and reranking
+description: What did the retriever bring, and what went into the prompt? Top-k and the cutoff, the metadata filter, access control and rerank. Steps 6 and 7.
+---
+import WhereAmI from '../../../../components/WhereAmI.astro';
+import DaysQuestion from '../../../../components/DaysQuestion.astro';
+import Gate from '../../../../components/Gate.astro';
+import Deck from '../../../../components/Deck.astro';
+import DeckFigure from '../../../../components/DeckFigure.astro';
+import Step from '../../../../components/Step.astro';
+import Now from '../../../../components/Now.astro';
+import Example from '../../../../components/Example.astro';
+import RepoCode from '../../../../components/RepoCode.astro';
+import Log from '../../../../components/Log.astro';
+import YourTurn from '../../../../components/YourTurn.astro';
+import FAQ from '../../../../components/FAQ.astro';
+import Takeaway from '../../../../components/Takeaway.astro';
+import Term from '../../../../components/Term.astro';
+
+<WhereAmI at="qembed search rerank" />
+
+<DaysQuestion answer="rerank off → “An employee with 7 years of service gets 22 working days of annual leave [1].” · rerank on → “An employee with 7 years of service gets 22 working days …” ✓" how="chroma · section · filter edition 2025, access all — 22 in both runs" />
+
+<Gate>
+The store is full, so now we ask questions. For the question of the day, the right chunk comes first. But look closely at the scores, and you see how small that lead is.
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure" stage="list">
+    <svg viewBox="0 0 1000 500" role="img" aria-label="Vector ranking and ranking after rerank for the question of the day. The cutoff is k = 5, and the top 3 chunks go into the prompt" data-draw="rerank-arrows" data-gloss="hr-leave@2025#2=probation|hr-leave@2025#3=leave table|hr-leave@2025#4=leave planning|hr-leave@2025#5=special leave|hr-leave@2025#7=leave carry-over|hr-leave@2025#6=unpaid leave">
+      <rect x="20" y="14" width="960" height="44" rx="8" class="fbox" />
+      <text x="500" y="43" text-anchor="middle" class="fsub" data-q="log:06-retrieve">question → bge-m3 → Chroma: the 5 closest chunks · filter: edition 2025, access all</text>
+      <g data-from="2">
+        <text x="245" y="96" text-anchor="middle" class="flbl" data-q="const">vector ranking · step 6</text>
+        <rect x="22" y="118" width="446" height="26" rx="4" class="fbox-good" data-gen="v-good" />
+        <text x="32" y="136" class="fsub fnum" data-q="const">1</text>
+        <text x="62" y="136" class="fsub" data-gen="v-score">0.614</text>
+        <text x="130" y="136" class="fsub" data-gen="v-id">hr-leave@2025#3 · leave table</text>
+        <text x="32" y="176" class="fsub fnum" data-q="const">2</text>
+        <text x="62" y="176" class="fsub" data-gen="v-score">0.604</text>
+        <text x="130" y="176" class="fsub" data-gen="v-id">hr-leave@2025#2 · probation</text>
+        <text x="32" y="216" class="fsub fnum" data-q="const">3</text>
+        <text x="62" y="216" class="fsub" data-gen="v-score">0.602</text>
+        <text x="130" y="216" class="fsub" data-gen="v-id">hr-leave@2025#7 · leave carry-over</text>
+        <text x="32" y="290" class="fsub fnum" data-q="const">4</text>
+        <text x="62" y="290" class="fsub" data-gen="v-score">0.598</text>
+        <text x="130" y="290" class="fsub" data-gen="v-id">hr-leave@2025#6 · unpaid leave</text>
+        <text x="32" y="330" class="fsub fnum" data-q="const">5</text>
+        <text x="62" y="330" class="fsub" data-gen="v-score">0.598</text>
+        <text x="130" y="330" class="fsub" data-gen="v-id">hr-leave@2025#4 · leave planning</text>
+      </g>
+      <g data-from="3">
+        <path d="M112 122 V334" class="farrow" />
+        <text x="118" y="360" class="fsub fgate-t" data-gen="gap">top 5 gap: 0.016</text>
+      </g>
+      <g data-from="4">
+        <path d="M20 378 H470" class="farrow" stroke-dasharray="7 5" />
+        <text x="466" y="370" text-anchor="end" class="fsub" data-q="const">cutoff: k = 5</text>
+        <text x="32" y="406" class="fsub" data-q="const">6</text>
+        <text x="62" y="406" class="fsub" data-gen="v-score">0.585</text>
+        <text x="130" y="406" class="fsub" data-gen="v-id">benefits@2025#6</text>
+        <text x="32" y="442" class="fsub" data-q="const">7</text>
+        <text x="62" y="442" class="fsub" data-gen="v-score">0.583</text>
+        <text x="130" y="442" class="fsub" data-gen="v-id">hr-leave@2025#5 · special leave</text>
+        <text x="32" y="478" class="fsub" data-q="const">8</text>
+        <text x="62" y="478" class="fsub" data-gen="v-score">0.569</text>
+        <text x="130" y="478" class="fsub" data-gen="v-id">hr-leave@2025#8</text>
+      </g>
+      <g data-from="5">
+        <path d="M20 234 H470" class="fbox-gate" stroke-dasharray="7 5" />
+        <text x="466" y="258" text-anchor="end" class="fsub fgate-t" data-q="code:src/lib/config.ts">↑ top 3 into the prompt</text>
+      </g>
+      <g data-from="6">
+        <text x="765" y="96" text-anchor="middle" class="flbl" data-q="const">after rerank · step 7</text>
+        <rect x="552" y="118" width="428" height="26" rx="4" class="fbox-good" data-gen="r-good" />
+        <text x="562" y="136" class="fsub fnum" data-q="const">1</text>
+        <text x="592" y="136" class="fsub" data-gen="r-rel">rel 10</text>
+        <text x="666" y="136" class="fsub" data-gen="r-id">hr-leave@2025#3 · leave table</text>
+        <text x="562" y="176" class="fsub fnum" data-q="const">2</text>
+        <text x="592" y="176" class="fsub" data-gen="r-rel">rel 6</text>
+        <text x="666" y="176" class="fsub" data-gen="r-id">hr-leave@2025#7 · leave carry-over</text>
+        <text x="562" y="216" class="fsub fnum" data-q="const">3</text>
+        <text x="592" y="216" class="fsub" data-gen="r-rel">rel 6</text>
+        <text x="666" y="216" class="fsub" data-gen="r-id">hr-leave@2025#4 · leave planning</text>
+        <text x="562" y="290" class="fsub fnum" data-q="const">4</text>
+        <text x="592" y="290" class="fsub" data-gen="r-rel">rel 3</text>
+        <text x="666" y="290" class="fsub" data-gen="r-id">hr-leave@2025#2 · probation</text>
+        <text x="562" y="330" class="fsub fnum" data-q="const">5</text>
+        <text x="592" y="330" class="fsub" data-gen="r-rel">rel 2</text>
+        <text x="666" y="330" class="fsub" data-gen="r-id">hr-leave@2025#6 · unpaid leave</text>
+        <path d="M550 234 H980" class="fbox-gate" stroke-dasharray="7 5" />
+        <text x="976" y="258" text-anchor="end" class="fsub fgate-t" data-q="code:src/lib/config.ts">↑ top 3 into the prompt</text>
+      </g>
+      <g data-from="7">
+        <path d="M472 131 L548 131" class="farrow" data-gen="arrow" />
+        <path d="M472 171 L548 285" class="fbox-bad" data-gen="arrow" />
+        <path d="M472 211 L548 171" class="farrow" data-gen="arrow" />
+        <path d="M472 285 L548 325" class="farrow" data-gen="arrow" />
+        <path d="M472 325 L548 211" class="farrow-on" data-gen="arrow" />
+        <text x="765" y="384" text-anchor="middle" class="fsub fgood-t" data-q="log:07-rerank">§2 (probation) leaves the prompt</text>
+        <text x="765" y="410" text-anchor="middle" class="fsub fbad-t" data-q="log:07-rerank">§7 and §4 get in: rel 6, but not the answer</text>
+      </g>
+      <g data-from="8">
+        <text x="765" y="452" text-anchor="middle" class="fsub" data-gen="timing">search: 7 ms · rerank: 5 calls, 1439 ms</text>
+        <text x="765" y="478" text-anchor="middle" class="fsub">(measured on an M-series Mac)</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <DeckFigure slot="figure" stage="yol">
+    <svg viewBox="0 0 1000 210" role="img" aria-label="Retrieval methods: top-k, threshold, metadata filter, MMR, hybrid">
+      <rect x="20" y="20" width="176" height="160" rx="10" class="fbox-on" />
+      <text x="108" y="60" text-anchor="middle" class="flbl">top-k</text>
+      <text x="108" y="92" text-anchor="middle" class="fsub">the k closest</text>
+      <text x="108" y="118" text-anchor="middle" class="fsub" data-q="const">here k = 5</text>
+      <text x="108" y="160" text-anchor="middle" class="fsub fgood-t">in this repo</text>
+      <g class="ph ph1">
+        <rect x="216" y="20" width="176" height="160" rx="10" class="fbox" />
+        <text x="304" y="60" text-anchor="middle" class="flbl">threshold</text>
+        <text x="304" y="92" text-anchor="middle" class="fsub">score ≥ threshold</text>
+        <text x="304" y="118" text-anchor="middle" class="fsub">set it on your data</text>
+        <text x="304" y="160" text-anchor="middle" class="fsub">concept</text>
+      </g>
+      <g class="ph ph2">
+        <rect x="412" y="20" width="176" height="160" rx="10" class="fbox-on" />
+        <text x="500" y="60" text-anchor="middle" class="flbl">filter</text>
+        <text x="500" y="92" text-anchor="middle" class="fsub">edition, access</text>
+        <text x="500" y="118" text-anchor="middle" class="fsub">inside the search</text>
+        <text x="500" y="160" text-anchor="middle" class="fsub fgood-t">in this repo</text>
+      </g>
+      <g class="ph ph3">
+        <rect x="608" y="20" width="176" height="160" rx="10" class="fbox" />
+        <text x="696" y="60" text-anchor="middle" class="flbl">MMR</text>
+        <text x="696" y="92" text-anchor="middle" class="fsub">skip near-copies</text>
+        <text x="696" y="118" text-anchor="middle" class="fsub">add variety</text>
+        <text x="696" y="160" text-anchor="middle" class="fsub">concept</text>
+        <rect x="804" y="20" width="176" height="160" rx="10" class="fbox" />
+        <text x="892" y="60" text-anchor="middle" class="flbl">hybrid</text>
+        <text x="892" y="92" text-anchor="middle" class="fsub">vector + keyword</text>
+        <text x="892" y="118" text-anchor="middle" class="fsub" data-q="const">(BM25)</text>
+        <text x="892" y="160" text-anchor="middle" class="fsub">concept</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="The question becomes a vector too" stage="list">
+    Step 6 embeds the question and asks Chroma for the 5 closest chunks. The filter runs inside the search: only the 2025 edition, only documents open to everyone.
+  </Step>
+  <Step title="What did the retriever bring?" stage="list">
+    5 chunks, all from the Annual Leave Policy. §3, the leave table with the answer, comes first.
+  </Step>
+  <Step title="The scores are almost equal" stage="list">
+    First: 0.614. Fifth: 0.598. The gap is 0.016. Every hr-leave chunk starts with the prefix `[Annual Leave Policy › …]`, and the question says "annual leave" too. So the prefix pulls them all equally close to the question. Small differences in content decide the order. §3 is first, but only by a little.
+  </Step>
+  <Step title="The cutoff: k" stage="list">
+    Taking the k closest chunks is called <Term id="topk">top-k</Term>. Here k = 5, so benefits §6 in 6th place (0.585) stays out. If k is small, the answer can miss the list. If k is large, more noise goes to the next steps.
+
+    <Now n="1">Run `npm run step -- 6`, then open `data/6-retrieved.json`.</Now>
+  </Step>
+  <Step title="Only 3 chunks go into the prompt" stage="list">
+    With rerank off, the top 3 by vector go in: §3, §2, §7. §2 is about probation, and §7 is about leave carry-over. Neither answers the question, but both take room in the prompt. Special leave (§5) is not even in the top 5. It is only 7th.
+  </Step>
+  <Step title="Rerank: read the question and the chunk together" stage="list">
+    We made the vectors one at a time: the question alone, each chunk alone. A <Term id="rerank">reranker</Term> scores each (question, chunk) pair from 0 to 10. Here our chat model gemma3:4b does this job: 5 chunks, 5 calls.
+  </Step>
+  <Step title="After rerank" stage="list">
+    §3 stays first with 10. The others get 6 or less, so the gap of 0.016 becomes a clear split. §2 gets 3, drops to 4th and leaves the prompt. But the reranker makes mistakes too. §7 (leave carry-over) and §4 (leave planning) get 6 and move up. Both are in the prompt, but neither answers the question.
+  </Step>
+  <Step title="The cost" stage="list">
+    The search took 7 ms. Rerank took 1439 ms. For this question, the answer didn't change: 22 working days in both runs. Rerank does its real job when the right chunk is outside the top 3.
+
+    <Now n="2">In `src/steps/7-rerank.ts`, turn rerank off. Run `npm run step -- 7` and `npm run step -- 8`.</Now>
+  </Step>
+  <Step title="The right chunk is not always in front" stage="list">
+    Ask "How much holiday do I get? I started here 4 years ago." and look at the leave table. By vector, it is only at rank 5. Without rerank, it never gets into the prompt. After rerank, it is at rank 1. With rerank on, the answer is right: 18 working days.
+
+    <Now n="3">Run `npm run ask -- "How much holiday do I get? I started here 4 years ago."`. What rank is the leave table by vector, and what rank after rerank?</Now>
+  </Step>
+  <Step title="Top-k is not the only way" stage="yol">
+    A threshold is a score limit, not a fixed k. On page C, even the "unrelated" pair scored 0.503. So pick the threshold on your own data. <Term id="mmr">MMR</Term> skips near-copies. Hybrid adds keyword search (BM25). Of these, only the metadata filter (`access`, `edition`) is in this repo.
+
+    <Now n="4">In `src/steps/6-retrieve.ts`, turn the access filter off. Run `npm run ask -- "What is the upper limit of the monthly gross salary band for a senior specialist?"`.</Now>
+  </Step>
+</Deck>
+
+<Example>
+The same ranking in the terminal: first the retriever's list, then rerank off and on.
+</Example>
+
+<Log name="06-retrieve" title="npm run step -- 6" />
+
+<Log name="07-rerank-off" title="npm run step -- 7   (RERANK = false)" />
+
+<Log name="08-answer-rerank-off" title="npm run step -- 8   (with rerank off)" from={2} />
+
+<Log name="07-rerank" title="npm run step -- 7" />
+
+This is all the retriever does: build the filter, embed the question, ask for `k + 3` results. The extra results show what is below the cutoff.
+
+<RepoCode file="src/steps/6-retrieve.ts" from="export async function retrieve" />
+
+The reranker's question is one prompt. It reads at most 700 characters of the chunk and returns only a number.
+
+<RepoCode file="src/steps/7-rerank.ts" from="export async function relevance" />
+
+## Access filter: same question, two employees
+
+The salary bands document is `access: hr-only`. The toggle in step 6 decides what the person who asks may read:
+
+<RepoCode file="src/steps/6-retrieve.ts" from="// TOGGLE access filter" to="alternative" />
+
+<Log name="ask-access-on" title='npm run ask -- "What is the upper limit of the monthly gross salary band for a senior specialist?"' from={2} to={16} />
+
+<Log name="ask-access-on" title="… the same command, continued: rerank and answer" from={17} />
+
+<Log name="ask-access-off" title="ASKER_MAY_READ = undefined (nobody checks)" />
+
+With the filter off, the answer gives the salary figure. The [Security](/en/uretim/guvenlik/) page explains what these two answers mean.
+
+<YourTurn>
+**1 · Open the list.** Run `npm run step -- 6` and open `data/6-retrieved.json`. Look at `hits` (the 5 candidate chunks for the prompt), `below` (the 3 below the cutoff) and `filter`. Try another question: `npm run step -- 6 "How much holiday do I get?"`.
+
+**2 · Turn rerank off.** In `src/steps/7-rerank.ts`, find the `TOGGLE rerank` block. Comment out the `true; // default` line and uncomment the `false; // alternative` line. Run `npm run step -- 7` and `npm run step -- 8`. Then switch the toggle back and run `npm run step -- 7`. In `data/7-reranked.json`, each chunk has `was` (its old rank), `relevance` (the rerank score) and `score` (the vector score). Then run `npm run step -- 8`.
+
+**3 · Rerank's real job.** Run `npm run ask -- "How much holiday do I get? I started here 4 years ago."`. In the log, find the leave table (`hr-leave@2025#3`). Find its rank by vector and its rank after rerank. Did it get into the prompt? Is the answer 18?
+
+**4 · Turn the access filter off.** In `src/steps/6-retrieve.ts`, find the `TOGGLE access filter` block. Uncomment the alternative line and comment out the default line. Run `npm run ask -- "What is the upper limit of the monthly gross salary band for a senior specialist?"`. Then always switch it back.
+
+Fell behind? Run `npm run catchup -- 7`.
+</YourTurn>
+
+<YourTurn optional>
+**Change k.** Run `npm run step -- 6 --k 8`. The cutoff moves down. Then go back to 5 with `npm run step -- 6`.
+</YourTurn>
+
+## Common questions
+
+<FAQ q="How do I pick k?">
+By measuring. `npm run eval` counts how many questions have the right section in the top k (recall@k). See [Measuring quality](/en/uretim/kaliteyi-olcmek/). Our retriever gives 5 candidates, and 3 go into the prompt (`topK` and `contextK`, `src/lib/config.ts`). Both numbers are our choice.
+</FAQ>
+
+<FAQ q="Do I need rerank for every question?">
+No. If the retriever already puts the right chunk in the top 3, the rerank time is wasted. The eval shows how many questions need it.
+</FAQ>
+
+<FAQ q="Can the reranker be wrong?">
+Yes. For the salary question, it gave 10 to both per diem and hotel tables of the travel policy. Ties happen too. The `ties` count in the log shows how many chunks got the same score.
+</FAQ>
+
+<FAQ q="What do bi-encoder and cross-encoder mean?">
+The embedding model is a bi-encoder. It turns the question and the chunk into vectors separately. We compute the chunk vectors in advance, so the search is fast. A cross-encoder reads both together. It is more careful, but it runs again for every candidate of every question. Our reranker is a chat model, but it uses the same idea. Special cross-encoder models do this job faster. We didn't measure them.
+</FAQ>
+
+<Takeaway>Finding the right chunk is not enough. It must also rank high enough to get into the prompt.</Takeaway>
