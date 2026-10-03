@@ -45,15 +45,15 @@ import Term from '../../../components/Term.astro';
         <text x="690" y="288" class="fsub">edition, access …</text>
       </g>
       <text x="40" y="70" class="fsub">id</text>
-      <text x="170" y="70" class="fsub fnum">hr-leave@2025#3</text>
+      <text x="170" y="70" class="fsub fnum" data-q="log:03-chunk-section">hr-leave@2025#3</text>
       <text x="40" y="124" class="fsub">embedding</text>
-      <text x="170" y="124" class="fsub">[ … 1024 sayı … ]</text>
+      <text x="170" y="124" class="fsub" data-q="log:04-embed">[ … 1024 sayı … ]</text>
       <text x="40" y="186" class="fsub">document</text>
-      <text x="170" y="182" class="fsub">[Yıllık İzin Politikası › 3. Yıllık Ücretli İzin]</text>
-      <text x="170" y="208" class="fsub">Yıllık ücretli izin süresi, … | 7 | 22 | …</text>
+      <text x="170" y="182" class="fsub" data-q="log:03-chunk-section">[Yıllık İzin Politikası › 3. Yıllık Ücretli İzin]</text>
+      <text x="170" y="208" class="fsub" data-q="log:03-chunk-section">Yıllık ücretli izin süresi, … | 7 | 22 | …</text>
       <text x="40" y="264" class="fsub">metadata</text>
-      <text x="170" y="260" class="fsub">docId: hr-leave · edition: 2025 · title: Yıllık İzin Politikası</text>
-      <text x="170" y="286" class="fsub">access: all · lang: tr · sections: 3</text>
+      <text x="170" y="260" class="fsub" data-q="corpus:2025/hr-leave.md">docId: hr-leave · edition: 2025 · title: Yıllık İzin Politikası</text>
+      <text x="170" y="286" class="fsub" data-q="corpus:2025/hr-leave.md log:03-chunk-section">access: all · lang: tr · sections: 3</text>
     </svg>
   </DeckFigure>
   <DeckFigure slot="figure" stage="a">
@@ -176,14 +176,14 @@ import Term from '../../../components/Term.astro';
         <text x="590" y="80" text-anchor="end" class="fsub fnum">giriş</text>
       </g>
       <g data-from="5">
-        <text x="240" y="362" text-anchor="middle" class="fsub">brute force: 60 vektör, 60 karşılaştırma · kesin</text>
+        <text x="240" y="362" text-anchor="middle" class="fsub" data-q="log:05-store-json">brute force: 60 vektör, 60 karşılaştırma · kesin</text>
       </g>
       <g data-from="7">
         <text x="760" y="362" text-anchor="middle" class="fsub fnum">HNSW: birkaç atlama · yaklaşık</text>
       </g>
       <text x="500" y="200" text-anchor="middle" class="fsub">şematik</text>
       <g data-from="8">
-        <text x="500" y="240" text-anchor="middle" class="fsub fgood-t">ilk 5 id: aynı ✓</text>
+        <text x="500" y="240" text-anchor="middle" class="fsub fgood-t" data-q="const">ilk 5 id: aynı ✓</text>
       </g>
     </svg>
   </DeckFigure>

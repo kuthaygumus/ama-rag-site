@@ -30,25 +30,25 @@ Günün sorusunun cevabı hr-leave'in 199 satırından tek bir tablo satırında
     <svg viewBox="0 0 1000 260" role="img" aria-label="Bir doküman parçalara bölünür, arama birkaç parçayı seçip prompt'a koyar">
       <rect x="30" y="30" width="190" height="200" rx="10" class="fbox" />
       <text x="125" y="70" text-anchor="middle" class="flbl">hr-leave</text>
-      <text x="125" y="98" text-anchor="middle" class="fsub">199 satır</text>
+      <text x="125" y="98" text-anchor="middle" class="fsub" data-q="log:01-load">199 satır</text>
       <path d="M55 125 H195 M55 145 H180 M55 165 H195 M55 185 H170 M55 205 H190" class="faxis" />
       <path d="M228 130 H292" class="farrow" marker-end="url(#bh-a)" />
       <text x="260" y="118" text-anchor="middle" class="fsub">böl</text>
       <rect x="310" y="60" width="64" height="44" rx="6" class="fbox" />
       <rect x="386" y="60" width="64" height="44" rx="6" class="fbox" />
       <rect x="462" y="60" width="140" height="44" rx="6" class="fbox-on" />
-      <text x="532" y="88" text-anchor="middle" class="fsub">| 7 | 22 |</text>
+      <text x="532" y="88" text-anchor="middle" class="fsub" data-q="corpus:2025/hr-leave.md">| 7 | 22 |</text>
       <rect x="310" y="116" width="64" height="44" rx="6" class="fbox" />
       <rect x="386" y="116" width="64" height="44" rx="6" class="fbox" />
       <rect x="462" y="116" width="64" height="44" rx="6" class="fbox" />
       <rect x="538" y="116" width="64" height="44" rx="6" class="fbox" />
       <text x="456" y="192" text-anchor="middle" class="fsub">chunk'lar</text>
       <path d="M610 100 H708" class="farrow-on" marker-end="url(#bh-b)" />
-      <text x="660" y="88" text-anchor="middle" class="fsub">en yakın 3'ü</text>
+      <text x="660" y="88" text-anchor="middle" class="fsub" data-q="code:src/lib/config.ts">en yakın 3'ü</text>
       <rect x="720" y="50" width="250" height="120" rx="10" class="fbox" />
       <text x="845" y="94" text-anchor="middle" class="flbl">prompt</text>
-      <text x="845" y="124" text-anchor="middle" class="fsub">soru + 3 chunk</text>
-      <text x="500" y="245" text-anchor="middle" class="fsub">8 dokümanın tamamı değil, yalnızca seçilen parçalar modele gider</text>
+      <text x="845" y="124" text-anchor="middle" class="fsub" data-q="code:src/lib/config.ts">soru + 3 chunk</text>
+      <text x="500" y="245" text-anchor="middle" class="fsub" data-q="const">8 dokümanın tamamı değil, yalnızca seçilen parçalar modele gider</text>
       <defs>
         <marker id="bh-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker>
         <marker id="bh-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead-on" /></marker>
@@ -58,49 +58,49 @@ Günün sorusunun cevabı hr-leave'in 199 satırından tek bir tablo satırında
   <DeckFigure slot="figure" stage="b">
     <svg viewBox="0 0 1000 640" role="img" aria-label="İzin tablosu iki şekilde bölünmüş: her 300 karakterde bir kesince 7. yılın satırı başlıksız bir parçaya düşüyor; başlıklardan kesince tablo başlığıyla birlikte kalıyor">
       <g data-from="2">
-        <text x="250" y="30" text-anchor="middle" class="flbl">fixed · her 300 karakterde bir kes</text>
+        <text x="250" y="30" text-anchor="middle" class="flbl" data-q="code:src/steps/3-chunk.ts corpus:2025/hr-leave.md">fixed · her 300 karakterde bir kes</text>
         <rect x="20" y="48" width="460" height="40" rx="6" class="fbox" />
-        <text x="34" y="74" class="fsub">… ## 3. Yıllık Ü</text>
-        <text x="468" y="74" text-anchor="end" class="fsub">c06</text>
+        <text x="34" y="74" class="fsub" data-q="log:03-chunk-fixed corpus:2025/hr-leave.md">… ## 3. Yıllık Ü</text>
+        <text x="468" y="74" text-anchor="end" class="fsub" data-q="log:03-chunk-fixed corpus:2025/hr-leave.md">c06</text>
         <rect x="20" y="96" width="460" height="214" rx="6" class="fbox" />
-        <text x="468" y="120" text-anchor="end" class="fsub">c07</text>
-        <text x="34" y="120" class="fsub">cretli İzin</text>
-        <text x="34" y="145" class="fsub">Yıllık ücretli izin süresi, … ayrı bir satırda verilmiştir.</text>
-        <text x="34" y="170" class="fsub">| Kıdem (tam yıl) | Yıllık ücretli izin (iş günü) |</text>
+        <text x="468" y="120" text-anchor="end" class="fsub" data-q="log:03-chunk-fixed corpus:2025/hr-leave.md">c07</text>
+        <text x="34" y="120" class="fsub" data-q="log:03-chunk-fixed corpus:2025/hr-leave.md">cretli İzin</text>
+        <text x="34" y="145" class="fsub" data-q="log:03-chunk-section">Yıllık ücretli izin süresi, … ayrı bir satırda verilmiştir.</text>
+        <text x="34" y="170" class="fsub" data-q="log:03-chunk-section">| Kıdem (tam yıl) | Yıllık ücretli izin (iş günü) |</text>
         <text x="34" y="195" class="fsub">|---|---|</text>
-        <text x="34" y="220" class="fsub">| 1 | 16 |</text>
+        <text x="34" y="220" class="fsub" data-q="corpus:2025/hr-leave.md">| 1 | 16 |</text>
         <text x="34" y="245" class="fsub">⋮</text>
-        <text x="34" y="270" class="fsub">| 4 | 18 |</text>
-        <text x="34" y="295" class="fsub">| 5 | 2</text>
+        <text x="34" y="270" class="fsub" data-q="corpus:2025/hr-leave.md">| 4 | 18 |</text>
+        <text x="34" y="295" class="fsub" data-q="log:03-chunk-fixed corpus:2025/hr-leave.md">| 5 | 2</text>
         <rect x="20" y="352" width="460" height="200" rx="6" class="fbox" />
       </g>
       <g data-from="4">
         <rect x="20" y="352" width="460" height="200" rx="6" class="fbox-bad" />
         <rect x="28" y="411" width="120" height="22" rx="4" class="fbox-bad" />
-        <text x="250" y="628" text-anchor="middle" class="fsub fbad-t">başlık c07'de kaldı: c08'deki “7” ve “22” neyin sayısı?</text>
+        <text x="250" y="628" text-anchor="middle" class="fsub fbad-t" data-q="log:03-chunk-fixed corpus:2025/hr-leave.md">başlık c07'de kaldı: c08'deki “7” ve “22” neyin sayısı?</text>
       </g>
       <g data-from="2">
-        <text x="468" y="376" text-anchor="end" class="fsub">c08</text>
-        <text x="34" y="376" class="fsub">2 |</text>
-        <text x="34" y="401" class="fsub">| 6 | 22 |</text>
-        <text x="34" y="426" class="fsub">| 7 | 22 |</text>
-        <text x="34" y="451" class="fsub">| 8 | 22 |</text>
+        <text x="468" y="376" text-anchor="end" class="fsub" data-q="log:03-chunk-fixed corpus:2025/hr-leave.md">c08</text>
+        <text x="34" y="376" class="fsub" data-q="log:03-chunk-fixed corpus:2025/hr-leave.md">2 |</text>
+        <text x="34" y="401" class="fsub" data-q="corpus:2025/hr-leave.md">| 6 | 22 |</text>
+        <text x="34" y="426" class="fsub" data-q="corpus:2025/hr-leave.md">| 7 | 22 |</text>
+        <text x="34" y="451" class="fsub" data-q="corpus:2025/hr-leave.md">| 8 | 22 |</text>
         <text x="34" y="476" class="fsub">⋮</text>
-        <text x="34" y="501" class="fsub">| 15 ve üzeri | 28 |</text>
-        <text x="34" y="526" class="fsub">İzin talepleri, … bölüm direktörünün onayı da ara</text>
+        <text x="34" y="501" class="fsub" data-q="log:03-chunk-section">| 15 ve üzeri | 28 |</text>
+        <text x="34" y="526" class="fsub" data-q="log:03-chunk-fixed">İzin talepleri, … bölüm direktörünün onayı da ara</text>
         <rect x="20" y="562" width="460" height="36" rx="6" class="fbox" />
-        <text x="34" y="586" class="fsub">nır. …</text>
-        <text x="468" y="586" text-anchor="end" class="fsub">c09</text>
+        <text x="34" y="586" class="fsub" data-q="log:03-chunk-fixed corpus:2025/hr-leave.md">nır. …</text>
+        <text x="468" y="586" text-anchor="end" class="fsub" data-q="log:03-chunk-fixed corpus:2025/hr-leave.md">c09</text>
       </g>
       <g data-from="3">
         <path d="M14 322 H486" class="fbox-bad" stroke-dasharray="7 5" />
-        <text x="34" y="343" class="fsub fbad-t">✂ 300. karakter: 5. yılın “22”si ikiye bölündü</text>
+        <text x="34" y="343" class="fsub fbad-t" data-q="code:src/steps/3-chunk.ts corpus:2025/hr-leave.md">✂ 300. karakter: 5. yılın “22”si ikiye bölündü</text>
       </g>
       <g data-from="5">
         <text x="750" y="30" text-anchor="middle" class="flbl">section · başlıklardan kes</text>
         <rect x="520" y="48" width="460" height="40" rx="6" class="fbox" />
-        <text x="534" y="74" class="fsub">[Yıllık İzin Politikası › 2. Hak Kazanma …]</text>
-        <text x="968" y="74" text-anchor="end" class="fsub">#2</text>
+        <text x="534" y="74" class="fsub" data-q="log:03-chunk-section corpus:2025/hr-leave.md">[Yıllık İzin Politikası › 2. Hak Kazanma …]</text>
+        <text x="968" y="74" text-anchor="end" class="fsub" data-q="log:03-chunk-section">#2</text>
         <rect x="520" y="96" width="460" height="340" rx="6" class="fbox-on" />
       </g>
       <g data-from="6">
@@ -108,27 +108,27 @@ Günün sorusunun cevabı hr-leave'in 199 satırından tek bir tablo satırında
         <text x="750" y="628" text-anchor="middle" class="fsub fgood-t">başlık ve tablo aynı chunk'ta</text>
       </g>
       <g data-from="5">
-        <text x="968" y="122" text-anchor="end" class="fsub">#3</text>
-        <text x="534" y="122" class="fsub fnum">[Yıllık İzin Politikası › 3. Yıllık Ücretli İzin]</text>
-        <text x="534" y="147" class="fsub">Yıllık ücretli izin süresi, … ayrı bir satırda verilmiştir.</text>
-        <text x="534" y="172" class="fsub">| Kıdem (tam yıl) | Yıllık ücretli izin (iş günü) |</text>
+        <text x="968" y="122" text-anchor="end" class="fsub" data-q="log:03-chunk-section">#3</text>
+        <text x="534" y="122" class="fsub fnum" data-q="log:03-chunk-section">[Yıllık İzin Politikası › 3. Yıllık Ücretli İzin]</text>
+        <text x="534" y="147" class="fsub" data-q="log:03-chunk-section">Yıllık ücretli izin süresi, … ayrı bir satırda verilmiştir.</text>
+        <text x="534" y="172" class="fsub" data-q="log:03-chunk-section">| Kıdem (tam yıl) | Yıllık ücretli izin (iş günü) |</text>
         <text x="534" y="197" class="fsub">|---|---|</text>
-        <text x="534" y="222" class="fsub">| 1 | 16 |</text>
+        <text x="534" y="222" class="fsub" data-q="corpus:2025/hr-leave.md">| 1 | 16 |</text>
         <text x="534" y="247" class="fsub">⋮</text>
-        <text x="534" y="272" class="fsub">| 6 | 22 |</text>
-        <text x="534" y="297" class="fsub">| 7 | 22 |</text>
-        <text x="534" y="322" class="fsub">| 8 | 22 |</text>
+        <text x="534" y="272" class="fsub" data-q="corpus:2025/hr-leave.md">| 6 | 22 |</text>
+        <text x="534" y="297" class="fsub" data-q="corpus:2025/hr-leave.md">| 7 | 22 |</text>
+        <text x="534" y="322" class="fsub" data-q="corpus:2025/hr-leave.md">| 8 | 22 |</text>
         <text x="534" y="347" class="fsub">⋮</text>
-        <text x="534" y="372" class="fsub">| 15 ve üzeri | 28 |</text>
-        <text x="534" y="397" class="fsub">İzin talepleri, … onayı da aranır.</text>
-        <text x="534" y="422" class="fsub">Takvim yılı içinde … 7. bölümde açıklanmıştır.</text>
+        <text x="534" y="372" class="fsub" data-q="log:03-chunk-section">| 15 ve üzeri | 28 |</text>
+        <text x="534" y="397" class="fsub" data-q="log:03-chunk-section">İzin talepleri, … onayı da aranır.</text>
+        <text x="534" y="422" class="fsub" data-q="log:03-chunk-section">Takvim yılı içinde … 7. bölümde açıklanmıştır.</text>
         <rect x="520" y="446" width="460" height="40" rx="6" class="fbox" />
-        <text x="534" y="472" class="fsub">[Yıllık İzin Politikası › 4. İzin Planlama …]</text>
-        <text x="968" y="472" text-anchor="end" class="fsub">#4</text>
+        <text x="534" y="472" class="fsub" data-q="log:03-chunk-section corpus:2025/hr-leave.md">[Yıllık İzin Politikası › 4. İzin Planlama …]</text>
+        <text x="968" y="472" text-anchor="end" class="fsub" data-q="log:03-chunk-section">#4</text>
       </g>
       <g data-from="7">
-        <text x="750" y="536" text-anchor="middle" class="fsub">fixed: 139 chunk · ortalama 287 karakter</text>
-        <text x="750" y="566" text-anchor="middle" class="fsub fnum">section: 60 chunk · ortalama 688 karakter</text>
+        <text x="750" y="536" text-anchor="middle" class="fsub" data-q="log:03-chunk-fixed">fixed: 139 chunk · ortalama 287 karakter</text>
+        <text x="750" y="566" text-anchor="middle" class="fsub fnum" data-q="log:03-chunk-section">section: 60 chunk · ortalama 688 karakter</text>
       </g>
     </svg>
   </DeckFigure>

@@ -57,7 +57,7 @@ function skeleton(src) {
 /** The reader-visible text: prose, drawing labels and the prose attributes, without code, logs and markup. */
 function prose(src) {
   const body = src.replace(/^---[\s\S]*?\n---\n/, '').replace(/^import .*$/gm, '');
-  const attrText = [...body.matchAll(/\b(title|answer|how|q|caption|aria-label|description|label|alt|placeholder)="([^"]*)"/g)].map((m) => m[2]);
+  const attrText = [...body.matchAll(/(?<![\w-])(title|answer|how|q|caption|aria-label|description|label|alt|placeholder)="([^"]*)"/g)].map((m) => m[2]);
   const text = body
     .replace(/```[\s\S]*?```/g, ' ')
     .replace(/`[^`]*`/g, ' ')

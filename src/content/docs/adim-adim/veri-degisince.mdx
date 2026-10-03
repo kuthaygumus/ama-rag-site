@@ -31,12 +31,12 @@ import Term from '../../../components/Term.astro';
       <rect x="20" y="16" width="380" height="306" rx="12" class="fbox" />
       <text x="210" y="50" text-anchor="middle" class="flbl">Chroma · kraken-policies</text>
       <rect x="40" y="72" width="340" height="104" rx="8" class="fbox" />
-      <text x="210" y="112" text-anchor="middle" class="flbl">2025 · 60 kayıt</text>
-      <text x="210" y="146" text-anchor="middle" class="fsub">hr-leave@2025#3 · | 7 | 22 |</text>
+      <text x="210" y="112" text-anchor="middle" class="flbl" data-q="log:ingest-section">2025 · 60 kayıt</text>
+      <text x="210" y="146" text-anchor="middle" class="fsub" data-q="log:edition-all corpus:2025/hr-leave.md">hr-leave@2025#3 · | 7 | 22 |</text>
       <g data-from="2">
         <rect x="40" y="198" width="340" height="104" rx="8" class="fbox-on" />
-        <text x="210" y="238" text-anchor="middle" class="flbl">2026 · 60 kayıt</text>
-        <text x="210" y="272" text-anchor="middle" class="fsub">hr-leave@2026#3 · | 7 | 24 |</text>
+        <text x="210" y="238" text-anchor="middle" class="flbl" data-q="log:ingest-2026">2026 · 60 kayıt</text>
+        <text x="210" y="272" text-anchor="middle" class="fsub" data-q="log:edition-all">hr-leave@2026#3 · | 7 | 24 |</text>
       </g>
       <g data-from="3">
         <path d="M384 250 C430 250 440 180 468 172" class="farrow-on" marker-end="url(#vd-on)" />
@@ -44,18 +44,18 @@ import Term from '../../../components/Term.astro';
         <text x="452" y="140" class="flbl fbad-t">✗</text>
         <path d="M470 120 H570 L535 176 V222 H505 V176 Z" class="fbox-gate" />
         <text x="520" y="104" text-anchor="middle" class="fsub fgate-t">edition = en yeni</text>
-        <text x="520" y="250" text-anchor="middle" class="flbl fgate-t">2026</text>
+        <text x="520" y="250" text-anchor="middle" class="flbl fgate-t" data-q="const">2026</text>
       </g>
       <g data-from="4">
         <path d="M540 172 H592" class="farrow-on" marker-end="url(#vd-on)" />
         <rect x="600" y="112" width="380" height="120" rx="10" class="fbox-good" />
-        <text x="616" y="144" class="fsub">Tablodan, 7 tam yıl kıdeminde 24 iş günü</text>
-        <text x="616" y="170" class="fsub">ücretli izin hakkı olduğunu görüyoruz [1].</text>
-        <text x="616" y="210" class="fsub fnum">[1] = hr-leave@2026#3</text>
+        <text x="616" y="144" class="fsub" data-q="log:question-4-2026">Tablodan, 7 tam yıl kıdeminde 24 iş günü</text>
+        <text x="616" y="170" class="fsub" data-q="log:question-4-2026">ücretli izin hakkı olduğunu görüyoruz [1].</text>
+        <text x="616" y="210" class="fsub fnum" data-q="log:question-4-2026">[1] = hr-leave@2026#3</text>
       </g>
       <g data-from="5">
-        <text x="790" y="276" text-anchor="middle" class="fsub fbad-t">filtre yoksa: 2026#3 (0.632) ve 2025#3 (0.631)</text>
-        <text x="790" y="302" text-anchor="middle" class="fsub fbad-t">ikisi birden prompt'ta — 24 ve 22 yan yana</text>
+        <text x="790" y="276" text-anchor="middle" class="fsub fbad-t" data-q="log:edition-all">filtre yoksa: 2026#3 (0.632) ve 2025#3 (0.631)</text>
+        <text x="790" y="302" text-anchor="middle" class="fsub fbad-t" data-q="log:edition-all corpus:2025/hr-leave.md">ikisi birden prompt'ta — 24 ve 22 yan yana</text>
       </g>
       <defs>
         <marker id="vd-on" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead-on" /></marker>

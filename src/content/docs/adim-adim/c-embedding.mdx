@@ -30,23 +30,23 @@ import Term from '../../../components/Term.astro';
     <svg viewBox="0 0 1000 290" role="img" aria-label="Chunk metni ve soru aynı embedding modelinden geçip 1024 sayılık vektörlere dönüşüyor">
       <rect x="5" y="40" width="290" height="80" rx="10" class="fbox-on" />
       <text x="150" y="72" text-anchor="middle" class="flbl">chunk metni</text>
-      <text x="150" y="100" text-anchor="middle" class="fsub">announcement-meal-card@2025#1</text>
+      <text x="150" y="100" text-anchor="middle" class="fsub" data-q="log:04-embed">announcement-meal-card@2025#1</text>
       <path d="M299 80 H352" class="farrow" marker-end="url(#ce-a)" />
       <rect x="360" y="30" width="230" height="230" rx="12" class="fbox-frozen" />
-      <text x="475" y="112" text-anchor="middle" class="flbl">bge-m3</text>
+      <text x="475" y="112" text-anchor="middle" class="flbl" data-q="const">bge-m3</text>
       <text x="475" y="142" text-anchor="middle" class="fsub">embedding modeli</text>
       <text x="475" y="168" text-anchor="middle" class="fsub">bir neural network</text>
       <text x="475" y="194" text-anchor="middle" class="fsub ffrozen-t">ağırlıklar donmuş</text>
       <path d="M595 80 H652" class="farrow" marker-end="url(#ce-a)" />
-      <text x="662" y="74" class="fsub fnum">[-0.0538, -0.0108, -0.0047, … ]</text>
-      <text x="662" y="102" class="fsub">1024 sayı · uzunluk 1.000</text>
+      <text x="662" y="74" class="fsub fnum" data-q="log:04-embed">[-0.0538, -0.0108, -0.0047, … ]</text>
+      <text x="662" y="102" class="fsub" data-q="log:04-embed">1024 sayı · uzunluk 1.000</text>
       <g data-from="4">
         <rect x="20" y="170" width="260" height="80" rx="10" class="fbox" />
         <text x="150" y="202" text-anchor="middle" class="flbl">soru</text>
-        <text x="150" y="230" text-anchor="middle" class="fsub">7 yıllık bir çalışanın …</text>
+        <text x="150" y="230" text-anchor="middle" class="fsub" data-q="code:src/lib/config.ts" data-q-mode="quote">7 yıllık bir çalışanın …</text>
         <path d="M285 210 H352" class="farrow" marker-end="url(#ce-a)" />
         <path d="M595 210 H652" class="farrow" marker-end="url(#ce-a)" />
-        <text x="662" y="204" class="fsub fnum">[ … 1024 sayı … ]</text>
+        <text x="662" y="204" class="fsub fnum" data-q="log:04-embed">[ … 1024 sayı … ]</text>
         <text x="662" y="232" class="fsub">aynı model → aynı uzay</text>
       </g>
       <defs>
@@ -58,7 +58,7 @@ import Term from '../../../components/Term.astro';
     <svg viewBox="0 0 1000 380" role="img" aria-label="İki vektör: aralarındaki açı cosine, uçları arasındaki mesafe L2, birinin diğeri üzerindeki izdüşümü dot">
       <path d="M120 330 H410 M120 330 V40" class="faxis" />
       <path d="M370 330 A250 250 0 0 0 120 80" class="farrow" stroke-dasharray="4 5" />
-      <text x="330" y="360" class="fsub">uzunluk 1</text>
+      <text x="330" y="360" class="fsub" data-q="const">uzunluk 1</text>
       <path d="M120 330 L352 246" class="farrow-on" marker-end="url(#ce-b)" />
       <path d="M120 330 L251 121" class="farrow-on" marker-end="url(#ce-b)" />
       <text x="364" y="244" class="flbl">a</text>
@@ -69,7 +69,7 @@ import Term from '../../../components/Term.astro';
       </g>
       <g class="ph ph2">
         <path d="M354.9 244.5 L252.5 118" class="fbox-bad" stroke-dasharray="7 5" />
-        <text x="318" y="170" class="flbl fbad-t">L2</text>
+        <text x="318" y="170" class="flbl fbad-t" data-q="const">L2</text>
       </g>
       <g class="ph ph3">
         <path d="M252.5 118 L305.1 262.6" class="farrow" stroke-dasharray="4 4" />
@@ -79,17 +79,17 @@ import Term from '../../../components/Term.astro';
       <g class="ph ph1">
         <text x="480" y="80" class="flbl">cosine</text>
         <text x="480" y="108" class="fsub">a·b / (|a|·|b|) — aradaki açı</text>
-        <text x="480" y="134" class="fsub">−1 ile 1 arası · 1 = aynı yön · ilgisiz ≠ 0</text>
+        <text x="480" y="134" class="fsub" data-q="const">−1 ile 1 arası · 1 = aynı yön · ilgisiz ≠ 0</text>
       </g>
       <g class="ph ph2">
-        <text x="480" y="190" class="flbl fbad-t">L2</text>
+        <text x="480" y="190" class="flbl fbad-t" data-q="const">L2</text>
         <text x="480" y="218" class="fsub">√Σ (a[i] − b[i])² — uçlar arası mesafe</text>
         <text x="480" y="244" class="fsub">küçük = yakın: yön ters</text>
       </g>
       <g class="ph ph3">
         <text x="480" y="300" class="flbl fgate-t">dot</text>
         <text x="480" y="328" class="fsub">Σ a[i]·b[i] — uzunluklara bölmez</text>
-        <text x="480" y="354" class="fsub">bizim vektörlerin uzunluğu 1.000 → ?</text>
+        <text x="480" y="354" class="fsub" data-q="log:04-embed">bizim vektörlerin uzunluğu 1.000 → ?</text>
       </g>
       <defs>
         <marker id="ce-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead-on" /></marker>
@@ -141,109 +141,111 @@ Cosine ve mesafe karşılığı L2, `src/lib/similarity.ts` içinde birkaç sat�
 
 <Deck>
   <DeckFigure slot="figure" stage="p">
-    <svg viewBox="0 0 1000 330" role="img" aria-label="Beş cümle çiftinin cosine benzerliği: paraphrase 0.526, Türkçe-İngilizce 0.701, ikiz tablolar 0.940, olumsuzluk tuzağı 0.841, ilgisiz 0.456">
-      <path d="M330 10 V300 M630 10 V300 M930 10 V300" class="faxis" stroke-dasharray="3 5" />
-      <text x="330" y="322" text-anchor="middle" class="fsub">0</text>
-      <text x="630" y="322" text-anchor="middle" class="fsub">0.5</text>
-      <text x="930" y="322" text-anchor="middle" class="fsub">1</text>
+    <svg viewBox="0 0 1000 330" role="img" aria-label="Beş cümle çiftinin cosine benzerliği: paraphrase 0.526, Türkçe-İngilizce 0.701, ikiz tablolar 0.940, olumsuzluk tuzağı 0.841, ilgisiz 0.456" data-draw="similar-bars">
+      <path d="M330 10 V300 M630 10 V300 M930 10 V300" class="faxis" stroke-dasharray="3 5" data-gen="axis" />
+      <text x="330" y="322" text-anchor="middle" class="fsub" data-q="const">0</text>
+      <text x="630" y="322" text-anchor="middle" class="fsub" data-q="const">0.5</text>
+      <text x="930" y="322" text-anchor="middle" class="fsub" data-q="const">1</text>
       <g class="ph ph2">
         <text x="20" y="40" class="flbl">paraphrase</text>
-        <text x="20" y="62" class="fsub">Tatil hakkım … ↔ Yıllık ücretli izin …</text>
-        <rect x="330" y="26" width="315.6" height="28" rx="4" class="fbox-gate" />
-        <text x="656" y="47" class="flbl">0.526</text>
+        <text x="20" y="62" class="fsub" data-gen="pair">Tatil hakkım … ↔ Yıllık ücretli izin …</text>
+        <rect x="330" y="26" width="315.6" height="28" rx="4" class="fbox-gate" data-gen="bar" />
+        <text x="656" y="47" class="flbl" data-gen="score">0.526</text>
       </g>
       <g class="ph ph1">
         <text x="20" y="96" class="flbl">TR ↔ EN</text>
-        <text x="20" y="118" class="fsub">Şifremi … ↔ Passwords …</text>
-        <rect x="330" y="82" width="420.6" height="28" rx="4" class="fbox-good" />
-        <text x="761" y="103" class="flbl">0.701</text>
+        <text x="20" y="118" class="fsub" data-gen="pair">Şifremi … ↔ Passwords …</text>
+        <rect x="330" y="82" width="420.6" height="28" rx="4" class="fbox-good" data-gen="bar" />
+        <text x="761" y="103" class="flbl" data-gen="score">0.701</text>
       </g>
       <g class="ph ph4">
         <text x="20" y="152" class="flbl">ikiz tablolar</text>
-        <text x="20" y="174" class="fsub">Yurt içi harcırah ↔ Yurt dışı harcırah</text>
-        <rect x="330" y="138" width="564" height="28" rx="4" class="fbox-bad" />
-        <text x="905" y="159" class="flbl">0.940</text>
+        <text x="20" y="174" class="fsub" data-gen="pair">Yurt içi harcırah ↔ Yurt dışı harcırah</text>
+        <rect x="330" y="138" width="564" height="28" rx="4" class="fbox-bad" data-gen="bar" />
+        <text x="905" y="159" class="flbl" data-gen="score">0.940</text>
       </g>
       <g class="ph ph3">
         <text x="20" y="208" class="flbl">olumsuzluk tuzağı</text>
-        <text x="20" y="230" class="fsub">… çalışabilir ↔ … çalışamaz</text>
-        <rect x="330" y="194" width="504.6" height="28" rx="4" class="fbox-bad" />
-        <text x="845" y="215" class="flbl">0.841</text>
+        <text x="20" y="230" class="fsub" data-gen="pair">… çalışabilir ↔ … çalışamaz</text>
+        <rect x="330" y="194" width="504.6" height="28" rx="4" class="fbox-bad" data-gen="bar" />
+        <text x="845" y="215" class="flbl" data-gen="score">0.841</text>
       </g>
       <g class="ph ph1">
         <text x="20" y="264" class="flbl">ilgisiz</text>
-        <text x="20" y="286" class="fsub">Yemek kartı … ↔ USB bellek …</text>
-        <rect x="330" y="250" width="273.6" height="28" rx="4" class="fbox" />
-        <text x="614" y="271" class="flbl">0.456</text>
+        <text x="20" y="286" class="fsub" data-gen="pair">Yemek kartı … ↔ USB bellek …</text>
+        <rect x="330" y="250" width="273.6" height="28" rx="4" class="fbox" data-gen="bar" />
+        <text x="614" y="271" class="flbl" data-gen="score">0.456</text>
       </g>
     </svg>
   </DeckFigure>
   <DeckFigure slot="figure" stage="map">
-    <svg viewBox="0 0 1000 600" role="img" aria-label="60 chunk'ın iki boyutlu haritası, dokümana göre işaretli; günün sorusu yıldız olarak">
+    <svg viewBox="0 0 1000 600" role="img" aria-label="60 chunk'ın iki boyutlu haritası, dokümana göre işaretli; günün sorusu yıldız olarak" data-draw="chunk-map" data-q="log:04b-map">
       <path d="M40 575 H700 M30 30 V565" class="faxis" />
-      <text x="700" y="596" text-anchor="end" class="fsub">1. yön (PC1) · yayılımın %11,8'i</text>
-      <text x="40" y="20" class="fsub">2. yön (PC2) · %8,3</text>
-        <rect x="555.8" y="428.8" width="14" height="14" class="fbox-good" />
-        <rect x="618.0" y="399.2" width="14" height="14" class="fbox-good" />
-        <rect x="438.7" y="470.9" width="14" height="14" class="fbox-good" />
-        <circle cx="419.2" cy="93.3" r="7" class="fbox-good" />
-        <circle cx="604.9" cy="402.4" r="7" class="fbox-good" />
-        <circle cx="552.9" cy="431.5" r="7" class="fbox-good" />
-        <circle cx="493.4" cy="473.8" r="7" class="fbox-good" />
-        <circle cx="563.3" cy="344.8" r="7" class="fbox-good" />
-        <circle cx="560.5" cy="364.5" r="7" class="fbox-good" />
-        <circle cx="479.0" cy="135.2" r="7" class="fbox-good" />
-        <circle cx="493.1" cy="416.9" r="7" class="fbox-good" />
-        <path d="M227.2 79.3 L235.2 87.3 L227.2 95.3 L219.2 87.3Z" class="fbox" />
-        <path d="M220.2 267.8 L228.2 275.8 L220.2 283.8 L212.2 275.8Z" class="fbox" />
-        <path d="M452.5 422.8 L460.5 430.8 L452.5 438.8 L444.5 430.8Z" class="fbox" />
-        <path d="M341.3 377.8 L349.3 385.8 L341.3 393.8 L333.3 385.8Z" class="fbox" />
-        <path d="M285.4 259.3 L293.4 267.3 L285.4 275.3 L277.4 267.3Z" class="fbox" />
-        <path d="M160.0 149.4 L168.0 157.4 L160.0 165.4 L152.0 157.4Z" class="fbox" />
-        <path d="M119.1 419.0 L127.1 427.0 L119.1 435.0 L111.1 427.0Z" class="fbox" />
-        <path d="M327.6 414.7 L335.6 422.7 L327.6 430.7 L319.6 422.7Z" class="fbox" />
-        <circle cx="519.2" cy="109.8" r="7" class="fbox-bad" />
-        <circle cx="338.2" cy="433.5" r="7" class="fbox-bad" />
-        <circle cx="652.6" cy="427.8" r="7" class="fbox-bad" />
-        <circle cx="622.0" cy="443.0" r="7" class="fbox-bad" />
-        <circle cx="670.9" cy="446.6" r="7" class="fbox-bad" />
-        <circle cx="661.7" cy="438.2" r="7" class="fbox-bad" />
-        <circle cx="636.7" cy="410.4" r="7" class="fbox-bad" />
-        <circle cx="550.1" cy="453.5" r="7" class="fbox-bad" />
-        <rect x="357.1" y="48.6" width="14" height="14" class="fbox" />
-        <rect x="475.2" y="337.7" width="14" height="14" class="fbox" />
-        <rect x="454.7" y="323.1" width="14" height="14" class="fbox" />
-        <rect x="584.0" y="399.7" width="14" height="14" class="fbox" />
-        <rect x="457.9" y="115.9" width="14" height="14" class="fbox" />
-        <rect x="405.4" y="308.8" width="14" height="14" class="fbox" />
-        <rect x="199.5" y="397.2" width="14" height="14" class="fbox" />
-        <circle cx="67.7" cy="444.6" r="7" class="fbox-frozen" />
-        <circle cx="73.1" cy="177.1" r="7" class="fbox-frozen" />
-        <circle cx="127.7" cy="367.2" r="7" class="fbox-frozen" />
-        <circle cx="75.1" cy="516.7" r="7" class="fbox-frozen" />
-        <circle cx="75.4" cy="540.7" r="7" class="fbox-frozen" />
-        <circle cx="82.4" cy="331.4" r="7" class="fbox-frozen" />
-        <circle cx="93.7" cy="402.0" r="7" class="fbox-frozen" />
-        <circle cx="66.5" cy="489.7" r="7" class="fbox-frozen" />
-        <circle cx="125.7" cy="492.2" r="7" class="fbox-frozen" />
-        <circle cx="101.5" cy="395.5" r="7" class="fbox-frozen" />
-        <circle cx="442.6" cy="70.0" r="7" class="fbox" />
-        <circle cx="412.4" cy="166.4" r="7" class="fbox" />
-        <circle cx="613.7" cy="345.7" r="7" class="fbox" />
-        <circle cx="590.9" cy="373.0" r="7" class="fbox" />
-        <circle cx="504.7" cy="340.8" r="7" class="fbox" />
-        <circle cx="545.9" cy="358.9" r="7" class="fbox" />
-        <circle cx="519.0" cy="433.6" r="7" class="fbox" />
-        <circle cx="514.9" cy="369.4" r="7" class="fbox" />
-        <circle cx="419.1" cy="49.2" r="9" class="fdot" />
-        <circle cx="578.9" cy="228.1" r="9" class="fdot" />
-        <circle cx="640.1" cy="372.2" r="9" class="fdot" />
-        <circle cx="579.8" cy="298.1" r="9" class="fdot" />
-        <circle cx="580.1" cy="359.6" r="9" class="fdot" />
-        <circle cx="581.6" cy="362.5" r="9" class="fdot" />
-        <circle cx="564.9" cy="386.7" r="9" class="fdot" />
-        <circle cx="625.0" cy="322.8" r="9" class="fdot" />
-      <g transform="translate(752 60)">
+      <text x="700" y="596" text-anchor="end" class="fsub" data-gen="axis-x">1. yön (PC1) · yayılımın %11,8'i</text>
+      <text x="40" y="20" class="fsub" data-gen="axis-y">2. yön (PC2) · %8,3</text>
+      <g data-gen="points">
+        <rect x="555.8" y="428.8" width="14" height="14" class="fbox-good" data-id="announcement-meal-card@2025#1" />
+        <rect x="618.0" y="399.2" width="14" height="14" class="fbox-good" data-id="announcement-meal-card@2025#2" />
+        <rect x="438.7" y="470.9" width="14" height="14" class="fbox-good" data-id="announcement-meal-card@2025#3" />
+        <circle cx="419.2" cy="93.3" r="7" class="fbox-good" data-id="benefits@2025#1" />
+        <circle cx="604.9" cy="402.4" r="7" class="fbox-good" data-id="benefits@2025#2" />
+        <circle cx="552.9" cy="431.5" r="7" class="fbox-good" data-id="benefits@2025#3" />
+        <circle cx="493.4" cy="473.8" r="7" class="fbox-good" data-id="benefits@2025#4" />
+        <circle cx="563.3" cy="344.8" r="7" class="fbox-good" data-id="benefits@2025#5" />
+        <circle cx="560.5" cy="364.5" r="7" class="fbox-good" data-id="benefits@2025#6" />
+        <circle cx="479.0" cy="135.2" r="7" class="fbox-good" data-id="benefits@2025#7" />
+        <circle cx="493.1" cy="416.9" r="7" class="fbox-good" data-id="benefits@2025#8" />
+        <path d="M227.2 79.3 L235.2 87.3 L227.2 95.3 L219.2 87.3Z" class="fbox" data-id="code-of-conduct@2025#1" />
+        <path d="M220.2 267.8 L228.2 275.8 L220.2 283.8 L212.2 275.8Z" class="fbox" data-id="code-of-conduct@2025#2" />
+        <path d="M452.5 422.8 L460.5 430.8 L452.5 438.8 L444.5 430.8Z" class="fbox" data-id="code-of-conduct@2025#3" />
+        <path d="M341.3 377.8 L349.3 385.8 L341.3 393.8 L333.3 385.8Z" class="fbox" data-id="code-of-conduct@2025#4" />
+        <path d="M285.4 259.3 L293.4 267.3 L285.4 275.3 L277.4 267.3Z" class="fbox" data-id="code-of-conduct@2025#5" />
+        <path d="M160.0 149.4 L168.0 157.4 L160.0 165.4 L152.0 157.4Z" class="fbox" data-id="code-of-conduct@2025#6" />
+        <path d="M119.1 419.0 L127.1 427.0 L119.1 435.0 L111.1 427.0Z" class="fbox" data-id="code-of-conduct@2025#7" />
+        <path d="M327.6 414.7 L335.6 422.7 L327.6 430.7 L319.6 422.7Z" class="fbox" data-id="code-of-conduct@2025#8" />
+        <circle cx="519.2" cy="109.8" r="7" class="fbox-bad" data-id="hr-salary-bands@2025#1" />
+        <circle cx="338.2" cy="433.5" r="7" class="fbox-bad" data-id="hr-salary-bands@2025#2" />
+        <circle cx="652.6" cy="427.8" r="7" class="fbox-bad" data-id="hr-salary-bands@2025#3" />
+        <circle cx="622.0" cy="443.0" r="7" class="fbox-bad" data-id="hr-salary-bands@2025#4" />
+        <circle cx="670.9" cy="446.6" r="7" class="fbox-bad" data-id="hr-salary-bands@2025#5" />
+        <circle cx="661.7" cy="438.2" r="7" class="fbox-bad" data-id="hr-salary-bands@2025#6" />
+        <circle cx="636.7" cy="410.4" r="7" class="fbox-bad" data-id="hr-salary-bands@2025#7" />
+        <circle cx="550.1" cy="453.5" r="7" class="fbox-bad" data-id="hr-salary-bands@2025#8" />
+        <rect x="357.1" y="48.6" width="14" height="14" class="fbox" data-id="hr-working-hours@2025#1" />
+        <rect x="475.2" y="337.7" width="14" height="14" class="fbox" data-id="hr-working-hours@2025#2" />
+        <rect x="454.7" y="323.1" width="14" height="14" class="fbox" data-id="hr-working-hours@2025#3" />
+        <rect x="584.0" y="399.7" width="14" height="14" class="fbox" data-id="hr-working-hours@2025#4" />
+        <rect x="457.9" y="115.9" width="14" height="14" class="fbox" data-id="hr-working-hours@2025#5" />
+        <rect x="405.4" y="308.8" width="14" height="14" class="fbox" data-id="hr-working-hours@2025#6" />
+        <rect x="199.5" y="397.2" width="14" height="14" class="fbox" data-id="hr-working-hours@2025#7" />
+        <circle cx="67.7" cy="444.6" r="7" class="fbox-frozen" data-id="it-security@2025#0" />
+        <circle cx="73.1" cy="177.1" r="7" class="fbox-frozen" data-id="it-security@2025#1" />
+        <circle cx="127.7" cy="367.2" r="7" class="fbox-frozen" data-id="it-security@2025#2" />
+        <circle cx="75.1" cy="516.7" r="7" class="fbox-frozen" data-id="it-security@2025#3" />
+        <circle cx="75.4" cy="540.7" r="7" class="fbox-frozen" data-id="it-security@2025#4" />
+        <circle cx="82.4" cy="331.4" r="7" class="fbox-frozen" data-id="it-security@2025#5" />
+        <circle cx="93.7" cy="402.0" r="7" class="fbox-frozen" data-id="it-security@2025#6" />
+        <circle cx="66.5" cy="489.7" r="7" class="fbox-frozen" data-id="it-security@2025#7" />
+        <circle cx="125.7" cy="492.2" r="7" class="fbox-frozen" data-id="it-security@2025#8" />
+        <circle cx="101.5" cy="395.5" r="7" class="fbox-frozen" data-id="it-security@2025#9" />
+        <circle cx="442.6" cy="70.0" r="7" class="fbox" data-id="travel-expenses@2025#1" />
+        <circle cx="412.4" cy="166.4" r="7" class="fbox" data-id="travel-expenses@2025#2" />
+        <circle cx="613.7" cy="345.7" r="7" class="fbox" data-id="travel-expenses@2025#3" />
+        <circle cx="590.9" cy="373.0" r="7" class="fbox" data-id="travel-expenses@2025#4" />
+        <circle cx="504.7" cy="340.8" r="7" class="fbox" data-id="travel-expenses@2025#5" />
+        <circle cx="545.9" cy="358.9" r="7" class="fbox" data-id="travel-expenses@2025#6" />
+        <circle cx="519.0" cy="433.6" r="7" class="fbox" data-id="travel-expenses@2025#7" />
+        <circle cx="514.9" cy="369.4" r="7" class="fbox" data-id="travel-expenses@2025#8" />
+        <circle cx="419.1" cy="49.2" r="9" class="fdot" data-id="hr-leave@2025#1" />
+        <circle cx="578.9" cy="228.1" r="9" class="fdot" data-id="hr-leave@2025#2" />
+        <circle cx="640.1" cy="372.2" r="9" class="fdot" data-id="hr-leave@2025#3" />
+        <circle cx="579.8" cy="298.1" r="9" class="fdot" data-id="hr-leave@2025#4" />
+        <circle cx="580.1" cy="359.6" r="9" class="fdot" data-id="hr-leave@2025#5" />
+        <circle cx="581.6" cy="362.5" r="9" class="fdot" data-id="hr-leave@2025#6" />
+        <circle cx="564.9" cy="386.7" r="9" class="fdot" data-id="hr-leave@2025#7" />
+        <circle cx="625.0" cy="322.8" r="9" class="fdot" data-id="hr-leave@2025#8" />
+      </g>
+      <g transform="translate(752 60)" data-gen="legend">
         <circle cx="0" cy="0" r="9" class="fdot" />
         <text x="18" y="6" class="fsub">hr-leave</text>
         <circle cx="0" cy="30" r="7" class="fbox" />
@@ -262,20 +264,20 @@ Cosine ve mesafe karşılığı L2, `src/lib/similarity.ts` içinde birkaç sat�
         <text x="18" y="216" class="fsub">it-security</text>
       </g>
       <g data-from="7">
-        <text x="44" y="226" class="fsub ffrozen-t">it-security · İngilizce</text>
-        <text x="431" y="45" class="fsub">§1</text>
-        <text x="239" y="83" class="fsub">§1</text>
-        <text x="376" y="51" class="fsub">§1</text>
-        <text x="455" y="66" class="fsub">§1</text>
-        <text x="431" y="98" class="fsub">§1</text>
-        <text x="531" y="106" class="fsub">§1</text>
-        <text x="548" y="44" class="fsub">§1 Amaç ve Kapsam,</text>
-        <text x="548" y="66" class="fsub">6 Türkçe politikada</text>
+        <text x="44" y="226" class="fsub ffrozen-t" data-gen="doc-label" data-doc="it-security">it-security · İngilizce</text>
+        <text x="431" y="45" class="fsub" data-gen="anchor" data-id="hr-leave@2025#1">§1</text>
+        <text x="239" y="83" class="fsub" data-gen="anchor" data-id="code-of-conduct@2025#1">§1</text>
+        <text x="376" y="51" class="fsub" data-gen="anchor" data-id="hr-working-hours@2025#1">§1</text>
+        <text x="455" y="66" class="fsub" data-gen="anchor" data-id="travel-expenses@2025#1">§1</text>
+        <text x="431" y="98" class="fsub" data-gen="anchor" data-id="benefits@2025#1">§1</text>
+        <text x="531" y="106" class="fsub" data-gen="anchor" data-id="hr-salary-bands@2025#1">§1</text>
+        <text x="548" y="44" class="fsub" data-q="corpus:2025/hr-leave.md">§1 Amaç ve Kapsam,</text>
+        <text x="548" y="66" class="fsub" data-q="const">6 Türkçe politikada</text>
       </g>
       <g data-from="8">
-        <path d="M507 345 L640 372" class="farrow" stroke-dasharray="5 5" />
-        <polygon points="506.9,328.2 511.1,339.5 523.1,339.9 513.6,347.4 516.9,358.9 506.9,352.2 497.0,358.9 500.3,347.4 490.8,339.9 502.8,339.5" class="farrow fgate-t" />
-        <text x="652" y="398" class="fsub fnum">hr-leave §3 (cevap)</text>
+        <path d="M507 345 L640 372" class="farrow" stroke-dasharray="5 5" data-gen="star-line" data-id="hr-leave@2025#3" />
+        <polygon points="506.9,328.2 511.1,339.5 523.1,339.9 513.6,347.4 516.9,358.9 506.9,352.2 497.0,358.9 500.3,347.4 490.8,339.9 502.8,339.5" class="farrow fgate-t" data-gen="star" />
+        <text x="652" y="398" class="fsub fnum" data-gen="anchor" data-id="answer">hr-leave §3 (cevap)</text>
         <polygon points="752,288 755,296 763,296 757,301 759,309 752,304 745,309 747,301 741,296 749,296" class="farrow fgate-t" />
         <text x="770" y="306" class="fsub fgate-t">günün sorusu</text>
       </g>

@@ -23,33 +23,33 @@ Günün sorusu çözüldü. Her şey yolunda mı? Gün boyunca pipeline'ın dör
       <text x="20" y="38" class="flbl">Dört yanılma, dördü de bu günün loglarında</text>
       <g data-from="1">
         <rect x="20" y="60" width="470" height="140" rx="12" class="fbox fbox-bad" />
-        <text x="44" y="98" class="flbl">1 · Retriever</text>
-        <text x="44" y="136" class="fsub">"tatil hakkım" (q02): doğru bölüm 5. sırada</text>
+        <text x="44" y="98" class="flbl" data-q="const">1 · Retriever</text>
+        <text x="44" y="136" class="fsub" data-q="log:eval-answers">"tatil hakkım" (q02): doğru bölüm 5. sırada</text>
         <text x="44" y="164" class="fsub">soru dokümanın kelimelerini kullanmıyor</text>
       </g>
       <g data-from="2">
         <rect x="510" y="60" width="470" height="140" rx="12" class="fbox fbox-bad" />
-        <text x="534" y="98" class="flbl">2 · Chunk</text>
-        <text x="534" y="136" class="fsub">fixed: "| 7 | 22 |" başlığından ayrıldı</text>
+        <text x="534" y="98" class="flbl" data-q="const">2 · Chunk</text>
+        <text x="534" y="136" class="fsub" data-q="corpus:2025/hr-leave.md">fixed: "| 7 | 22 |" başlığından ayrıldı</text>
         <text x="534" y="164" class="fsub">→ "Bu bilgi politikalarda yer almıyor."</text>
       </g>
       <g data-from="3">
         <rect x="20" y="220" width="470" height="140" rx="12" class="fbox fbox-bad" />
-        <text x="44" y="258" class="flbl">3 · LLM</text>
+        <text x="44" y="258" class="flbl" data-q="const">3 · LLM</text>
         <text x="44" y="296" class="fsub">maaş sorusu, maaş chunk'ı yok (filtre)</text>
-        <text x="44" y="324" class="fsub">"bilmiyorum" demedi → "harcırah 70 EUR [1]"</text>
+        <text x="44" y="324" class="fsub" data-q="log:ask-access-on">"bilmiyorum" demedi → "harcırah 70 EUR [1]"</text>
       </g>
       <g data-from="4">
         <rect x="510" y="220" width="470" height="140" rx="12" class="fbox fbox-bad" />
-        <text x="534" y="258" class="flbl">4 · Context</text>
-        <text x="534" y="296" class="fsub">hepsi prompt'ta: 11358 token, RAG 1155</text>
-        <text x="534" y="324" class="fsub">num_ctx ayarımız 8192'ye sığmıyor</text>
+        <text x="534" y="258" class="flbl" data-q="const">4 · Context</text>
+        <text x="534" y="296" class="fsub" data-q="log:stuff-everything log:08-answer">hepsi prompt'ta: 11358 token, RAG 1155</text>
+        <text x="534" y="324" class="fsub" data-q="code:src/lib/config.ts">num_ctx ayarımız 8192'ye sığmıyor</text>
       </g>
       <text x="20" y="408" class="flbl">RAG'in başarısı =</text>
       <g class="ph ph1">
         <rect x="20" y="424" width="290" height="110" rx="12" class="fbox fbox-on" />
         <text x="165" y="466" text-anchor="middle" class="flbl">retriever doğruluğu</text>
-        <text x="165" y="504" text-anchor="middle" class="fsub">q02: 5. sırada</text>
+        <text x="165" y="504" text-anchor="middle" class="fsub" data-q="log:eval-answers">q02: 5. sırada</text>
       </g>
       <text x="335" y="490" text-anchor="middle" class="flbl">×</text>
       <g class="ph ph2">
@@ -101,7 +101,7 @@ Hepsi aynı iskelet: bul, ekle, yaz. Fark, "bul" adımının ne kadar akıllı v
     <svg viewBox="0 0 1000 590" role="img" aria-label="Dört RAG türü dört küçük pipeline olarak">
       <defs><marker id="rt-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker></defs>
       <g class="ph ph1">
-        <text x="20" y="32" class="flbl">1 · Naive RAG</text>
+        <text x="20" y="32" class="flbl" data-q="const">1 · Naive RAG</text>
         <rect x="20" y="46" width="130" height="58" rx="10" class="fbox" />
         <text x="85" y="82" text-anchor="middle" class="flbl">Soru</text>
         <rect x="182" y="46" width="130" height="58" rx="10" class="fbox" />
@@ -119,17 +119,17 @@ Hepsi aynı iskelet: bul, ekle, yaz. Fark, "bul" adımının ne kadar akıllı v
         <text x="20" y="130" class="fsub">bugün kurduğumuz iskelet</text>
       </g>
       <g class="ph ph1">
-        <text x="20" y="177" class="flbl">2 · Reranker RAG</text>
+        <text x="20" y="177" class="flbl" data-q="const">2 · Reranker RAG</text>
         <rect x="20" y="191" width="130" height="58" rx="10" class="fbox" />
         <text x="85" y="227" text-anchor="middle" class="flbl">Soru</text>
         <rect x="182" y="191" width="130" height="58" rx="10" class="fbox" />
         <text x="247" y="227" text-anchor="middle" class="flbl">Embed</text>
         <rect x="344" y="191" width="130" height="58" rx="10" class="fbox" />
-        <text x="409" y="227" text-anchor="middle" class="flbl">top-5</text>
+        <text x="409" y="227" text-anchor="middle" class="flbl" data-q="const">top-5</text>
         <rect x="506" y="191" width="130" height="58" rx="10" class="fbox fbox-on" />
         <text x="571" y="227" text-anchor="middle" class="flbl">Reranker</text>
         <rect x="668" y="191" width="130" height="58" rx="10" class="fbox" />
-        <text x="733" y="227" text-anchor="middle" class="flbl">en iyi 3</text>
+        <text x="733" y="227" text-anchor="middle" class="flbl" data-q="code:src/lib/config.ts">en iyi 3</text>
         <rect x="830" y="191" width="130" height="58" rx="10" class="fbox fbox-frozen" />
         <text x="895" y="227" text-anchor="middle" class="flbl">LLM</text>
         <path d="M152 220 H178" class="farrow" marker-end="url(#rt-h)" />
@@ -137,10 +137,10 @@ Hepsi aynı iskelet: bul, ekle, yaz. Fark, "bul" adımının ne kadar akıllı v
         <path d="M476 220 H502" class="farrow" marker-end="url(#rt-h)" />
         <path d="M638 220 H664" class="farrow" marker-end="url(#rt-h)" />
         <path d="M800 220 H826" class="farrow" marker-end="url(#rt-h)" />
-        <text x="20" y="275" class="fsub fgood-t">burada kurduk · 5 LLM çağrısı · günün sorusunda 2244 ms</text>
+        <text x="20" y="275" class="fsub fgood-t" data-q="log:07-rerank">burada kurduk · 5 LLM çağrısı · günün sorusunda 2244 ms</text>
       </g>
       <g class="ph ph2">
-        <text x="20" y="322" class="flbl">3 · Multi-query RAG</text>
+        <text x="20" y="322" class="flbl" data-q="const">3 · Multi-query RAG</text>
         <rect x="20" y="336" width="130" height="58" rx="10" class="fbox" />
         <text x="85" y="372" text-anchor="middle" class="flbl">Soru</text>
         <rect x="182" y="336" width="130" height="58" rx="10" class="fbox fbox-frozen" />
@@ -148,11 +148,11 @@ Hepsi aynı iskelet: bul, ekle, yaz. Fark, "bul" adımının ne kadar akıllı v
         <rect x="356" y="326" width="130" height="58" rx="10" class="fbox" />
         <rect x="350" y="331" width="130" height="58" rx="10" class="fbox" />
         <rect x="344" y="336" width="130" height="58" rx="10" class="fbox fbox-on" />
-        <text x="409" y="372" text-anchor="middle" class="flbl">3 soru</text>
+        <text x="409" y="372" text-anchor="middle" class="flbl" data-q="code:src/lib/config.ts">3 soru</text>
         <rect x="518" y="326" width="130" height="58" rx="10" class="fbox" />
         <rect x="512" y="331" width="130" height="58" rx="10" class="fbox" />
         <rect x="506" y="336" width="130" height="58" rx="10" class="fbox fbox-on" />
-        <text x="571" y="372" text-anchor="middle" class="flbl">3 arama</text>
+        <text x="571" y="372" text-anchor="middle" class="flbl" data-q="code:src/lib/config.ts">3 arama</text>
         <rect x="668" y="336" width="130" height="58" rx="10" class="fbox fbox-on" />
         <text x="733" y="372" text-anchor="middle" class="flbl">birleşim</text>
         <rect x="830" y="336" width="130" height="58" rx="10" class="fbox fbox-frozen" />
@@ -165,7 +165,7 @@ Hepsi aynı iskelet: bul, ekle, yaz. Fark, "bul" adımının ne kadar akıllı v
         <text x="20" y="420" class="fsub fgate-t">ölçmedik</text>
       </g>
       <g class="ph ph2">
-        <text x="20" y="467" class="flbl">4 · RAG-fusion</text>
+        <text x="20" y="467" class="flbl" data-q="const">4 · RAG-fusion</text>
         <rect x="20" y="481" width="130" height="58" rx="10" class="fbox" />
         <text x="85" y="517" text-anchor="middle" class="flbl">Soru</text>
         <rect x="182" y="481" width="130" height="58" rx="10" class="fbox fbox-frozen" />
@@ -173,11 +173,11 @@ Hepsi aynı iskelet: bul, ekle, yaz. Fark, "bul" adımının ne kadar akıllı v
         <rect x="356" y="471" width="130" height="58" rx="10" class="fbox" />
         <rect x="350" y="476" width="130" height="58" rx="10" class="fbox" />
         <rect x="344" y="481" width="130" height="58" rx="10" class="fbox" />
-        <text x="409" y="517" text-anchor="middle" class="flbl">3 soru</text>
+        <text x="409" y="517" text-anchor="middle" class="flbl" data-q="code:src/lib/config.ts">3 soru</text>
         <rect x="518" y="471" width="130" height="58" rx="10" class="fbox" />
         <rect x="512" y="476" width="130" height="58" rx="10" class="fbox" />
         <rect x="506" y="481" width="130" height="58" rx="10" class="fbox" />
-        <text x="571" y="517" text-anchor="middle" class="flbl">3 arama</text>
+        <text x="571" y="517" text-anchor="middle" class="flbl" data-q="code:src/lib/config.ts">3 arama</text>
         <rect x="668" y="481" width="130" height="58" rx="10" class="fbox fbox-on" />
         <text x="733" y="517" text-anchor="middle" class="flbl tight">birleştir</text>
         <rect x="830" y="481" width="130" height="58" rx="10" class="fbox fbox-frozen" />

@@ -25,57 +25,57 @@ B sayfasında chunker'ı değiştirdik ve günün sorusu "yer almıyor"dan "22 i
 
 <Deck>
   <DeckFigure slot="figure">
-    <svg viewBox="0 0 1000 610" role="img" aria-label="Bir soru için retriever'ın getirdiği beş bölüm, üç metrik ve iki chunker'ın sonucu">
-      <text x="20" y="34" class="flbl">q02 · "Tatil hakkım kaç gün, 4 yıldır çalışıyorum?"</text>
+    <svg viewBox="0 0 1000 610" role="img" aria-label="Bir soru için retriever'ın getirdiği beş bölüm, üç metrik ve iki chunker'ın sonucu" data-draw="eval-question" data-qid="q02">
+      <text x="20" y="34" class="flbl" data-q="code:eval/gold.jsonl">q02 · "Tatil hakkım kaç gün, 4 yıldır çalışıyorum?"</text>
       <rect x="20" y="52" width="460" height="68" rx="10" class="fbox fbox-gate" />
-      <text x="40" y="82" class="flbl">doğru bölüm: hr-leave#3</text>
-      <text x="40" y="108" class="fsub">beklenen değer: "18" · tür: paraphrase</text>
+      <text x="40" y="82" class="flbl" data-q="code:eval/gold.jsonl">doğru bölüm: hr-leave#3</text>
+      <text x="40" y="108" class="fsub" data-q="code:eval/gold.jsonl">beklenen değer: "18" · tür: paraphrase</text>
       <g data-from="2">
-        <rect x="20" y="140" width="460" height="42" rx="8" class="fbox" />
-        <text x="40" y="168" class="fsub">1</text>
-        <text x="80" y="169" class="flbl">hr-working-hours#5</text>
-        <rect x="20" y="192" width="460" height="42" rx="8" class="fbox" />
-        <text x="40" y="220" class="fsub">2</text>
-        <text x="80" y="221" class="flbl">hr-leave#4</text>
-        <rect x="20" y="244" width="460" height="42" rx="8" class="fbox" />
-        <text x="40" y="272" class="fsub">3</text>
-        <text x="80" y="273" class="flbl">hr-leave#6</text>
-        <rect x="20" y="296" width="460" height="42" rx="8" class="fbox" />
-        <text x="40" y="324" class="fsub">4</text>
-        <text x="80" y="324" class="fsub">…</text>
-        <rect x="20" y="348" width="460" height="42" rx="8" class="fbox fbox-good" />
-        <text x="40" y="376" class="fsub">5</text>
-        <text x="80" y="377" class="flbl fgood-t">hr-leave#3 ✓</text>
+        <rect x="20" y="140" width="460" height="42" rx="8" class="fbox" data-gen="row-box" />
+        <text x="40" y="168" class="fsub" data-gen="row-rank">1</text>
+        <text x="80" y="169" class="flbl" data-gen="row-id">hr-working-hours#5</text>
+        <rect x="20" y="192" width="460" height="42" rx="8" class="fbox" data-gen="row-box" />
+        <text x="40" y="220" class="fsub" data-gen="row-rank">2</text>
+        <text x="80" y="221" class="flbl" data-gen="row-id">hr-leave#4</text>
+        <rect x="20" y="244" width="460" height="42" rx="8" class="fbox" data-gen="row-box" />
+        <text x="40" y="272" class="fsub" data-gen="row-rank">3</text>
+        <text x="80" y="273" class="flbl" data-gen="row-id">hr-leave#6</text>
+        <rect x="20" y="296" width="460" height="42" rx="8" class="fbox" data-gen="row-box" />
+        <text x="40" y="324" class="fsub" data-gen="row-rank">4</text>
+        <text x="80" y="324" class="fsub" data-gen="row-id">…</text>
+        <rect x="20" y="348" width="460" height="42" rx="8" class="fbox fbox-good" data-gen="row-box" />
+        <text x="40" y="376" class="fsub" data-gen="row-rank">5</text>
+        <text x="80" y="377" class="flbl fgood-t" data-gen="row-id">hr-leave#3 ✓</text>
         <path d="M20 404 H480" class="faxis" stroke-dasharray="6 5" />
-        <text x="480" y="426" text-anchor="end" class="fsub">kesim: k = 5</text>
+        <text x="480" y="426" text-anchor="end" class="fsub" data-q="const">kesim: k = 5</text>
         <rect x="520" y="52" width="460" height="110" rx="10" class="fbox fbox-bad" />
-        <text x="545" y="92" class="flbl fbad-t">hit@1 = 0</text>
-        <text x="545" y="124" class="fsub">1. sırada çalışma saatleri bölümü,</text>
+        <text x="545" y="92" class="flbl fbad-t" data-gen="hit1">hit@1 = 0</text>
+        <text x="545" y="124" class="fsub" data-q="log:eval-section">1. sırada çalışma saatleri bölümü,</text>
         <text x="545" y="148" class="fsub">doğru bölüm değil</text>
       </g>
       <g data-from="3">
         <rect x="520" y="180" width="460" height="110" rx="10" class="fbox fbox-good" />
-        <text x="545" y="220" class="flbl fgood-t">recall@5 = 1/1 = 1.0</text>
-        <text x="545" y="252" class="fsub">tek doğru bölüm ilk 5'in içinde;</text>
+        <text x="545" y="220" class="flbl fgood-t" data-gen="recall">recall@5 = 1/1 = 1.0</text>
+        <text x="545" y="252" class="fsub" data-q="const">tek doğru bölüm ilk 5'in içinde;</text>
         <text x="545" y="276" class="fsub">kaçıncı olduğu önemsiz</text>
         <rect x="520" y="308" width="460" height="110" rx="10" class="fbox fbox-on" />
-        <text x="545" y="348" class="flbl fnum">RR = 1/5 = 0.20</text>
-        <text x="545" y="380" class="fsub">ilk doğru bölüm 5. sırada;</text>
-        <text x="545" y="404" class="fsub">1. sırada olsaydı 1.00 olurdu</text>
+        <text x="545" y="348" class="flbl fnum" data-gen="rr">RR = 1/5 = 0.20</text>
+        <text x="545" y="380" class="fsub" data-gen="rank-note">ilk doğru bölüm 5. sırada;</text>
+        <text x="545" y="404" class="fsub" data-q="const">1. sırada olsaydı 1.00 olurdu</text>
       </g>
       <g data-from="4">
         <text x="20" y="462" class="fsub">bölüm = doküman#başlık numarası: chunker değişse de aynı kalır</text>
       </g>
       <g data-from="5">
         <text x="20" y="508" class="flbl">section</text>
-        <text x="130" y="508" class="flbl fnum">hit@1 0.842 (16/19) · recall@5 1.000 · MRR 0.896</text>
+        <text x="130" y="508" class="flbl fnum" data-gen="metrics-section">hit@1 0.842 (16/19) · recall@5 1.000 · MRR 0.896</text>
       </g>
       <g data-from="6">
         <text x="20" y="550" class="flbl">fixed</text>
-        <text x="130" y="550" class="flbl fbad-t">hit@1 0.368 (7/19) · recall@5 0.895 · MRR 0.610</text>
+        <text x="130" y="550" class="flbl fbad-t" data-gen="metrics-fixed">hit@1 0.368 (7/19) · recall@5 0.895 · MRR 0.610</text>
       </g>
       <g data-from="7">
-        <text x="20" y="592" class="fsub">section'da zayıf: paraphrase 0.00 · tablo 0.50 · ikiz tablo 0.67</text>
+        <text x="20" y="592" class="fsub" data-gen="weak" data-names="paraphrase=paraphrase|table=tablo|twin-table=ikiz tablo">section'da zayıf: paraphrase 0.00 · tablo 0.50 · ikiz tablo 0.67</text>
       </g>
     </svg>
   </DeckFigure>

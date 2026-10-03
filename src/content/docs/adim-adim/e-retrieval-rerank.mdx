@@ -27,81 +27,81 @@ Depo dolu, şimdi soru soruyoruz. Günün sorusunda doğru chunk ilk sırada gel
 
 <Deck>
   <DeckFigure slot="figure" stage="list">
-    <svg viewBox="0 0 1000 500" role="img" aria-label="Günün sorusu için vektör sırası ve rerank sonrası sıra: kesme çizgisi k eşittir 5, prompt'a ilk 3 chunk giriyor">
+    <svg viewBox="0 0 1000 500" role="img" aria-label="Günün sorusu için vektör sırası ve rerank sonrası sıra: kesme çizgisi k eşittir 5, prompt'a ilk 3 chunk giriyor" data-draw="rerank-arrows" data-gloss="hr-leave@2025#3=izin tablosu|hr-leave@2025#4=izin planlama|hr-leave@2025#5=mazeret izinleri|hr-leave@2025#7=izin devri|hr-leave@2025#6=ücretsiz izin">
       <rect x="20" y="14" width="960" height="44" rx="8" class="fbox" />
-      <text x="500" y="43" text-anchor="middle" class="fsub">soru → bge-m3 → Chroma: en yakın 5 chunk · filtre: edition 2025, access all</text>
+      <text x="500" y="43" text-anchor="middle" class="fsub" data-q="log:06-retrieve">soru → bge-m3 → Chroma: en yakın 5 chunk · filtre: edition 2025, access all</text>
       <g data-from="2">
-        <text x="245" y="96" text-anchor="middle" class="flbl">vektör sırası · adım 6</text>
-        <rect x="22" y="118" width="446" height="26" rx="4" class="fbox-good" />
-        <text x="32" y="136" class="fsub fnum">1</text>
-        <text x="62" y="136" class="fsub">0.631</text>
-        <text x="130" y="136" class="fsub">hr-leave@2025#3 · izin tablosu</text>
-        <text x="32" y="176" class="fsub fnum">2</text>
-        <text x="62" y="176" class="fsub">0.628</text>
-        <text x="130" y="176" class="fsub">hr-leave@2025#4 · izin planlama</text>
-        <text x="32" y="216" class="fsub fnum">3</text>
-        <text x="62" y="216" class="fsub">0.627</text>
-        <text x="130" y="216" class="fsub">hr-leave@2025#5 · mazeret izinleri</text>
-        <text x="32" y="290" class="fsub fnum">4</text>
-        <text x="62" y="290" class="fsub">0.626</text>
-        <text x="130" y="290" class="fsub">hr-leave@2025#7 · izin devri</text>
-        <text x="32" y="330" class="fsub fnum">5</text>
-        <text x="62" y="330" class="fsub">0.624</text>
-        <text x="130" y="330" class="fsub">hr-leave@2025#6 · ücretsiz izin</text>
+        <text x="245" y="96" text-anchor="middle" class="flbl" data-q="const">vektör sırası · adım 6</text>
+        <rect x="22" y="118" width="446" height="26" rx="4" class="fbox-good" data-gen="v-good" />
+        <text x="32" y="136" class="fsub fnum" data-q="const">1</text>
+        <text x="62" y="136" class="fsub" data-gen="v-score">0.631</text>
+        <text x="130" y="136" class="fsub" data-gen="v-id">hr-leave@2025#3 · izin tablosu</text>
+        <text x="32" y="176" class="fsub fnum" data-q="const">2</text>
+        <text x="62" y="176" class="fsub" data-gen="v-score">0.628</text>
+        <text x="130" y="176" class="fsub" data-gen="v-id">hr-leave@2025#4 · izin planlama</text>
+        <text x="32" y="216" class="fsub fnum" data-q="const">3</text>
+        <text x="62" y="216" class="fsub" data-gen="v-score">0.627</text>
+        <text x="130" y="216" class="fsub" data-gen="v-id">hr-leave@2025#5 · mazeret izinleri</text>
+        <text x="32" y="290" class="fsub fnum" data-q="const">4</text>
+        <text x="62" y="290" class="fsub" data-gen="v-score">0.626</text>
+        <text x="130" y="290" class="fsub" data-gen="v-id">hr-leave@2025#7 · izin devri</text>
+        <text x="32" y="330" class="fsub fnum" data-q="const">5</text>
+        <text x="62" y="330" class="fsub" data-gen="v-score">0.624</text>
+        <text x="130" y="330" class="fsub" data-gen="v-id">hr-leave@2025#6 · ücretsiz izin</text>
       </g>
       <g data-from="3">
         <path d="M112 122 V334" class="farrow" />
-        <text x="118" y="360" class="fsub fgate-t">ilk 5'in farkı: 0.007</text>
+        <text x="118" y="360" class="fsub fgate-t" data-gen="gap">ilk 5'in farkı: 0.007</text>
       </g>
       <g data-from="4">
         <path d="M20 378 H470" class="farrow" stroke-dasharray="7 5" />
-        <text x="466" y="370" text-anchor="end" class="fsub">kesme: k = 5</text>
-        <text x="32" y="406" class="fsub">6</text>
-        <text x="62" y="406" class="fsub">0.607</text>
-        <text x="130" y="406" class="fsub">hr-working-hours@2025#5</text>
-        <text x="32" y="442" class="fsub">7</text>
-        <text x="62" y="442" class="fsub">0.588</text>
-        <text x="130" y="442" class="fsub">hr-leave@2025#2</text>
-        <text x="32" y="478" class="fsub">8</text>
-        <text x="62" y="478" class="fsub">0.580</text>
-        <text x="130" y="478" class="fsub">benefits@2025#6</text>
+        <text x="466" y="370" text-anchor="end" class="fsub" data-q="const">kesme: k = 5</text>
+        <text x="32" y="406" class="fsub" data-q="const">6</text>
+        <text x="62" y="406" class="fsub" data-gen="v-score">0.607</text>
+        <text x="130" y="406" class="fsub" data-gen="v-id">hr-working-hours@2025#5</text>
+        <text x="32" y="442" class="fsub" data-q="const">7</text>
+        <text x="62" y="442" class="fsub" data-gen="v-score">0.588</text>
+        <text x="130" y="442" class="fsub" data-gen="v-id">hr-leave@2025#2</text>
+        <text x="32" y="478" class="fsub" data-q="const">8</text>
+        <text x="62" y="478" class="fsub" data-gen="v-score">0.580</text>
+        <text x="130" y="478" class="fsub" data-gen="v-id">benefits@2025#6</text>
       </g>
       <g data-from="5">
         <path d="M20 234 H470" class="fbox-gate" stroke-dasharray="7 5" />
-        <text x="466" y="258" text-anchor="end" class="fsub fgate-t">↑ prompt'a ilk 3</text>
+        <text x="466" y="258" text-anchor="end" class="fsub fgate-t" data-q="code:src/lib/config.ts">↑ prompt'a ilk 3</text>
       </g>
       <g data-from="6">
-        <text x="765" y="96" text-anchor="middle" class="flbl">rerank sonrası · adım 7</text>
-        <rect x="552" y="118" width="428" height="26" rx="4" class="fbox-good" />
-        <text x="562" y="136" class="fsub fnum">1</text>
-        <text x="592" y="136" class="fsub">rel 10</text>
-        <text x="666" y="136" class="fsub">hr-leave@2025#3 · izin tablosu</text>
-        <text x="562" y="176" class="fsub fnum">2</text>
-        <text x="592" y="176" class="fsub">rel 9</text>
-        <text x="666" y="176" class="fsub">hr-leave@2025#7 · izin devri</text>
-        <text x="562" y="216" class="fsub fnum">3</text>
-        <text x="592" y="216" class="fsub">rel 6</text>
-        <text x="666" y="216" class="fsub">hr-leave@2025#4 · izin planlama</text>
-        <text x="562" y="290" class="fsub fnum">4</text>
-        <text x="592" y="290" class="fsub">rel 3</text>
-        <text x="666" y="290" class="fsub">hr-leave@2025#6 · ücretsiz izin</text>
-        <text x="562" y="330" class="fsub fnum">5</text>
-        <text x="592" y="330" class="fsub">rel 0</text>
-        <text x="666" y="330" class="fsub">hr-leave@2025#5 · mazeret izinleri</text>
+        <text x="765" y="96" text-anchor="middle" class="flbl" data-q="const">rerank sonrası · adım 7</text>
+        <rect x="552" y="118" width="428" height="26" rx="4" class="fbox-good" data-gen="r-good" />
+        <text x="562" y="136" class="fsub fnum" data-q="const">1</text>
+        <text x="592" y="136" class="fsub" data-gen="r-rel">rel 10</text>
+        <text x="666" y="136" class="fsub" data-gen="r-id">hr-leave@2025#3 · izin tablosu</text>
+        <text x="562" y="176" class="fsub fnum" data-q="const">2</text>
+        <text x="592" y="176" class="fsub" data-gen="r-rel">rel 9</text>
+        <text x="666" y="176" class="fsub" data-gen="r-id">hr-leave@2025#7 · izin devri</text>
+        <text x="562" y="216" class="fsub fnum" data-q="const">3</text>
+        <text x="592" y="216" class="fsub" data-gen="r-rel">rel 6</text>
+        <text x="666" y="216" class="fsub" data-gen="r-id">hr-leave@2025#4 · izin planlama</text>
+        <text x="562" y="290" class="fsub fnum" data-q="const">4</text>
+        <text x="592" y="290" class="fsub" data-gen="r-rel">rel 3</text>
+        <text x="666" y="290" class="fsub" data-gen="r-id">hr-leave@2025#6 · ücretsiz izin</text>
+        <text x="562" y="330" class="fsub fnum" data-q="const">5</text>
+        <text x="592" y="330" class="fsub" data-gen="r-rel">rel 0</text>
+        <text x="666" y="330" class="fsub" data-gen="r-id">hr-leave@2025#5 · mazeret izinleri</text>
         <path d="M550 234 H980" class="fbox-gate" stroke-dasharray="7 5" />
-        <text x="976" y="258" text-anchor="end" class="fsub fgate-t">↑ prompt'a ilk 3</text>
+        <text x="976" y="258" text-anchor="end" class="fsub fgate-t" data-q="code:src/lib/config.ts">↑ prompt'a ilk 3</text>
       </g>
       <g data-from="7">
-        <path d="M472 131 L548 131" class="farrow" />
-        <path d="M472 171 L548 211" class="farrow" />
-        <path d="M472 211 L548 325" class="fbox-bad" />
-        <path d="M472 285 L548 171" class="farrow-on" />
-        <path d="M472 325 L548 285" class="farrow" />
-        <text x="765" y="384" text-anchor="middle" class="fsub fgood-t">§5 (ilgisiz) prompt'tan çıktı</text>
-        <text x="765" y="410" text-anchor="middle" class="fsub fbad-t">§7 girdi: rel 9, ama cevap değil</text>
+        <path d="M472 131 L548 131" class="farrow" data-gen="arrow" />
+        <path d="M472 171 L548 211" class="farrow" data-gen="arrow" />
+        <path d="M472 211 L548 325" class="fbox-bad" data-gen="arrow" />
+        <path d="M472 285 L548 171" class="farrow-on" data-gen="arrow" />
+        <path d="M472 325 L548 285" class="farrow" data-gen="arrow" />
+        <text x="765" y="384" text-anchor="middle" class="fsub fgood-t" data-q="log:07-rerank">§5 (ilgisiz) prompt'tan çıktı</text>
+        <text x="765" y="410" text-anchor="middle" class="fsub fbad-t" data-q="log:07-rerank">§7 girdi: rel 9, ama cevap değil</text>
       </g>
       <g data-from="8">
-        <text x="765" y="452" text-anchor="middle" class="fsub">arama: 7 ms · rerank: 5 çağrı, 2243 ms</text>
+        <text x="765" y="452" text-anchor="middle" class="fsub" data-gen="timing">arama: 7 ms · rerank: 5 çağrı, 2243 ms</text>
         <text x="765" y="478" text-anchor="middle" class="fsub">(M serisi bir Mac'te ölçüldü)</text>
       </g>
     </svg>
@@ -111,7 +111,7 @@ Depo dolu, şimdi soru soruyoruz. Günün sorusunda doğru chunk ilk sırada gel
       <rect x="20" y="20" width="176" height="160" rx="10" class="fbox-on" />
       <text x="108" y="60" text-anchor="middle" class="flbl">top-k</text>
       <text x="108" y="92" text-anchor="middle" class="fsub">en yakın k tane</text>
-      <text x="108" y="118" text-anchor="middle" class="fsub">bizde k = 5</text>
+      <text x="108" y="118" text-anchor="middle" class="fsub" data-q="const">bizde k = 5</text>
       <text x="108" y="160" text-anchor="middle" class="fsub fgood-t">bu repoda</text>
       <g class="ph ph1">
         <rect x="216" y="20" width="176" height="160" rx="10" class="fbox" />
@@ -136,7 +136,7 @@ Depo dolu, şimdi soru soruyoruz. Günün sorusunda doğru chunk ilk sırada gel
         <rect x="804" y="20" width="176" height="160" rx="10" class="fbox" />
         <text x="892" y="60" text-anchor="middle" class="flbl">hybrid</text>
         <text x="892" y="92" text-anchor="middle" class="fsub">vektör + kelime</text>
-        <text x="892" y="118" text-anchor="middle" class="fsub">(BM25)</text>
+        <text x="892" y="118" text-anchor="middle" class="fsub" data-q="const">(BM25)</text>
         <text x="892" y="160" text-anchor="middle" class="fsub">kavram</text>
       </g>
     </svg>

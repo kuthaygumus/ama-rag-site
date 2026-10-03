@@ -63,20 +63,20 @@ Bir günde bir RAG pipeline'ı kurduk ve her ara çıktısını açtık. Kurumsa
       <path d="M850 138 V160 H400 V178" class="farrow" marker-end="url(#kp-h)" />
       <g class="ph ph6">
         <rect x="20" y="272" width="940" height="52" rx="10" class="fbox fbox-gate" />
-        <text x="490" y="306" text-anchor="middle" class="flbl">Eval: her değişiklikten sonra aynı 23 soru</text>
+        <text x="490" y="306" text-anchor="middle" class="flbl" data-q="log:eval-section">Eval: her değişiklikten sonra aynı 23 soru</text>
       </g>
       <g data-from="8">
         <text x="20" y="362" class="fsub">npm run question defteri: aynı soru, aynı model, beş cevap</text>
         <rect x="20" y="374" width="176" height="56" rx="10" class="fbox fbox-bad" />
-        <text x="108" y="410" text-anchor="middle" class="flbl fbad-t">50</text>
+        <text x="108" y="410" text-anchor="middle" class="flbl fbad-t" data-q="log:question-0-bare">50</text>
         <rect x="216" y="374" width="176" height="56" rx="10" class="fbox fbox-gate" />
-        <text x="304" y="410" text-anchor="middle" class="flbl fgate-t">yer almıyor</text>
+        <text x="304" y="410" text-anchor="middle" class="flbl fgate-t" data-q="log:question-1-fixed">yer almıyor</text>
         <rect x="412" y="374" width="176" height="56" rx="10" class="fbox fbox-good" />
-        <text x="500" y="410" text-anchor="middle" class="flbl fgood-t">22 ✓</text>
+        <text x="500" y="410" text-anchor="middle" class="flbl fgood-t" data-q="log:question-2-section">22 ✓</text>
         <rect x="608" y="374" width="176" height="56" rx="10" class="fbox fbox-good" />
-        <text x="696" y="410" text-anchor="middle" class="flbl fgood-t">22 ✓</text>
+        <text x="696" y="410" text-anchor="middle" class="flbl fgood-t" data-q="log:question-3-full">22 ✓</text>
         <rect x="804" y="374" width="176" height="56" rx="10" class="fbox fbox-good" />
-        <text x="892" y="410" text-anchor="middle" class="flbl fgood-t">24 ✓</text>
+        <text x="892" y="410" text-anchor="middle" class="flbl fgood-t" data-q="log:question-4-2026">24 ✓</text>
         <path d="M198 402 H212" class="farrow" marker-end="url(#kp-h)" />
         <path d="M394 402 H408" class="farrow" marker-end="url(#kp-h)" />
         <path d="M590 402 H604" class="farrow" marker-end="url(#kp-h)" />
@@ -135,27 +135,27 @@ Her satır bir pipeline adımı, her sütun bir eksen; sayılar bu sitenin logla
     <text x="304" y="40" text-anchor="middle" class="fsub">fixed chunk</text>
     <text x="500" y="40" text-anchor="middle" class="fsub">section chunk</text>
     <text x="696" y="40" text-anchor="middle" class="fsub">Chroma</text>
-    <text x="892" y="40" text-anchor="middle" class="fsub">2026 sürümü</text>
+    <text x="892" y="40" text-anchor="middle" class="fsub" data-q="const">2026 sürümü</text>
     <rect x="20" y="56" width="176" height="110" rx="12" class="fbox fbox-bad" />
-    <text x="108" y="104" text-anchor="middle" class="flbl fbad-t">50 iş günü</text>
+    <text x="108" y="104" text-anchor="middle" class="flbl fbad-t" data-q="log:question-0-bare">50 iş günü</text>
     <text x="108" y="138" text-anchor="middle" class="fsub">uydurdu</text>
     <rect x="216" y="56" width="176" height="110" rx="12" class="fbox fbox-gate" />
-    <text x="304" y="104" text-anchor="middle" class="flbl fgate-t">yer almıyor</text>
+    <text x="304" y="104" text-anchor="middle" class="flbl fgate-t" data-q="log:question-1-fixed">yer almıyor</text>
     <text x="304" y="138" text-anchor="middle" class="fsub">satır başlıksız kaldı</text>
     <rect x="412" y="56" width="176" height="110" rx="12" class="fbox fbox-good" />
-    <text x="500" y="104" text-anchor="middle" class="flbl fgood-t">22 ✓</text>
+    <text x="500" y="104" text-anchor="middle" class="flbl fgood-t" data-q="log:question-2-section">22 ✓</text>
     <text x="500" y="138" text-anchor="middle" class="fsub">başlık önekli chunk</text>
     <rect x="608" y="56" width="176" height="110" rx="12" class="fbox fbox-good" />
-    <text x="696" y="104" text-anchor="middle" class="flbl fgood-t">22 ✓</text>
+    <text x="696" y="104" text-anchor="middle" class="flbl fgood-t" data-q="log:question-3-full">22 ✓</text>
     <text x="696" y="138" text-anchor="middle" class="fsub">aynı sıralama</text>
     <rect x="804" y="56" width="176" height="110" rx="12" class="fbox fbox-good" />
-    <text x="892" y="104" text-anchor="middle" class="flbl fgood-t">24 ✓</text>
+    <text x="892" y="104" text-anchor="middle" class="flbl fgood-t" data-q="log:question-4-2026">24 ✓</text>
     <text x="892" y="138" text-anchor="middle" class="fsub">yeni doküman</text>
     <path d="M198 111 H212" class="farrow" marker-end="url(#kp-l)" />
     <path d="M394 111 H408" class="farrow" marker-end="url(#kp-l)" />
     <path d="M590 111 H604" class="farrow" marker-end="url(#kp-l)" />
     <path d="M786 111 H800" class="farrow" marker-end="url(#kp-l)" />
-    <text x="500" y="206" text-anchor="middle" class="fsub">model: beş seferde de gemma3:4b, aynı ağırlıklar</text>
+    <text x="500" y="206" text-anchor="middle" class="fsub" data-q="const">model: beş seferde de gemma3:4b, aynı ağırlıklar</text>
   </svg>
 </Figure>
 

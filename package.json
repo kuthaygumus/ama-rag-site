@@ -20,7 +20,9 @@
     "check:i18n": "node scripts/check-i18n.mjs",
     "check:dist": "node scripts/check-dist.mjs",
     "check:links": "node scripts/check-links.mjs",
-    "check:en": "node scripts/check-en.mjs"
+    "check:en": "node scripts/check-en.mjs",
+    "check:drawings": "node scripts/check-drawings.mjs",
+    "gen:drawings": "node scripts/gen-drawings.mjs"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.42.0",
