@@ -27,25 +27,25 @@ Cevap doğru ve kaynaklı. Peki bir soru kaç saniye sürüyor, API'li bir model
     <svg viewBox="0 0 1000 520" role="img" aria-label="Prompt token karşılaştırması, bir sorunun aşama süreleri ve ingest cache'i" data-draw="time-bars">
       <g class="ph ph1">
         <text x="40" y="34" class="flbl">Prompt'a giren token (rerank hariç)</text>
-        <rect x="40" y="50" width="96" height="44" rx="6" class="fbox fbox-good" data-gen="rag-bar" />
-        <text x="150" y="79" class="fsub" data-gen="rag-label">RAG: 3 chunk · 1155 token · 22 ✓</text>
+        <rect x="40" y="50" width="92" height="44" rx="6" class="fbox fbox-good" data-gen="rag-bar" />
+        <text x="146" y="79" class="fsub" data-gen="rag-label">RAG: 3 chunk · 976 token · 22 ✓</text>
         <rect x="40" y="106" width="940" height="44" rx="6" class="fbox fbox-bad" data-gen="all-bar" />
-        <text x="60" y="135" class="fsub" data-gen="all-label">hepsi: 8 doküman, maaş tablosu dahil · 11358 token · 22 ✓</text>
-        <path d="M718 40 V162" class="faxis" stroke-dasharray="6 5" data-gen="numctx" />
-        <text x="718" y="184" text-anchor="middle" class="fsub" data-gen="numctx-label">bizim num_ctx ayarımız: 8192 token</text>
+        <text x="60" y="135" class="fsub" data-gen="all-label">hepsi: 8 doküman, maaş tablosu dahil · 9954 token · 22 ✓</text>
+        <path d="M814 40 V162" class="faxis" stroke-dasharray="6 5" data-gen="numctx" />
+        <text x="814" y="184" text-anchor="middle" class="fsub" data-gen="numctx-label">bizim num_ctx ayarımız: 8192 token</text>
       </g>
       <g class="ph ph2">
         <text x="40" y="236" class="flbl">Günün sorusu, tek koşu: süre nerede geçiyor?</text>
-        <rect x="40" y="254" width="6" height="56" class="fbox fbox-on" data-gen="seg-search" />
-        <rect x="46" y="254" width="668" height="56" rx="6" class="fbox fbox-gate" data-gen="seg-rerank" />
-        <rect x="714" y="254" width="266" height="56" rx="6" class="fbox fbox-frozen" data-gen="seg-answer" />
-        <text x="380" y="290" text-anchor="middle" class="flbl" data-gen="seg-rerank-label">rerank · 5 LLM çağrısı · 2244 ms</text>
-        <text x="847" y="290" text-anchor="middle" class="flbl" data-gen="seg-answer-label">cevap · 891 ms</text>
-        <path d="M43 314 V326" class="faxis" data-gen="search-tick" />
+        <rect x="40" y="254" width="9" height="56" class="fbox fbox-on" data-gen="seg-search" />
+        <rect x="49" y="254" width="640" height="56" rx="6" class="fbox fbox-gate" data-gen="seg-rerank" />
+        <rect x="689" y="254" width="291" height="56" rx="6" class="fbox fbox-frozen" data-gen="seg-answer" />
+        <text x="369" y="290" text-anchor="middle" class="flbl" data-gen="seg-rerank-label">rerank · 5 LLM çağrısı · 1441 ms</text>
+        <text x="835" y="290" text-anchor="middle" class="flbl" data-gen="seg-answer-label">cevap · 655 ms</text>
+        <path d="M45 314 V326" class="faxis" data-gen="search-tick" />
         <text x="40" y="348" class="fsub" data-gen="search-label">↑ arama adımı 21 ms (vector DB 7 ms · soruyu embed 0 ms, cache'ten)</text>
       </g>
       <g class="ph ph3">
-        <text x="40" y="410" class="flbl" data-q="log:04-embed">Ingest, ikinci kez: 60 vektörün 60'ı cache'ten, adım 4 = 38 ms</text>
+        <text x="40" y="410" class="flbl" data-q="log:04-embed">Ingest, ikinci kez: 60 vektörün 60'ı cache'ten, adım 4 = 52 ms</text>
         <rect x="40" y="428" width="460" height="52" rx="8" class="fbox" />
         <text x="270" y="461" text-anchor="middle" class="flbl" data-q="log:ingest-2026">2025 · 60 kayıt · dokunulmadı</text>
         <rect x="520" y="428" width="460" height="52" rx="8" class="fbox fbox-on" />
