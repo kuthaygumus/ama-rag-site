@@ -53,7 +53,14 @@ async function save(name: string, text: string): Promise<void> {
 
 const gold = (await readFile("eval/gold.jsonl", "utf8")).trim().split("\n").map((l) => JSON.parse(l) as Gold);
 const first = (type: string) => gold.find((g) => g.type === type)!.query;
-const noRule = (fragment: string) => steps.s8.RULES.filter((r) => !r.includes(fragment));
+/** The rules without the ONE rule that holds `fragment`. Throws when the fragment is in no rule or in several:
+ *  a stale fragment would otherwise record a "rule-off" log with every rule still on. */
+const noRule = (fragment: string) => {
+  const left = steps.s8.RULES.filter((r) => !r.includes(fragment));
+  const removed = steps.s8.RULES.length - left.length;
+  if (removed !== 1) throw new Error(`rule-off fragment "${fragment}" must be in exactly one rule (found in ${removed})`);
+  return left;
+};
 
 /** Steps 6 → 7 → 8 with explicit settings, printed like the real steps. */
 async function pipeline(question: string, o: { access?: string[] | undefined; edition?: "latest" | "all"; rules?: string[]; rerank?: boolean } = {}) {
@@ -72,7 +79,7 @@ await clearData();
 await openStore().reset();
 console.log("capture: playing the day …");
 
-// Başlamadan
+// Before we start
 await run("doctor", ["src/cli/doctor.ts"]);
 await record("00-bare", "npm run step -- 0", () => steps.s0.run());
 await run("question-0-bare", ["src/cli/question.ts"]);
@@ -104,26 +111,34 @@ await record("08-answer-rerank-off", "npm run step -- 8   (after rerank off)", (
 await record("07-rerank", "npm run step -- 7", () => steps.s7.run(true));
 await run("08-answer", ["src/cli/step.ts", "8", "--prompt"]);
 await run("question-3-full", ["src/cli/question.ts"]);
+await run("ask-paraphrase", ["src/cli/ask.ts", first("paraphrase")]);
 
-// E / Güvenlik · access filter
+// E / Security · access filter
 await run("ask-access-on", ["src/cli/ask.ts", first("access")]);
 await record("ask-access-off", `npm run ask -- "${first("access")}"   (ASKER_MAY_READ = undefined)`, () => pipeline(first("access"), { access: undefined }));
 
 // F · answer generation: abstain + injection
 await run("ask-out-of-corpus", ["src/cli/ask.ts", first("out-of-corpus")]);
-await record("ask-out-of-corpus-rule-off", `npm run ask -- "${first("out-of-corpus")}"   (abstain rule commented out)`, () => pipeline(first("out-of-corpus"), { rules: noRule("yoksa yalnızca") }));
+await record("ask-out-of-corpus-rule-off", `npm run ask -- "${first("out-of-corpus")}"   (abstain rule commented out)`, () => pipeline(first("out-of-corpus"), { rules: noRule("write only this") }));
 await run("ask-injection", ["src/cli/ask.ts", first("injection")]);
-await record("ask-injection-rule-off", `npm run ask -- "${first("injection")}"   (the concrete-ban rule commented out)`, () => pipeline(first("injection"), { rules: noRule("asla şifre") }));
+await record("ask-injection-rule-off", `npm run ask -- "${first("injection")}"   (the concrete-ban rule commented out)`, () => pipeline(first("injection"), { rules: noRule("Never ask the user for a password") }));
 
 // 4 · quality: section vs fixed, then answers
 await run("eval-section", ["src/cli/eval.ts"]);
 await run("eval-answers", ["src/cli/eval.ts", "--answers"]);
+// the same eval on the JSON store (brute force): eval opens the store step 5 last wrote
+await steps.s5.run("json");
+await run("eval-section-json", ["src/cli/eval.ts"]);
+await steps.s5.run("chroma");
 await record("ingest-fixed", "npm run step -- 3 / 4 / 5   (chunker: fixed)", async () => {
   await steps.s3.run("fixed");
   await steps.s4.run();
   await steps.s5.run("chroma");
 });
 await run("eval-fixed", ["src/cli/eval.ts"]);
+await steps.s5.run("json");
+await run("eval-fixed-json", ["src/cli/eval.ts"]);
+await steps.s5.run("chroma");
 await record("ingest-section", "npm run step -- 3 / 4 / 5   (chunker: section)", async () => {
   await steps.s3.run("section");
   await steps.s4.run();
@@ -134,16 +149,17 @@ await record("ingest-section", "npm run step -- 3 / 4 / 5   (chunker: section)",
 await record("stuff-everything", "every document in one prompt (no retrieval)", async () => {
   const docs = JSON.parse(await readFile("data/2-clean.json", "utf8")).data as { id: string; text: string }[];
   const all = docs.map((d) => `### ${d.id}\n${d.text}`).join("\n\n");
-  const g = await generate(`KAYNAKLAR:\n\n${all}\n\nSORU: ${config.dayQuestion}\nCEVAP:`, { system: steps.s8.system(), numCtx: 32768 });
+  const g = await generate(`SOURCES:\n\n${all}\n\nQUESTION: ${config.dayQuestion}\nANSWER:`, { system: steps.s8.system(), numCtx: 32768 });
   console.log(`   documents      ${docs.length} (${all.length} characters)`);
   console.log(`   prompt tokens  ${g.promptTokens}`);
   console.log(`   time           ${g.ms} ms`);
   console.log(`\n${g.text}`);
 });
 
-// Veri değişince · the 2026 edition
+// When the data changes · the 2026 edition
 await run("ingest-2026", ["src/cli/ingest.ts", "--edition", "2026"]);
 await run("question-4-2026", ["src/cli/question.ts"]);
+await run("ask-2026-password", ["src/cli/ask.ts", first("en-tr")]);
 await record("edition-all", `npm run question   (EDITION_FILTER = "all")`, () => pipeline(config.dayQuestion, { edition: "all" }));
 
 console.log("capture: done — now in the site repo: npm run sync");
