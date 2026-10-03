@@ -56,7 +56,7 @@ Model politikayı bilmiyor. Cevabın şirketin politikasına bağlı olduğunu s
       </g>
       <g data-from="2">
         <path d="M512 228 L592 190" class="farrow" marker-end="url(#rr-h)" />
-        <text x="524" y="200" class="fsub" data-q="log:04-embed"><tspan x="524" y="180">1024</tspan><tspan x="524" y="200">sayı</tspan></text>
+        <text x="524" y="180" class="fsub" data-q="log:04-embed"><tspan x="524" y="160">1024</tspan><tspan x="524" y="180">sayı</tspan></text>
         <ellipse cx="655" cy="240" rx="55" ry="14" class="fbox" />
         <rect x="600" y="150" width="110" height="90" class="fbox" />
         <ellipse cx="655" cy="150" rx="55" ry="14" class="fbox" />
@@ -115,7 +115,7 @@ Model politikayı bilmiyor. Cevabın şirketin politikasına bağlı olduğunu s
     Model aynı, ağırlıklarına kimse dokunmadı. Değişen yalnızca önüne konan metin: cevap 22 iş günü, kaynağı [1] hr-leave §3.
   </Step>
   <Step title="Hepsini prompt'a koysak?" stage="b">
-    El kitabının 8 dokümanını tek prompt'a koyduk: 9954 token; RAG'in prompt'u 976. Cevap yine 22 iş günü, ama tek çağrı 26337 ms sürdü. RAG'in bütün yolu, arama ve <Term id="rerank">rerank</Term> dahil, yaklaşık 2 saniye.
+    El kitabının 8 dokümanını tek prompt'a koyduk: 9954 token; RAG'in prompt'u 976. Cevap yine 22 iş günü, ama tek çağrı 26337 ms, yani yaklaşık 26 saniye sürdü. RAG'in bütün yolu, arama ve <Term id="rerank">rerank</Term> dahil, yaklaşık 2 saniye.
   </Step>
   <Step title="Asıl iş seçmek" stage="b">
     Hepsini koyarsanız her soruda bütün el kitabının bedelini ödersiniz; corpus büyüdükçe bir gün <Term id="context">context window</Term>'a sığmaz; yalnızca İK'nın görebileceği ücret tablosunu da herkes okur.
@@ -129,7 +129,7 @@ Model politikayı bilmiyor. Cevabın şirketin politikasına bağlı olduğunu s
 
 Sonra bütün pipeline kurulduğunda (`HOW` satırına ve altındaki kaynaklara bakın):
 
-<Log name="question-3-full" title="npm run question — D'den sonra, vector DB dolunca" from={0} to={10} />
+<Log name="question-3-full" title="npm run question — vector DB dolunca" from={0} to={10} />
 </Example>
 
 Modelin önüne konan metnin tamamı (kurallar, numaralı kaynaklar, soru) [F · Cevap üretimi](/adim-adim/f-cevap/)

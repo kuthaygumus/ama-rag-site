@@ -140,7 +140,7 @@ The model made up numbers for the question of the day. The policy says a differe
     We asked the model the question of the day, with no sources. It said "depending on the company's policy". But it still gave numbers: 25-30 working days. The model never saw Kraken Air's policy. So these numbers don't come from there.
   </Step>
   <Step title="How did it write that?" stage="a">
-    The model writes the answer <Term id="token">token</Term> by token. At each step, it picks the most likely next token for the text so far. After "How many working days?", texts always go on with a number. No step checks that the number is right.
+    The model writes the answer <Term id="token">token</Term> by token. At each step, it picks the most likely next token for the text so far. After "How many working days", texts usually go on with a number. No step checks that the number is right.
   </Step>
   <Step title="Where does the knowledge live?" stage="b">
     Everything the model knows is in its <Term id="weights">weights</Term>. In gemma3:4b, that is about 4 billion numbers. Training changes these numbers in tiny steps, so the model predicts text better. The knowledge is not in one place. It is spread over all the numbers.
@@ -149,7 +149,7 @@ The model made up numbers for the question of the day. The policy says a differe
     When training ends, the weights freeze. Every question reads them, and no question writes to them. Chatting doesn't teach the model anything either. Kraken Air's policy was not in the training data. So it is not in these numbers.
   </Step>
   <Step title="It doesn't know that it doesn't know" stage="a">
-    The policy says 22 working days. Inside the model, no warning light comes on for "I don't know this". A made-up answer sounds as fluent as a right one. This is called a <Term id="hallucination">hallucination</Term>.
+    The policy says 22 working days. The model hedged, but it did not say "I don't know". It still gave numbers. Inside the model, no warning light comes on for "I don't know this". A made-up answer sounds as fluent as a right one. This is called a <Term id="hallucination">hallucination</Term>.
 
     <Now>Another question with no sources: `npm run step -- 0 "How many days do I have to upload my receipts after a trip?"`</Now>
   </Step>
@@ -160,7 +160,7 @@ The model made up numbers for the question of the day. The policy says a differe
 
 <Example>
 Model: "… gets **25-30 working days** of annual leave, depending on the company's policy."
-The policy itself is in `corpus/2025/hr-leave.md`. Each year of service has its own row:
+The policy itself is in `corpus/2025/hr-leave.md`. Each year of service up to 14 has its own row, and the last row is "15 or more":
 
 <RepoCode file="corpus/2025/hr-leave.md" from="| Years of service (full years)" to="15 or more" mark={["| 7 | 22 |"]} />
 </Example>

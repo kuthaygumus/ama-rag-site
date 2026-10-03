@@ -51,12 +51,12 @@ name, and the name says what it does.
       </g>
       <path d="M882 155 H902" class="farrow" marker-end="url(#rn-h)" />
       <rect x="908" y="112" width="84" height="86" rx="12" class="fbox" />
-      <text x="950" y="150" text-anchor="middle" class="flbl">answer</text>
+      <text x="950" y="150" text-anchor="middle" class="flbl tight">answer</text>
       <text x="950" y="176" text-anchor="middle" class="fsub" data-q="const">+ [1]</text>
     </svg>
   </DeckFigure>
   <Step title="What the name means">
-    <Term id="rag">RAG</Term> = Retrieval-Augmented Generation. Everyone calls it RAG. The three words are three jobs that run in order: find, add, write.
+    <Term id="rag">RAG</Term> = Retrieval-Augmented Generation. The three words are three jobs that run in order: find, add, write.
   </Step>
   <Step title="R · Retrieval: find" phase="1">
     We search for the question among chunks made from the documents beforehand. The search picks the few most relevant ones. Here, two files do this: `6-retrieve.ts` (search) and `7-rerank.ts` (<Term id="rerank">rerank</Term>).
@@ -78,7 +78,7 @@ name, and the name says what it does.
 | Problem | What RAG does | Where we see it today |
 |---|---|---|
 | **Private data** | On every question, it puts company documents the model never saw in front of it | [Without RAG / with RAG](/en/neden-rag/ragsiz-ragli/) |
-| **Fresh data** | A new edition comes: re-ingest it. No training | [When the data changes](/en/adim-adim/veri-degisince/) |
+| **Fresh data** | When a new edition arrives, re-ingest it. No training is needed | [When the data changes](/en/adim-adim/veri-degisince/) |
 | **Citing sources** | The answer says which chunk it came from, with `[1]` | [F · Generating the answer](/en/adim-adim/f-cevap/) |
 | **Access control** | A filter keeps HR-only documents out of the search | [E · Retrieval and reranking](/en/adim-adim/e-retrieval-rerank/) · [Security](/en/uretim/guvenlik/) |
 | **Made-up answers** | You can design it to say "I don't know" when the sources don't have the answer | [F · Generating the answer](/en/adim-adim/f-cevap/) |
@@ -105,7 +105,7 @@ page.
 </FAQ>
 
 <FAQ q="Is RAG a library or a product?">
-Neither. It is a setup, a design pattern. Today we write every step ourselves, in plain TypeScript. Frameworks
+No. It is a setup, a design pattern. Today we write every step ourselves, in plain TypeScript. Frameworks
 package the same steps. When you build the steps by hand once, you see what is inside a framework.
 </FAQ>
 

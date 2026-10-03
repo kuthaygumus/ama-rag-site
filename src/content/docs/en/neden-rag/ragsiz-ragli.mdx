@@ -17,7 +17,7 @@ import Takeaway from '../../../../components/Takeaway.astro';
 
 <Gate>
 The model doesn't know the policy. It says the answer depends on the company's policy, but it still gives numbers.
-None of them is 22. So what if we give the model the knowledge with the question, every time?
+None of them is 22. What if we give the model the knowledge with the question, every time?
 </Gate>
 
 <Deck>
@@ -35,7 +35,7 @@ None of them is 22. So what if we give the model the knowledge with the question
       <rect x="42" y="226" width="36" height="60" rx="14" class="fbox" />
       <rect x="190" y="190" width="130" height="90" rx="14" class="fbox fbox-frozen" />
       <text x="255" y="232" text-anchor="middle" class="flbl" data-q="const">gemma3:4b</text>
-      <text x="255" y="258" text-anchor="middle" class="fsub">language model</text>
+      <text x="255" y="258" text-anchor="middle" class="fsub">chat model</text>
       <path d="M88 215 H182" class="farrow" marker-end="url(#rr-h)" />
       <text x="135" y="205" text-anchor="middle" class="fsub">question</text>
       <path d="M188 262 H94" class="farrow" marker-end="url(#rr-h)" />
@@ -56,7 +56,7 @@ None of them is 22. So what if we give the model the knowledge with the question
       </g>
       <g data-from="2">
         <path d="M512 228 L592 190" class="farrow" marker-end="url(#rr-h)" />
-        <text x="524" y="200" class="fsub" data-q="log:04-embed"><tspan x="524" y="180">1024</tspan><tspan x="524" y="200">numbers</tspan></text>
+        <text x="524" y="180" class="fsub" data-q="log:04-embed"><tspan x="524" y="160">1024</tspan><tspan x="524" y="180">numbers</tspan></text>
         <ellipse cx="655" cy="240" rx="55" ry="14" class="fbox" />
         <rect x="600" y="150" width="110" height="90" class="fbox" />
         <ellipse cx="655" cy="150" rx="55" ry="14" class="fbox" />
@@ -115,7 +115,7 @@ None of them is 22. So what if we give the model the knowledge with the question
     The model is the same. Nobody touched its weights. Only the text in front of it changed. The answer is 22 working days, with the source [1] hr-leave §3.
   </Step>
   <Step title="What if we put everything in the prompt?" stage="b">
-    We put all 8 handbook documents into one prompt: 9954 tokens. The RAG prompt is 976 tokens. The answer is still 22 working days, but one call took 26337 ms. The whole RAG path, with search and <Term id="rerank">rerank</Term>, takes about 2 seconds.
+    We put all 8 handbook documents into one prompt: 9954 tokens. The RAG prompt is 976 tokens. The answer is still 22 working days, but one call took 26337 ms, about 26 seconds. The whole RAG path, with search and <Term id="rerank">rerank</Term>, takes about 2 seconds.
   </Step>
   <Step title="The real job is choosing" stage="b">
     If you put everything in, you pay for the whole handbook on every question. As the corpus grows, one day it won't fit in the <Term id="context">context window</Term>. And everyone reads the salary table that only HR may see.
@@ -129,7 +129,7 @@ First, with nothing built yet:
 
 Then the same command, with the whole pipeline built. Look at the `HOW` line and the sources under it:
 
-<Log name="question-3-full" title="npm run question — after D, with the vector DB filled" from={0} to={10} />
+<Log name="question-3-full" title="npm run question — with the vector DB filled" from={0} to={10} />
 </Example>
 
 The full text the model gets (rules, numbered sources, question) is on the

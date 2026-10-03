@@ -140,7 +140,7 @@ Model günün sorusuna sayı uydurdu. Politikadaki sayı başka.
     Günün sorusunu modele tek başına sorduk. Cevabın şirketin politikasına göre değiştiğini söyledi ("depending on the company's policy"), ama yine de sayı verdi: 25-30 iş günü. Model Kraken Air'in politikasını hiç görmedi; bu sayılar oradan gelmiyor.
   </Step>
   <Step title="Nasıl yazdı?" stage="a">
-    Model cevabı <Term id="token">token</Term> token yazar: her adımda, o ana kadarki metne en olası devamı seçer. "Kaç iş günü?" sorusundan sonra metinlerde hep bir sayı gelir. Sayının doğruluğunu kontrol eden bir adım yok.
+    Model cevabı <Term id="token">token</Term> token yazar: her adımda, o ana kadarki metne en olası devamı seçer. "How many working days" gibi bir sorudan sonra metinlerde çoğunlukla bir sayı gelir. Sayının doğruluğunu kontrol eden bir adım yok.
   </Step>
   <Step title="Bilgi nerede duruyor?" stage="b">
     Modelin bildiği her şey <Term id="weights">ağırlıklarında</Term>: gemma3:4b'de yaklaşık 4 milyar sayı. Eğitim bu sayıları, metni daha iyi tahmin edecek şekilde azar azar ayarlar. Bilgi tek bir yerde değil, sayılara dağılmış.
@@ -149,7 +149,7 @@ Model günün sorusuna sayı uydurdu. Politikadaki sayı başka.
     Eğitim bitince ağırlıklar dondurulur. Her soru onları okur, hiçbiri yazmaz; sohbet de modele bir şey öğretmez. Kraken Air'in politikası eğitim verisinde yoktu, yani bu sayılarda da yok.
   </Step>
   <Step title="Bilmediğini bilmiyor" stage="a">
-    Politika 22 iş günü diyor. Modelin içinde "bunu bilmiyorum" diye yanan bir ışık yok: uydurulan cevap da doğru cevap kadar akıcı çıkar. Buna <Term id="hallucination">halüsinasyon</Term> denir.
+    Politika 22 iş günü diyor. Model çekince koydu ama "bilmiyorum" demedi; yine de sayı verdi. Modelin içinde "bunu bilmiyorum" diye yanan bir ışık yok: uydurulan cevap da doğru cevap kadar akıcı çıkar. Buna <Term id="hallucination">halüsinasyon</Term> denir.
 
     <Now>Kaynaksız başka bir soru: `npm run step -- 0 "How many days do I have to upload my receipts after a trip?"`</Now>
   </Step>
@@ -160,7 +160,7 @@ Model günün sorusuna sayı uydurdu. Politikadaki sayı başka.
 
 <Example>
 Model: "… gets **25-30 working days** of annual leave, depending on the company's policy."
-Politikanın kendisi `corpus/2025/hr-leave.md` içinde; her kıdem yılı bir satır:
+Politikanın kendisi `corpus/2025/hr-leave.md` içinde; 14. yıla kadar her kıdem yılı bir satır, son satır "15 or more":
 
 <RepoCode file="corpus/2025/hr-leave.md" from="| Years of service (full years)" to="15 or more" mark={["| 7 | 22 |"]} />
 </Example>
