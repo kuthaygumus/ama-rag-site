@@ -55,18 +55,18 @@ Cevap doğru ve kaynaklı. Peki bir soru kaç saniye sürüyor, API'li bir model
     </svg>
   </DeckFigure>
   <Step title="Hepsini prompt'a koysak?" phase="1">
-    8 dokümanın tamamı (40092 karakter) tek prompt'ta: 11358 prompt <Term id="token">token</Term>. RAG'de 3 chunk, 1155 token: yaklaşık 10 kat az (rerank hariç). 11358, num_ctx ayarımız olan 8192'lik <Term id="context">pencereye</Term> sığmaz; bu ölçüm için 32768'e açtık.
+    8 dokümanın tamamı (40709 karakter) tek prompt'ta: 9954 prompt <Term id="token">token</Term>. RAG'de 3 chunk, 976 token: yaklaşık 10 kat az (rerank hariç). 9954, num_ctx ayarımız olan 8192'lik <Term id="context">pencereye</Term> sığmaz; bu ölçüm için 32768'e açtık.
   </Step>
   <Step title="…ve maaş tablosu herkese" phase="1">
-    Cevap doğru (22). Ama 8 dokümanın biri hr-only maaş tablosu: retrieval yoksa erişim filtresi de yok, maaşlar her çalışanın prompt'una girer. Cevap 29983 ms sürdü; RAG koşularında 888–3941 ms. Kat olarak karşılaştırmıyoruz: tek koşu, üstelik pencere büyüyünce model yeniden yüklendi.
+    Cevap doğru (22). Ama 8 dokümanın biri hr-only maaş tablosu: retrieval yoksa erişim filtresi de yok, maaşlar her çalışanın prompt'una girer. Cevap 26337 ms sürdü; RAG koşularında 650–3341 ms. Kat olarak karşılaştırmıyoruz: tek koşu. Model büyük pencere için belleğe yeniden yüklenmiş de olabilir; bunu ayrıca ölçmedik.
   </Step>
   <Step title="Bir sorunun süresi nereye gidiyor?" phase="2">
-    Günün sorusu, M serisi bir Mac'te, tek koşu: arama 21 ms, <Term id="rerank">rerank</Term> 2244 ms, cevap 891 ms. Rerank toplamın (3156 ms) yaklaşık %71'i: 5 chunk için 5 ayrı LLM çağrısı. Başka sorularda 5053–5672 ms sürdü; sizde süreler farklı olur.
+    Günün sorusu, M serisi bir Mac'te, tek koşu: arama 21 ms, <Term id="rerank">rerank</Term> 1441 ms, cevap 655 ms. Rerank toplamın (2117 ms) yaklaşık %68'i: 5 chunk için 5 ayrı LLM çağrısı. Başka sorularda 3662–4334 ms sürdü; sizde süreler farklı olur.
 
-    <Now n="1">`npm run ask -- "Frankfurt'a iki günlük toplantıya gidiyorum, uzmanım. Günlük harcırahım ne kadar?"`: arama, rerank ve cevap sürelerini not edin.</Now>
+    <Now n="1">`npm run ask -- "I am going to Frankfurt for a two-day meeting. I am a specialist. How much is my daily per diem?"`: arama, rerank ve cevap sürelerini not edin.</Now>
   </Step>
   <Step title="Ingest'te: cache ve artımlı yükleme" phase="3">
-    Her embedding, model + metin hash'iyle `.cache/` altına yazılır; yeniden çalıştırınca 60 vektörün 60'ı cache'ten geldi, adım 4 38 ms sürdü. 2026 sürümü eklenince depo yalnızca 2026'nın 60 kaydını yazdı; 2025 yerinde kaldı.
+    Her embedding, model + metin hash'iyle `.cache/` altına yazılır; yeniden çalıştırınca 60 vektörün 60'ı cache'ten geldi, adım 4 52 ms sürdü. 2026 sürümü eklenince depo yalnızca 2026'nın 60 kaydını yazdı; 2025 yerinde kaldı.
   </Step>
   <Step title="Süreyi ve faturayı ne büyütür?">
     Modele kaç kez gittiğiniz ve her seferinde ne kadar metin gönderdiğiniz. Bir soru 6 çağrı: 5 rerank, 1 cevap; N kişi aynı anda sorarsa N × 6. Aşağıdaki ayarlar bu sayıları, çoğu doğruluğu da değiştirir; her ayardan sonra eval.
@@ -90,12 +90,12 @@ Günün sorusu için arama, rerank ve cevap; süreler her logun `TIME` satırın
 
 | | RAG (3 chunk) | hepsi (8 doküman) |
 |---|---|---|
-| prompt token (rerank hariç) | 1155 | 11358 |
+| prompt token (rerank hariç) | 976 | 9954 |
 | prompt'taki hr-only doküman | yok (filtre) | maaş tablosu |
-| cevap çağrısı | 888 ms | 29983 ms |
+| cevap çağrısı | 650 ms | 26337 ms |
 | cevap | 22 iş günü ✓ | 22 iş günü ✓ |
 
-Fark, her soruda ödenen bedelde; el kitabı büyüdükçe bu yol kapanır. 29983 ms'deki yeniden yükleme sürenin küçük bir kısmı; asıl maliyet 11358 token'ı okumak.
+Fark, her soruda ödenen bedelde; el kitabı büyüdükçe bu yol kapanır. Olası bir yeniden yüklemenin 26337 ms içindeki payını ölçmedik; asıl maliyet 9954 token'ı okumak.
 </Example>
 
 <Log name="stuff-everything" title="her doküman tek prompt'ta (retrieval yok)" />
@@ -112,7 +112,7 @@ Aynı metin, aynı modelle her zaman aynı vektörü verir. Cache `.cache/embedd
 
 <Log name="04-embed" title="npm run step -- 4   (ikinci kez)" />
 
-Bu loglarda bütün vektörler cache'ten; ilk embed süresini göstermiyorlar. `npm run doctor` tek bir cümleyi 1924 ms'de embed etti, ama soğuk başladı: modelin belleğe yüklenmesi de bu sürede. Kendi makinenizde görmek için `.cache/` klasörünü silip `npm run step -- 4` çalıştırın; log chunk başına milisaniyeyi yazar.
+Bu loglarda bütün vektörler cache'ten; ilk embed süresini göstermiyorlar. `npm run doctor` tek bir cümleyi 122 ms'de embed etti. Model bellekte değilse ilk çağrıya modelin yüklenme süresi de eklenir. Kendi makinenizde görmek için `.cache/` klasörünü silip `npm run step -- 4` çalıştırın; log chunk başına milisaniyeyi yazar.
 
 Depo sürüm başına yazar (`replaceEdition`):
 
@@ -124,12 +124,12 @@ Depo sürüm başına yazar (`replaceEdition`):
 
 | Ayar | Bizde | Artırınca | Burada ölçtük mü? |
 |---|---|---|---|
-| Chunk boyu | section: ortalama 688 karakter, 60 chunk · fixed: 300 karakter, 139 chunk | prompt'a giren token artar, vektör sayısı azalır | Evet: hit@1 fixed ile 0.368 (19 sorunun 7'si), section ile 0.842 (16'sı) ([Kaliteyi ölçmek](/uretim/kaliteyi-olcmek/)) |
+| Chunk boyu | section: ortalama 695 karakter, 60 chunk · fixed: 300 karakter, 138 chunk | prompt'a giren token artar, vektör sayısı azalır | Evet: hit@1 fixed ile 0.526 (19 sorunun 10'u), section ile 0.842 (16'sı) ([Kaliteyi ölçmek](/uretim/kaliteyi-olcmek/)) |
 | k (retriever'ın getirdiği aday) | 5 | rerank'ta her aday bir LLM çağrısı daha; prompt'a yine 3 chunk girer | Hayır: `--k 10` ile siz deneyin |
-| Prompt'a giren chunk | 3 | prompt token artar | 3 chunk = 1155 prompt token (günün sorusu) |
+| Prompt'a giren chunk | 3 | prompt token artar | 3 chunk = 976 prompt token (günün sorusu) |
 | Rerank | açık | kapatınca 5 çağrı gider, sıra vektör skoruna kalır | Kısmen: günün sorusunda cevap iki durumda da 22; q02'de doğru bölüm vektör sırasında 5.; rerank açıkken cevap doğru, kapalıyken ölçmedik |
 | Model boyu | gemma3:4b | RAM ve süre artar | Hayır: süreyi yalnızca gemma3:4b ile ölçtük |
-| Embedding cache | açık | — | Evet: 60 vektörün 60'ı cache'ten, adım 4 = 38 ms |
+| Embedding cache | açık | — | Evet: 60 vektörün 60'ı cache'ten, adım 4 = 52 ms |
 | Artımlı ingest | sürüm başına `replaceEdition` | — | Evet: 2026 eklendi, depoda 120 kayıt, 2025'e dokunulmadı |
 
 ## Fatura: fiyatsız bir formül
@@ -140,19 +140,19 @@ Fiyatlar sağlayıcıya göre değişir; rakam yerine formül. API'li bir modeld
 > **+ ingest'te bir kerelik embedding** (yalnızca değişen sürüm; cache aynı metni yeniden embed etmez)
 
 - Girdi ve çıktı token'ının fiyatı çoğu sağlayıcıda farklıdır; formülü ikiye bölerek hesaplayın.
-- Bizim ölçtüğümüz terimler, günün sorusunda: cevap prompt'u 1155 token, çıktı 28 token. Rerank prompt'larının token'ını loglamıyoruz; her biri soruyu ve tek bir chunk'ı taşır.
+- Bizim ölçtüğümüz terimler, günün sorusunda: cevap prompt'u 976 token, çıktı 21 token. Rerank prompt'larının token'ını loglamıyoruz; her biri soruyu ve tek bir chunk'ı taşır.
 - Kendi sunucunuzda (self-host) birim fiyatın yerini GPU saati alır: aynı anda gelen N soru × 6 çağrıyı bekletmeden karşılayacak kapasite.
 
 <YourTurn>
-1. `npm run ask -- "Frankfurt'a iki günlük toplantıya gidiyorum, uzmanım. Günlük harcırahım ne kadar?"` çalıştırın. Arama, rerank ve cevap sürelerini not edin.
+1. `npm run ask -- "I am going to Frankfurt for a two-day meeting. I am a specialist. How much is my daily per diem?"` çalıştırın. Arama, rerank ve cevap sürelerini not edin.
 2. Aynı soruyu `--k 10` ile çalıştırın. Rerank kaç chunk puanladı, süresi nasıl değişti? Cevap değişti mi?
-3. `src/steps/7-rerank.ts` içindeki `TOGGLE rerank` bloğunda `false` satırını açın; soruyu tekrar sorun. Kazandığınız süreyi ve cevabı karşılaştırın, sonra toggle'ı geri alın.
+3. `src/steps/7-rerank.ts` içindeki `TOGGLE rerank` bloğunda `true; // default` satırını yoruma alın, `false; // alternative` satırını açın; soruyu tekrar sorun. Kazandığınız süreyi ve cevabı karşılaştırın, sonra toggle'ı geri alın.
 </YourTurn>
 
 ## Sık sorulan
 
 <FAQ q="Daha hızlı bir vector DB alsak?">
-Bu ölçümde vector DB araması 7 ms; rerank ile cevap birlikte 3135 ms (2244 + 891). Darboğaz modele yapılan çağrılar. Milyonlarca vektörde arama da pahalılaşır; D sayfasındaki indeks bunun için.
+Bu ölçümde vector DB araması 7 ms; rerank ile cevap birlikte 2096 ms (1441 + 655). Darboğaz modele yapılan çağrılar. Milyonlarca vektörde arama da pahalılaşır; D sayfasındaki indeks bunun için.
 </FAQ>
 
 <FAQ q="Rerank'ı kapatıp süreyi kısaltalım mı?">
