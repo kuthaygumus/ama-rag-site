@@ -1,0 +1,183 @@
+---
+title: Architecture
+description: Two lanes and one vector space — the lane that prepares the documents once, the lane that runs on every question, and the place where they meet. Every box is a file in the repo.
+---
+import { FileTree } from '@astrojs/starlight/components';
+import Deck from '../../../components/Deck.astro';
+import DeckFigure from '../../../components/DeckFigure.astro';
+import Step from '../../../components/Step.astro';
+import WhereAmI from '../../../components/WhereAmI.astro';
+import Gate from '../../../components/Gate.astro';
+import RepoCode from '../../../components/RepoCode.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Term from '../../../components/Term.astro';
+import Takeaway from '../../../components/Takeaway.astro';
+
+<Gate bridge>
+We saw RAG's three jobs: find, add, write. To find anything, the documents must be prepared first.
+Who prepares them, when, and where do they go?
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 1000 510" role="img" aria-label="RAG architecture: on top, the ingest lane runs once. Below, the question lane runs on every question. The two lanes meet at the same embedding model and the vector DB">
+      <defs>
+        <marker id="mi-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker>
+      </defs>
+      <g data-from="1">
+        <text x="14" y="38" class="fsub">once (ingest)</text>
+        <rect x="22" y="48" width="120" height="64" rx="10" class="fbox" />
+        <rect x="18" y="52" width="120" height="64" rx="10" class="fbox" />
+        <rect x="14" y="56" width="120" height="64" rx="10" class="fbox" />
+        <text x="78" y="84" text-anchor="middle" class="flbl">Document</text>
+        <text x="78" y="108" text-anchor="middle" class="fsub" data-q="const">8 documents</text>
+      </g>
+      <g data-from="2">
+        <path d="M144 88 H150" class="farrow" marker-end="url(#mi-h)" />
+        <rect x="156" y="56" width="76" height="64" rx="10" class="fbox fbox-on" />
+        <text x="194" y="84" text-anchor="middle" class="flbl">Load</text>
+        <text x="194" y="108" text-anchor="middle" class="fsub" data-q="const">1-load.ts</text>
+        <path d="M234 88 H240" class="farrow" marker-end="url(#mi-h)" />
+        <rect x="246" y="56" width="92" height="64" rx="10" class="fbox fbox-on" />
+        <text x="292" y="84" text-anchor="middle" class="flbl">Clean</text>
+        <text x="292" y="108" text-anchor="middle" class="fsub" data-q="const">2-clean.ts</text>
+        <path d="M340 88 H346" class="farrow" marker-end="url(#mi-h)" />
+        <rect x="352" y="56" width="104" height="64" rx="10" class="fbox fbox-on" />
+        <text x="404" y="84" text-anchor="middle" class="flbl">Chunk</text>
+        <text x="404" y="108" text-anchor="middle" class="fsub" data-q="const">3-chunk.ts</text>
+      </g>
+      <g data-from="3">
+        <path d="M458 88 H464" class="farrow" marker-end="url(#mi-h)" />
+        <rect x="470" y="56" width="104" height="64" rx="10" class="fbox fbox-on" />
+        <text x="522" y="84" text-anchor="middle" class="flbl">Embed</text>
+        <text x="522" y="108" text-anchor="middle" class="fsub" data-q="const">4-embed.ts</text>
+        <path d="M522 122 V196" class="farrow" stroke-dasharray="5 5" />
+        <rect x="442" y="198" width="160" height="64" rx="12" class="fbox fbox-frozen" />
+        <text x="522" y="228" text-anchor="middle" class="flbl" data-q="const">bge-m3</text>
+        <text x="522" y="252" text-anchor="middle" class="fsub">embedding model</text>
+      </g>
+      <g data-from="4">
+        <path d="M576 88 H582" class="farrow" marker-end="url(#mi-h)" />
+        <rect x="588" y="56" width="120" height="64" rx="10" class="fbox fbox-on" />
+        <text x="648" y="84" text-anchor="middle" class="flbl">Vector DB</text>
+        <text x="648" y="108" text-anchor="middle" class="fsub" data-q="const">5-store.ts</text>
+      </g>
+      <g data-from="5">
+        <text x="14" y="332" class="fsub">on every question</text>
+        <text x="336" y="366" text-anchor="end" class="fsub" data-q="code:src/lib/config.ts" data-q-mode="quote">How many working days of</text>
+        <text x="336" y="390" text-anchor="end" class="fsub" data-q="code:src/lib/config.ts" data-q-mode="quote">annual leave does an employee<tspan x="336" dy="24">with 7 years of service get?</tspan></text>
+        <rect x="352" y="342" width="108" height="64" rx="10" class="fbox fbox-on" />
+        <text x="406" y="381" text-anchor="middle" class="flbl">Question</text>
+        <path d="M462 374 H470" class="farrow" marker-end="url(#mi-h)" />
+        <rect x="476" y="342" width="92" height="64" rx="10" class="fbox fbox-on" />
+        <text x="522" y="381" text-anchor="middle" class="flbl">Embed</text>
+        <path d="M522 264 V340" class="farrow" stroke-dasharray="5 5" />
+        <text x="514" y="306" text-anchor="end" class="fsub ffrozen-t">same model</text>
+      </g>
+      <g data-from="6">
+        <path d="M570 374 H600" class="farrow" marker-end="url(#mi-h)" />
+        <rect x="606" y="342" width="84" height="64" rx="10" class="fbox fbox-on" />
+        <text x="648" y="381" text-anchor="middle" class="flbl">Search</text>
+        <path d="M648 340 V124" class="farrow" marker-end="url(#mi-h)" />
+        <text x="640" y="306" text-anchor="end" class="fsub" data-q="const">5 closest</text>
+        <path d="M480 416 V424 H686 V416" class="faxis" fill="none" />
+        <text x="583" y="446" text-anchor="middle" class="fsub" data-q="const">6-retrieve.ts</text>
+        <path d="M692 374 H698" class="farrow" marker-end="url(#mi-h)" />
+        <rect x="704" y="342" width="84" height="64" rx="10" class="fbox fbox-on" />
+        <text x="746" y="381" text-anchor="middle" class="flbl">Rerank</text>
+        <text x="746" y="446" text-anchor="middle" class="fsub" data-q="const">7-rerank.ts</text>
+      </g>
+      <g data-from="7">
+        <path d="M790 374 H796" class="farrow" marker-end="url(#mi-h)" />
+        <rect x="802" y="342" width="88" height="64" rx="10" class="fbox fbox-on" />
+        <text x="846" y="381" text-anchor="middle" class="flbl">Prompt</text>
+        <path d="M892 374 H898" class="farrow" marker-end="url(#mi-h)" />
+        <rect x="904" y="342" width="90" height="64" rx="10" class="fbox fbox-good" />
+        <text x="949" y="381" text-anchor="middle" class="flbl">Answer</text>
+        <path d="M806 416 V424 H990 V416" class="faxis" fill="none" />
+        <text x="898" y="446" text-anchor="middle" class="fsub" data-q="const">8-answer.ts</text>
+        <text x="985" y="486" text-anchor="end" class="flbl fgood-t" data-q="log:08-answer">22 working days [1]</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="The documents">
+    Kraken Air has 8 documents in Markdown: 7 policies and 1 announcement, 2025 edition. Each one starts with information about itself: which document, which edition, who may read it. The top lane makes them searchable. It runs once.
+  </Step>
+  <Step title="Load, clean, split">
+    `1-load.ts` reads the files and turns the information at the top into <Term id="metadata">metadata</Term>. `2-clean.ts` removes page noise and joins broken lines. `3-chunk.ts` splits the documents at their section headings into <Term id="chunk">chunks</Term>. The search finds chunks, not whole documents.
+  </Step>
+  <Step title="Embed">
+    `4-embed.ts` uses bge-m3 to turn each chunk into an <Term id="embedding">embedding</Term> of 1024 numbers.
+  </Step>
+  <Step title="Vector DB">
+    `5-store.ts` writes each chunk to Chroma with its vector, its text and its metadata. Chroma is our <Term id="vectordb">vector DB</Term>.
+  </Step>
+  <Step title="The question, with the same model">
+    The bottom lane runs on every question. The question also becomes 1024 numbers, with the same model as the top lane. A different model means a different space, and you can't compare the two.
+  </Step>
+  <Step title="Search and rerank">
+    `6-retrieve.ts` asks for the 5 chunks closest to the question. A metadata filter keeps old editions out of the search. It also keeps out documents the asker may not read. `7-rerank.ts` has the chat model score these 5 chunks, then sorts them again.
+  </Step>
+  <Step title="Prompt and answer">
+    `8-answer.ts` puts the rules, the best 3 sources and the question into one text. The model cites the source by number: 22 working days, [1] Annual Leave Policy §3.
+  </Step>
+  <Step title="Two lanes, two meeting points">
+    The lanes meet in only two places: the vector DB and the same embedding model. The chat model works only in the bottom lane, for rerank and the answer.
+  </Step>
+</Deck>
+
+## Repo tour: every box is a file
+
+In "Build it step by step", every page starts with a small copy of this drawing. The box for that page lights
+up. For example, on the chunking page:
+
+<WhereAmI at="chunk" />
+
+<FileTree>
+- src/
+  - steps/ one file and one command per box (steps 1–8: table below)
+    - 0-bare.ts step 0: the model alone, no documents
+  - lib/
+    - ollama.ts the two calls to the model: embed and generate
+    - chroma.ts writes to Chroma and searches it
+    - store-json.ts the same job, with a JSON file
+    - config.ts every setting in one place
+  - cli/
+    - ingest.ts top lane: steps 1–5
+    - ask.ts bottom lane: steps 6–8
+    - question.ts the question of the day and its ledger
+    - eval.ts measures quality
+    - doctor.ts checks the setup
+    - catchup.ts helps you catch up if you fall behind
+  - explore/
+    - similar.ts which texts are close?
+    - map.ts the vector space, in 2 dimensions
+- corpus/ Kraken Air policies, 2025 and 2026
+- data/ each step writes its output here. Open it and look
+</FileTree>
+
+| Box | File | On its own | Writes |
+|---|---|---|---|
+| Load | `src/steps/1-load.ts` | `npm run step -- 1` | `data/1-docs.json` |
+| Clean | `src/steps/2-clean.ts` | `npm run step -- 2` | `data/2-clean.json` |
+| Chunk | `src/steps/3-chunk.ts` | `npm run step -- 3` | `data/3-chunks.json` |
+| Embed | `src/steps/4-embed.ts` | `npm run step -- 4` | `data/4-vectors.json` |
+| Vector DB | `src/steps/5-store.ts` | `npm run step -- 5` | `data/5-store.json` |
+| Embed + Search | `src/steps/6-retrieve.ts` | `npm run step -- 6` | `data/6-retrieved.json` |
+| Rerank | `src/steps/7-rerank.ts` | `npm run step -- 7` | `data/7-reranked.json` |
+| Prompt + Answer | `src/steps/8-answer.ts` | `npm run step -- 8` | `data/8-answer.json` |
+
+Two lanes, two commands. The top lane is `npm run ingest`:
+
+<RepoCode file="src/cli/ingest.ts" />
+
+The bottom lane is `npm run ask -- "question"`:
+
+<RepoCode file="src/cli/ask.ts" />
+
+The "same model" rule is a check in the code. If the vector DB holds vectors from another embedding model, the
+search does not start.
+
+<RepoCode file="src/steps/6-retrieve.ts" from="export async function storeReceipt" />
+
+<Takeaway>Prepare once, search on every question.</Takeaway>

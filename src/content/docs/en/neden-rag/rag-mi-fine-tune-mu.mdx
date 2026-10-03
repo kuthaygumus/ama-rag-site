@@ -1,0 +1,189 @@
+---
+title: RAG or fine-tuning?
+description: A short, flat road or a long climb — the choice between putting knowledge in front of the model and changing the model's weights.
+---
+import Deck from '../../../../components/Deck.astro';
+import DeckFigure from '../../../../components/DeckFigure.astro';
+import Step from '../../../../components/Step.astro';
+import Gate from '../../../../components/Gate.astro';
+import Panel from '../../../../components/Panel.astro';
+import PanelLink from '../../../../components/PanelLink.astro';
+import RepoCode from '../../../../components/RepoCode.astro';
+import FAQ from '../../../../components/FAQ.astro';
+import Term from '../../../../components/Term.astro';
+import Takeaway from '../../../../components/Takeaway.astro';
+
+<Gate bridge>
+There is another way to give a model knowledge: change the model itself. You train it again and
+<PanelLink to="agirlik">adjust its weights</PanelLink>. The two ways don't do the same job.
+</Gate>
+
+<Panel id="agirlik" title="How do we adjust the weights?">
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 600 330" role="img" aria-label="Three features, three weights and a score: in the husky example, each fix moves the weights a little toward dog">
+      <text x="20" y="36" class="fsub">feature</text>
+      <text x="300" y="36" text-anchor="middle" class="fsub" data-from="2">husky</text>
+      <text x="470" y="36" text-anchor="middle" class="fsub">weight</text>
+      <text x="20" y="85" class="flbl">pointy ears</text>
+      <text x="20" y="131" class="flbl">long nose</text>
+      <text x="20" y="177" class="flbl">barks</text>
+      <rect x="410" y="58" width="120" height="38" rx="8" class="fbox fbox-frozen" />
+      <rect x="410" y="104" width="120" height="38" rx="8" class="fbox fbox-frozen" />
+      <rect x="410" y="150" width="120" height="38" rx="8" class="fbox fbox-frozen" />
+      <g data-from="2">
+        <text x="300" y="85" text-anchor="middle" class="flbl">yes</text>
+        <text x="300" y="131" text-anchor="middle" class="flbl">yes</text>
+        <text x="300" y="177" text-anchor="middle" class="flbl">yes</text>
+        <text x="20" y="250" class="flbl">score</text>
+      </g>
+      <g data-from="1" data-to="2">
+        <text x="470" y="85" text-anchor="middle" class="flbl" data-q="const">+0.8</text>
+        <text x="470" y="131" text-anchor="middle" class="flbl" data-q="const">−0.2</text>
+        <text x="470" y="177" text-anchor="middle" class="flbl" data-q="const">−0.1</text>
+      </g>
+      <g data-from="1" data-to="1">
+        <text x="20" y="250" class="fsub">+ pushes toward cat · − toward dog</text>
+        <text x="20" y="282" class="fsub">far from zero = a stronger push</text>
+      </g>
+      <g data-from="2" data-to="2">
+        <text x="110" y="250" class="flbl" data-q="const">+0.8 − 0.2 − 0.1 = +0.5<tspan class="fbad-t"> → cat ✗</tspan></text>
+      </g>
+      <g data-from="3" data-to="3">
+        <text x="470" y="85" text-anchor="middle" class="flbl" data-q="const">+0.7</text>
+        <text x="470" y="131" text-anchor="middle" class="flbl" data-q="const">−0.3</text>
+        <text x="470" y="177" text-anchor="middle" class="flbl" data-q="const">−0.2</text>
+        <text x="470" y="214" text-anchor="middle" class="fsub fgate-t" data-q="const">each moves 0.1 toward dog</text>
+        <text x="110" y="250" class="flbl" data-q="const">+0.7 − 0.3 − 0.2 = +0.2<tspan class="fbad-t"> → still cat ✗</tspan></text>
+      </g>
+      <g data-from="4" data-to="4">
+        <text x="470" y="85" text-anchor="middle" class="flbl" data-q="const">+0.6</text>
+        <text x="470" y="131" text-anchor="middle" class="flbl" data-q="const">−0.4</text>
+        <text x="470" y="177" text-anchor="middle" class="flbl" data-q="const">−0.3</text>
+        <text x="110" y="250" class="flbl" data-q="const">+0.6 − 0.4 − 0.3 = −0.1<tspan class="fgood-t"> → dog ✓</tspan></text>
+        <text x="20" y="295" class="fsub" data-q="const">plain cat (pointy ears only): +0.6<tspan class="fgood-t"> → cat ✓</tspan></text>
+      </g>
+      <g data-from="5" data-to="5">
+        <text x="470" y="85" text-anchor="middle" class="flbl fbad-t" data-q="const">−0.2</text>
+        <text x="470" y="131" text-anchor="middle" class="flbl fbad-t" data-q="const">−1.2</text>
+        <text x="470" y="177" text-anchor="middle" class="flbl fbad-t" data-q="const">−1.1</text>
+        <text x="470" y="214" text-anchor="middle" class="fsub fgate-t" data-q="const">if we move 1.0 at once</text>
+        <text x="110" y="250" class="flbl" data-q="const">−0.2 − 1.2 − 1.1 = −2.5<tspan class="fgood-t"> → dog ✓</tspan></text>
+        <text x="20" y="295" class="fsub" data-q="const">plain cat (pointy ears only): −0.2<tspan class="fbad-t"> → dog ✗</tspan></text>
+      </g>
+      <g data-from="6">
+        <text x="470" y="85" text-anchor="middle" class="flbl" data-q="const">+0.6</text>
+        <text x="470" y="131" text-anchor="middle" class="flbl" data-q="const">−0.4</text>
+        <text x="470" y="177" text-anchor="middle" class="flbl" data-q="const">−0.3</text>
+        <text x="110" y="250" class="flbl" data-q="const">+0.6 − 0.4 − 0.3 = −0.1<tspan class="fgood-t"> → dog ✓</tspan></text>
+        <text x="20" y="295" class="fsub fnum" data-q="const">language model: same loop, about 4 billion weights</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="The task">
+    The model looks at three features of an animal. Then it says cat or dog. Each feature has a weight. A positive weight pushes the answer toward cat, a negative one toward dog. The model is half trained. It doesn't know yet how much barking matters (−0.1).
+  </Step>
+  <Step title="The prediction">
+    A husky comes in. It has pointy ears and a long nose, and it barks. The model adds up the three weights: +0.8 − 0.2 − 0.1 = +0.5. The score is positive, so the answer is "cat". That is wrong. A husky is a dog.
+  </Step>
+  <Step title="A small change">
+    The mistake was the push toward cat. So we move each weight 0.1 toward dog: +0.7, −0.3, −0.2. The new score is +0.2. The answer is still wrong, but it moved the right way.
+  </Step>
+  <Step title="Once more">
+    We make the same fix once more. The score is now −0.1, and the answer is "dog". A plain cat with only pointy ears still gets +0.6. So it is still a cat. Small steps taught the new answer without breaking the old ones.
+  </Step>
+  <Step title="Why small steps?">
+    What if each weight moves 1.0 at once? The husky is fixed. But the pointy-ear weight drops to −0.2. Now the plain cat gets "dog". The step size is called the learning rate. Ours is 0.1. Moving every weight a little toward a smaller error is gradient descent.
+  </Step>
+  <Step title="Language models and fine-tuning">
+    A language model runs the same loop. Its question is "which token comes next?" Our model has about 4 billion weights. Fine-tuning takes a ready model and runs these small steps on your own examples.
+  </Step>
+</Deck>
+</Panel>
+
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 1000 430" role="img" aria-label="RAG: a short, flat road, with the flag at ground level. Fine-tuning: a long climb, with the flag much higher">
+      <path d="M500 30 V415" class="faxis" stroke-dasharray="4 8" />
+      <g class="ph ph1">
+        <text x="240" y="60" text-anchor="middle" class="flbl fnum">RAG</text>
+        <path d="M40 360 H210 C230 360 236 330 260 330 C284 330 290 360 310 360 H440" class="farrow-on" />
+        <circle cx="80" cy="300" r="12" class="fbox" />
+        <path d="M80 312 V338 M80 338 L70 358 M80 338 L90 358 M66 322 L94 322" class="farrow" />
+        <path d="M420 360 V290" class="farrow" />
+        <path d="M420 290 L452 302 L420 314 Z" class="fbox fbox-on" />
+        <text x="260" y="316" text-anchor="middle" class="fsub">ingest: once</text>
+        <text x="455" y="274" text-anchor="end" class="fsub fnum">knowledge in front of the model</text>
+        <text x="240" y="394" text-anchor="middle" class="fsub">documents change: re-ingest</text>
+      </g>
+      <g class="ph ph2">
+        <text x="760" y="60" text-anchor="middle" class="flbl ffrozen-t">fine-tuning</text>
+        <path d="M540 360 H590 Q880 360 925 130 H985" class="farrow" />
+        <circle cx="565" cy="300" r="12" class="fbox" />
+        <path d="M565 312 V338 M565 338 L555 358 M565 338 L575 358 M551 322 L579 322" class="farrow" />
+        <path d="M960 130 V62" class="farrow" />
+        <path d="M960 62 L990 74 L960 86 Z" class="fbox fbox-frozen" />
+        <text x="700" y="394" text-anchor="middle" class="fsub">① prepare example pairs</text>
+        <text x="790" y="300" text-anchor="end" class="fsub">② train on a GPU</text>
+        <text x="875" y="215" text-anchor="end" class="fsub">③ measure, retry if it fails</text>
+      </g>
+      <g class="ph ph3" data-from="3">
+        <path d="M530 356 V136" class="farrow" stroke-dasharray="5 6" />
+        <path d="M540 130 H915" class="faxis" stroke-dasharray="5 6" />
+        <text x="545" y="178" class="fsub ffrozen-t">height:</text>
+        <text x="545" y="201" class="fsub ffrozen-t">behavior in</text>
+        <text x="545" y="224" class="fsub ffrozen-t">the weights</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="RAG: a short, flat road" phase="1">
+    You start with a ready model. The only bump is to prepare the documents once: the <Term id="ingest">ingest</Term>. The flag sits at ground level. The knowledge is not inside the model. It is in front of it. If a document changes, you ingest it again. The model never changes.
+  </Step>
+  <Step title="Fine-tuning: a long climb" phase="2">
+    The other way is to train the model again: <Term id="finetune">fine-tuning</Term>. You prepare example pairs and train the model on a GPU. Then you measure it. If it fails, you start over. It is a long road. If what you teach changes, you climb again.
+  </Step>
+  <Step title="Why is the flag so high? What does it teach?" phase="3">
+    The climb changes the weights. Fine-tuning teaches behavior best: tone, format, company terms. You don't repeat them in every prompt.
+
+    <strong class="turn">BUT</strong> facts don't get into the weights reliably. A pattern from thousands of examples stays. A number from a few examples leaves only a small trace. The model remembers the fact only in part. It can mix up similar numbers and can't cite a source.
+  </Step>
+  <Step title="Together">
+    They are not rivals. You can also use them together. Today we build only RAG, because our knowledge changes. It is the policies, and they get a new edition every year.
+  </Step>
+</Deck>
+
+## Side by side
+
+| | RAG | Fine-tuning |
+|---|---|---|
+| **What does it change?** | The input to the model. The model stays the same | The model's weights |
+| **What it teaches best** | Facts: what the policy says, how many days | Behavior: tone, format, terminology |
+| **Facts** | Reads them from the text and cites the source: `[1] hr-leave §3` | Not reliable: it can remember only part, mix facts up, and it can't cite a source |
+| **When the data changes** | Re-ingest. The model stays the same ([When the data changes](/en/adim-adim/veri-degisince/)) | Train again: data, GPU, measuring |
+| **Cost per question** | High: the model reads the sources too (976 prompt tokens for the question of the day, 37 without sources) | Low: only the question |
+| **Access control** | Metadata filter: who can see what | None: any user can ask for what is stored in the weights |
+
+The token counts in the RAG column come from the output of `npm run step -- 8` and `npm run step -- 0`.
+We didn't measure the fine-tuning column today. Its rows come from general experience.
+
+## When is fine-tuning the right choice?
+
+When you want to teach a **behavior** that doesn't change:
+
+- **Format**: every answer must come in the same template or the same JSON shape.
+- **Tone**: the company's style. Short, formal, in a set language.
+- **Terminology**: internal abbreviations and product names. A glossary the model must use correctly.
+
+Try the prompt first. Most behavior needs only one rule line. Think about fine-tuning when the rules get too
+long, or when the model doesn't follow them reliably. Our answer step gets its behavior from these lines:
+
+<RepoCode file="src/steps/8-answer.ts" from="export const RULES" to="^\];" />
+
+## Common questions
+
+<FAQ q="What is LoRA?">
+A cheap way to fine-tune. The model's main weights stay frozen, and you train a small add-on next to them. It
+cuts cost and time. It doesn't change the answer to "what does it teach?" The answer is still behavior.
+</FAQ>
+
+<Takeaway>RAG for facts that change, fine-tuning for behavior that doesn't.</Takeaway>
