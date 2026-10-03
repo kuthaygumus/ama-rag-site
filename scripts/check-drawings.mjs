@@ -1,6 +1,6 @@
 // Fails when a drawing shows a number that its source does not hold (plan/site.md §2, mechanism Q), or when a
-// generated drawing is not what the logs draw (mechanism G, scripts/gen-drawings.mjs). Not in `build` yet: it joins
-// at S7g, once the TR labels quote the English capture (PLAN §1.3).
+// generated drawing is not what the logs draw (mechanism G, scripts/gen-drawings.mjs). Part of `build` since S7g,
+// when the TR labels moved to the English capture (PLAN §1.3).
 //
 // Rules, per <text> of every inline drawing:
 //   1. every number in a label with data-q is a number of its source(s) (data-q="log:x code:y …"; const = design value)

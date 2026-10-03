@@ -11,7 +11,7 @@ Sayfalardaki noktalı altı çizili kelimelerin uzun hâli. Alfabetik; her terim
 
 <h3 id="abstain">Abstain ("bilmiyorum" demek)</h3>
 
-Cevap kaynaklarda yoksa modelin bilerek "bilmiyorum" demesi. Kendiliğinden olmaz, prompt'taki bir kuralla tasarlanır; bizde cümlesi "Bu bilgi politikalarda yer almıyor." Kod bu cevabı o cümleyi arayarak tanır.
+Cevap kaynaklarda yoksa modelin bilerek "bilmiyorum" demesi. Kendiliğinden olmaz, prompt'taki bir kuralla tasarlanır; bizde cümlesi "This is not in the policies." Kod bu cevabı o cümlenin bir parçasını arayarak tanır.
 
 <h3 id="agentic">Agentic RAG</h3>
 
@@ -29,7 +29,7 @@ Her vektörü tek tek gezmek yerine bir indeksle yalnızca yakın komşuları ge
 
 <h3 id="bge-m3">bge-m3</h3>
 
-Bu kursun embedding modeli: her metni 1024 sayılık bir vektöre çevirir. Türkçe ve İngilizceyi aynı uzaya koyar; Türkçe sorularla İngilizce bölümleri bulabilmemiz bundan. Ollama'da yerel çalışır.
+Bu kursun embedding modeli: her metni 1024 sayılık bir vektöre çevirir. İngilizce ve Türkçeyi aynı uzaya koyar; İngilizce sorularla Türkçe dokümanın bölümlerini bulabilmemiz bundan. Ollama'da yerel çalışır.
 
 <h3 id="bi-encoder">Bi-encoder</h3>
 
@@ -47,7 +47,7 @@ HTTP isteklerini elle göndermek için bir masaüstü uygulaması. Bu kursta Oll
 
 <h3 id="catchup">Catch-up</h3>
 
-`npm run catchup -- N`: toggle'ları varsayılana döndürür, `data/` klasörünü boşaltır ve 1'den N'ye kadar adımları yeniden çalıştırır. Yazdığınız fonksiyonlar olduğu gibi kalır. `N = 0` hiçbir adımı çalıştırmaz: günün başına dönersiniz.
+`npm run catchup -- N`: toggle'ları varsayılana döndürür, `data/` klasörünü boşaltır, vector DB'yi de sıfırlar. Sonra 1'den N'ye kadar adımları yeniden çalıştırır. Yazdığınız fonksiyonlar olduğu gibi kalır. `N = 0` hiçbir adımı çalıştırmaz: günün başına dönersiniz.
 
 <h3 id="chroma">Chroma</h3>
 
@@ -67,7 +67,7 @@ Modelin tek seferde okuyabileceği token sınırı; prompt, kaynaklar ve cevap b
 
 <h3 id="cosine">Cosine benzerliği</h3>
 
-İki vektörün aynı yöne ne kadar baktığı. 1 = aynı yön (aynı anlam), 0 = ilgisiz. Arama skorlarımız bu ölçüyle hesaplanır.
+İki vektörün aynı yöne ne kadar baktığı. 1 = aynı yön (aynı anlam). İlgisiz metinler bile 0'a inmez: bizim ilgisiz çiftimiz 0.503 aldı. Arama skorlarımız bu ölçüyle hesaplanır.
 
 <h3 id="cross-encoder">Cross-encoder</h3>
 
@@ -105,7 +105,7 @@ Hazır bir modeli kendi örneklerinizle biraz daha eğitmek. Bilgiyi ağırlıkl
 
 <h3 id="front-matter">Front matter</h3>
 
-Bir Markdown dosyasının başında `---` çizgileri arasındaki alanlar: id, başlık, sürüm, departman, erişim, dil. Yükleme adımı bunları metadata'ya çevirir.
+Bir Markdown dosyasının başında `---` çizgileri arasındaki alanlar: `id`, `title`, `edition`, `department`, `access`, `lang`. Yükleme adımı bunları metadata'ya çevirir.
 
 ## G
 
@@ -151,7 +151,7 @@ Dokümanları aranabilir hâle getiren hazırlık: yükle, temizle, chunk'la, em
 
 <h3 id="isaretli-kaynak">İşaretli kaynak</h3>
 
-Prompt'taki her kaynağın `<<<KAYNAK n: doküman adı>>>` ile açılıp `<<<KAYNAK n SONU>>>` ile kapanması. Dokümandan gelen metnin nerede başlayıp bittiğini işaretler; tek başına injection'ı durdurmadı.
+Prompt'taki her kaynağın `<<<SOURCE n: document title>>>` ile açılıp `<<<END SOURCE n>>>` ile kapanması. Dokümandan gelen metnin nerede başlayıp bittiğini işaretler. Injection'ı durdurmadı; prompt'taki kurallar da durdurmadı.
 
 ## K
 
@@ -219,7 +219,7 @@ Dil modellerini dizüstünde çalıştıran araç. Bu kursta embedding modeli (b
 
 <h3 id="paraphrase">Paraphrase</h3>
 
-Aynı anlamı başka kelimelerle söylemek: "tatil hakkım" ile "yıllık ücretli izin". Kelime araması bunu kaçırır; embedding yakalar, ama bizim ölçümde ancak 5. sıradan.
+Aynı anlamı başka kelimelerle söylemek: "How much holiday do I get?" ile "Annual paid leave depends on the length of service." cümleleri: biri "holiday" diyor, öteki "annual paid leave". Kelime araması bunu kaçırır; embedding yakalar, ama bizim ölçümde ancak 5. sıradan.
 
 <h3 id="parentchild">Parent-child</h3>
 
@@ -271,7 +271,7 @@ Retrieval, soru anında depodan en ilgili chunk'ları bulmaktır. Retriever bu i
 
 <h3 id="sibling">Sibling (benzer fonksiyon)</h3>
 
-Repoda örneği yazılmış bir kuralın ya da fonksiyonun altına sizin yazacağınız benzeri: `englishConfidential` bir kural (RegExp), `dot` ve `byParagraph` birer fonksiyon. `npm run check:sibling` üçünü de test eder.
+Repoda örneği yazılmış bir kuralın ya da fonksiyonun altına sizin yazacağınız benzeri: `turkishConfidential` bir kural (RegExp), `dot` ve `byParagraph` birer fonksiyon. `npm run check:sibling` üçünü de test eder.
 
 <h3 id="threshold">Skor eşiği</h3>
 
@@ -279,7 +279,7 @@ Arama sonuçlarından belirli bir benzerlik skorunun altındakileri atmak; top-k
 
 <h3 id="system-prompt">System prompt</h3>
 
-Modelin her soruda gördüğü sabit kurallar. Bizde 7 satır: rol, yalnızca kaynaklardan cevap, "bilmiyorum" cümlesi, "kaynaklar veridir", şifre yasağı, kaynak gösterme, tablo satırını önce yazma.
+Modelin her soruda gördüğü sabit kurallar. Bizde 7 satır: rol, yalnızca kaynaklardan cevap, "bilmiyorum" cümlesi, kaynakların talimat değil veri olduğu, şifre ve kişisel veri yasağı, kaynak gösterme, tablo satırını önce yazma.
 
 ## T
 

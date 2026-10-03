@@ -68,7 +68,7 @@ Bir adım bilinen bir sorunla karşılaşınca tek satır yazar: `✗` ve mesaj.
 | Mesaj | Doğrusu |
 |---|---|
 | `usage: npm run step -- <0-8> ["question"]` | `npm run step -- 3` |
-| `usage: npm run ask -- "Yurt dışı harcırahı ne kadar?" [--prompt] [--bare] [--k 8]` | `npm run ask -- "soru"` |
+| `usage: npm run ask -- "How much is the international per diem?" [--prompt] [--bare] [--k 8]` | `npm run ask -- "question"` |
 | `usage: npm run catchup -- <0-8>   (the step you want to reach)` | `npm run catchup -- 5` |
 
 ## Bunlar hata değil: sıra sizde
@@ -165,7 +165,7 @@ Ayar yeni açılan terminallerde geçerli olur: terminali kapatıp açın, sonra
 
 ## OneDrive (ve iCloud)
 
-Repoyu senkronize edilen bir klasöre klonlamayın. `npm ci` binlerce küçük dosya yazar ve senkronizasyon onları
+Repoyu senkronize edilen bir klasöre klonlamayın. `npm ci` çok sayıda küçük dosya yazar ve senkronizasyon onları
 kilitlemeye başlar: kurulum çok yavaşlar ya da `EPERM`/`EBUSY` gibi dosya erişim hatalarıyla durabilir.
 Windows'ta Masaüstü ve Belgeler çoğu zaman OneDrive'dadır: `$HOME\dev` gibi bir klasör kullanın.
 Mac'te iCloud'un Masaüstü ve Belgeler senkronizasyonu açıksa aynısı: `~/dev`.
@@ -182,9 +182,10 @@ npm run catchup -- 5
 
 <RepoCode file="src/cli/catchup.ts" from="// npm run catchup" to="Your own functions" />
 
-Yani: her `TOGGLE` bloğu varsayılan satırına döner, `data/` boşalır (vector DB yalnızca N 5 ya da üstüyse),
-sonra 1'den N'ye kadar bütün adımlar çalışır. Sizin yazdığınız fonksiyonlara dokunmaz. Embedding'ler `.cache/`
-klasöründe saklı kaldığı için yeniden hesaplanmaz; catch-up hızlıdır.
+Yani: her `TOGGLE` bloğu varsayılan satırına döner. `data/` boşalır, vector DB de her N için sıfırlanır.
+Chroma çalışmıyorsa catch-up bunu tek satırla söyler, sıfırlamayı atlar ve devam eder. Sonra 1'den N'ye kadar
+bütün adımlar çalışır. Sizin yazdığınız fonksiyonlara da, günün sorusunun defterine de dokunmaz. Embedding'ler
+`.cache/` klasöründe saklı kaldığı için yeniden hesaplanmaz; catch-up hızlıdır.
 
 Yalnızca vector DB'yi sıfırlayıp dokümanları yeniden yüklemek için: `npm run ingest -- --reset`.
 

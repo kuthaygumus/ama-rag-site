@@ -64,8 +64,8 @@ Kim hazırlıyor, ne zaman, nereye koyuyor?
       </g>
       <g data-from="5">
         <text x="14" y="332" class="fsub">her soruda</text>
-        <text x="336" y="366" text-anchor="end" class="fsub" data-q="code:src/lib/config.ts" data-q-mode="quote">7 yıllık bir çalışanın</text>
-        <text x="336" y="390" text-anchor="end" class="fsub" data-q="code:src/lib/config.ts" data-q-mode="quote">yıllık izni kaç iş günü?</text>
+        <text x="336" y="366" text-anchor="end" class="fsub" data-q="code:src/lib/config.ts" data-q-mode="quote">How many working days of</text>
+        <text x="336" y="390" text-anchor="end" class="fsub" data-q="code:src/lib/config.ts" data-q-mode="quote">annual leave does an employee<tspan x="336" dy="24">with 7 years of service get?</tspan></text>
         <rect x="352" y="342" width="108" height="64" rx="10" class="fbox fbox-on" />
         <text x="406" y="381" text-anchor="middle" class="flbl">Soru</text>
         <path d="M462 374 H470" class="farrow" marker-end="url(#mi-h)" />
@@ -119,7 +119,7 @@ Kim hazırlıyor, ne zaman, nereye koyuyor?
     `6-retrieve.ts` soruya en yakın 5 chunk'ı ister; eski sürümler ve sorana kapalı dokümanlar metadata filtresiyle aramaya hiç girmez. `7-rerank.ts` bu 5 chunk'ı chat modeline puanlatıp yeniden sıralar.
   </Step>
   <Step title="Prompt ve cevap">
-    `8-answer.ts` kuralları, en iyi 3 kaynağı ve soruyu tek bir metinde birleştirir. Model cevabı kaynak numarasıyla yazar: 22 iş günü, [1] Yıllık İzin Politikası §3.
+    `8-answer.ts` kuralları, en iyi 3 kaynağı ve soruyu tek bir metinde birleştirir. Model cevabı kaynak numarasıyla yazar: 22 iş günü, [1] Annual Leave Policy §3.
   </Step>
   <Step title="İki şerit, iki buluşma noktası">
     Şeritler yalnızca iki yerde buluşur: vector DB ve aynı embedding modeli. Chat modeli yalnızca alt şeritte çalışır: rerank ve cevap.
@@ -135,7 +135,7 @@ chunking sayfasında:
 
 <FileTree>
 - src/
-  - steps/ her kutu bir dosya, her dosya tek başına çalışır (adım 1–8: aşağıdaki tablo)
+  - steps/ her kutu için bir dosya ve bir komut (adım 1–8: aşağıdaki tablo)
     - 0-bare.ts adım 0: model tek başına, doküman yok
   - lib/
     - ollama.ts modele giden iki çağrı: embed ve generate
@@ -171,7 +171,7 @@ chunking sayfasında:
 
 <RepoCode file="src/cli/ingest.ts" />
 
-Alt şerit `npm run ask -- "soru"`:
+Alt şerit `npm run ask -- "question"`:
 
 <RepoCode file="src/cli/ask.ts" />
 
