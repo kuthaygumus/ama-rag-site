@@ -1,0 +1,221 @@
+---
+title: The first 90 days
+description: The pipeline is live and tickets come in. Each ticket is a failure, each failure has a technique, and we mark what we measured and what we didn't.
+---
+import Deck from '../../../../components/Deck.astro';
+import DeckFigure from '../../../../components/DeckFigure.astro';
+import Step from '../../../../components/Step.astro';
+import DaysQuestion from '../../../../components/DaysQuestion.astro';
+import Gate from '../../../../components/Gate.astro';
+import Log from '../../../../components/Log.astro';
+import FAQ from '../../../../components/FAQ.astro';
+import Term from '../../../../components/Term.astro';
+import Takeaway from '../../../../components/Takeaway.astro';
+
+<DaysQuestion answer="24 working days [1] ✓" how="chroma · section · rerank on · edition 2026" />
+
+<Gate bridge>
+Which RAG variant should you add, and when? The first tip in a blog post doesn't decide that. A real failure of your system does.
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 1000 600" role="img" aria-label="A cost ladder made of the techniques from eight tickets">
+      <defs><marker id="nd-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker></defs>
+      <path d="M30 574 V84" class="farrow" marker-end="url(#nd-h)" />
+      <text x="30" y="62" text-anchor="middle" class="fsub">costly</text>
+      <text x="30" y="594" text-anchor="middle" class="fsub">cheap</text>
+      <g class="ph ph8">
+        <rect x="60" y="520" width="880" height="52" rx="10" class="fbox fbox-good" />
+        <text x="84" y="554" class="flbl">cut at headings, write the prefix</text>
+        <text x="500" y="553" class="fsub">page B</text>
+        <text x="590" y="553" class="fsub">free</text>
+        <text x="920" y="553" text-anchor="end" class="fsub fgood-t">measured</text>
+      </g>
+      <g data-from="2">
+        <g class="ph ph1">
+          <rect x="60" y="456" width="880" height="52" rx="10" class="fbox fbox-on" />
+          <text x="84" y="490" class="flbl">metadata filter (edition, scope)</text>
+          <text x="500" y="489" class="fsub" data-q="const">T1 · T2</text>
+          <text x="590" y="489" class="fsub">free</text>
+          <text x="920" y="489" text-anchor="end" class="fsub fgood-t" data-q="const">T2 measured</text>
+        </g>
+      </g>
+      <g data-from="3">
+        <g class="ph ph2">
+          <rect x="60" y="392" width="880" height="52" rx="10" class="fbox fbox-on" />
+          <text x="84" y="426" class="flbl">trim the context, sort it</text>
+          <text x="500" y="425" class="fsub" data-q="const">T3</text>
+          <text x="590" y="425" class="fsub">free</text>
+          <text x="920" y="425" text-anchor="end" class="fsub fgood-t">measured</text>
+        </g>
+      </g>
+      <g data-from="4">
+        <g class="ph ph3">
+          <rect x="60" y="328" width="880" height="52" rx="10" class="fbox" stroke-dasharray="7 6" />
+          <text x="84" y="362" class="flbl">hybrid (keyword + vector)</text>
+          <text x="500" y="361" class="fsub" data-q="const">T4</text>
+          <text x="590" y="361" class="fsub">second index</text>
+          <text x="920" y="361" text-anchor="end" class="fsub fgate-t">not added: no failure</text>
+        </g>
+      </g>
+      <g data-from="4">
+        <g class="ph ph3">
+          <rect x="60" y="264" width="880" height="52" rx="10" class="fbox fbox-on" />
+          <text x="84" y="298" class="flbl">rerank</text>
+          <text x="500" y="297" class="fsub" data-q="const">T5</text>
+          <text x="590" y="297" class="fsub" data-q="log:07-rerank">5 calls</text>
+          <text x="920" y="297" text-anchor="end" class="fsub fgood-t">measured with rerank on</text>
+        </g>
+      </g>
+      <g data-from="5">
+        <g class="ph ph4">
+          <rect x="60" y="200" width="880" height="52" rx="10" class="fbox" />
+          <text x="84" y="234" class="flbl">parent-child</text>
+          <text x="500" y="233" class="fsub" data-q="const">T6</text>
+          <text x="590" y="233" class="fsub">two chunk sizes</text>
+          <text x="920" y="233" text-anchor="end" class="fsub fgate-t">not measured</text>
+        </g>
+      </g>
+      <g data-from="5">
+        <g class="ph ph4">
+          <rect x="60" y="136" width="880" height="52" rx="10" class="fbox" />
+          <text x="84" y="170" class="flbl">agentic RAG</text>
+          <text x="500" y="169" class="fsub" data-q="const">T7</text>
+          <text x="590" y="169" class="fsub">many calls</text>
+          <text x="920" y="169" text-anchor="end" class="fsub fgate-t">not measured</text>
+        </g>
+      </g>
+      <g data-from="6">
+        <g class="ph ph5">
+          <rect x="60" y="72" width="880" height="52" rx="10" class="fbox" />
+          <text x="84" y="106" class="flbl">GraphRAG</text>
+          <text x="500" y="105" class="fsub" data-q="const">T8</text>
+          <text x="590" y="105" class="fsub">whole corpus</text>
+          <text x="920" y="105" text-anchor="end" class="fsub fgate-t">not measured</text>
+        </g>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="We're live">
+    The pipeline is now Kraken Air's HR assistant. The model stays the same for 90 days. The tickets are fiction, but the measurements in them come from today's logs. The badge on the right of each level says if we measured it.
+  </Step>
+  <Step title="T1 · T2 · Label, then filter" phase="1">
+    T1: for the London hotel question (q06), the domestic table ranks 1st. Rerank saved the answer, but no label separates the twin tables. T2: with the edition filter off, the 2025 table (22) got into the prompt too. In this run, the model picked 24. Both need a metadata filter.
+  </Step>
+  <Step title="T3 · Let's put it all in the prompt" phase="2">
+    Someone said: "Let's put in the whole handbook." The answer is right. But it costs 9954 tokens, against RAG's 976. One call takes about half a minute. And the hr-only salary table is in every prompt. The fix: a small, chosen context.
+  </Step>
+  <Step title="T4 · T5 · When the words don't match" phase="3">
+    T4: the team wants hybrid for the Turkish IT security policy. In the eval, 4 of 4 EN→TR questions have the right section 1st. No failure, no hybrid. T5: for "holiday" (q02), the leave table is 5th by vector. With rerank on, the answer is right. But rerank is expensive.
+  </Step>
+  <Step title="T6 · T7 · No headings, a three-part question" phase="4">
+    T6: HR announcements arrive as emails with no headings. A small chunk is easy to find but loses its heading. The fix: search with small chunks, give the model big ones (parent-child). T7: three questions in one, answers in three sections. The fix: agentic RAG, which splits the question.
+  </Step>
+  <Step title="T8 · 330 or 400?" phase="5">
+    The benefits policy says 330 TRY. The announcement says 400 TRY. Both chunks were in the prompt. The model wrote both, and didn't say which one is valid. 400 is right: the announcement updates that section. But only the text holds this link. The fix: cross-document links (GraphRAG).
+  </Step>
+  <Step title="Eight tickets, one ladder">
+    The levels go in order of cost. Start at the cheapest and measure. If it isn't enough, go up one level. The diagnoses of T1-T5 and T8 come from the logs. For T6 and T7, they come from reasoning.
+  </Step>
+</Deck>
+
+## T1 · Week 1 — In London, the domestic table comes first
+
+> **Scenario.** The team reads the eval results and sees a problem. For the question "I am a director travelling to London. How much can I spend on a hotel per night?", the first source is the domestic table.
+
+**Measurement.** This question is in the gold set (q06). The retriever brings the section for domestic travel (§3) first, then the one for international travel (§4). The answer check is ✓:
+
+<Log name="eval-answers" title="npm run eval -- --answers   (q06)" from={8} to={9} />
+
+**Diagnosis.** Twin tables: both sections use the same pattern, `Job title · Daily per diem · Hotel upper limit`. To the embedding, both are "hotel limit". In this run, rerank brought the right answer: it moved the international table up. A system that leaves the choice to rerank and the model can one day pick the wrong one.
+**Technique.** A <Term id="metadata">metadata</Term> filter. Give each chunk a scope label (domestic / international). Read the scope from the question, and filter the search with it.
+**Cost.** One field at ingest. The hard part: who picks the label when a question comes in? The question says "London". It doesn't say "international". **Not measured.**
+
+## T2 · Week 1 — Edition filter turned off
+
+> **Scenario.** The team loads the 2026 handbook. Someone turns off the edition filter: "Old editions should show too."
+
+**Measurement.** The edition filter is off:
+
+<Log name="edition-all" title={'npm run question   (EDITION_FILTER = "all")'} />
+
+**Diagnosis.** The two editions are almost the same text. Each chunk has a twin, and their scores are almost equal (0.619 and 0.614). The year is not in the source marker or in the chunk text. Nothing stops the model from picking 22.
+**Technique.** An edition filter: the search sees only the latest edition. It is our default. With the filter on, all three sources are 2026 ([When the data changes](/en/adim-adim/veri-degisince/)).
+**Cost.** None in the code. The real work is in the content: at ingest, you must label which edition is current.
+
+## T3 · Week 2 — "Let's put it all in the prompt"
+
+> **Scenario.** Someone said: "Why do we need retrieval? Let's give the model the whole handbook with every question."
+
+**Measurement.** The whole handbook in one prompt, same question:
+
+<Log name="stuff-everything" title="every document in one prompt (no retrieval)" />
+
+**Diagnosis.** The answer is right. The problem is cost and security: without retrieval, there is no access filter either. Details: [Performance and cost](/en/uretim/performans-maliyet/).
+**Technique.** Trim the context and sort it: only chosen chunks, the best one first. That is RAG itself.
+**Cost.** Free. Not doing it is what costs you.
+
+## T4 · Month 1 — "Let's add hybrid"
+
+> **Scenario.** The IT security policy is in Turkish. Someone on the team says: "The words won't match an English question. Every RAG article says to use hybrid. Let's add it."
+
+**Measurement.** The gold set has 4 EN→TR questions. For all of them, the right section is 1st:
+
+<Log name="eval-section" title="npm run eval   (EN→TR questions)" from={10} to={14} />
+
+**Diagnosis.** No failure: bge-m3 already matches the English question with the Turkish section. Keyword search would add little here ([why](/en/her-derde-deva/sinirlar-ve-turler/)).
+**Technique.** <Term id="hybrid">Hybrid</Term> search helps with words you search for exactly: codes, numbers, product names. We didn't add it here.
+**Cost.** A second index, merging two lists, and maintenance.
+
+## T5 · Month 1 — The word "holiday"
+
+> **Scenario.** An employee asked with the word "holiday". The leave policy doesn't use this word.
+
+**Measurement.** q02: "How much holiday do I get? I started here 4 years ago." By vector score, the right section is 5th (RR 0.20). The answer is ✓, with rerank on:
+
+<Log name="eval-answers" title="npm run eval -- --answers   (q02)" from={4} to={5} />
+
+**Diagnosis.** The question says "holiday". The document says "annual paid leave". The meaning is shared, not the words. The embedding finds the section, but barely (rank 5). Only the top 3 chunks go into the prompt. Asked on its own, the same question goes from 5th to 1st with rerank.
+**Technique.** <Term id="rerank">Rerank</Term> ([E](/en/adim-adim/e-retrieval-rerank/)). A cheaper option: have the model rewrite the question in the document's words. Or have it write a guessed answer first, and search with that answer (<Term id="hyde">HyDE</Term>).
+**Cost.** Rerank is one LLM call per candidate ([Performance](/en/uretim/performans-maliyet/)). We didn't measure q02 with rerank off. We didn't measure HyDE either. Rerank makes mistakes too: on the salary question, it gave the top score (10) to two per diem sections ([Security](/en/uretim/guvenlik/)).
+
+## T6 · Month 2 — Documents without headings
+
+> **Scenario.** HR announcements now come into the corpus as converted emails. They have no headings like `## 3.`.
+
+**Measurement, closest equivalent:** a chunk that lost its header row. The table rows are here. The table's header row stayed in the previous chunk:
+
+<Log name="03-chunk-fixed" title="npm run step -- 3   (chunker: fixed)" from={5} to={21} />
+
+**Diagnosis.** If the section chunker finds no headings, it packs paragraphs together. Each pack has up to about 1500 characters. It writes only the document name in front. The fixed cut separates the row from its header row. A small chunk is easy to find but hard to read. A big chunk is easy to read but hard to find.
+**Technique.** <Term id="parentchild">Parent-child</Term>: search with small chunks. Put the big chunk they belong to into the prompt. If there are no headings, have the model write a context line for each chunk at ingest.
+**Cost.** Chunks in two sizes, and the link between them. The prompt grows. You have to rethink the section numbers in the gold set. **Not measured.**
+
+## T7 · Month 3 — Three questions in one
+
+> **Scenario.** "My wife is having a baby. How many days of leave do I get? Is my meal card topped up on those days? Can I carry over my unused annual leave?"
+
+**Diagnosis.** The answer is spread over three sections. Leave for the birth: leave policy §5. The days the meal card is not topped up: benefits policy §2. Carrying over leave: leave policy §7. One search looks for one "average" question. The prompt gets 3 chunks.
+**Technique.** <Term id="agentic">Agentic RAG</Term>: the model splits the question into parts. It searches for each part and checks "is this enough?". Then it answers.
+**Cost.** Many calls instead of one. The time multiplies with the number of rounds. Two runs can split the question in different ways. You need a limit on rounds. **Not measured:** we didn't ask the pipeline this question.
+
+## T8 · Month 3 — 330 or 400?
+
+> **Scenario.** "The assistant wrote both 400 TRY and 330 TRY in one answer. The benefits policy says 330 TRY. Which one is right?"
+
+**Measurement.** On the meal card question, the announcement and benefits §2 were in the prompt together. The answer gives both amounts: 400 TRY [1] from the announcement, and 330 TRY [2] from the benefits policy. The last sentence is an instruction hidden in the announcement ([Security](/en/uretim/guvenlik/)):
+
+<Log name="ask-injection" title="npm run ask -- &quot;How much is loaded onto the meal card each day?&quot;" from={29} />
+
+**Diagnosis.** Only the text says that the announcement updates the amount in benefits §2. In this run, the two chunks came together. The model put both amounts side by side. It didn't say that 330 is the old amount. We didn't measure what happens if the announcement drops out of the top 3.
+**Technique.** At ingest, extract the links between documents ("announcement → updates → benefits §2"). At query time, follow that link: <Term id="graphrag">GraphRAG</Term>. The simplest form: an "updated" metadata label on the section that changed.
+**Cost.** The whole corpus goes through the model once. If a link is wrong, the search quietly goes to the wrong place. Summary questions like "When do I need a director's approval?" belong here too. Their answers are spread over many sections. **Not measured.**
+
+## Common questions
+
+<FAQ q="If the eval says 22/23, where do the tickets come from?">
+A gold set knows only its own questions and checks. T1 and T5 came from the eval, because those questions were in the gold set. T8's question is in the gold set too (q13). The eval marked it ✗, because the answer asks for a password. But the eval checks only two things: the answer has 400, and it doesn't have the word "password". It can't see the old 330 in the answer. T6 and T7 are question types that the gold set doesn't have. Every new failure type from real use should become a new line in the gold set.
+</FAQ>
+
+<Takeaway>No failure to fix? Don't add the technique.</Takeaway>
