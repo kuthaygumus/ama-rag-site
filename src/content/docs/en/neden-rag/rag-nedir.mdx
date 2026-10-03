@@ -1,0 +1,112 @@
+---
+title: What is RAG?
+description: Retrieval-Augmented Generation in one sentence — what it solves and what it doesn't.
+---
+import Deck from '../../../../components/Deck.astro';
+import DeckFigure from '../../../../components/DeckFigure.astro';
+import Step from '../../../../components/Step.astro';
+import Gate from '../../../../components/Gate.astro';
+import RepoCode from '../../../../components/RepoCode.astro';
+import FAQ from '../../../../components/FAQ.astro';
+import Term from '../../../../components/Term.astro';
+import Takeaway from '../../../../components/Takeaway.astro';
+
+<Gate bridge>
+We put the right chunks in front of the model, and it gave the right answer with its source. This setup has a
+name, and the name says what it does.
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 1000 330" role="img" aria-label="RAG: Retrieval finds, Augmented adds to the prompt, Generation writes the answer">
+      <defs>
+        <marker id="rn-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker>
+      </defs>
+      <rect x="15" y="120" width="115" height="70" rx="12" class="fbox" />
+      <text x="72" y="162" text-anchor="middle" class="flbl">question</text>
+      <path d="M132 155 H157" class="farrow" marker-end="url(#rn-h)" />
+      <g class="ph ph1">
+        <rect x="165" y="90" width="235" height="130" rx="14" class="fbox fbox-on" />
+        <text x="282" y="128" text-anchor="middle" class="flbl">R · Retrieval</text>
+        <text x="282" y="156" text-anchor="middle" class="fsub">find: most relevant chunks</text>
+        <text x="282" y="190" text-anchor="middle" class="fsub">embed · search · rerank</text>
+        <rect x="165" y="262" width="235" height="52" rx="10" class="fbox" />
+        <text x="282" y="295" text-anchor="middle" class="flbl">vector DB</text>
+        <path d="M282 260 V228" class="farrow" marker-end="url(#rn-h)" />
+        <text x="412" y="295" class="fsub">filled once by ingest</text>
+      </g>
+      <path d="M402 155 H427" class="farrow" marker-end="url(#rn-h)" />
+      <g class="ph ph2">
+        <rect x="435" y="90" width="235" height="130" rx="14" class="fbox fbox-on" />
+        <text x="552" y="128" text-anchor="middle" class="flbl">A · Augmented</text>
+        <text x="552" y="156" text-anchor="middle" class="fsub">add: put in the prompt</text>
+        <text x="552" y="190" text-anchor="middle" class="fsub">rules + sources + question</text>
+      </g>
+      <path d="M672 155 H697" class="farrow" marker-end="url(#rn-h)" />
+      <g class="ph ph2">
+        <rect x="705" y="90" width="175" height="130" rx="14" class="fbox fbox-frozen" />
+        <text x="792" y="128" text-anchor="middle" class="flbl">G · Generation</text>
+        <text x="792" y="156" text-anchor="middle" class="fsub">write: model writes</text>
+        <text x="792" y="190" text-anchor="middle" class="fsub" data-q="const">same gemma3:4b</text>
+      </g>
+      <path d="M882 155 H902" class="farrow" marker-end="url(#rn-h)" />
+      <rect x="908" y="112" width="84" height="86" rx="12" class="fbox" />
+      <text x="950" y="150" text-anchor="middle" class="flbl">answer</text>
+      <text x="950" y="176" text-anchor="middle" class="fsub" data-q="const">+ [1]</text>
+    </svg>
+  </DeckFigure>
+  <Step title="What the name means">
+    <Term id="rag">RAG</Term> = Retrieval-Augmented Generation. Everyone calls it RAG. The three words are three jobs that run in order: find, add, write.
+  </Step>
+  <Step title="R · Retrieval: find" phase="1">
+    We search for the question among chunks made from the documents beforehand. The search picks the few most relevant ones. Here, two files do this: `6-retrieve.ts` (search) and `7-rerank.ts` (<Term id="rerank">rerank</Term>).
+  </Step>
+  <Step title="A + G · add and write" phase="2">
+    The chosen chunks get numbers and go in front of the question. Rules go on top. The model writes the answer from this input and adds the source number. Both jobs are in one file, `8-answer.ts`.
+  </Step>
+  <Step title="In one sentence">
+    <p class="key">RAG finds relevant chunks, adds them to the prompt, and the model answers from them.</p>
+  </Step>
+</Deck>
+
+`npm run ask` runs a question through steps 6, 7 and 8:
+
+<RepoCode file="src/cli/ask.ts" />
+
+## What does it solve?
+
+| Problem | What RAG does | Where we see it today |
+|---|---|---|
+| **Private data** | On every question, it puts company documents the model never saw in front of it | [Without RAG / with RAG](/en/neden-rag/ragsiz-ragli/) |
+| **Fresh data** | A new edition comes: re-ingest it. No training | [When the data changes](/en/adim-adim/veri-degisince/) |
+| **Citing sources** | The answer says which chunk it came from, with `[1]` | [F · Generating the answer](/en/adim-adim/f-cevap/) |
+| **Access control** | A filter keeps HR-only documents out of the search | [E · Retrieval and reranking](/en/adim-adim/e-retrieval-rerank/) · [Security](/en/uretim/guvenlik/) |
+| **Made-up answers** | You can design it to say "I don't know" when the sources don't have the answer | [F · Generating the answer](/en/adim-adim/f-cevap/) |
+
+## What doesn't it solve?
+
+- **Style and format.** How the model talks is not RAG's job. That is a job for the prompt or for fine-tuning.
+  The second way changes the model. It is on the next page: [RAG or fine-tuning?](/en/neden-rag/rag-mi-fine-tune-mu/)
+- **Math.** The model is still a language model. It can make mistakes when it calculates with the numbers in the
+  sources. We didn't measure this today.
+- **Bad data.** A wrong, old or conflicting document gives a wrong answer, even when the search finds it.
+- **Reading mistakes.** Even with the right chunk in front of it, the model can read the wrong row. More on this:
+  [Limits and RAG variants](/en/her-derde-deva/sinirlar-ve-turler/).
+
+What we build today is the simplest form of RAG (naive RAG), plus rerank. Other variants, and the mistake each one
+fixes: [Limits and RAG variants](/en/her-derde-deva/sinirlar-ve-turler/).
+
+## Common questions
+
+<FAQ q="Does RAG mean a vector DB?">
+No. The find step can also be a keyword search, an SQL query or an API call. Vector search is common because it
+searches for meaning, not words. We measure how well it searches on the [C · Embedding](/en/adim-adim/c-embedding/)
+page.
+</FAQ>
+
+<FAQ q="Is RAG a library or a product?">
+Neither. It is a setup, a design pattern. Today we write every step ourselves, in plain TypeScript. Frameworks
+package the same steps. When you build the steps by hand once, you see what is inside a framework.
+</FAQ>
+
+<Takeaway>RAG doesn't change the model. It changes what we give the model.</Takeaway>

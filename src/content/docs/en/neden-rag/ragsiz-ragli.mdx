@@ -1,0 +1,151 @@
+---
+title: Without RAG / with RAG
+description: Same question, same model — once with no sources, once with the right chunks in front of it. And why "put everything in the prompt" is not the fix.
+---
+import Deck from '../../../../components/Deck.astro';
+import DeckFigure from '../../../../components/DeckFigure.astro';
+import Step from '../../../../components/Step.astro';
+import DaysQuestion from '../../../../components/DaysQuestion.astro';
+import Gate from '../../../../components/Gate.astro';
+import Example from '../../../../components/Example.astro';
+import Log from '../../../../components/Log.astro';
+import FAQ from '../../../../components/FAQ.astro';
+import Term from '../../../../components/Term.astro';
+import Takeaway from '../../../../components/Takeaway.astro';
+
+<DaysQuestion answer="25-30 working days" how="bare model, no documents" />
+
+<Gate>
+The model doesn't know the policy. It says the answer depends on the company's policy, but it still gives numbers.
+None of them is 22. So what if we give the model the knowledge with the question, every time?
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure" stage="a">
+    <svg viewBox="0 0 1000 500" role="img" aria-label="Without RAG, the question goes straight to the model. With RAG, the question is searched first, and the chunks found go to the model with the question">
+      <defs>
+        <marker id="rr-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker>
+        <marker id="rr-on" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead-on" /></marker>
+      </defs>
+      <text x="500" y="34" text-anchor="middle" class="flbl tight" data-q="code:src/lib/config.ts" data-q-mode="quote">How many working days of annual leave does an employee with 7 years of service get?</text>
+      <path d="M345 60 V485" class="faxis" stroke-dasharray="4 8" />
+      <text x="175" y="88" text-anchor="middle" class="flbl">Without RAG</text>
+      <path d="M125 97 H225" class="faxis" />
+      <circle cx="60" cy="205" r="16" class="fbox" />
+      <rect x="42" y="226" width="36" height="60" rx="14" class="fbox" />
+      <rect x="190" y="190" width="130" height="90" rx="14" class="fbox fbox-frozen" />
+      <text x="255" y="232" text-anchor="middle" class="flbl" data-q="const">gemma3:4b</text>
+      <text x="255" y="258" text-anchor="middle" class="fsub">language model</text>
+      <path d="M88 215 H182" class="farrow" marker-end="url(#rr-h)" />
+      <text x="135" y="205" text-anchor="middle" class="fsub">question</text>
+      <path d="M188 262 H94" class="farrow" marker-end="url(#rr-h)" />
+      <text x="135" y="312" text-anchor="middle" class="flbl fbad-t" data-q="log:question-0-bare">25-30 working days</text>
+      <text x="135" y="336" text-anchor="middle" class="fsub fbad-t">made up</text>
+      <g data-from="2">
+        <text x="680" y="88" text-anchor="middle" class="flbl">With RAG</text>
+        <path d="M630 97 H730" class="faxis" />
+        <rect x="370" y="110" width="360" height="200" rx="16" class="fbox fbox-on" />
+        <text x="388" y="138" class="fsub">retrieval</text>
+        <rect x="390" y="200" width="120" height="70" rx="12" class="fbox fbox-frozen" />
+        <text x="450" y="232" text-anchor="middle" class="flbl" data-q="const">bge-m3</text>
+        <text x="450" y="256" text-anchor="middle" class="fsub">embedding</text>
+        <circle cx="420" cy="380" r="16" class="fbox" />
+        <rect x="402" y="401" width="36" height="60" rx="14" class="fbox" />
+        <path d="M420 358 V318" class="farrow" marker-end="url(#rr-h)" />
+        <text x="436" y="345" class="fsub">question</text>
+      </g>
+      <g data-from="2">
+        <path d="M512 228 L592 190" class="farrow" marker-end="url(#rr-h)" />
+        <text x="524" y="200" class="fsub" data-q="log:04-embed"><tspan x="524" y="180">1024</tspan><tspan x="524" y="200">numbers</tspan></text>
+        <ellipse cx="655" cy="240" rx="55" ry="14" class="fbox" />
+        <rect x="600" y="150" width="110" height="90" class="fbox" />
+        <ellipse cx="655" cy="150" rx="55" ry="14" class="fbox" />
+        <text x="655" y="205" text-anchor="middle" class="flbl">Chroma</text>
+        <text x="655" y="292" text-anchor="middle" class="fsub">closest chunks</text>
+        <path d="M732 180 H757" class="farrow-on" marker-end="url(#rr-on)" />
+        <rect x="765" y="110" width="225" height="150" rx="12" class="fbox" />
+        <text x="877" y="138" text-anchor="middle" class="fsub" data-q="code:src/lib/config.ts">the 3 best chunks</text>
+        <text x="877" y="172" text-anchor="middle" class="flbl" data-q="log:08-answer">hr-leave §3</text>
+        <text x="877" y="198" text-anchor="middle" class="fsub fnum" data-q="corpus:2025/hr-leave.md">leave table: 7 years → 22</text>
+        <text x="877" y="232" text-anchor="middle" class="fsub">+ two more chunks</text>
+      </g>
+      <g data-from="3">
+        <path d="M877 262 V284" class="farrow-on" marker-end="url(#rr-on)" />
+        <rect x="760" y="292" width="235" height="80" rx="12" class="fbox fbox-on" />
+        <text x="877" y="326" text-anchor="middle" class="flbl">prompt</text>
+        <text x="877" y="352" text-anchor="middle" class="fsub">rules + sources + question</text>
+      </g>
+      <g data-from="4">
+        <path d="M877 374 V396" class="farrow-on" marker-end="url(#rr-on)" />
+        <rect x="800" y="404" width="155" height="76" rx="12" class="fbox fbox-frozen" />
+        <text x="877" y="438" text-anchor="middle" class="flbl" data-q="const">gemma3:4b</text>
+        <text x="877" y="462" text-anchor="middle" class="fsub">same model</text>
+        <path d="M796 442 H452" class="farrow-on" marker-end="url(#rr-on)" />
+        <text x="624" y="430" text-anchor="middle" class="flbl fgood-t" data-q="log:08-answer">22 working days [1]</text>
+        <text x="624" y="470" text-anchor="middle" class="fsub" data-q="log:08-answer">[1] = hr-leave §3</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <DeckFigure slot="figure" stage="b">
+    <svg viewBox="0 0 1000 320" role="img" aria-label="The prompt sent to the model, in tokens: with RAG, and with the whole handbook" data-draw="token-bars">
+      <text x="30" y="44" class="flbl" data-q="log:question-3-full log:stuff-everything">question of the day: two ways, both 22 working days</text>
+      <text x="30" y="108" class="flbl" data-q="code:src/lib/config.ts">RAG: 3 chunks</text>
+      <text x="30" y="134" class="fsub" data-q="log:06-retrieve log:07-rerank log:08-answer">search + rerank + answer ≈ 2 s</text>
+      <rect x="300" y="82" width="65" height="40" rx="6" class="fbox fbox-on" data-gen="rag-bar" />
+      <text x="377" y="110" class="flbl fnum" data-gen="rag-label">976 prompt tokens</text>
+      <text x="30" y="208" class="flbl" data-q="const">all: 8 documents</text>
+      <text x="30" y="234" class="fsub fbad-t" data-q="log:stuff-everything">answer call 26337 ms</text>
+      <rect x="300" y="182" width="660" height="40" rx="6" class="fbox fbox-bad" data-gen="all-bar" />
+      <text x="318" y="210" class="flbl" data-gen="all-label">9954 prompt tokens</text>
+      <g data-from="6">
+        <text x="300" y="282" class="fsub fgate-t" data-q="const">one of these 8 documents is HR-only: salary bands</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="Without RAG" stage="a">
+    The question goes straight to the model. The answer is made up: 25-30 working days.
+  </Step>
+  <Step title="Search comes first" stage="a">
+    With RAG, the question first becomes an <Term id="embedding">embedding</Term>. The <Term id="vectordb">vector DB</Term> returns the handbook <Term id="chunk">chunks</Term> that are closest in meaning. One of the three chosen chunks holds the leave table. For 7 years, it says 22 working days.
+  </Step>
+  <Step title="Prompt: sources + question" stage="a">
+    The chosen chunks go in front of the question, together with the rules. We call the whole text that goes to the model the <Term id="prompt">prompt</Term>.
+  </Step>
+  <Step title="Same model, right answer" stage="a">
+    The model is the same. Nobody touched its weights. Only the text in front of it changed. The answer is 22 working days, with the source [1] hr-leave §3.
+  </Step>
+  <Step title="What if we put everything in the prompt?" stage="b">
+    We put all 8 handbook documents into one prompt: 9954 tokens. The RAG prompt is 976 tokens. The answer is still 22 working days, but one call took 26337 ms. The whole RAG path, with search and <Term id="rerank">rerank</Term>, takes about 2 seconds.
+  </Step>
+  <Step title="The real job is choosing" stage="b">
+    If you put everything in, you pay for the whole handbook on every question. As the corpus grows, one day it won't fit in the <Term id="context">context window</Term>. And everyone reads the salary table that only HR may see.
+  </Step>
+</Deck>
+
+<Example>
+First, with nothing built yet:
+
+<Log name="question-0-bare" title="npm run question — before we start" from={0} to={6} />
+
+Then the same command, with the whole pipeline built. Look at the `HOW` line and the sources under it:
+
+<Log name="question-3-full" title="npm run question — after D, with the vector DB filled" from={0} to={10} />
+</Example>
+
+The full text the model gets (rules, numbered sources, question) is on the
+[F · Generating the answer](/en/adim-adim/f-cevap/) page.
+
+The "put everything in the prompt" test: all documents in one prompt, no search. Details:
+[Performance and cost](/en/uretim/performans-maliyet/).
+
+<Log name="stuff-everything" title="all documents in one prompt" />
+
+## Common questions
+
+<FAQ q="What happens if the search brings the wrong chunk?">
+The model works with the wrong context. It either says "I don't know" or writes a wrong answer. You can see a live
+example on the [B · Chunking](/en/adim-adim/b-chunking/) page. When a document is split badly, the search doesn't
+find the table. Then the model writes a wrong number, with a source. A source doesn't make an answer right.
+</FAQ>
+
+<Takeaway>The hard part is not giving the knowledge. It is choosing the right chunk.</Takeaway>
