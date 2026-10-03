@@ -1,0 +1,222 @@
+---
+title: Does RAG fix everything?
+description: Four ways RAG failed in today's logs, the three factors of success (retriever × chunk × LLM), and the RAG variants.
+---
+import Deck from '../../../../components/Deck.astro';
+import DeckFigure from '../../../../components/DeckFigure.astro';
+import Step from '../../../../components/Step.astro';
+import DaysQuestion from '../../../../components/DaysQuestion.astro';
+import Gate from '../../../../components/Gate.astro';
+import FAQ from '../../../../components/FAQ.astro';
+import Term from '../../../../components/Term.astro';
+import Takeaway from '../../../../components/Takeaway.astro';
+
+<DaysQuestion answer="24 working days [1] ✓" how="chroma · section · rerank on · edition 2026" />
+
+<Gate>
+The question of the day is solved. Is everything fine now? Today we saw the pipeline fail in four different ways.
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 1000 600" role="img" aria-label="Four ways RAG fails, and the formula for success">
+      <text x="20" y="38" class="flbl">Four failures, all four in today's logs</text>
+      <g data-from="1">
+        <rect x="20" y="60" width="470" height="140" rx="12" class="fbox fbox-bad" />
+        <text x="44" y="98" class="flbl" data-q="const">1 · Retriever</text>
+        <text x="44" y="136" class="fsub" data-q="log:eval-answers">“holiday” (q02): right section is 5th</text>
+        <text x="44" y="164" class="fsub">the question doesn't use the document's words</text>
+      </g>
+      <g data-from="2">
+        <rect x="510" y="60" width="470" height="140" rx="12" class="fbox fbox-bad" />
+        <text x="534" y="98" class="flbl" data-q="const">2 · Chunk</text>
+        <text x="534" y="136" class="fsub" data-q="corpus:2025/hr-leave.md">fixed: “| 7 | 22 |” lost its header row</text>
+        <text x="534" y="164" class="fsub" data-q="log:question-1-fixed" data-q-mode="quote">→ “… at most 7 working days [1].”</text>
+      </g>
+      <g data-from="3">
+        <rect x="20" y="220" width="470" height="140" rx="12" class="fbox fbox-bad" />
+        <text x="44" y="258" class="flbl" data-q="const">3 · LLM</text>
+        <text x="44" y="296" class="fsub">salary question, no salary chunk (filter)</text>
+        <text x="44" y="324" class="fsub" data-q="log:ask-access-on">no “I don't know” → “… 4,000 TRY per night [2].”</text>
+      </g>
+      <g data-from="4">
+        <rect x="510" y="220" width="470" height="140" rx="12" class="fbox fbox-bad" />
+        <text x="534" y="258" class="flbl" data-q="const">4 · Context</text>
+        <text x="534" y="296" class="fsub" data-q="log:stuff-everything log:08-answer">all in the prompt: 9954 tokens, RAG 976</text>
+        <text x="534" y="324" class="fsub" data-q="code:src/lib/config.ts">doesn't fit our num_ctx of 8192</text>
+      </g>
+      <text x="20" y="408" class="flbl">RAG's success =</text>
+      <g class="ph ph1">
+        <rect x="20" y="424" width="290" height="110" rx="12" class="fbox fbox-on" />
+        <text x="165" y="466" text-anchor="middle" class="flbl">retriever accuracy</text>
+        <text x="165" y="504" text-anchor="middle" class="fsub" data-q="log:eval-answers">q02: ranked 5th</text>
+      </g>
+      <text x="335" y="490" text-anchor="middle" class="flbl">×</text>
+      <g class="ph ph2">
+        <rect x="360" y="424" width="290" height="110" rx="12" class="fbox fbox-on" />
+        <text x="505" y="466" text-anchor="middle" class="flbl">chunk quality</text>
+        <text x="505" y="504" text-anchor="middle" class="fsub" data-q="log:question-1-fixed">fixed: “at most 7 … [1]”</text>
+      </g>
+      <text x="675" y="490" text-anchor="middle" class="flbl">×</text>
+      <g class="ph ph3">
+        <rect x="690" y="424" width="300" height="110" rx="12" class="fbox fbox-frozen" />
+        <text x="840" y="466" text-anchor="middle" class="flbl">LLM understanding</text>
+        <text x="840" y="504" text-anchor="middle" class="fsub">answered another question</text>
+      </g>
+      <g class="ph ph4">
+        <text x="20" y="578" class="fsub">context size is a cost, not a factor · on a wrong answer, check the prompt first</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="One product. First factor: the retriever" phase="1">
+    RAG's success is a product: retriever × chunk × LLM. If one factor is zero, the result is zero. "How much holiday do I get?" (q02) doesn't use the document's words. By vector score, the leave table ranks 5th. It gets into the top 3 only with <Term id="rerank">rerank</Term>: rerank moves it to 1st.
+  </Step>
+  <Step title="Chunk: the row that lost its header" phase="2">
+    The fixed chunker cuts every 300 characters. The row `| 7 | 22 |` landed in a different chunk from the table's header row. That chunk didn't get into the prompt. The model took a leave limit from §4 as the answer: "An employee with 7 years of service gets at most 7 working days [1]." A wrong number, with a source.
+  </Step>
+  <Step title="LLM: the right answer was “I don't know”" phase="3">
+    On the salary question, the filter kept the salary chunk out. That was right. But the model didn't say "I don't know". It wrote a hotel limit from the per diem table instead. The answer has a source, but it is wrong: "The hotel upper limit for a senior specialist is 4,000 TRY per night [2]."
+  </Step>
+  <Step title="Context: a cost" phase="4">
+    The fourth is not a factor. It is a cost. The whole handbook is 9954 tokens. RAG's 3 chunks are 976. You pay for a big <Term id="context">context</Term> on every question. On a wrong answer, ask first: what was in the prompt? `--prompt` is for that.
+  </Step>
+</Deck>
+
+The logs of all four failures are on this site. Retriever: [Measuring quality](/en/uretim/kaliteyi-olcmek/) (q02). Chunk: [B · Chunking](/en/adim-adim/b-chunking/). LLM: [Security](/en/uretim/guvenlik/) (filter on). Context: [Performance and cost](/en/uretim/performans-maliyet/).
+
+**One more story about the LLM factor: reading a table.** We shaped the table and the prompt for a small model:
+
+1. The leave table has one row for each year of service: `| 7 | 22 |`.
+2. The source marker holds only the document name. It has no ids and no section numbers.
+3. The prompt has a rule for tables: "If the answer comes from a table, first write the row you used word for word. Then give the answer in one sentence."
+4. The model doesn't follow the first half of this rule. Its answer to the question of the day doesn't write the row first: "An employee with 7 years of service gets 22 working days of annual leave [1]." A rule in the prompt doesn't mean the model follows it.
+5. In today's logs, the table questions are right. A small model is fragile when it reads tables. Shape the data and the prompt for it, and measure anyway.
+
+## Is there only one RAG?
+
+They all share one skeleton: find, add, write. The difference is in the find step: how smart it is and how much it costs.
+
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 1000 590" role="img" aria-label="Four RAG variants as four small pipelines">
+      <defs><marker id="rt-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker></defs>
+      <g class="ph ph1">
+        <text x="20" y="32" class="flbl" data-q="const">1 · Naive RAG</text>
+        <rect x="20" y="46" width="130" height="58" rx="10" class="fbox" />
+        <text x="85" y="82" text-anchor="middle" class="flbl">Question</text>
+        <rect x="182" y="46" width="130" height="58" rx="10" class="fbox" />
+        <text x="247" y="82" text-anchor="middle" class="flbl">Embed</text>
+        <rect x="344" y="46" width="130" height="58" rx="10" class="fbox" />
+        <text x="409" y="82" text-anchor="middle" class="flbl">top-k</text>
+        <rect x="506" y="46" width="130" height="58" rx="10" class="fbox fbox-frozen" />
+        <text x="571" y="82" text-anchor="middle" class="flbl">LLM</text>
+        <rect x="668" y="46" width="130" height="58" rx="10" class="fbox" />
+        <text x="733" y="82" text-anchor="middle" class="flbl">Answer</text>
+        <path d="M152 75 H178" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M314 75 H340" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M476 75 H502" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M638 75 H664" class="farrow" marker-end="url(#rt-h)" />
+        <text x="20" y="130" class="fsub">the skeleton we built today</text>
+      </g>
+      <g class="ph ph1">
+        <text x="20" y="177" class="flbl" data-q="const">2 · Reranker RAG</text>
+        <rect x="20" y="191" width="130" height="58" rx="10" class="fbox" />
+        <text x="85" y="227" text-anchor="middle" class="flbl">Question</text>
+        <rect x="182" y="191" width="130" height="58" rx="10" class="fbox" />
+        <text x="247" y="227" text-anchor="middle" class="flbl">Embed</text>
+        <rect x="344" y="191" width="130" height="58" rx="10" class="fbox" />
+        <text x="409" y="227" text-anchor="middle" class="flbl" data-q="const">top-5</text>
+        <rect x="506" y="191" width="130" height="58" rx="10" class="fbox fbox-on" />
+        <text x="571" y="227" text-anchor="middle" class="flbl">Reranker</text>
+        <rect x="668" y="191" width="130" height="58" rx="10" class="fbox" />
+        <text x="733" y="227" text-anchor="middle" class="flbl" data-q="code:src/lib/config.ts">best 3</text>
+        <rect x="830" y="191" width="130" height="58" rx="10" class="fbox fbox-frozen" />
+        <text x="895" y="227" text-anchor="middle" class="flbl">LLM</text>
+        <path d="M152 220 H178" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M314 220 H340" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M476 220 H502" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M638 220 H664" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M800 220 H826" class="farrow" marker-end="url(#rt-h)" />
+        <text x="20" y="275" class="fsub fgood-t" data-q="log:07-rerank">built here · 5 LLM calls · 1441 ms on the question of the day</text>
+      </g>
+      <g class="ph ph2">
+        <text x="20" y="322" class="flbl" data-q="const">3 · Multi-query RAG</text>
+        <rect x="20" y="336" width="130" height="58" rx="10" class="fbox" />
+        <text x="85" y="372" text-anchor="middle" class="flbl">Question</text>
+        <rect x="182" y="336" width="130" height="58" rx="10" class="fbox fbox-frozen" />
+        <text x="247" y="372" text-anchor="middle" class="flbl tight">rewrite</text>
+        <rect x="356" y="326" width="130" height="58" rx="10" class="fbox" />
+        <rect x="350" y="331" width="130" height="58" rx="10" class="fbox" />
+        <rect x="344" y="336" width="130" height="58" rx="10" class="fbox fbox-on" />
+        <text x="409" y="372" text-anchor="middle" class="flbl" data-q="code:src/lib/config.ts">3 queries</text>
+        <rect x="518" y="326" width="130" height="58" rx="10" class="fbox" />
+        <rect x="512" y="331" width="130" height="58" rx="10" class="fbox" />
+        <rect x="506" y="336" width="130" height="58" rx="10" class="fbox fbox-on" />
+        <text x="571" y="372" text-anchor="middle" class="flbl" data-q="code:src/lib/config.ts">3 searches</text>
+        <rect x="668" y="336" width="130" height="58" rx="10" class="fbox fbox-on" />
+        <text x="733" y="372" text-anchor="middle" class="flbl">union</text>
+        <rect x="830" y="336" width="130" height="58" rx="10" class="fbox fbox-frozen" />
+        <text x="895" y="372" text-anchor="middle" class="flbl">LLM</text>
+        <path d="M152 365 H178" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M314 365 H340" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M488 365 H502" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M650 365 H664" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M800 365 H826" class="farrow" marker-end="url(#rt-h)" />
+        <text x="20" y="420" class="fsub fgate-t">not measured</text>
+      </g>
+      <g class="ph ph2">
+        <text x="20" y="467" class="flbl" data-q="const">4 · RAG-fusion</text>
+        <rect x="20" y="481" width="130" height="58" rx="10" class="fbox" />
+        <text x="85" y="517" text-anchor="middle" class="flbl">Question</text>
+        <rect x="182" y="481" width="130" height="58" rx="10" class="fbox fbox-frozen" />
+        <text x="247" y="517" text-anchor="middle" class="flbl tight">rewrite</text>
+        <rect x="356" y="471" width="130" height="58" rx="10" class="fbox" />
+        <rect x="350" y="476" width="130" height="58" rx="10" class="fbox" />
+        <rect x="344" y="481" width="130" height="58" rx="10" class="fbox" />
+        <text x="409" y="517" text-anchor="middle" class="flbl" data-q="code:src/lib/config.ts">3 queries</text>
+        <rect x="518" y="471" width="130" height="58" rx="10" class="fbox" />
+        <rect x="512" y="476" width="130" height="58" rx="10" class="fbox" />
+        <rect x="506" y="481" width="130" height="58" rx="10" class="fbox" />
+        <text x="571" y="517" text-anchor="middle" class="flbl" data-q="code:src/lib/config.ts">3 searches</text>
+        <rect x="668" y="481" width="130" height="58" rx="10" class="fbox fbox-on" />
+        <text x="733" y="517" text-anchor="middle" class="flbl tight">merge</text>
+        <rect x="830" y="481" width="130" height="58" rx="10" class="fbox fbox-frozen" />
+        <text x="895" y="517" text-anchor="middle" class="flbl">LLM</text>
+        <path d="M152 510 H178" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M314 510 H340" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M488 510 H502" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M650 510 H664" class="farrow" marker-end="url(#rt-h)" />
+        <path d="M800 510 H826" class="farrow" marker-end="url(#rt-h)" />
+        <text x="20" y="565" class="fsub fgate-t">not measured</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="What we built today: naive and reranker" phase="1">
+    Naive: we embed the question. The k closest chunks go to the model with it. Reranker: a ranking step comes in between, and only the best 3 go on. It is expensive: one LLM call for each candidate. With rerank on, the answer to q02 is right.
+  </Step>
+  <Step title="Multi-query and RAG-fusion" phase="2">
+    <Term id="multiquery">Multi-query</Term>: the model rewrites the question in a few ways. It searches with each one and combines the results. <Term id="ragfusion">RAG-fusion</Term> scores the lists by rank. Both add calls to the find step. Start cheap: measure naive RAG first. Add a variant only when the eval shows a failure.
+  </Step>
+</Deck>
+
+## Five more variants, one line each
+
+We didn't measure any of them here. Each one fixes a specific failure, and each one has a cost:
+
+| Variant | What it fixes | Cost |
+|---|---|---|
+| <Term id="hybrid">Hybrid</Term> (keyword + vector) | Codes, numbers and email addresses that must match exactly. Words that the embedding blurs. | A second index, and merging two lists. Between an English question and a Turkish document, most words don't match. But acronyms, names and addresses look the same in both languages. On our 4 EN→TR questions, vector search alone got hit@1 1.00. |
+| <Term id="hyde">HyDE</Term> | The question and the document use different words: "holiday" ↔ "annual paid leave". In the eval, the right section for this question ranks 5th. | One LLM call per question. The model first writes a guessed answer, and the search uses that answer. A made-up number in that answer can send the search the wrong way. |
+| <Term id="parentchild">Parent-child</Term> | A small chunk is easy to find but hard to read (the table row that lost its header). | Chunks in two sizes, and the link between them. The search uses the small one, and the big one goes into the prompt. The prompt grows. |
+| <Term id="agentic">Agentic RAG</Term> | Questions with several parts, spread over several documents | The model splits the question, searches for each part, and asks "is this enough?". Many calls instead of one. The time multiplies with the number of rounds. Two runs can give different results. |
+| <Term id="graphrag">GraphRAG</Term> | Questions whose answer is in a link between documents (the announcement updates the amount in benefits §2). Also "summarize everything" questions. | At ingest, the whole corpus goes through the model. We extract an entity–relationship graph and keep it up to date. The most expensive variant. |
+
+The story of when and in which order we add these variants: [The first 90 days](/en/her-derde-deva/ilk-90-gun/).
+
+## Common questions
+
+<FAQ q="Which variant should I start with?">
+Naive RAG and a gold set. When one question type scores low in the eval, add the variant that fixes that failure. For us, these are the table and paraphrase questions. Then run the same eval again.
+</FAQ>
+
+<Takeaway>Retriever × chunk × LLM: if one is zero, the others can't save it.</Takeaway>

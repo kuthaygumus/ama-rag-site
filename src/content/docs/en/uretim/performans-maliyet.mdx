@@ -1,0 +1,170 @@
+---
+title: Performance and cost
+description: Where the time of one question goes. The token gap between RAG and putting everything in the prompt. The settings that change time or cost.
+---
+import Deck from '../../../../components/Deck.astro';
+import DeckFigure from '../../../../components/DeckFigure.astro';
+import Step from '../../../../components/Step.astro';
+import Now from '../../../../components/Now.astro';
+import DaysQuestion from '../../../../components/DaysQuestion.astro';
+import Gate from '../../../../components/Gate.astro';
+import Example from '../../../../components/Example.astro';
+import RepoCode from '../../../../components/RepoCode.astro';
+import Log from '../../../../components/Log.astro';
+import YourTurn from '../../../../components/YourTurn.astro';
+import FAQ from '../../../../components/FAQ.astro';
+import Term from '../../../../components/Term.astro';
+import Takeaway from '../../../../components/Takeaway.astro';
+
+<DaysQuestion answer="24 working days [1] ✓" how="chroma · section · rerank on · edition 2026" />
+
+<Gate bridge>
+The answer is right, and it cites its source. But how many seconds does one question take? And with an API model, what makes the bill grow? No need to guess. Each step prints its own time and token count.
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 1000 520" role="img" aria-label="Prompt tokens compared, the time of each stage for one question, and the ingest cache" data-draw="time-bars">
+      <g class="ph ph1">
+        <text x="40" y="34" class="flbl">Tokens in the prompt (rerank not counted)</text>
+        <rect x="40" y="50" width="92" height="44" rx="6" class="fbox fbox-good" data-gen="rag-bar" />
+        <text x="146" y="79" class="fsub" data-gen="rag-label">RAG: 3 chunks · 976 tokens · 22 ✓</text>
+        <rect x="40" y="106" width="940" height="44" rx="6" class="fbox fbox-bad" data-gen="all-bar" />
+        <text x="60" y="135" class="fsub" data-gen="all-label">all: 8 documents, salary table too · 9954 tokens · 22 ✓</text>
+        <path d="M814 40 V162" class="faxis" stroke-dasharray="6 5" data-gen="numctx" />
+        <text x="814" y="184" text-anchor="middle" class="fsub" data-gen="numctx-label">our num_ctx setting: 8192 tokens</text>
+      </g>
+      <g class="ph ph2">
+        <text x="40" y="236" class="flbl">Question of the day, one run: where does the time go?</text>
+        <rect x="40" y="254" width="9" height="56" class="fbox fbox-on" data-gen="seg-search" />
+        <rect x="49" y="254" width="640" height="56" rx="6" class="fbox fbox-gate" data-gen="seg-rerank" />
+        <rect x="689" y="254" width="291" height="56" rx="6" class="fbox fbox-frozen" data-gen="seg-answer" />
+        <text x="369" y="290" text-anchor="middle" class="flbl" data-gen="seg-rerank-label">rerank · 5 LLM calls · 1441 ms</text>
+        <text x="835" y="290" text-anchor="middle" class="flbl" data-gen="seg-answer-label">answer · 655 ms</text>
+        <path d="M45 314 V326" class="faxis" data-gen="search-tick" />
+        <text x="40" y="348" class="fsub" data-gen="search-label">↑ search step 21 ms (vector DB 7 ms · question embed 0 ms, from the cache)</text>
+      </g>
+      <g class="ph ph3">
+        <text x="40" y="410" class="flbl" data-q="log:04-embed">Ingest, second time: 60 of 60 vectors from the cache, step 4 = 52 ms</text>
+        <rect x="40" y="428" width="460" height="52" rx="8" class="fbox" />
+        <text x="270" y="461" text-anchor="middle" class="flbl" data-q="log:ingest-2026">2025 · 60 records · untouched</text>
+        <rect x="520" y="428" width="460" height="52" rx="8" class="fbox fbox-on" />
+        <text x="750" y="461" text-anchor="middle" class="flbl" data-q="log:ingest-2026">2026 · 60 records · newly written</text>
+        <text x="40" y="508" class="fsub" data-q="log:ingest-2026">120 records in the store, 2 editions: only the changed edition is written</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="What if we put everything in the prompt?" phase="1">
+    All 8 documents (40709 characters) in one prompt: 9954 prompt <Term id="token">tokens</Term>. RAG sends 3 chunks, 976 tokens. That is about 10 times fewer, not counting rerank. 9954 tokens don't fit in the 8192-token <Term id="context">window</Term> of our num_ctx setting. For this one measurement, we opened it to 32768.
+  </Step>
+  <Step title="…and the salary table goes to everyone" phase="1">
+    Right answer: 22. But the 8 documents include the hr-only salary table. No retrieval, no access filter: every employee's prompt gets the salaries. The answer took 26337 ms. RAG answers took from 650 to 3341 ms. We don't compute a factor from one run. A model reload for the bigger window may also be in that time. We didn't measure it.
+  </Step>
+  <Step title="Where does the time of one question go?" phase="2">
+    Question of the day, one run, on an M-series Mac. Search: 21 ms. <Term id="rerank">Rerank</Term>: 1441 ms. Answer: 655 ms. Rerank is about 68% of the total (2117 ms). That is 5 LLM calls for 5 chunks. Other questions: rerank took from 3662 to 4334 ms. Your times will differ.
+
+    <Now n="1">Run `npm run ask -- "I am going to Frankfurt for a two-day meeting. I am a specialist. How much is my daily per diem?"`. Note the search, rerank and answer times.</Now>
+  </Step>
+  <Step title="At ingest: cache and incremental ingest" phase="3">
+    Each embedding goes into `.cache/`. The key is a hash of the model and the text. On a second run, 60 of 60 vectors came from the cache. Step 4 took 52 ms. Adding the 2026 edition wrote only the 60 records of 2026. 2025 stayed untouched.
+  </Step>
+  <Step title="What makes the time and the bill grow?">
+    How often you call the model, and how much text you send each time. One question is 6 calls: 5 rerank, 1 answer. If N people ask at once: N times 6 calls. The settings below change these numbers. Most also change accuracy. Run the eval after each change.
+
+    <Now n="2">Ask the same question with `--k 10`. How many chunks did rerank score? How did the time change?</Now>
+
+    <Now n="3">In `src/steps/7-rerank.ts`, turn rerank off and ask the question again. What happened to the time and the answer?</Now>
+  </Step>
+</Deck>
+
+## Measurements, step by step
+
+Search, rerank and answer for the question of the day. Each log shows its time on the `TIME` line:
+
+<Log name="06-retrieve" title="npm run step -- 6" from={0} to={6} />
+<Log name="07-rerank" title="npm run step -- 7" from={0} to={6} />
+<Log name="08-answer" title="npm run step -- 8 --prompt" from={0} to={6} />
+
+<Example>
+**Put everything in the prompt.** There is no retrieval. The clean text of all 8 documents goes into one prompt, one after another. The rules and the question stay the same.
+
+| | RAG (3 chunks) | all (8 documents) |
+|---|---|---|
+| prompt tokens (rerank not counted) | 976 | 9954 |
+| hr-only document in the prompt | none (filter) | salary table |
+| answer call | 650 ms | 26337 ms |
+| answer | 22 working days ✓ | 22 working days ✓ |
+
+You pay the difference on every question. As the handbook grows, this approach stops working. We didn't measure how much of the 26337 ms a reload might take. The real cost is reading 9954 tokens.
+</Example>
+
+<Log name="stuff-everything" title="every document in one prompt (no retrieval)" />
+
+The measuring code. The part that opens the window to 32768 tokens is `numCtx`:
+
+<RepoCode file="src/cli/capture.ts" from={'await record("stuff-everything"'} to="^\}\);" />
+
+## The ingest side: cache and incremental ingest
+
+The same text with the same model always gives the same vector. The cache is in `.cache/embeddings.json`. The key is one hash of the model name and the text together:
+
+<RepoCode file="src/lib/ollama.ts" from="export async function embed" />
+
+<Log name="04-embed" title="npm run step -- 4   (second time)" />
+
+In these logs, every vector comes from the cache, so they don't show the first embed time. `npm run doctor` embedded one sentence in 122 ms. If the model is not in memory yet, the first call also includes the time to load it. To see it on your machine, delete the `.cache/` folder and run `npm run step -- 4`. The log shows the milliseconds per chunk.
+
+The store writes one edition at a time (`replaceEdition`):
+
+<RepoCode file="src/lib/store.ts" from="export interface VectorStore" />
+
+<Log name="ingest-2026" title="npm run ingest -- --edition 2026   (steps 4 and 5)" from={74} to={92} />
+
+## Settings
+
+| Setting | Ours | When you raise it | Did we measure it here? |
+|---|---|---|---|
+| Chunk size | section: 695 characters on average, 60 chunks · fixed: 300 characters, 138 chunks | more tokens in the prompt, fewer vectors | Yes: hit@1 is 0.526 with fixed (10 of 19 questions) and 0.842 with section (16) ([Measuring quality](/en/uretim/kaliteyi-olcmek/)) |
+| k (candidates the retriever returns) | 5 | one more LLM call per candidate in rerank; the prompt still gets 3 chunks | No: try it yourself with `--k 10` |
+| Chunks in the prompt | 3 | more prompt tokens | 3 chunks = 976 prompt tokens (question of the day) |
+| Rerank | on | turn it off: the 5 calls go away, and the vector score sets the order | Partly: for the question of the day, the answer is 22 both ways. For q02, the right section is at rank 5 by vector score. With rerank on, the answer is right. With rerank off, we didn't measure it. |
+| Model size | gemma3:4b | more RAM and more time | No: we measured time only with gemma3:4b |
+| Embedding cache | on | — | Yes: 60 of 60 vectors from the cache, step 4 = 52 ms |
+| Incremental ingest | `replaceEdition` per edition | — | Yes: 2026 added, 120 records in the store, 2025 untouched |
+
+## The bill: a formula without prices
+
+Prices change from provider to provider, so here is a formula, not a number. With an API model, the cost is about this:
+
+> **daily cost = queries/day × (answer prompt + 5 × rerank prompt + output tokens) × unit price**
+> **+ one-time embedding at ingest** (only the changed edition; the cache never embeds the same text twice)
+
+- Most providers charge different prices for input and output tokens. Split the formula in two and calculate each part.
+- The terms we measured, for the question of the day: answer prompt 976 tokens, output 21 tokens. We don't log the tokens of the rerank prompts. Each one carries the question and one chunk.
+- On your own server (self-host), GPU hours take the place of the unit price. You need enough capacity for N questions times 6 calls at the same time, with no waiting.
+
+<YourTurn>
+1. Run `npm run ask -- "I am going to Frankfurt for a two-day meeting. I am a specialist. How much is my daily per diem?"`. Note the search, rerank and answer times.
+2. Run the same question with `--k 10`. How many chunks did rerank score? How did its time change? Did the answer change?
+3. In `src/steps/7-rerank.ts`, find the `TOGGLE rerank` block. Comment out the `true; // default` line and uncomment the `false; // alternative` line. Ask the question again. Compare the time you saved and the answer. Then undo the toggle.
+</YourTurn>
+
+## Common questions
+
+<FAQ q="Should we buy a faster vector DB?">
+Not for this. In this run the vector DB search took 7 ms. Rerank and answer together took 2096 ms (1441 + 655). The bottleneck is the calls to the model. With millions of vectors, search gets expensive too. That is what the index on page D is for.
+</FAQ>
+
+<FAQ q="Should we turn rerank off to save time?">
+Only if the eval says so. Time and accuracy depend on the same setting: see the Rerank row in the table above. A faster option is a small reranker model trained for this job, a cross-encoder. We didn't measure it.
+</FAQ>
+
+<FAQ q="Can we cache the answers too?">
+Yes. The same question, the same sources, temperature 0 and a fixed seed give the same answer on the same machine. So you can store the answer. The key needs three parts: question + edition + access scope. Without the scope in the key, the cache can give an employee the salary answer that HR got. When you ingest a new edition, delete the cache for that edition. This repo has no answer cache.
+</FAQ>
+
+<FAQ q="Is a bigger model better?">
+Only the eval can tell. A bigger model is slower and needs more RAM. On this site we measured times only with gemma3:4b. To change the model, copy `env.example` to `.env` and uncomment the `CHAT_MODEL` line. Then run `npm run eval -- --answers`.
+</FAQ>
+
+<Takeaway>Time and cost are not in the search. They are in every model call and every token.</Takeaway>
