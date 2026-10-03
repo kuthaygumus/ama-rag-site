@@ -6,7 +6,7 @@ import { docsSchema, i18nSchema } from '@astrojs/starlight/schema';
 /** The site's own UI strings, read in components with Astro.locals.t('rag.…'); one file per locale in src/content/i18n/. */
 const ragStrings = z.object({
   'rag.dayq.question': z.string(),
-  'rag.dayq.original': z.string().optional(),
+  'rag.dayq.logs': z.string().optional(),
   'rag.guess.label': z.string(),
   'rag.guess.unit': z.string(),
   'rag.guess.note': z.string(),

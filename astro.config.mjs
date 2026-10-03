@@ -8,7 +8,7 @@ import { presentScript } from './src/scripts/present.js';
 import { guessScript } from './src/scripts/guess.js';
 import { panelScript } from './src/scripts/panel.js';
 
-const termScript = termPopoverScript.replace('__TERM_DEFS__', JSON.stringify({ tr: terms, en: termsEn }));
+const termScript = termPopoverScript.replace('__TERM_DEFS__', () => JSON.stringify({ tr: terms, en: termsEn }));
 
 /** [slug, Turkish label, English label] triples → sidebar items. */
 const items = (/** @type {[string, string, string][]} */ list) =>

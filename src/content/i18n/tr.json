@@ -1,5 +1,6 @@
 {
   "rag.dayq.question": "7 yıllık bir çalışanın yıllık izni kaç iş günü?",
+  "rag.dayq.logs": "İngilizce, logların yazdığı gibi:",
   "rag.guess.label": "Tahmininiz",
   "rag.guess.unit": "iş günü",
   "rag.guess.note": "bu tarayıcıda saklanır",

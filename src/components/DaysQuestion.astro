@@ -1,16 +1,20 @@
 ---
 /**
- * The day's question and where its answer stands at this point of the day (numbers from `npm run capture`).
- * The English pages also show the Turkish wording, because that is the question the workshop's logs print.
+ * The question of the day and where its answer stands at this point of the day (numbers from `npm run capture`).
+ * The Turkish pages also show the English wording, because that is the question the workshop's logs print. It is
+ * read from the synced config.ts, never typed here, so the box cannot drift from the logs.
  */
 interface Props { answer?: string; how?: string }
 const { answer, how } = Astro.props;
 const { t } = Astro.locals;
 const en = Astro.locals.starlightRoute.lang === 'en';
+const config = Object.values(import.meta.glob('../snippets/code/src/lib/config.ts', { query: '?raw', import: 'default', eager: true }))[0] as string | undefined;
+const logsQuestion = config?.match(/dayQuestion:\s*"([^"]+)"/)?.[1];
+if (!logsQuestion) throw new Error('DaysQuestion: no dayQuestion in src/snippets/code/src/lib/config.ts (run npm run sync)');
 ---
 <div class="dayq">
   <div class="q">{t('rag.dayq.question')}</div>
-  {en && <div class="q-tr">{t('rag.dayq.original')} <span lang="tr">“7 yıllık bir çalışanın yıllık izni kaç iş günü?”</span></div>}
+  {!en && <div class="q-log">{t('rag.dayq.logs')} <span lang="en">“{logsQuestion}”</span></div>}
   {answer && <div class="a">→ {answer}</div>}
   {how && <div class="how">{how}</div>}
   <slot />

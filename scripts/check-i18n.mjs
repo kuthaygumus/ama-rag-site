@@ -6,7 +6,8 @@
 //    ph classes the deck animates), a term has no English definition in terms-en.js, or an English page links to
 //    a Turkish one; the commands in backticks differ (both languages run the same commands on the same data); the
 //    headings differ in count or level, or in the ids other pages link to (<h3 id> on the glossary); a UI string
-//    key (src/content/i18n) exists in one language only, unless content.config.ts marks it optional;
+//    key (src/content/i18n) exists in one language only, unless content.config.ts marks it optional; the English
+//    day question differs from the one the logs print (dayQuestion in the synced config.ts);
 //  ! only warns, because a Turkish edit made in a hurry must still deploy: the numbers written on the page (3,3
 //    and 3.3 count as the same number), the terms marked, Turkish letters left in English prose (quoted data may
 //    keep them), and the numbers in a popover that differ between terms.js and terms-en.js.
@@ -100,6 +101,10 @@ if (!only) {
   const dict = Object.fromEntries(['tr', 'en'].map((l) => [l, JSON.parse(readFileSync(`src/content/i18n/${l}.json`, 'utf8'))]));
   for (const l of ['tr', 'en']) for (const k of Object.keys(dict[l])) if (k.startsWith('rag.') && !declared.has(k)) fail(`i18n/${l}.json`, `"${k}" is not declared in content.config.ts`);
   for (const [k, optional] of declared) for (const l of ['tr', 'en']) if (!optional && !(k in dict[l])) fail(`i18n/${l}.json`, `"${k}" is missing (required in content.config.ts)`);
+  // The English day question is the one the logs print (D2): en.json must equal dayQuestion in the synced config.ts.
+  const logsQ = readFileSync('src/snippets/code/src/lib/config.ts', 'utf8').match(/dayQuestion:\s*"([^"]+)"/)?.[1];
+  if (!logsQ) fail('src/snippets/code/src/lib/config.ts', 'no dayQuestion (run npm run sync)');
+  else if (dict.en['rag.dayq.question'] !== logsQ) fail('i18n/en.json', `"rag.dayq.question" differs from dayQuestion in config.ts: "${logsQ}"`);
   const code = walk('src').filter((f) => /\.(astro|ts|js|mjs)$/.test(f) && !f.startsWith('src/snippets/'));
   for (const f of code) for (const [, k] of readFileSync(f, 'utf8').matchAll(/\bt\(\s*['"](rag\.[\w.]+)['"]/g)) {
     if (!declared.has(k)) fail(f, `t('${k}') is not declared in content.config.ts`);

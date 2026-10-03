@@ -1,6 +1,5 @@
 {
   "rag.dayq.question": "How many working days of annual leave does an employee with 7 years of service get?",
-  "rag.dayq.original": "In Turkish, as the logs print it:",
   "rag.guess.label": "Your guess",
   "rag.guess.unit": "working days",
   "rag.guess.note": "kept in this browser",

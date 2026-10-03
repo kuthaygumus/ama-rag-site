@@ -9,7 +9,7 @@ export const terms = {
   chunk: { title: 'Chunk', body: 'Bir dokümanın parçası. Arama tüm dokümanı değil, bu parçaları bulur; modele de yalnızca seçilen birkaç parça gider.' },
   embedding: { title: 'Embedding', body: 'Bir metnin sayı listesi (vektör) hâli. Anlamı yakın metinlerin sayıları da birbirine yakın çıkar.' },
   vektor: { title: 'Vektör', body: 'Sıralı bir sayı listesi. Bizim embedding modelimiz her metin için 1024 sayılık bir vektör üretir.' },
-  cosine: { title: 'Cosine benzerliği', body: 'İki vektörün aynı yöne ne kadar baktığı: −1 ile 1 arasında, 1 = aynı yön (aynı anlam). Bizim modelde ilgisiz metinler bile 0’a inmez: ölçtüğümüz ilgisiz çift 0.456 aldı. Skor görelidir.' },
+  cosine: { title: 'Cosine benzerliği', body: 'İki vektörün aynı yöne ne kadar baktığı: −1 ile 1 arasında, 1 = aynı yön (aynı anlam). Bizim modelde ilgisiz metinler bile 0’a inmez: ölçtüğümüz ilgisiz çift 0.503 aldı. Skor görelidir.' },
   topk: { title: 'Top-k', body: 'Aramanın döndürdüğü en yakın k parça; bizde k = 5. k küçükse doğru parça listeye giremeyebilir; büyüdükçe rerank daha çok parça puanlar ve süre uzar. Prompt’a yine en iyi 3 parça girer.' },
   rerank: { title: 'Rerank', body: 'Arama sonuçlarını ikinci, daha dikkatli bir modelle yeniden sıralamak. Soru ile parçayı birlikte okur.' },
   metadata: { title: 'Metadata', body: 'Bir parçanın içeriği dışındaki etiketleri: hangi doküman, hangi sürüm, kim okuyabilir. Aramada filtre olarak kullanılır.' },
