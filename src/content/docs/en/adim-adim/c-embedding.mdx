@@ -1,0 +1,360 @@
+---
+title: C · Embedding
+description: Turn text into 1024 numbers, measure closeness (cosine, dot, L2), and look at the question "embedding done — what do we have?". Steps 4 and 4b.
+---
+import WhereAmI from '../../../../components/WhereAmI.astro';
+import DaysQuestion from '../../../../components/DaysQuestion.astro';
+import Gate from '../../../../components/Gate.astro';
+import Deck from '../../../../components/Deck.astro';
+import DeckFigure from '../../../../components/DeckFigure.astro';
+import Step from '../../../../components/Step.astro';
+import Now from '../../../../components/Now.astro';
+import Example from '../../../../components/Example.astro';
+import RepoCode from '../../../../components/RepoCode.astro';
+import Log from '../../../../components/Log.astro';
+import YourTurn from '../../../../components/YourTurn.astro';
+import FAQ from '../../../../components/FAQ.astro';
+import Takeaway from '../../../../components/Takeaway.astro';
+import Term from '../../../../components/Term.astro';
+
+<WhereAmI at="embed qembed" />
+
+<DaysQuestion answer="“An employee with 7 years of service gets 22 working days of annual leave [1].” ✓" how="chunker section · in-memory search (black box) — we open the box on this page" />
+
+<Gate>
+"How much holiday do I get?" and "Annual paid leave depends on the length of service." talk about the same topic. But they don't share a single word. A keyword search can't match these two. The black box on page B still found the right section.
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure" stage="v">
+    <svg viewBox="0 0 1000 290" role="img" aria-label="The chunk text and the question go through the same embedding model and become vectors of 1024 numbers">
+      <rect x="5" y="40" width="290" height="80" rx="10" class="fbox-on" />
+      <text x="150" y="72" text-anchor="middle" class="flbl">chunk text</text>
+      <text x="150" y="100" text-anchor="middle" class="fsub" data-q="log:04-embed">announcement-meal-card@2025#1</text>
+      <path d="M299 80 H352" class="farrow" marker-end="url(#ce-a)" />
+      <rect x="360" y="30" width="230" height="230" rx="12" class="fbox-frozen" />
+      <text x="475" y="112" text-anchor="middle" class="flbl" data-q="const">bge-m3</text>
+      <text x="475" y="142" text-anchor="middle" class="fsub">embedding model</text>
+      <text x="475" y="168" text-anchor="middle" class="fsub">a neural network</text>
+      <text x="475" y="194" text-anchor="middle" class="fsub ffrozen-t">frozen weights</text>
+      <path d="M595 80 H652" class="farrow" marker-end="url(#ce-a)" />
+      <text x="662" y="74" class="fsub fnum" data-q="log:04-embed">[-0.0356, 0.0001, -0.0278, … ]</text>
+      <text x="662" y="102" class="fsub" data-q="log:04-embed">1024 numbers · length 1.000</text>
+      <g data-from="4">
+        <rect x="20" y="170" width="260" height="80" rx="10" class="fbox" />
+        <text x="150" y="202" text-anchor="middle" class="flbl">question</text>
+        <text x="150" y="230" text-anchor="middle" class="fsub" data-q="code:src/lib/config.ts" data-q-mode="quote">… 7 years of service …</text>
+        <path d="M285 210 H352" class="farrow" marker-end="url(#ce-a)" />
+        <path d="M595 210 H652" class="farrow" marker-end="url(#ce-a)" />
+        <text x="662" y="204" class="fsub fnum" data-q="log:04-embed">[ … 1024 numbers … ]</text>
+        <text x="662" y="232" class="fsub">same model → same space</text>
+      </g>
+      <defs>
+        <marker id="ce-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker>
+      </defs>
+    </svg>
+  </DeckFigure>
+  <DeckFigure slot="figure" stage="m">
+    <svg viewBox="0 0 1000 380" role="img" aria-label="Two vectors: the angle between them is cosine, the distance between their tips is L2, and the projection of one onto the other is dot">
+      <path d="M120 330 H410 M120 330 V40" class="faxis" />
+      <path d="M370 330 A250 250 0 0 0 120 80" class="farrow" stroke-dasharray="4 5" />
+      <text x="330" y="360" class="fsub" data-q="const">length 1</text>
+      <path d="M120 330 L352 246" class="farrow-on" marker-end="url(#ce-b)" />
+      <path d="M120 330 L251 121" class="farrow-on" marker-end="url(#ce-b)" />
+      <text x="364" y="244" class="flbl">a</text>
+      <text x="256" y="110" class="flbl">b</text>
+      <g class="ph ph1">
+        <path d="M185.8 306.1 A70 70 0 0 0 157.1 270.6" class="farrow" />
+        <text x="190" y="284" class="flbl">θ</text>
+      </g>
+      <g class="ph ph2">
+        <path d="M354.9 244.5 L252.5 118" class="fbox-bad" stroke-dasharray="7 5" />
+        <text x="318" y="170" class="flbl fbad-t" data-q="const">L2</text>
+      </g>
+      <g class="ph ph3">
+        <path d="M252.5 118 L305.1 262.6" class="farrow" stroke-dasharray="4 4" />
+        <path d="M120 330 L305.1 262.6" class="fbox-gate" />
+        <text x="232" y="318" class="fsub fgate-t">projection</text>
+      </g>
+      <g class="ph ph1">
+        <text x="480" y="80" class="flbl">cosine</text>
+        <text x="480" y="108" class="fsub">a·b / (|a|·|b|) — the angle between</text>
+        <text x="480" y="134" class="fsub" data-q="const">−1 to 1 · 1 = same direction · unrelated ≠ 0</text>
+      </g>
+      <g class="ph ph2">
+        <text x="480" y="190" class="flbl fbad-t" data-q="const">L2</text>
+        <text x="480" y="218" class="fsub">√Σ (a[i] − b[i])² — distance between tips</text>
+        <text x="480" y="244" class="fsub">small = close: reversed scale</text>
+      </g>
+      <g class="ph ph3">
+        <text x="480" y="300" class="flbl fgate-t">dot</text>
+        <text x="480" y="328" class="fsub">Σ a[i]·b[i] — doesn’t divide by length</text>
+        <text x="480" y="354" class="fsub" data-q="log:04-embed">our vectors have length 1.000 → ?</text>
+      </g>
+      <defs>
+        <marker id="ce-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead-on" /></marker>
+      </defs>
+    </svg>
+  </DeckFigure>
+  <Step title="Text goes in, 1024 numbers come out" stage="v">
+    Step 4 sends each chunk to the bge-m3 model. It gets back a list of 1024 numbers, a <Term id="vektor">vector</Term>. This vector is the text's <Term id="embedding">embedding</Term>.
+
+    <Now n="1">Run `npm run step -- 4`, then open `data/4-vectors.json`.</Now>
+  </Step>
+  <Step title="One number alone means nothing" stage="v">
+    No single one of the 1024 numbers means "leave" or "date". The meaning is in where two vectors sit, compared to each other. Close meaning, close vectors.
+  </Step>
+  <Step title="Who decided what is close?" stage="v">
+    Not us. The model. bge-m3 is a neural network. Its training used many examples of "these two texts say the same thing". In training, it learned which texts to put close together. Its weights are frozen now.
+  </Step>
+  <Step title="The question goes through the same model" stage="v">
+    The question also becomes 1024 numbers. Without that, we can't compare it with the chunks. The model must be the same. Another model puts its vectors in another space.
+  </Step>
+  <Step title="Measuring closeness: cosine" stage="m" phase="1">
+    The angle between two vectors. It ignores length and looks only at direction. The result is between −1 and 1, and 1 means the same direction. Our retriever and our Chroma collection both use it: <Term id="cosine">cosine similarity</Term>.
+  </Step>
+  <Step title="L2: the distance between the tips" stage="m" phase="2">
+    The straight-line distance between two points. Careful, the scale runs the other way. A small number means close.
+  </Step>
+  <Step title="Dot: multiply and add" stage="m" phase="3">
+    Dot multiplies the matching numbers and adds them up. Unlike cosine, it doesn't divide by the lengths. The step 4 log shows a vector length of 1.000. So for our vectors, what difference is left between dot and cosine?
+
+    <Now n="2">Write the empty `dot()` function in `src/lib/similarity.ts`. Check: `npm run check:sibling`.</Now>
+  </Step>
+</Deck>
+
+<Example>
+In the log, look at the first 6 numbers of the first chunk (an announcement). Look at the vector's length too. None of the 60 chunks was computed again. The vectors came from the `.cache/` folder.
+</Example>
+
+<Log name="04-embed" title="npm run step -- 4" />
+
+Cosine and its distance version, L2, take a few lines in `src/lib/similarity.ts`:
+
+<RepoCode file="src/lib/similarity.ts" from="export function cosine" />
+
+<RepoCode file="src/lib/similarity.ts" from="export function l2" />
+
+## Embedding done: what do we have?
+
+60 chunks, each one 1024 numbers. Before search relies on these numbers, look at the model's choices. What did it put close together? What did it put far apart?
+
+<Deck>
+  <DeckFigure slot="figure" stage="p">
+    <svg viewBox="0 0 1000 330" role="img" aria-label="Cosine similarity of five sentence pairs: paraphrase 0.599, English-Turkish 0.752, twin tables 0.860, negation trap 0.853, unrelated 0.503" data-draw="similar-bars">
+      <path d="M330 10 V300 M630 10 V300 M930 10 V300" class="faxis" stroke-dasharray="3 5" data-gen="axis" />
+      <text x="330" y="322" text-anchor="middle" class="fsub" data-q="const">0</text>
+      <text x="630" y="322" text-anchor="middle" class="fsub" data-q="const">0.5</text>
+      <text x="930" y="322" text-anchor="middle" class="fsub" data-q="const">1</text>
+      <g class="ph ph2">
+        <text x="20" y="40" class="flbl">paraphrase</text>
+        <text x="20" y="62" class="fsub" data-gen="pair">How much … ↔ Annual paid leave …</text>
+        <rect x="330" y="26" width="359.4" height="28" rx="4" class="fbox-gate" data-gen="bar" />
+        <text x="700" y="47" class="flbl" data-gen="score">0.599</text>
+      </g>
+      <g class="ph ph1">
+        <text x="20" y="96" class="flbl">EN ↔ TR</text>
+        <text x="20" y="118" class="fsub" data-gen="pair">How often must … ↔ Şifreler 90 …</text>
+        <rect x="330" y="82" width="451.2" height="28" rx="4" class="fbox-good" data-gen="bar" />
+        <text x="792" y="103" class="flbl" data-gen="score">0.752</text>
+      </g>
+      <g class="ph ph4">
+        <text x="20" y="152" class="flbl">twin tables</text>
+        <text x="20" y="174" class="fsub" data-gen="pair">… domestic … ↔ … international …</text>
+        <rect x="330" y="138" width="516" height="28" rx="4" class="fbox-bad" data-gen="bar" />
+        <text x="857" y="159" class="flbl" data-gen="score">0.860</text>
+      </g>
+      <g class="ph ph3">
+        <text x="20" y="208" class="flbl">negation trap</text>
+        <text x="20" y="230" class="fsub" data-gen="pair">… can work … ↔ … cannot work …</text>
+        <rect x="330" y="194" width="511.8" height="28" rx="4" class="fbox-bad" data-gen="bar" />
+        <text x="852" y="215" class="flbl" data-gen="score">0.853</text>
+      </g>
+      <g class="ph ph1">
+        <text x="20" y="264" class="flbl">unrelated</text>
+        <text x="20" y="286" class="fsub" data-gen="pair">Your meal card … ↔ USB sticks are …</text>
+        <rect x="330" y="250" width="301.8" height="28" rx="4" class="fbox" data-gen="bar" />
+        <text x="642" y="271" class="flbl" data-gen="score">0.503</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <DeckFigure slot="figure" stage="map">
+    <svg viewBox="0 0 1000 600" role="img" aria-label="A two-dimensional map of the 60 chunks, marked by document, with the question of the day as a star" data-draw="chunk-map" data-q="log:04b-map">
+      <path d="M40 575 H700 M30 30 V565" class="faxis" />
+      <text x="700" y="596" text-anchor="end" class="fsub" data-gen="axis-x">direction 1 (PC1) · 12.3% of the spread</text>
+      <text x="40" y="20" class="fsub" data-gen="axis-y">direction 2 (PC2) · 8.8%</text>
+      <g data-gen="points">
+        <rect x="538.8" y="472.0" width="14" height="14" class="fbox-good" data-id="announcement-meal-card@2025#1" />
+        <rect x="605.5" y="396.9" width="14" height="14" class="fbox-good" data-id="announcement-meal-card@2025#2" />
+        <rect x="431.9" y="509.7" width="14" height="14" class="fbox-good" data-id="announcement-meal-card@2025#3" />
+        <circle cx="494.3" cy="106.4" r="7" class="fbox-good" data-id="benefits@2025#1" />
+        <circle cx="598.2" cy="430.7" r="7" class="fbox-good" data-id="benefits@2025#2" />
+        <circle cx="524.9" cy="453.4" r="7" class="fbox-good" data-id="benefits@2025#3" />
+        <circle cx="544.3" cy="481.4" r="7" class="fbox-good" data-id="benefits@2025#4" />
+        <circle cx="512.1" cy="354.9" r="7" class="fbox-good" data-id="benefits@2025#5" />
+        <circle cx="595.5" cy="468.1" r="7" class="fbox-good" data-id="benefits@2025#6" />
+        <circle cx="516.7" cy="153.1" r="7" class="fbox-good" data-id="benefits@2025#7" />
+        <circle cx="499.9" cy="500.4" r="7" class="fbox-good" data-id="benefits@2025#8" />
+        <path d="M287.7 60.5 L295.7 68.5 L287.7 76.5 L279.7 68.5Z" class="fbox" data-id="code-of-conduct@2025#1" />
+        <path d="M282.8 250.1 L290.8 258.1 L282.8 266.1 L274.8 258.1Z" class="fbox" data-id="code-of-conduct@2025#2" />
+        <path d="M386.7 450.0 L394.7 458.0 L386.7 466.0 L378.7 458.0Z" class="fbox" data-id="code-of-conduct@2025#3" />
+        <path d="M314.6 421.6 L322.6 429.6 L314.6 437.6 L306.6 429.6Z" class="fbox" data-id="code-of-conduct@2025#4" />
+        <path d="M308.1 223.9 L316.1 231.9 L308.1 239.9 L300.1 231.9Z" class="fbox" data-id="code-of-conduct@2025#5" />
+        <path d="M241.6 129.8 L249.6 137.8 L241.6 145.8 L233.6 137.8Z" class="fbox" data-id="code-of-conduct@2025#6" />
+        <path d="M149.9 369.6 L157.9 377.6 L149.9 385.6 L141.9 377.6Z" class="fbox" data-id="code-of-conduct@2025#7" />
+        <path d="M332.2 414.3 L340.2 422.3 L332.2 430.3 L324.2 422.3Z" class="fbox" data-id="code-of-conduct@2025#8" />
+        <circle cx="572.3" cy="140.0" r="7" class="fbox-bad" data-id="hr-salary-bands@2025#1" />
+        <circle cx="340.3" cy="443.9" r="7" class="fbox-bad" data-id="hr-salary-bands@2025#2" />
+        <circle cx="625.4" cy="471.0" r="7" class="fbox-bad" data-id="hr-salary-bands@2025#3" />
+        <circle cx="624.3" cy="496.7" r="7" class="fbox-bad" data-id="hr-salary-bands@2025#4" />
+        <circle cx="670.9" cy="495.8" r="7" class="fbox-bad" data-id="hr-salary-bands@2025#5" />
+        <circle cx="634.0" cy="504.6" r="7" class="fbox-bad" data-id="hr-salary-bands@2025#6" />
+        <circle cx="663.6" cy="483.5" r="7" class="fbox-bad" data-id="hr-salary-bands@2025#7" />
+        <circle cx="524.4" cy="478.6" r="7" class="fbox-bad" data-id="hr-salary-bands@2025#8" />
+        <rect x="415.7" y="42.2" width="14" height="14" class="fbox" data-id="hr-working-hours@2025#1" />
+        <rect x="473.4" y="379.8" width="14" height="14" class="fbox" data-id="hr-working-hours@2025#2" />
+        <rect x="431.8" y="340.7" width="14" height="14" class="fbox" data-id="hr-working-hours@2025#3" />
+        <rect x="575.4" y="421.6" width="14" height="14" class="fbox" data-id="hr-working-hours@2025#4" />
+        <rect x="524.2" y="148.1" width="14" height="14" class="fbox" data-id="hr-working-hours@2025#5" />
+        <rect x="443.1" y="300.0" width="14" height="14" class="fbox" data-id="hr-working-hours@2025#6" />
+        <rect x="243.5" y="378.7" width="14" height="14" class="fbox" data-id="hr-working-hours@2025#7" />
+        <circle cx="69.5" cy="479.7" r="7" class="fbox-frozen" data-id="it-security@2025#0" />
+        <circle cx="124.4" cy="179.0" r="7" class="fbox-frozen" data-id="it-security@2025#1" />
+        <circle cx="125.9" cy="441.1" r="7" class="fbox-frozen" data-id="it-security@2025#2" />
+        <circle cx="76.6" cy="540.7" r="7" class="fbox-frozen" data-id="it-security@2025#3" />
+        <circle cx="66.5" cy="518.5" r="7" class="fbox-frozen" data-id="it-security@2025#4" />
+        <circle cx="124.4" cy="344.1" r="7" class="fbox-frozen" data-id="it-security@2025#5" />
+        <circle cx="114.1" cy="418.1" r="7" class="fbox-frozen" data-id="it-security@2025#6" />
+        <circle cx="78.8" cy="534.4" r="7" class="fbox-frozen" data-id="it-security@2025#7" />
+        <circle cx="106.6" cy="505.3" r="7" class="fbox-frozen" data-id="it-security@2025#8" />
+        <circle cx="112.0" cy="410.6" r="7" class="fbox-frozen" data-id="it-security@2025#9" />
+        <circle cx="521.9" cy="122.5" r="7" class="fbox" data-id="travel-expenses@2025#1" />
+        <circle cx="476.6" cy="256.0" r="7" class="fbox" data-id="travel-expenses@2025#2" />
+        <circle cx="585.0" cy="423.1" r="7" class="fbox" data-id="travel-expenses@2025#3" />
+        <circle cx="603.7" cy="432.5" r="7" class="fbox" data-id="travel-expenses@2025#4" />
+        <circle cx="534.6" cy="411.0" r="7" class="fbox" data-id="travel-expenses@2025#5" />
+        <circle cx="571.6" cy="413.2" r="7" class="fbox" data-id="travel-expenses@2025#6" />
+        <circle cx="517.9" cy="436.7" r="7" class="fbox" data-id="travel-expenses@2025#7" />
+        <circle cx="523.1" cy="408.7" r="7" class="fbox" data-id="travel-expenses@2025#8" />
+        <circle cx="500.5" cy="101.1" r="9" class="fdot" data-id="hr-leave@2025#1" />
+        <circle cx="624.6" cy="258.1" r="9" class="fdot" data-id="hr-leave@2025#2" />
+        <circle cx="610.2" cy="444.4" r="9" class="fdot" data-id="hr-leave@2025#3" />
+        <circle cx="554.6" cy="352.1" r="9" class="fdot" data-id="hr-leave@2025#4" />
+        <circle cx="573.5" cy="457.4" r="9" class="fdot" data-id="hr-leave@2025#5" />
+        <circle cx="611.9" cy="458.9" r="9" class="fdot" data-id="hr-leave@2025#6" />
+        <circle cx="607.3" cy="455.2" r="9" class="fdot" data-id="hr-leave@2025#7" />
+        <circle cx="651.4" cy="314.0" r="9" class="fdot" data-id="hr-leave@2025#8" />
+      </g>
+      <g transform="translate(752 60)" data-gen="legend">
+        <circle cx="0" cy="0" r="9" class="fdot" />
+        <text x="18" y="6" class="fsub">hr-leave</text>
+        <circle cx="0" cy="30" r="7" class="fbox" />
+        <text x="18" y="36" class="fsub">travel-expenses</text>
+        <rect x="-7" y="53" width="14" height="14" class="fbox" />
+        <text x="18" y="66" class="fsub">hr-working-hours</text>
+        <path d="M0 82 L8 90 L0 98 L-8 90Z" class="fbox" />
+        <text x="18" y="96" class="fsub">code-of-conduct</text>
+        <circle cx="0" cy="120" r="7" class="fbox-good" />
+        <text x="18" y="126" class="fsub">benefits</text>
+        <rect x="-7" y="143" width="14" height="14" class="fbox-good" />
+        <text x="18" y="156" class="fsub">announcement-meal-card</text>
+        <circle cx="0" cy="180" r="7" class="fbox-bad" />
+        <text x="18" y="186" class="fsub">hr-salary-bands</text>
+        <circle cx="0" cy="210" r="7" class="fbox-frozen" />
+        <text x="18" y="216" class="fsub">it-security</text>
+      </g>
+      <g data-from="7">
+        <text x="44" y="228" class="fsub ffrozen-t" data-gen="doc-label" data-doc="it-security">it-security · Turkish</text>
+        <text x="512" y="97" class="fsub" data-gen="anchor" data-id="hr-leave@2025#1">§1</text>
+        <text x="300" y="64" class="fsub" data-gen="anchor" data-id="code-of-conduct@2025#1">§1</text>
+        <text x="435" y="45" class="fsub" data-gen="anchor" data-id="hr-working-hours@2025#1">§1</text>
+        <text x="534" y="119" class="fsub" data-gen="anchor" data-id="travel-expenses@2025#1">§1</text>
+        <text x="498" y="136" class="fsub" data-gen="anchor" data-id="benefits@2025#1">§1</text>
+        <text x="584" y="136" class="fsub" data-gen="anchor" data-id="hr-salary-bands@2025#1">§1</text>
+        <text x="548" y="44" class="fsub" data-q="corpus:2025/hr-leave.md">§1 Purpose and Scope,</text>
+        <text x="548" y="66" class="fsub" data-q="const">in 6 English policies</text>
+      </g>
+      <g data-from="8">
+        <path d="M535 383 L610 444" class="farrow" stroke-dasharray="5 5" data-gen="star-line" data-id="hr-leave@2025#3" />
+        <polygon points="535.4,365.8 539.6,377.1 551.6,377.5 542.1,385.0 545.4,396.5 535.4,389.8 525.5,396.5 528.8,385.0 519.3,377.5 531.3,377.1" class="farrow fgate-t" data-gen="star" />
+        <text x="622" y="458" class="fsub fnum" data-gen="anchor" data-id="answer">hr-leave §3 (answer)</text>
+        <polygon points="752,288 755,296 763,296 757,301 759,309 752,304 745,309 747,301 741,296 749,296" class="farrow fgate-t" />
+        <text x="770" y="306" class="fsub fgate-t">question of the day</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="First, a few pairs" stage="p">
+    `npm run similar` embeds the 5 sentence pairs we prepared. It prints the cosine similarity of each pair.
+
+    <Now n="3">Run `npm run similar -- --metric dot` and `npm run similar -- --metric l2`.</Now>
+  </Step>
+  <Step title="Expected: language is no barrier" stage="p" phase="1">
+    English question, Turkish rule: 0.752. No shared word, not even the same language. The model looked at the meaning and put them close. The unrelated pair got 0.503. Even "unrelated" is not 0. Scores are relative, not absolute.
+  </Step>
+  <Step title="Surprising: the paraphrase scores low" stage="p" phase="2">
+    "How much holiday do I get?" and "Annual paid leave …": the model put this pair closer than the unrelated pair. But the gap is small. 0.599 is only 0.096 above the unrelated pair (0.503).
+  </Step>
+  <Step title="Trap: negation" stage="p" phase="3">
+    "… can work remotely" and "… cannot work remotely": 0.853. Opposite meaning, close vectors. An embedding catches the topic. It can miss whether the text says yes or no. The model that writes the answer must spot the difference by reading the text.
+
+    <Now n="4">Run `npm run similar -- "How much holiday do I get?" "How many days of annual leave do I get?"`. Then try your own negation pair.</Now>
+  </Step>
+  <Step title="Twin tables" stage="p" phase="4">
+    The domestic and the international per diem questions: 0.860. Different table, different numbers, but almost the same vectors. The question set on the Measuring quality page has 3 questions of this type. In one of them, the right table ranks only 2nd.
+  </Step>
+  <Step title="From 1024 dimensions down to 2" stage="map">
+    `npm run map` uses <Term id="pca">PCA</Term> to project the 60 chunks onto a flat surface. The horizontal direction keeps 12.3% of the spread. The vertical one keeps 8.8%. About 79% is not in this picture. Each point is a chunk, and its marker shows the document.
+  </Step>
+  <Step title="What do we see?" stage="map">
+    The Turkish document sits apart, on the left. The "Purpose and Scope" sections of the 6 English policies sit side by side at the top. They come from different documents, but they are the same kind of text. The other English sections are mixed together on the right.
+  </Step>
+  <Step title="The star: the question of the day" stage="map">
+    On the map, the question lands next to travel-expenses §8. It is not next to hr-leave §3. In two dimensions, the distances are not accurate. Step 6 measures in all 1024 dimensions. Its top 5 holds only hr-leave chunks. The map gives intuition. It doesn't make the decision.
+
+    <Now n="5">Run `npm run map -- "How often should I change my password?"`, then open `data/map.html`.</Now>
+  </Step>
+</Deck>
+
+<Log name="04b-similar" title="npm run similar" />
+
+<Log name="04b-map" title="npm run map" />
+
+Open `data/map.html` in your browser. Hover over a point to see the chunk's text. We drew the map above from the same coordinates, in `data/map.json`.
+
+The empty `dot()` is at the end of `similarity.ts`:
+
+<RepoCode file="src/lib/similarity.ts" from="// ── YOUR TURN" to="^}" title="src/lib/similarity.ts — your turn" />
+
+<YourTurn>
+**1 · Look at a vector.** Run `npm run step -- 4`, then open `data/4-vectors.json`. Each chunk's `vector` field holds 1024 numbers. The `embedModel` field holds the model's name. In Bruno, send the `00-ollama` → `embed one sentence` request. It does the same job by hand. Change one word in `input` and send it again.
+
+**2 · Write the sibling.** In `src/lib/similarity.ts`, `dot()` is empty. The loop inside `cosine()` already computes `dot`. Write the same thing, but don't divide by the lengths. Check: `npm run check:sibling`. The `similarity · dot` tests should be green.
+
+**3 · Compare the measures.** Run `npm run similar -- --metric dot` and `npm run similar -- --metric l2`. Put the dot output next to the cosine output (the log above). Why does it look like this? Hint: the length in the step 4 log.
+
+**4 · Try your own pair.** Run `npm run similar -- "How much holiday do I get?" "How many days of annual leave do I get?"`. Then build the negation trap with your own sentences.
+
+**5 · Your own question on the map.** Run `npm run map -- "How often should I change my password?"` and open `data/map.html`. Where does the star land this time?
+
+Fell behind? Run `npm run catchup -- 4`.
+</YourTurn>
+
+## Common questions
+
+<FAQ q="Why does dot give the same result as cosine?">
+Because bge-m3 vectors have length 1.000. Cosine divides the dot result by the lengths of the two vectors. Dividing by 1 changes nothing. That is why many vector DBs offer dot as a "fast cosine" for normalized vectors.
+</FAQ>
+
+<FAQ q="What do dense and sparse mean?">
+Our vectors are dense. All 1024 numbers are filled, and together they carry the meaning. A sparse vector has one dimension for each word in a vocabulary, and most of them are zero. That is word matching (the BM25 family). Hybrid search combines the two.
+</FAQ>
+
+<FAQ q="Which embedding model should I pick?">
+Check its language support (we need English and Turkish). Check the vector size, because you store one vector for each chunk. Check how long a text it can read. Check where it runs: locally or through an API? That decides where your data goes. Public leaderboards give you an idea. But you decide by measuring on your own question set (Measuring quality).
+</FAQ>
+
+<FAQ q="What happens if I change the model?">
+You re-embed every chunk. The old vectors stay in a different space. The code stops you from mixing them. Step 4 writes the model name into `data/4-vectors.json`. If step 6 sees a different model for the question, it stops. It asks you to run steps 4 and 5 again.
+</FAQ>
+
+<Takeaway>The model decides what is close, not the database.</Takeaway>
