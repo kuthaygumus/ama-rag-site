@@ -1,0 +1,192 @@
+---
+title: Setup problems
+description: Every error message the repo can print, as the code writes it, with its fix. Also Podman, Windows, the company network, OneDrive, and catch-up when you fall behind.
+---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import RepoCode from '../../../components/RepoCode.astro';
+import Log from '../../../components/Log.astro';
+import Takeaway from '../../../components/Takeaway.astro';
+
+Start with `npm run doctor`. Each `✗` line names the problem and its fix. On a healthy machine, the output looks like this:
+
+<Log name="doctor" title="npm run doctor" />
+
+The messages below are exactly as the repo's code writes them. Your own value goes where you see `<…>`.
+
+## `npm run doctor` lines
+
+| Line | What to do |
+|---|---|
+| `✗ Node.js` `found <version>, need 22 or newer — https://nodejs.org` | Install Node.js 22 or newer. Close the terminal, open it again, and check with `node -v`. |
+| `✗ Ollama` `not reachable at http://localhost:11434 — start the Ollama app` | Open the Ollama app. No app? Run `ollama serve` in a terminal. If Ollama runs at another address, write `OLLAMA_URL=…` in `.env`. |
+| `✗ model gemma3:4b` `not pulled — run: ollama pull gemma3:4b` | Run the command from the line. The same for `bge-m3`: `ollama pull bge-m3`. |
+| `✗ Chroma` `not reachable — run: podman compose up -d   (or set STORE=json in .env)` | Run `podman compose up -d` in the repo folder. If that fails, see the [Podman](#podman) section below. If nothing works, write `STORE=json` in `.env`. |
+| `✗ corpus/2025` `missing — run npm run doctor from the repo folder` | Run the command from inside the repo folder: `cd ama-rag-workshop`. |
+| `slow laptop: answers will take a while — that is fine, the steps still work` | Not an error. One answer took longer than 20 seconds. On the first run, this time also includes loading the model into memory. Run `npm run doctor` once more right away. If the warning stays, you only have to wait longer. |
+| `<n> problem(s) — fix them before the day starts.` | The number of `✗` lines above. When all of them are fixed, the last line says `Ready.` |
+
+## Error lines from the steps
+
+When a step hits a known problem, it prints one line: `✗` and the message. On an unknown error, it prints the whole
+stack trace. Then read the first line.
+
+**Ollama**
+
+| Message | What happened, what to do |
+|---|---|
+| `Ollama is not reachable at http://localhost:11434. Is it running? (fetch failed)` | Ollama is not running. Open the app, or run `ollama serve`. |
+| `Ollama /api/embed → HTTP 404: <Ollama's reply> — is the model pulled? Try: ollama pull bge-m3` | The embedding model is missing. Run the command at the end of the line. |
+| `Ollama /api/generate → HTTP 404: <Ollama's reply> — is the model pulled? Try: ollama pull gemma3:4b` | The chat model is missing. Run the command at the end of the line. |
+| `Ollama /api/<path> → HTTP <code>: <Ollama's reply>` | Another Ollama error. The details are in Ollama's reply. Check that `ollama list` works. |
+
+**Chroma**
+
+| Message | What happened, what to do |
+|---|---|
+| `Chroma is not reachable at http://localhost:8000. Start it: podman compose up -d  (or use --store json)` | The container is not running. Run `podman compose up -d`, then check with `podman compose ps` that it is up. |
+
+**`data/` files.** Each step reads the file of the step before it. It checks that this file is up to date:
+
+| Message | What happened, what to do |
+|---|---|
+| `data/<n>-<name>.json does not exist yet. Run: npm run step -- <n>` | The step before never ran. Run the command from the line, or `npm run catchup -- <n>`. |
+| `data/<n>-<name>.json was made from an older data/<m>-<name>.json. Run it again: npm run step -- <n>` | You ran the step before again, but not this one. Run the step from the line again, then the steps after it, in order. |
+| `corpus/<edition>/ changed after step 1 ran. Run it again: npm run step -- 1` | The corpus files changed. Start again from step 1. |
+| `The store was filled with <model> vectors, but questions would be embedded with <model>. Vectors from two models live in different spaces — run steps 4 and 5 again.` | `EMBED_MODEL` changed. Run steps 4 and 5 again. |
+
+**Corpus and settings**
+
+| Message | What happened, what to do |
+|---|---|
+| `No folder corpus/<edition>. Editions live in corpus/<edition>/ — try --edition 2025` | You asked for an edition that doesn't exist. Use `--edition 2025` or `--edition 2026`. |
+| `corpus/<edition>/<file>.md: front matter is missing <fields>` | A field is missing in the front matter at the top of a document. The fields are `id`, `title`, `edition`, `department`, `access`, `lang`. |
+| `Unknown store "<name>". Use --store chroma or --store json.` | `--store` or `STORE` has a typo. This one comes with a stack trace. |
+| `--metric must be one of: cosine, dot, l2` | `npm run similar -- --metric …` knows only these three. This one comes with a stack trace. |
+
+**Command format.** If an argument is missing or wrong, the command prints how to use it:
+
+| Message | Correct use |
+|---|---|
+| `usage: npm run step -- <0-8> ["question"]` | `npm run step -- 3` |
+| `usage: npm run ask -- "How much is the international per diem?" [--prompt] [--bare] [--k 8]` | `npm run ask -- "question"` |
+| `usage: npm run catchup -- <0-8>   (the step you want to reach)` | `npm run catchup -- 5` |
+
+## Not errors: your turn
+
+Two functions are empty on purpose. Until you write them, they print these messages:
+
+| Message | When |
+|---|---|
+| `dot() is not written yet — see the YOUR TURN note above it in src/lib/similarity.ts` | `npm run similar -- --metric dot`, before you write `dot()` |
+| `byParagraph() is homework — see the note above it in src/steps/3-chunk.ts` | `npm run check:sibling`, before you write `byParagraph()` |
+
+`npm run check:sibling` stays red until you write them. The finished versions are in the `solutions/` folder.
+
+## Podman
+
+| Situation | What to do |
+|---|---|
+| `` Cannot connect to Podman. Please verify your connection to the Linux system using `podman system connection list`, or try `podman machine init` and `podman machine start` to manage a new Linux VM `` | Podman's virtual machine is not running: `podman machine start`. If it was never created, run `podman machine init` first. |
+| `looking up compose provider failed` | `podman compose` found no Compose tool. Install Compose from Podman Desktop, or use the one-line command below. |
+| `the container name "chroma" is already in use by <id>. You have to remove that container to be able to reuse that name: …` | The container already exists. Start it: `podman start chroma`. |
+| `>>>> Executing external compose provider "…/podman-compose". Please see podman-compose(1) for how to disable this message. <<<<` | Not an error, only information. `podman compose` prints this every time it calls an outside Compose tool. Then Chroma starts as usual. |
+| Another program uses port 8000 | Move Chroma to another port and write the new address in `.env` (below). |
+
+Without Compose, the same Chroma in one line (from the comment at the top of `compose.yaml`):
+
+```sh
+podman run -d --name chroma -p 8000:8000 -v chroma-data:/data docker.io/chromadb/chroma:1.5.9
+```
+
+If port 8000 is taken, move Chroma to 8001 and tell the pipeline the new address:
+
+<Tabs syncKey="os">
+<TabItem label="Mac">
+```sh
+podman run -d --name chroma -p 8001:8000 -v chroma-data:/data docker.io/chromadb/chroma:1.5.9
+echo "CHROMA_URL=http://localhost:8001" >> .env
+```
+</TabItem>
+<TabItem label="Windows (PowerShell)">
+```powershell
+podman run -d --name chroma -p 8001:8000 -v chroma-data:/data docker.io/chromadb/chroma:1.5.9
+Add-Content .env "CHROMA_URL=http://localhost:8001"
+```
+</TabItem>
+</Tabs>
+
+**No containers at all.** Write `STORE=json` in `.env`. The details are on the [Setup](/en/baslamadan/kurulum/) page.
+
+**Podman without admin rights.** Installing Podman and starting its virtual machine the first time can need admin
+rights. On Windows, the virtual machine runs on WSL2 or Hyper-V. If they are off, turning them on needs admin rights
+once. If you can't get admin rights, use `STORE=json`. Only the parts that look inside Chroma stop working: the
+`01-chroma` folder of the Bruno collection.
+
+## Windows
+
+- **`VAR=x npm run …` doesn't work.** This form exists only in Mac and Linux shells. So the repo takes every setting
+  from a flag (`npm run step -- 5 --store json`) or from the `.env` file.
+- **If `npm` doesn't start in PowerShell** and the error says `running scripts is disabled on this system`: type
+  `npm.cmd` in place of `npm` (`npm.cmd run doctor`). If your company policy allows it, you can also run
+  `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
+- **If a flag seems to do nothing** (for example, `--store json` is ignored): write the same setting in the `.env`
+  file. `.env` doesn't depend on the shell. It works the same in PowerShell, cmd and zsh.
+- **Line endings** are not a problem. The repo uses LF through `.gitattributes`, and step 1 also turns `\r\n` into `\n`.
+
+## Company network
+
+We tried everything below on a company network, behind a proxy that inspects encrypted connections.
+
+**Certificate.** On such a network, `npm ci` and Node can't connect until they trust the company's root certificate
+(CA). Give Node the path of the certificate file. npm runs on Node, so it uses the same setting. Your company's IT
+team knows where the file is.
+
+<Tabs syncKey="os">
+<TabItem label="Mac">
+```sh
+echo 'export NODE_EXTRA_CA_CERTS=<ca-bundle.pem>' >> ~/.zshrc
+```
+</TabItem>
+<TabItem label="Windows (PowerShell)">
+```powershell
+setx NODE_EXTRA_CA_CERTS "<ca-bundle.pem>"
+```
+</TabItem>
+</Tabs>
+
+The setting works only in terminals you open after it. Close the terminal, open it again, then run `npm ci`.
+
+**Downloads.** Through the same proxy:
+
+- `ollama pull` reaches registry.ollama.ai, and the model files download too.
+- `podman pull docker.io/chromadb/chroma:1.5.9` works (649 MB).
+- One download runs at 4 to 8 MB per second. Download the two models and the image before the training day. If
+  everyone downloads on the same network on the morning of the training, they all share this speed.
+
+## OneDrive (and iCloud)
+
+Don't clone the repo into a synced folder. `npm ci` writes many small files, and the sync starts to lock them. The
+install slows down a lot, or it can stop with file access errors like `EPERM`/`EBUSY`.
+On Windows, Desktop and Documents are often in OneDrive. Use a folder like `$HOME\dev`.
+On a Mac, the same is true if iCloud syncs Desktop and Documents. Use `~/dev`.
+
+Already cloned into OneDrive? The cleanest fix: delete the folder, clone again under `$HOME\dev`, then run `npm ci`.
+
+## Fell behind? `npm run catchup -- N`
+
+Stuck, or broke the code? For example, to go on from the end of step 5:
+
+```sh
+npm run catchup -- 5
+```
+
+<RepoCode file="src/cli/catchup.ts" from="// npm run catchup" to="Your own functions" />
+
+So: every `TOGGLE` block goes back to its default line. `data/` is emptied, and the vector DB is reset for every N.
+If Chroma is not running, catch-up prints one line, skips the reset and goes on. Then all steps from 1 to N run.
+Catch-up doesn't touch the functions you wrote, and it doesn't touch the question ledger either. The embeddings stay
+in the `.cache/` folder, so they are not computed again. Catch-up is fast.
+
+To reset only the vector DB and load the documents again: `npm run ingest -- --reset`.
+
+<Takeaway>Start with `npm run doctor`. Each ✗ line also tells you the fix.</Takeaway>
