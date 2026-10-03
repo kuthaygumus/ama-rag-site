@@ -9,14 +9,18 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "node scripts/check-sync.mjs && node scripts/check-legacy.mjs && node scripts/check-now.mjs && node scripts/check-ranges.mjs && node scripts/check-i18n.mjs && astro build && node scripts/check-legacy.mjs dist && node scripts/check-dist.mjs",
+    "build": "node scripts/check-sync.mjs && node scripts/check-legacy.mjs && node scripts/check-now.mjs && node scripts/check-ranges.mjs && node scripts/check-svg-src.mjs && node scripts/check-i18n.mjs && astro build && node scripts/check-legacy.mjs dist && node scripts/check-dist.mjs && node scripts/check-links.mjs",
     "preview": "astro preview",
     "sync": "node scripts/sync.mjs",
     "check:sync": "node scripts/check-sync.mjs",
     "check:legacy": "node scripts/check-legacy.mjs",
     "check:now": "node scripts/check-now.mjs",
     "check:ranges": "node scripts/check-ranges.mjs",
-    "check:i18n": "node scripts/check-i18n.mjs"
+    "check:svg-src": "node scripts/check-svg-src.mjs",
+    "check:i18n": "node scripts/check-i18n.mjs",
+    "check:dist": "node scripts/check-dist.mjs",
+    "check:links": "node scripts/check-links.mjs",
+    "check:en": "node scripts/check-en.mjs"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.42.0",

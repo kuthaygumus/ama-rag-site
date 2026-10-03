@@ -22,7 +22,7 @@ const MARKERS = [
 ];
 const SKIP = new Set(['node_modules', '.git', '.astro', '.vercel', 'dist']);
 const TEXT = /\.(ts|js|mjs|cjs|json|jsonl|md|mdx|astro|css|html|svg|yaml|yml|bru|txt|xml)$|^\.[a-z]+$/;
-const SELF = /check-(legacy|dist)\.(ts|mjs)$/;
+const SELF = /(check-(legacy|dist)|style-lists)\.(ts|mjs)$/; // the lists that name the banned words
 
 const root = process.argv[2] ?? '.';
 const skip = root === '.' ? SKIP : new Set(['node_modules', '.git']);
