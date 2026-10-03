@@ -1,0 +1,295 @@
+---
+title: A · Raw data and cleaning
+description: Reading the files, reading what each document says about itself (metadata), and removing the noise the PDF left behind — steps 1 and 2.
+---
+import WhereAmI from '../../../../components/WhereAmI.astro';
+import DaysQuestion from '../../../../components/DaysQuestion.astro';
+import Gate from '../../../../components/Gate.astro';
+import Deck from '../../../../components/Deck.astro';
+import DeckFigure from '../../../../components/DeckFigure.astro';
+import Step from '../../../../components/Step.astro';
+import Now from '../../../../components/Now.astro';
+import Example from '../../../../components/Example.astro';
+import RepoCode from '../../../../components/RepoCode.astro';
+import Log from '../../../../components/Log.astro';
+import YourTurn from '../../../../components/YourTurn.astro';
+import FAQ from '../../../../components/FAQ.astro';
+import Takeaway from '../../../../components/Takeaway.astro';
+import Term from '../../../../components/Term.astro';
+
+<WhereAmI at="load clean" />
+
+<DaysQuestion answer="“Typically, an employee with 7 years of service gets 25-30 working days of annual leave, depending on the company's policy.” ✗ made up" how="bare model, no documents — we haven't read a document yet" />
+
+<Gate>
+The model never saw these files. And even if it did, the raw files are dirty. If we split this text into chunks as it is, the noise goes into the chunks too.
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure" stage="a">
+    <svg viewBox="0 0 1000 290" role="img" aria-label="In a real project, you first extract the text from a PDF, Word or HTML file. The workshop starts with this raw data, corpus/2025/hr-leave.md. Step 1 reads it, and step 2 cleans it">
+      <text x="102" y="36" text-anchor="middle" class="fsub">a real project</text>
+      <text x="102" y="60" text-anchor="middle" class="fsub">starts here</text>
+      <rect x="12" y="76" width="180" height="124" rx="10" class="fbox" />
+      <text x="102" y="124" text-anchor="middle" class="flbl">documents</text>
+      <text x="102" y="158" text-anchor="middle" class="fsub">PDF · Word · HTML</text>
+      <text x="234" y="116" text-anchor="middle" class="fsub">extract</text>
+      <text x="234" y="138" text-anchor="middle" class="fsub">text</text>
+      <path d="M197 150 H270" class="farrow" marker-end="url(#ah-a)" />
+      <rect x="277" y="76" width="180" height="124" rx="10" class="fbox" />
+      <text x="367" y="124" text-anchor="middle" class="flbl">raw data</text>
+      <g data-from="2">
+        <text x="367" y="36" text-anchor="middle" class="fsub fnum">the workshop</text>
+        <text x="367" y="60" text-anchor="middle" class="fsub fnum">starts here</text>
+        <rect x="277" y="76" width="180" height="124" rx="10" class="fbox-on" />
+        <text x="367" y="124" text-anchor="middle" class="flbl">raw data</text>
+        <text x="367" y="158" text-anchor="middle" class="fmono" data-q="const">corpus/2025/</text>
+        <text x="367" y="180" text-anchor="middle" class="fmono">hr-leave.md</text>
+        <text x="140" y="234" text-anchor="middle" class="fsub">skipped here:</text>
+        <text x="140" y="258" text-anchor="middle" class="fsub">the text comes ready</text>
+      </g>
+      <g data-from="3">
+        <text x="499" y="116" text-anchor="middle" class="fsub" data-q="const">step 1</text>
+        <text x="499" y="138" text-anchor="middle" class="fsub">read</text>
+        <path d="M462 150 H535" class="farrow-on" marker-end="url(#ah-b)" />
+        <rect x="542" y="76" width="180" height="124" rx="10" class="fbox" />
+        <text x="632" y="120" text-anchor="middle" class="flbl">metadata</text>
+        <text x="632" y="148" text-anchor="middle" class="fsub">+ text</text>
+        <text x="632" y="180" text-anchor="middle" class="fmono" data-q="const">data/1-docs.json</text>
+        <text x="764" y="116" text-anchor="middle" class="fsub" data-q="const">step 2</text>
+        <text x="764" y="138" text-anchor="middle" class="fsub">clean</text>
+        <path d="M727 150 H800" class="farrow-on" marker-end="url(#ah-b)" />
+        <rect x="807" y="76" width="180" height="124" rx="10" class="fbox-good" />
+        <text x="897" y="124" text-anchor="middle" class="flbl">clean text</text>
+        <text x="897" y="180" text-anchor="middle" class="fmono" data-q="const">data/2-clean.json</text>
+        <path d="M282 218 V228 H982 V218" class="faxis" />
+        <text x="632" y="258" text-anchor="middle" class="fsub">this page: our code, no model</text>
+      </g>
+      <defs>
+        <marker id="ah-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker>
+        <marker id="ah-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead-on" /></marker>
+      </defs>
+    </svg>
+  </DeckFigure>
+  <DeckFigure slot="figure" stage="b">
+    <svg viewBox="0 0 820 430" role="img" aria-label="The top of the raw file hr-leave.md: the metadata block, noise lines and broken lines">
+      <rect x="10" y="10" width="560" height="410" rx="10" class="fbox" />
+      <g class="ph ph1">
+        <rect x="18" y="20" width="544" height="180" rx="6" class="fbox-on" />
+      </g>
+      <g class="ph ph2">
+        <rect x="18" y="206" width="544" height="48" rx="6" class="fbox-bad" />
+        <rect x="18" y="382" width="544" height="28" rx="6" class="fbox-bad" />
+      </g>
+      <g class="ph ph3">
+        <rect x="18" y="304" width="544" height="50" rx="6" class="fbox-gate" />
+      </g>
+      <text x="28" y="40" class="fmono">---</text>
+      <text x="28" y="62" class="fmono">id: hr-leave</text>
+      <text x="28" y="84" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote">title: Annual Leave Policy</text>
+      <text x="28" y="106" class="fmono" data-q="const">edition: "2025"</text>
+      <text x="28" y="128" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote">department: Human Resources</text>
+      <text x="28" y="150" class="fmono">access: all</text>
+      <text x="28" y="172" class="fmono" data-q="corpus:2025/hr-leave.md">lang: en</text>
+      <text x="28" y="194" class="fmono">---</text>
+      <text x="28" y="226" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote">Kraken Air | Annual Leave Policy | Edition 2025</text>
+      <text x="28" y="248" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote">CONFIDENTIAL – Internal use only</text>
+      <text x="28" y="274" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote"># Annual Leave Policy</text>
+      <text x="28" y="296" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote">## 1. Purpose and Scope</text>
+      <text x="28" y="324" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote">This policy … annual paid leave, special</text>
+      <text x="28" y="346" class="fmono" data-q="corpus:2025/hr-leave.md" data-q-mode="quote">leave and unpaid leave. It also says …</text>
+      <text x="28" y="372" class="fmono">…</text>
+      <text x="28" y="401" class="fmono" data-q="corpus:2025/hr-leave.md">Page 1 of 4</text>
+      <text x="608" y="36" class="fsub">raw data:</text>
+      <text x="608" y="60" class="fmono">hr-leave.md</text>
+      <g data-from="4">
+        <path d="M575 110 H600" class="farrow-on" />
+        <text x="608" y="104" class="flbl">metadata</text>
+        <text x="608" y="128" class="fsub" data-q="const">→ data/1-docs.json</text>
+      </g>
+      <g data-from="7">
+        <path d="M575 230 H600" class="farrow" />
+        <text x="608" y="226" class="flbl fbad-t">noise</text>
+        <text x="608" y="250" class="fsub" data-q="code:src/steps/2-clean.ts">4 rules → dropped</text>
+      </g>
+      <g data-from="9">
+        <path d="M575 330 H600" class="farrow" />
+        <text x="608" y="326" class="flbl fgate-t">broken line</text>
+        <text x="608" y="350" class="fsub">→ joined into one line</text>
+      </g>
+      <g data-from="10">
+        <text x="608" y="398" class="fsub">clean text →</text>
+        <text x="608" y="420" class="fsub" data-q="const">data/2-clean.json</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <DeckFigure slot="figure" stage="c">
+    <svg viewBox="0 0 1000 440" role="img" aria-label="Step 1: the 8 files in the corpus/2025 folder go through src/steps/1-load.ts and become data/1-docs.json. Step 2: data/1-docs.json goes through src/steps/2-clean.ts and becomes data/2-clean.json">
+      <g class="ph ph1">
+        <rect x="10" y="62" width="210" height="120" rx="10" class="fbox" />
+        <text x="115" y="100" text-anchor="middle" class="flbl">raw data</text>
+        <text x="115" y="132" text-anchor="middle" class="fmono" data-q="const">corpus/2025/</text>
+        <text x="115" y="162" text-anchor="middle" class="fsub" data-q="const">8 .md files</text>
+        <path d="M224 122 H282" class="farrow" marker-end="url(#ch-a)" />
+        <rect x="290" y="30" width="440" height="170" rx="10" class="fbox-on" />
+        <text x="310" y="62" class="fmono fnum" data-q="const">src/steps/1-load.ts</text>
+        <text x="310" y="102" class="fmono">loadCorpus()</text>
+        <text x="492" y="102" class="fsub">reads each .md file</text>
+        <text x="310" y="136" class="fmono">parseFrontMatter()</text>
+        <text x="492" y="136" class="fsub">splits off the --- block</text>
+        <text x="310" y="170" class="fmono">writeStep()</text>
+        <text x="492" y="170" class="fsub">writes a JSON file</text>
+        <path d="M734 122 H772" class="farrow" marker-end="url(#ch-a)" />
+        <rect x="780" y="62" width="210" height="120" rx="10" class="fbox" />
+        <text x="885" y="100" text-anchor="middle" class="fmono" data-q="const">data/1-docs.json</text>
+        <text x="885" y="132" text-anchor="middle" class="fsub" data-q="const">8 records (Doc)</text>
+        <text x="885" y="162" text-anchor="middle" class="fsub">metadata + body</text>
+      </g>
+      <g class="ph ph2">
+        <path d="M885 186 V234 H115 V268" class="farrow" marker-end="url(#ch-a)" />
+        <text x="500" y="226" text-anchor="middle" class="fsub" data-q="const">step 1's output is step 2's input</text>
+        <rect x="10" y="277" width="210" height="120" rx="10" class="fbox" />
+        <text x="115" y="315" text-anchor="middle" class="fmono" data-q="const">data/1-docs.json</text>
+        <text x="115" y="347" text-anchor="middle" class="fsub" data-q="const">8 records (Doc)</text>
+        <text x="115" y="377" text-anchor="middle" class="fsub">body = raw text</text>
+        <path d="M224 337 H282" class="farrow" marker-end="url(#ch-a)" />
+        <rect x="290" y="255" width="440" height="170" rx="10" class="fbox-on" />
+        <text x="310" y="287" class="fmono fnum" data-q="const">src/steps/2-clean.ts</text>
+        <text x="310" y="324" class="fmono">readStep()</text>
+        <text x="492" y="324" class="fsub" data-q="const">reads 1-docs.json</text>
+        <text x="310" y="356" class="fmono">cleanText()</text>
+        <text x="492" y="356" class="fsub">drops the noise,</text>
+        <text x="492" y="380" class="fsub">joins the lines</text>
+        <text x="310" y="410" class="fmono">writeStep()</text>
+        <text x="492" y="410" class="fsub">writes a JSON file</text>
+        <path d="M734 337 H772" class="farrow" marker-end="url(#ch-a)" />
+        <rect x="780" y="277" width="210" height="120" rx="10" class="fbox-good" />
+        <text x="885" y="315" text-anchor="middle" class="fmono" data-q="const">data/2-clean.json</text>
+        <text x="885" y="347" text-anchor="middle" class="fsub" data-q="const">8 records (CleanDoc)</text>
+        <text x="885" y="377" text-anchor="middle" class="fsub">metadata + text</text>
+      </g>
+      <defs>
+        <marker id="ch-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker>
+      </defs>
+    </svg>
+  </DeckFigure>
+  <Step title="What is raw data?" stage="a">
+    A company's knowledge lives in PDF, Word or HTML files. We call the text taken from these files **raw data**. Its content is right. But it carries traces of the file: page headers, page numbers, menus.
+  </Step>
+  <Step title="Our raw data: hr-leave.md" stage="a">
+    We skip the text extraction in this workshop. We wrote each file in the `corpus/` folder to look like text from a PDF. We added the page headers, page numbers and broken lines on purpose. So there is something real to clean.
+  </Step>
+  <Step title="Two steps, no model" stage="a">
+    Step 1 reads the file. It separates the block of labels at the top from the main text. Step 2 cleans the text. No model runs in either step, only our own code.
+  </Step>
+  <Step title="The block at the top: metadata" stage="b" phase="1">
+    Between two `---` lines at the top, the document describes itself. It gives its name (`id`), edition (`edition`) and department. It says who may read it (`access`) and its language (`lang`). We call this <Term id="metadata">metadata</Term>. Step 1 stores each field.
+
+    <Now n="1">Run `npm run step -- 1`, then open `data/1-docs.json`. Which field is different for `hr-salary-bands`?</Now>
+  </Step>
+  <Step title="Does a real PDF have this block?" stage="b" phase="1">
+    No. In a real project, another system keeps the edition and read access. It is the system that holds the document: SharePoint, Confluence or an archive. We wrote them at the top of the file to keep everything in one file.
+  </Step>
+  <Step title="Metadata becomes a filter later" stage="b" phase="1">
+    The `hr-salary-bands` document has `access: hr-only`. Only HR may read it. We read the label now. We check it when a question comes in (page E). If the record has no label from the start, there is nothing to filter later.
+  </Step>
+  <Step title="The text below: traces of the PDF" stage="b" phase="2">
+    The hr-leave file looks like text from a 4-page PDF. Each page starts with the same header and a confidentiality line. Each page ends with a number like `Page 1 of 4`. These lines have nothing to do with the content. We call them noise.
+  </Step>
+  <Step title="Why is noise a problem?" stage="b" phase="2">
+    The header line repeats on every page. When we split the text, it lands in many chunks. Then the chunks look alike because of this shared line, not because of their content. So the search has a hard time telling them apart.
+  </Step>
+  <Step title="Broken lines, too" stage="b" phase="3">
+    The page width also broke sentences apart. "special" ends one line, and "leave" starts the next. A person reads this fine. But a program that works line by line sees two separate parts.
+  </Step>
+  <Step title="Cleaning: 4 rules and a joiner" stage="b">
+    Step 2 drops the noise with 4 rules (regex). The rules catch the page header and the English confidentiality line. They also catch page numbers in English and in Turkish. Then the step joins the broken lines of plain text. Headings, tables and blank lines stay as they are.
+
+    <Now n="2">In `src/steps/2-clean.ts`, comment out the first rule of the `NOISE` list. Run `npm run step -- 2`. The `hr-leave` line should show −8.</Now>
+  </Step>
+  <Step title="Result: raw data in, clean text out" stage="b">
+    In the 8 documents, 1078 lines went down to 512. Of the 566 removed lines, 74 are noise. The rest are joined lines and extra blank lines that the cleaning deleted. Both steps took a few milliseconds.
+  </Step>
+  <Step title="Step 1 in code: corpus → 1-docs.json" stage="c" phase="1">
+    No classes. Each step is one file, written with plain functions. `npm run step -- 1` runs `src/steps/1-load.ts`. It reads 8 files and writes 8 records to `data/1-docs.json`.
+  </Step>
+  <Step title="Step 2 in code: 1-docs.json → 2-clean.json" stage="c" phase="2">
+    Step 2 doesn't run step 1. It reads that step's output, `data/1-docs.json`. It puts the clean text into the `text` field. It copies the metadata as it is and writes the result to `data/2-clean.json`.
+
+    <Now n="3">Read the section "Where does the leftover noise go?" below. Then write the `turkishConfidential` rule. Check: `npm run check:sibling`.</Now>
+  </Step>
+</Deck>
+
+<Example>
+The answer to the question of the day is in §3. In the raw file, the first paragraph of §3 is broken over three lines. After cleaning, it is one line in `data/2-clean.json`.
+</Example>
+
+<RepoCode file="corpus/2025/hr-leave.md" from="## 3. Annual Paid Leave" to="^\| 2 \|" title="corpus/2025/hr-leave.md — raw text" />
+
+## Step 1 · corpus/ → data/1-docs.json
+
+`run()` hands the work to `loadCorpus()`. It reads each `.md` file, splits it in two with `parseFrontMatter()` and returns one record per file. If a metadata field is missing, the error comes up here:
+
+<RepoCode file="src/steps/1-load.ts" from="export async function loadCorpus" />
+
+`parseFrontMatter()` uses no YAML library. The `key: value` lines are enough:
+
+<RepoCode file="src/steps/1-load.ts" from="export function parseFrontMatter" />
+
+Each record it returns is a `Doc`. That is a TypeScript interface in `src/lib/types.ts`, not a class. `DocMeta` holds the fields of the block at the top. `body` is the rest of the file:
+
+<RepoCode file="src/lib/types.ts" from="Step 1 output" />
+
+`writeStep()` writes the 8 records into the `data` array of `data/1-docs.json`. The `hash` and `inputHash` fields at the top stop step 2 from running on an old file.
+
+<Log name="01-load" title="npm run step -- 1" />
+
+## Step 2 · data/1-docs.json → data/2-clean.json
+
+`run()` in `src/steps/2-clean.ts` reads `data/1-docs.json` with `readStep()`. Every record goes through this line:
+
+<RepoCode file="src/steps/2-clean.ts" from="const docs: CleanDoc[]" to="^\s*$" />
+
+The line drops `path`: it takes it as `_path` and never uses it. It copies the metadata (`...meta`) as it is. `cleanText(body)` adds the clean `text` field and the number of dropped lines (`noiseLines`). The record's shape is `CleanDoc`, right below `Doc` in `types.ts`.
+
+The joiner has a limit. It never adds a heading, a table row, a blank line or a list item to another line.
+
+<RepoCode file="src/steps/2-clean.ts" from="const closed" />
+
+The noise rules are in a list. Lines marked `// default` are on by default. The empty `turkishConfidential` is your job:
+
+<RepoCode file="src/steps/2-clean.ts" from="// ── YOUR TURN" to="^\];" />
+
+<Log name="02-clean" title="npm run step -- 2" />
+
+## Where does the leftover noise go?
+
+The Turkish document (`it-security`) has the line `GİZLİ – Yalnızca şirket içi kullanım içindir` on every page. In English, it means: confidential, for internal use only. No rule removes this line. In the log, `it-security` shows −8. Its 4 page headers and 4 page numbers are gone. Its 4 confidentiality lines stay. The leftover noise doesn't go away. With the split method of page B, it becomes a chunk named `it-security@2025#0`. That chunk holds only the document title and this line. It gets embedded and stored, and it competes in the search.
+
+<YourTurn>
+**1 · Look at the raw data.** Open `corpus/2025/hr-leave.md`. Find the `---` block, the page header and the `Page 1 of 4` line. Then run `npm run step -- 1` and open `data/1-docs.json`. Look at the `access` and `lang` fields of each document. Which field is different for `hr-salary-bands`?
+
+**2 · Comment out a rule.** In `src/steps/2-clean.ts`, find the first line of the `NOISE` list: the page header rule. Put `//` before it and run `npm run step -- 2`. In the log, the `hr-leave` line should show −8, not −12. Search `data/2-clean.json` for `Edition 2025`: the page header is back in the text. Uncomment the line and run step 2 again.
+
+**3 · Write a similar rule.** In the same file, `turkishConfidential` is empty. The rule for the English line looks like `/^CONFIDENTIAL – .+$/`. Write the same kind of rule for the Turkish confidentiality line. Hint: the dash is an en dash (–), and the `İ` has a dot. Copy the line from the file. Don't type `GIZLI`. Then:
+
+- `npm run step -- 2` → the `it-security` line should show −12, not −8.
+- `npm run check:sibling` → the `step 2 · turkishConfidential` test should be green. The `dot` and `byParagraph` tests stay red for now. They belong to page C and to the homework on page B.
+- If you like, run `npm run step -- 3` and open `data/3-chunks.json`: `it-security@2025#0` is gone.
+
+With the rule in place, step 2 drops 78 noise lines, not 74. The 1078 lines go down to 504. We captured the logs on the next pages without this rule. So the logs show 60 chunks, or 120 records with both editions. On your machine, you get 59 chunks (118 records). This difference is expected.
+
+Fell behind? Run `npm run catchup -- 2`.
+</YourTurn>
+
+## Common questions
+
+<FAQ q="Why is edition written in quotes?">
+So it stays text. The filter compares text: the text `"2025"` doesn't match the number `2025`. The quotes stop a YAML reader from turning the value into a number. Our small reader takes every value as text anyway.
+</FAQ>
+
+<FAQ q="What if a cleaning rule deletes real content by mistake?">
+The anchors stop that. Each rule is tied to the start and the end of the line (`^` … `$`). So a line goes only if the whole line matches the pattern. The `check:sibling` test checks this too. `turkishConfidential` must not delete `Gizli veriler şifrelenmelidir.`, a normal Turkish sentence about confidential data.
+</FAQ>
+
+<Takeaway>You can't search well in dirty text.</Takeaway>
