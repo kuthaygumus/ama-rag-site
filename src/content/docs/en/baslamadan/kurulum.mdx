@@ -1,0 +1,166 @@
+---
+title: Setup
+description: Once, before the course — Node 22, git, Ollama and two models, Chroma in Podman, the repo and npm run doctor.
+---
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+import RepoCode from '../../../../components/RepoCode.astro';
+import Log from '../../../../components/Log.astro';
+import FAQ from '../../../../components/FAQ.astro';
+import Takeaway from '../../../../components/Takeaway.astro';
+
+Do this once, before the course. Everything runs on your own laptop. The language models run in **Ollama**. The vector DB (Chroma)
+runs as a container in **Podman**. The pipeline itself is TypeScript on **Node.js**. No data leaves your laptop.
+
+Downloads: `gemma3:4b` 3.3 GB · `bge-m3` 1.2 GB · the Chroma image 649 MB. We measured these sizes on an M-series Mac
+with `ollama list` and `podman image ls`. Download them on a good connection. On a company network, read
+[Setup problems › Company network](/en/kurulum-sorunlari/#company-network) first.
+
+| What | What it does | Check |
+|---|---|---|
+| [Node.js](https://nodejs.org) 22 or later | runs the pipeline | `node -v` |
+| [git](https://git-scm.com) | downloads the repo | `git --version` |
+| [Ollama](https://ollama.com/download) | runs the two models locally | `ollama list` |
+| `gemma3:4b` | chat model: writes the answer | in `ollama list` |
+| `bge-m3` | embedding model: turns text into 1024 numbers | in `ollama list` |
+| [Podman Desktop](https://podman-desktop.io) (or Docker) | runs Chroma in a container | `podman --version` |
+| [Bruno](https://www.usebruno.com) (optional) | looks inside Chroma and Ollama over HTTP | — |
+
+## Step by step
+
+<Steps>
+
+1. **Node.js, git, Ollama, Podman Desktop, Bruno.** Install them from the links above. On first start, Podman Desktop
+   offers to create a Podman machine (a small Linux virtual machine) and to install Compose. Accept both.
+   `podman compose` calls that Compose tool. You can also start the machine from the terminal:
+
+   ```sh
+   podman machine init
+   podman machine start
+   ```
+
+2. **The two models and the Chroma image.** You download all three once:
+
+   ```sh
+   ollama pull gemma3:4b
+   ollama pull bge-m3
+   podman pull docker.io/chromadb/chroma:1.5.9
+   ```
+
+3. **The repo.** Don't put it in a folder that OneDrive (iCloud on a Mac) syncs. The Desktop and Documents folders
+   are often synced. Make a new `dev` folder in your home folder:
+
+   <Tabs syncKey="os">
+   <TabItem label="Mac">
+   ```sh
+   mkdir -p ~/dev && cd ~/dev
+   git clone https://github.com/kuthaygumus/ama-rag-workshop.git
+   cd ama-rag-workshop
+   npm ci
+   ```
+   </TabItem>
+   <TabItem label="Windows (PowerShell)">
+   ```powershell
+   New-Item -ItemType Directory -Force $HOME\dev
+   cd $HOME\dev
+   git clone https://github.com/kuthaygumus/ama-rag-workshop.git
+   cd ama-rag-workshop
+   npm ci
+   ```
+   </TabItem>
+   </Tabs>
+
+4. **Start Chroma.** In the repo folder:
+
+   ```sh
+   podman compose up -d
+   ```
+
+   Chroma now runs at `http://localhost:8000`. To stop it, run `podman compose down`. The saved vectors stay
+   in the volume.
+
+5. **Check.** This command tries every part once and times one answer:
+
+   ```sh
+   npm run doctor
+   ```
+
+   The last line should be `Ready.`
+
+</Steps>
+
+<Log name="doctor" title="npm run doctor" />
+
+The output above is from an M-series Mac. Both models were already in memory (embedding 122 ms, answer 172 ms).
+On the first run, both times also include loading the models into memory, so they are longer.
+Ollama keeps a model in memory for a few minutes. A new run in that time doesn't load it again.
+
+If a line has a `✗`, the same line says what to do. All of them, one by one:
+[Setup problems](/en/kurulum-sorunlari/).
+
+## No Podman?
+
+There are two ways. The pipeline works the same in both.
+
+**A one-line `podman run`.** Use it if Podman works but `podman compose` doesn't. It is the same line as the one in the
+comment at the top of `compose.yaml`:
+
+```sh
+podman run -d --name chroma -p 8000:8000 -v chroma-data:/data docker.io/chromadb/chroma:1.5.9
+```
+
+**No container at all: the JSON store.** The vectors go into the `data/store.json` file, not into Chroma. In the repo folder, add one line to a `.env` file:
+
+<Tabs syncKey="os">
+<TabItem label="Mac">
+```sh
+echo "STORE=json" >> .env
+npm run doctor
+```
+</TabItem>
+<TabItem label="Windows (PowerShell)">
+```powershell
+Add-Content .env "STORE=json"
+npm run doctor
+```
+</TabItem>
+</Tabs>
+
+Now `npm run doctor` doesn't check Chroma. Its `store` line says `json (no Podman needed)`. To change the setting
+for one command only, you can use a flag: `npm run step -- 5 --store json`.
+
+All settings are in the repo's `env.example` file, as comment lines. They are `OLLAMA_URL`, `CHROMA_URL`,
+`CHAT_MODEL`, `EMBED_MODEL`, `STORE` and `EDITION`. To change one, copy its line into your `.env` file and
+delete the `#` at the start.
+
+The Chroma setup, with a comment for each line:
+
+<RepoCode file="compose.yaml" />
+
+## Common questions
+
+<FAQ q="I use Docker. Do I need to install Podman?">
+No. `docker compose up -d` works with the same `compose.yaml`. In the one-line command, write `docker` in place of
+`podman`.
+</FAQ>
+
+<FAQ q="Do I need a GPU?">
+No. Ollama uses a GPU if you have one. If not, it runs on the CPU. The steps still work, but you wait longer.
+About the "slow laptop" warning: [Setup problems](/en/kurulum-sorunlari/).
+</FAQ>
+
+<FAQ q="Why isn’t Ollama in a container?">
+The models and the GPU are on your machine. With Ollama in a container, GPU access is harder, and you download the models
+a second time. Only the database runs in a container.
+</FAQ>
+
+<FAQ q="Do I need Bruno?">
+No. The pipeline runs in the terminal. Bruno is only for looking at the HTTP APIs of Chroma and Ollama by hand.
+Open the `bruno/` folder as a collection.
+</FAQ>
+
+<FAQ q="What if I don’t have admin rights on my company laptop?">
+You can still follow the course if Node, git and Ollama are installed. If Podman can't be installed, use the JSON store (above).
+More details, and the cases that only happen on Windows: [Setup problems](/en/kurulum-sorunlari/).
+</FAQ>
+
+<Takeaway>If `npm run doctor` says "Ready.", the day can start.</Takeaway>

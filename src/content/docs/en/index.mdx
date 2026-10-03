@@ -1,0 +1,117 @@
+---
+title: RAG, step by step
+description: Building a RAG pipeline step by step, and opening every intermediate output to look at it.
+---
+import { LinkCard, CardGrid } from '@astrojs/starlight/components';
+import Deck from '../../../components/Deck.astro';
+import DeckFigure from '../../../components/DeckFigure.astro';
+import Step from '../../../components/Step.astro';
+import WhereAmI from '../../../components/WhereAmI.astro';
+import DaysQuestion from '../../../components/DaysQuestion.astro';
+import Term from '../../../components/Term.astro';
+import Takeaway from '../../../components/Takeaway.astro';
+
+Today we build a <Term id="rag">RAG</Term> pipeline over a company's policy handbook. We build it step by step,
+on your own laptop. We open every intermediate output and look at it. The models run in Ollama, and the vector DB runs in Podman. The code is TypeScript.
+
+<WhereAmI at="load clean chunk embed store question qembed search rerank prompt answer" />
+
+We ask one question all day. Each time we add a part to the pipeline, we ask the same question again. Then we look at how the answer changes.
+
+<DaysQuestion />
+
+## The day at a glance
+
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 1000 250" role="img" aria-label="The day at a glance: Before we start, five parts and the Wrap-up">
+      <path d="M40 150 H960" class="farrow" />
+      <g data-from="1">
+        <circle cx="70" cy="150" r="22" class="fbox fbox-on" />
+        <text x="30" y="202" class="flbl">Before we start</text>
+        <text x="30" y="226" class="fsub">setup · the question</text>
+      </g>
+      <g data-from="2">
+        <circle cx="215" cy="150" r="22" class="fbox fbox-on" />
+        <text x="215" y="157" text-anchor="middle" class="flbl" data-q="const">1</text>
+        <text x="215" y="86" text-anchor="middle" class="flbl">Why RAG?</text>
+        <text x="215" y="110" text-anchor="middle" class="fsub">the model doesn’t know</text>
+      </g>
+      <g data-from="3">
+        <circle cx="360" cy="150" r="22" class="fbox fbox-on" />
+        <text x="360" y="157" text-anchor="middle" class="flbl" data-q="const">2</text>
+        <text x="360" y="202" text-anchor="middle" class="flbl">Architecture</text>
+        <text x="360" y="226" text-anchor="middle" class="fsub">two lanes, one vector space</text>
+      </g>
+      <g data-from="4">
+        <circle cx="505" cy="150" r="22" class="fbox fbox-on" />
+        <text x="505" y="157" text-anchor="middle" class="flbl" data-q="const">3</text>
+        <text x="505" y="86" text-anchor="middle" class="flbl">Build it step by step</text>
+        <text x="505" y="110" text-anchor="middle" class="fsub">A–F · open every output</text>
+      </g>
+      <g data-from="5">
+        <circle cx="650" cy="150" r="22" class="fbox fbox-on" />
+        <text x="650" y="157" text-anchor="middle" class="flbl" data-q="const">4</text>
+        <text x="650" y="202" text-anchor="middle" class="flbl">Ready for production?</text>
+        <text x="650" y="226" text-anchor="middle" class="fsub">quality · security · cost</text>
+      </g>
+      <g data-from="6">
+        <circle cx="795" cy="150" r="22" class="fbox fbox-on" />
+        <text x="795" y="157" text-anchor="middle" class="flbl" data-q="const">5</text>
+        <text x="795" y="86" text-anchor="middle" class="flbl">Does RAG fix everything?</text>
+        <text x="795" y="110" text-anchor="middle" class="fsub">limits · RAG variants</text>
+      </g>
+      <g data-from="7">
+        <circle cx="930" cy="150" r="22" class="fbox fbox-on" />
+        <text x="930" y="202" text-anchor="middle" class="flbl">Wrap-up</text>
+        <text x="930" y="226" text-anchor="middle" class="fsub">design checklist</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="Before we start">
+    Setup and `npm run doctor`. Then the question of the day. First your guess, then the model's answer with no documents.
+  </Step>
+  <Step title="1 · Why RAG?">
+    The model never saw our policy, but it still makes up numbers. There are two ways to give knowledge to a model: RAG and fine-tuning. Which one, and when?
+  </Step>
+  <Step title="2 · Architecture">
+    The whole pipeline in one drawing. One lane prepares the documents once. The other lane runs on every question. The two lanes meet in the vector space. Every box is a file in the repo.
+  </Step>
+  <Step title="3 · Build it step by step">
+    Eight steps run one by one. Each step writes its output to the `data/` folder. After each step, we open the file. The answer to the question of the day also changes, step by step.
+  </Step>
+  <Step title="4 · Ready for production?">
+    "Looks good to me" is not a measurement. We put a number on quality with a set of questions. We test for security holes. We look at where the time and the tokens go.
+  </Step>
+  <Step title="5 · Does RAG fix everything?">
+    Where does RAG fail? Which RAG variant fixes which failure? Which complaints come in during the first 90 days in production?
+  </Step>
+  <Step title="Wrap-up">
+    A design checklist for the whole pipeline: accuracy, security, performance and cost at every stage. All the answers to the question of the day, side by side.
+  </Step>
+</Deck>
+
+## By the end of the day
+
+Today is about RAG architectures. They help large language models use company data **safely and correctly**.
+We cover data preparation, chunking, embedding, retrieval, rerank, answer generation and quality measurement. By the end of the day:
+
+- You can **design a complete RAG pipeline** for company use. You run [every box of both lanes](/en/mimari/) yourself.
+- You can prepare the data: [clean the raw documents](/en/adim-adim/a-ham-veri/) and [split them in the right places](/en/adim-adim/b-chunking/).
+- You can show [what embedding finds close](/en/adim-adim/c-embedding/) and [what a vector DB is for](/en/adim-adim/d-vector-db/).
+- You can read the results of [retrieval and rerank](/en/adim-adim/e-retrieval-rerank/) and [generate the answer with its source](/en/adim-adim/f-cevap/).
+- You can judge key decisions on four points: **accuracy** ([Measuring quality](/en/uretim/kaliteyi-olcmek/)), **security** ([Security](/en/uretim/guvenlik/)), **performance** and **cost** ([Performance and cost](/en/uretim/performans-maliyet/)).
+
+## Getting started
+
+<CardGrid>
+  <LinkCard title="Setup" description="Node 22, Ollama and two models, Podman, the repo. At the end, npm run doctor." href="/en/baslamadan/kurulum/" />
+  <LinkCard title="Question of the day" description="The same question all day. What is your guess?" href="/en/baslamadan/gunun-sorusu/" />
+</CardGrid>
+
+Code: [github.com/kuthaygumus/ama-rag-workshop](https://github.com/kuthaygumus/ama-rag-workshop).
+
+Kraken Air and all its documents are **fictional**. We wrote the company, the policies and the numbers for this course.
+They have nothing to do with any real company.
+
+<Takeaway>Today we open every intermediate output and look at it.</Takeaway>
