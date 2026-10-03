@@ -19,7 +19,7 @@ import Term from '../../../components/Term.astro';
 
 <WhereAmI at="load clean chunk embed store" />
 
-<DaysQuestion answer="“Tablodan, 7 tam yıl kıdeminde 24 iş günü ücretli izin hakkı olduğunu görüyoruz [1].” ✓ (2026)" how="chroma store · chunker section · rerank on · filter edition 2026, access all" />
+<DaysQuestion answer="“An employee with 7 years of service gets 24 working days of annual leave [1].” ✓ (2026)" how="chroma store · chunker section · rerank on · filter edition 2026, access all" />
 
 <Gate>
 İK, izin politikasının 2026 sürümünü yayınladı ve günün sorusunun cevabı değişti. Bilgiyi ağırlıklarına yazmış bir model için bu yeniden eğitim demek. Bizim pipeline'da ne demek?
@@ -49,12 +49,12 @@ import Term from '../../../components/Term.astro';
       <g data-from="4">
         <path d="M540 172 H592" class="farrow-on" marker-end="url(#vd-on)" />
         <rect x="600" y="112" width="380" height="120" rx="10" class="fbox-good" />
-        <text x="616" y="144" class="fsub" data-q="log:question-4-2026">Tablodan, 7 tam yıl kıdeminde 24 iş günü</text>
-        <text x="616" y="170" class="fsub" data-q="log:question-4-2026">ücretli izin hakkı olduğunu görüyoruz [1].</text>
+        <text x="616" y="144" class="fsub" data-q="log:question-4-2026">An employee with 7 years of service gets</text>
+        <text x="616" y="170" class="fsub" data-q="log:question-4-2026">24 working days of annual leave [1].</text>
         <text x="616" y="210" class="fsub fnum" data-q="log:question-4-2026">[1] = hr-leave@2026#3</text>
       </g>
       <g data-from="5">
-        <text x="790" y="276" text-anchor="middle" class="fsub fbad-t" data-q="log:edition-all">filtre yoksa: 2026#3 (0.632) ve 2025#3 (0.631)</text>
+        <text x="790" y="276" text-anchor="middle" class="fsub fbad-t" data-q="log:edition-all">filtre yoksa: 2026#3 (0.619) ve 2025#3 (0.614)</text>
         <text x="790" y="302" text-anchor="middle" class="fsub fbad-t" data-q="log:edition-all corpus:2025/hr-leave.md">ikisi birden prompt'ta — 24 ve 22 yan yana</text>
       </g>
       <defs>
@@ -68,27 +68,27 @@ import Term from '../../../components/Term.astro';
   <Step title="Yeniden eğitim yok, yeniden ingest var">
     Ingest yalnızca yeni dosyaları adım 1–5'ten geçirir. Depoda artık 120 kayıt var: 2025'in 60'ı ve 2026'nın 60'ı yan yana.
 
-    <Now n="1">`npm run ingest -- --edition 2026`: log'un sonunda `120 in the store` yazmalı.</Now>
+    <Now n="1">`npm run ingest -- --edition 2026`: log'un sonlarına doğru `120 in the store` yazmalı.</Now>
   </Step>
   <Step title="Hangi sürüm cevap verecek?">
     Adım 6'daki <Term id="metadata">metadata</Term> filtresi (`EDITION_FILTER`) varsayılan olarak "latest": depodaki en yeni sürüm. Filtre aramanın içinde; 2025 kayıtları yarışa hiç girmiyor.
   </Step>
   <Step title="Cevap değişti">
-    "Tablodan, 7 tam yıl kıdeminde 24 iş günü …"; kaynak artık `hr-leave@2026#3`.
+    Cevap: "An employee with 7 years of service gets 24 working days of annual leave [1]." Kaynak artık `hr-leave@2026#3`.
 
     <Now n="2">`npm run question`: kaynak hangi sürümden?</Now>
 
     <Now n="3">Bruno'da `01-chroma` → önce `collections`, sonra `count`: 120.</Now>
   </Step>
   <Step title="Filtre olmasa?">
-    `EDITION_FILTER = "all"` olunca iki sürüm yarışıyor: tablonun 2026 hâli 0.632, 2025 hâli 0.631 aldı; ikisi de prompt'a girdi, 24 ve 22 yan yana. Model bu kez 24 dedi; KAYNAK 1 2026'ydı. Hangi sayının önde duracağını 0.001'lik bir fark belirledi.
+    `EDITION_FILTER = "all"` olunca iki sürüm yarışıyor: tablonun 2026 hâli 0.619, 2025 hâli 0.614 aldı; ikisi de prompt'a girdi, 24 ve 22 yan yana. Model bu kez 24 dedi; SOURCE 1 2026'ydı. Fark yalnızca 0.005: neredeyse beraberlik. Önde duran kaynak kazandı.
 
     <Now n="4">`src/steps/6-retrieve.ts` içinde sürüm filtresini `"all"` yapın ve `npm run question`: kaynaklarda iki sürüm yan yana mı?</Now>
   </Step>
   <Step title="Silmek mi, filtrelemek mi?">
     Eski sürümü tutmak geçmişe dönük soruları ve denetimi mümkün kılar; bedeli, filtreyi her aramada doğru kurmak. `replaceEdition` yalnızca aynı sürümü yerinde yeniler; 2026 gelince 2025'e dokunmaz. 2025'i silmek, `edition` koşuluyla ayrı bir silme; repoda bunun komutu yok.
 
-    <Now n="5">`npm run ask -- "Şifremi ne sıklıkla değiştirmem gerekiyor?"`: cevap hangi sürümden geldi?</Now>
+    <Now n="5">`npm run ask -- "After how many days must I change my password?"`: cevap hangi sürümden geldi?</Now>
   </Step>
 </Deck>
 
@@ -115,7 +115,7 @@ Sürüm filtresi adım 6'daki toggle'da. `.env` dosyasındaki `EDITION` ise baş
 "latest" kodda: `retrieve()` içinde `(await o.store.editions()).at(-1)`.
 
 <YourTurn>
-**1 · Yeni sürümü ekleyin.** `npm run ingest -- --edition 2026`. Log'un sonunda: `120 in the store · editions: 2025, 2026` (İngilizce gizlilik kuralını yazdıysanız 118).
+**1 · Yeni sürümü ekleyin.** `npm run ingest -- --edition 2026`. Log'un sonlarına doğru: `120 in the store · editions: 2025, 2026` (Türkçe gizlilik kuralını yazdıysanız 118).
 
 **2 · Günün sorusu.** `npm run question` → 24 iş günü, kaynak `hr-leave@2026#3`.
 
@@ -123,7 +123,7 @@ Sürüm filtresi adım 6'daki toggle'da. `.env` dosyasındaki `EDITION` ise baş
 
 **4 · Filtreyi kapatın.** `src/steps/6-retrieve.ts` → `TOGGLE edition filter` bloğunda `"all"; // alternative` satırını açın, varsayılanı kapatın. `npm run question`: kaynaklarda iki sürüm yan yana mı? Toggle'ı geri alın.
 
-**5 · Başka bir değişiklik.** 2026'da bilgi güvenliği politikasında şifre değiştirme süresi de değişti. `npm run ask -- "Şifremi ne sıklıkla değiştirmem gerekiyor?"`: cevap hangi sürümden geldi, kaynak hangi dilde?
+**5 · Başka bir değişiklik.** 2026'da bilgi güvenliği politikasında şifre değiştirme süresi de değişti. `npm run ask -- "After how many days must I change my password?"`: cevap hangi sürümden geldi? Soru İngilizce; kaynak ve cevap hangi dilde?
 
 Geride kaldıysanız: `npm run catchup -- 8`, ardından `npm run ingest -- --edition 2026`.
 </YourTurn>

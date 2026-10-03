@@ -19,7 +19,7 @@ import Term from '../../../components/Term.astro';
 
 <WhereAmI at="qembed search rerank" />
 
-<DaysQuestion answer="rerank kapalı → “Tablo 1'e göre 7 yıllık bir çalışanın yıllık ücretli izin hakkı 22 iş gundur [1].” · rerank açık → “Tablodan, 7 tam yıl kıdeminde 22 iş günü …” ✓" how="chroma · section · filter edition 2025, access all — iki yolda da 22" />
+<DaysQuestion answer="rerank kapalı → “An employee with 7 years of service gets 22 working days of annual leave [1].” · rerank açık → “An employee with 7 years of service gets 22 working days …” ✓" how="chroma · section · filter edition 2025, access all — iki yolda da 22" />
 
 <Gate>
 Depo dolu, şimdi soru soruyoruz. Günün sorusunda doğru chunk ilk sırada geldi; ama skorlara yakından bakınca bu birinciliğin ne kadar ince olduğu görünüyor.
@@ -145,39 +145,39 @@ Depo dolu, şimdi soru soruyoruz. Günün sorusunda doğru chunk ilk sırada gel
     Adım 6 soruyu embed eder ve Chroma'dan en yakın 5 chunk'ı ister. Filtre aramanın içinde: yalnızca 2025 sürümü, yalnızca herkese açık dokümanlar.
   </Step>
   <Step title="Retriever ne getirdi?" stage="list">
-    5 chunk, hepsi Yıllık İzin Politikası'ndan. Cevabı taşıyan §3, yani izin tablosu, ilk sırada.
+    5 chunk, hepsi izin politikasından (`hr-leave`). Cevabı taşıyan §3, yani izin tablosu, ilk sırada.
   </Step>
   <Step title="Skorlar neredeyse eşit" stage="list">
-    Birinci 0.631, beşinci 0.624: fark 0.007. Her hr-leave chunk'ı `[Yıllık İzin Politikası › …]` ön ekiyle başlıyor, soru da "yıllık izin" diyor; ön ek hepsini soruya eşit yaklaştırıyor. Sırayı küçük içerik farkları belirliyor: §3'ün birinciliği pamuk ipliğine bağlı.
+    Birinci 0.614, beşinci 0.598: fark 0.016. Her hr-leave chunk'ı `[Annual Leave Policy › …]` ön ekiyle başlıyor, sorunun içinde de "annual leave" geçiyor; ön ek hepsini soruya eşit yaklaştırıyor. Sırayı küçük içerik farkları belirliyor: §3'ün birinciliği pamuk ipliğine bağlı.
   </Step>
   <Step title="Kesme çizgisi: k" stage="list">
-    En yakın k tanesini almaya <Term id="topk">top-k</Term> denir. k = 5: 6. sıradaki hr-working-hours §5 (0.607) dışarıda kaldı. k küçükse cevap kaçabilir, büyükse sonraki adımlara gürültü taşınır.
+    En yakın k tanesini almaya <Term id="topk">top-k</Term> denir. k = 5: 6. sıradaki benefits §6 (0.585) dışarıda kaldı. k küçükse cevap kaçabilir, büyükse sonraki adımlara gürültü taşınır.
 
     <Now n="1">`npm run step -- 6`, sonra `data/6-retrieved.json` dosyasını açın.</Now>
   </Step>
   <Step title="Prompt'a yalnızca 3 chunk girer" stage="list">
-    Rerank kapalıyken vektör sırasındaki ilk 3 gider: §3, §4, §5. §5 mazeret izinleri (evlilik, vefat, taşınma): soruyla ilgisi yok ama prompt'ta yer kaplıyor.
+    Rerank kapalıyken vektör sırasındaki ilk 3 gider: §3, §2, §7. §2 deneme süresini, §7 izin devrini anlatıyor: ikisi de soruyu cevaplamıyor ama prompt'ta yer kaplıyor. Mazeret izinleri (§5) ilk 5'e bile girmedi; 7. sırada.
   </Step>
   <Step title="Rerank: soruyu ve chunk'ı birlikte oku" stage="list">
     Vektörler ayrı ayrı yapıldı: soru tek başına, chunk tek başına. <Term id="rerank">Reranker</Term> her (soru, chunk) çiftine 0–10 arası puan verir. Bizde bu işi gemma3:4b yapıyor: 5 chunk, 5 çağrı.
   </Step>
   <Step title="Rerank sonrası" stage="list">
-    §3 10 puanla yerinde; §5 0 puanla 5. sıraya indi ve prompt'tan çıktı. 0.007'lik farkların yerini net kararlar aldı. Ama reranker da yanılır: §7 (izin devri) 9 puanla 2. sıraya çıktı, oysa soruyu cevaplamıyor.
+    §3 10 puanla yerinde; diğerleri en fazla 6 aldı. 0.016'lık farkın yerini net bir ayrım aldı. §2 3 puanla 4. sıraya indi ve prompt'tan çıktı. Ama reranker da yanılır: §7 (izin devri) ve §4 (izin planlama) 6 puanla yükseldi; ikisi de prompt'ta, oysa soruyu cevaplamıyorlar.
   </Step>
   <Step title="Bedeli" stage="list">
-    Arama 7 ms sürdü; rerank 2243 ms. Bu soruda cevap değişmedi: iki yolda da 22 iş günü. Rerank'ın asıl işi, doğru chunk ilk 3'ün dışında kaldığında başlıyor.
+    Arama 7 ms sürdü; rerank 1439 ms. Bu soruda cevap değişmedi: iki yolda da 22 iş günü. Rerank'ın asıl işi, doğru chunk ilk 3'ün dışında kaldığında başlıyor.
 
     <Now n="2">`src/steps/7-rerank.ts` içinde rerank'ı kapatın; `npm run step -- 7` ve `npm run step -- 8`.</Now>
   </Step>
   <Step title="Doğru chunk hep önde değil" stage="list">
-    "Tatil hakkım kaç gün, 4 yıldır çalışıyorum?" sorusunda izin tablosu vektör sırasında ancak 5. geldi; rerank olmasa prompt'a hiç girmezdi. Rerank açıkken cevap doğru: 18 iş günü.
+    "How much holiday do I get? I started here 4 years ago." sorusunda izin tablosu vektör sırasında ancak 5. geldi; rerank olmasa prompt'a hiç girmezdi. Rerank sonrası 1. sırada. Rerank açıkken cevap doğru: 18 iş günü.
 
-    <Now n="3">`npm run ask -- "Tatil hakkım kaç gün, 4 yıldır çalışıyorum?"`: izin tablosu vektör sırasında kaçıncı, rerank sonrası kaçıncı?</Now>
+    <Now n="3">`npm run ask -- "How much holiday do I get? I started here 4 years ago."`: izin tablosu vektör sırasında kaçıncı, rerank sonrası kaçıncı?</Now>
   </Step>
   <Step title="Top-k tek yol değil" stage="yol">
-    Eşik: sabit k yerine bir skor sınırı; C'de "ilgisiz" çift bile 0.456 aldı, eşik kendi verinizde ölçülerek seçilir. Metadata filtresi (`access`, `edition`) bu repoda var. <Term id="mmr">MMR</Term> neredeyse aynı chunk'lardan birini alır; hybrid vektöre kelime aramasını (BM25) ekler. İkisi bu repoda yok.
+    Eşik: sabit k yerine bir skor sınırı; C'de "ilgisiz" çift bile 0.503 aldı, eşik kendi verinizde ölçülerek seçilir. Metadata filtresi (`access`, `edition`) bu repoda var. <Term id="mmr">MMR</Term> neredeyse aynı chunk'lardan birini alır; hybrid vektöre kelime aramasını (BM25) ekler. İkisi bu repoda yok.
 
-    <Now n="4">`src/steps/6-retrieve.ts` içinde erişim filtresini kapatın; `npm run ask -- "Kıdemli uzman unvanında aylık brüt maaş bandının üst sınırı nedir?"`.</Now>
+    <Now n="4">`src/steps/6-retrieve.ts` içinde erişim filtresini kapatın; `npm run ask -- "What is the upper limit of the monthly gross salary band for a senior specialist?"`.</Now>
   </Step>
 </Deck>
 
@@ -207,7 +207,7 @@ Maaş bantları dokümanı `access: hr-only`. Adım 6'daki toggle, soran kişini
 
 <RepoCode file="src/steps/6-retrieve.ts" from="// TOGGLE access filter" to="alternative" />
 
-<Log name="ask-access-on" title='npm run ask -- "Kıdemli uzman unvanında aylık brüt maaş bandının üst sınırı nedir?"' from={2} to={16} />
+<Log name="ask-access-on" title='npm run ask -- "What is the upper limit of the monthly gross salary band for a senior specialist?"' from={2} to={16} />
 
 <Log name="ask-access-on" title="… aynı komutun devamı: rerank ve cevap" from={17} />
 
@@ -216,13 +216,13 @@ Maaş bantları dokümanı `access: hr-only`. Adım 6'daki toggle, soran kişini
 Filtre kapalıyken cevap maaş rakamını veriyor. Bu iki cevabın ne anlattığı [Güvenlik](/uretim/guvenlik/) sayfasında.
 
 <YourTurn>
-**1 · Listeyi açın.** `npm run step -- 6` ve `data/6-retrieved.json`: `hits` (prompt'a aday 5 chunk), `below` (kesme çizgisinin altındaki 3), `filter`. Başka bir soru: `npm run step -- 6 "Tatil hakkım kaç gün?"`.
+**1 · Listeyi açın.** `npm run step -- 6` ve `data/6-retrieved.json`: `hits` (prompt'a aday 5 chunk), `below` (kesme çizgisinin altındaki 3), `filter`. Başka bir soru: `npm run step -- 6 "How much holiday do I get?"`.
 
 **2 · Rerank'ı kapatın.** `src/steps/7-rerank.ts` → `TOGGLE rerank` bloğunda `true; // default` satırını kapatın, `false; // alternative` satırını açın. `npm run step -- 7` ve `npm run step -- 8`. Toggle'ı geri alıp `npm run step -- 7`: `data/7-reranked.json` içinde her chunk için `was` (eski sıra), `relevance` (rerank puanı) ve `score` (vektör skoru). Sonra `npm run step -- 8`.
 
-**3 · Rerank'ın asıl işi.** `npm run ask -- "Tatil hakkım kaç gün, 4 yıldır çalışıyorum?"`. Log'da izin tablosunun (`hr-leave@2025#3`) vektör sırasını ve rerank sonrası sırasını bulun. Prompt'a girdi mi? Cevap 18 mi?
+**3 · Rerank'ın asıl işi.** `npm run ask -- "How much holiday do I get? I started here 4 years ago."`. Log'da izin tablosunun (`hr-leave@2025#3`) vektör sırasını ve rerank sonrası sırasını bulun. Prompt'a girdi mi? Cevap 18 mi?
 
-**4 · Erişim filtresini kapatın.** `src/steps/6-retrieve.ts` → `TOGGLE access filter` bloğunda alternatif satırı açın, varsayılanı kapatın. `npm run ask -- "Kıdemli uzman unvanında aylık brüt maaş bandının üst sınırı nedir?"`. Sonra mutlaka geri alın.
+**4 · Erişim filtresini kapatın.** `src/steps/6-retrieve.ts` → `TOGGLE access filter` bloğunda alternatif satırı açın, varsayılanı kapatın. `npm run ask -- "What is the upper limit of the monthly gross salary band for a senior specialist?"`. Sonra mutlaka geri alın.
 
 Geride kaldıysanız: `npm run catchup -- 7`.
 </YourTurn>
@@ -242,7 +242,7 @@ Retriever doğru chunk'ı zaten ilk 3'e koyuyorsa rerank süresi boşa gider. Ka
 </FAQ>
 
 <FAQ q="Reranker yanılır mı?">
-Evet. Maaş sorusunda seyahat politikasının otel ve harcırah tablosuna 10 verdi. Beraberlikler de oluyor: log'daki `ties` satırı, aynı puanı alan chunk sayısını yazıyor.
+Evet. Maaş sorusunda seyahat politikasının iki harcırah ve otel tablosuna da 10 verdi. Beraberlikler de oluyor: log'daki `ties` satırı, aynı puanı alan chunk sayısını yazıyor.
 </FAQ>
 
 <FAQ q="Bi-encoder ve cross-encoder ne demek?">
