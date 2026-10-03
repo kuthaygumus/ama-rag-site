@@ -157,7 +157,9 @@ for (const page of trPages) {
   const ta = termIds(tr), tb = termIds(en);
   const tl = minus([...new Set(ta)], [...new Set(tb)]), tadd = minus([...new Set(tb)], [...new Set(ta)]);
   if (tl.length || tadd.length) warn(page, `terms marked differ: only TR [${tl.join(', ')}] only EN [${tadd.join(', ')}]`);
-  const turkish = prose(en).split('\n').filter((l) => /[çğıöşüÇĞİÖŞÜ]/.test(l));
+  // A label a generator wrote (data-gen) quotes the data, which may be Turkish (the it-security pair).
+  const generated = /<text\b[^>]*\bdata-gen="[^"]*"[^>]*>[^<]*<\/text>/g;
+  const turkish = prose(en.replace(generated, ' ')).split('\n').filter((l) => /[çğıöşüÇĞİÖŞÜ]/.test(l));
   if (turkish.length) warn(page, `${turkish.length} English prose line(s) with Turkish letters (fine only for quoted data): ${turkish.slice(0, 2).map((l) => JSON.stringify(l.trim().slice(0, 70))).join(' ')}`);
 }
 
