@@ -148,8 +148,11 @@ for (const page of trPages) {
   const ca = commands(tr), cb = commands(en);
   if (minus(ca, cb).length || minus(cb, ca).length) fail(page, `commands in backticks differ: only TR [${minus(ca, cb).join(' | ')}] only EN [${minus(cb, ca).join(' | ')}]`);
   const ha = headings(tr), hb = headings(en);
-  if (ha.levels !== hb.levels) fail(page, `headings differ in count or level: TR [${ha.levels}] EN [${hb.levels}]`);
-  if (ha.ids.join(' ') !== hb.ids.join(' ')) fail(page, `heading ids differ (links point at them): only TR [${minus(ha.ids, hb.ids)}] only EN [${minus(hb.ids, ha.ids)}]`);
+  // The glossary is sorted by each language's own alphabet: the same headings and ids, in any order.
+  // Every other page keeps its headings in the same order in both languages.
+  const order = (list) => (page === 'sozluk.mdx' ? [...list].sort() : list).join(' ');
+  if (order(ha.levels.split(',')) !== order(hb.levels.split(','))) fail(page, `headings differ in count or level: TR [${ha.levels}] EN [${hb.levels}]`);
+  if (order(ha.ids) !== order(hb.ids)) fail(page, `heading ids differ (links point at them): only TR [${minus(ha.ids, hb.ids)}] only EN [${minus(hb.ids, ha.ids)}]`);
 
   const na = numbers(prose(tr)), nb = numbers(prose(en));
   const lost = minus(na, nb), added = minus(nb, na);
