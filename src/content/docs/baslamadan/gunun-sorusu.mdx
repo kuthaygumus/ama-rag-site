@@ -42,8 +42,8 @@ import Takeaway from '../../../components/Takeaway.astro';
       <text x="900" y="120" text-anchor="middle" class="fsub" data-q="const">2026 sürümü</text>
       <g data-from="3">
         <rect x="5" y="190" width="190" height="70" rx="10" class="fbox fbox-frozen" />
-        <text x="100" y="222" text-anchor="middle" class="flbl" data-q="log:question-0-bare">50 iş günü</text>
-        <text x="100" y="247" text-anchor="middle" class="fsub" data-q="log:question-0-bare">(15 + 35)</text>
+        <text x="100" y="222" text-anchor="middle" class="flbl" data-q="log:question-0-bare">25-30</text>
+        <text x="100" y="247" text-anchor="middle" class="fsub" data-q="log:question-0-bare">iş günü</text>
       </g>
       <g data-from="5">
         <rect x="215" y="190" width="170" height="70" rx="10" class="fbox" />
@@ -64,14 +64,14 @@ import Takeaway from '../../../components/Takeaway.astro';
     Siz olsanız ne derdiniz? Sayıyı yukarıdaki kutuya yazın; Kapanış'ta günün bütün cevaplarının yanına gelir.
   </Step>
   <Step title="Model tek başına">
-    `npm run question` soruyu modele tek başına sorar, yanında hiçbir doküman yok. Model önce "işverenine bağlı olarak değişir" dedi, sonra yine de bir sayı verdi: 50 iş günü (15 + 35).
+    `npm run question` soruyu modele tek başına sorar, yanında hiçbir doküman yok. Model cevabın şirketin politikasına göre değiştiğini söyledi ("depending on the company's policy"), ama yine de sayı verdi: 25-30 iş günü.
 
     <Now n="1">`npm run question` çalıştırın: `HOW` satırı `bare model, no documents` demeli.</Now>
   </Step>
   <Step title="İki tahmin">
-    Sizin sayınız da modelin 50'si de genel bilgiden gelen bir tahmin. Doğru cevap politikada; onu ne siz gördünüz ne model.
+    Sizin sayınız da modelin 25-30 aralığı da genel bilgiden gelen birer tahmin. Doğru cevap politikada; onu ne siz gördünüz ne model.
 
-    <Now n="2">Kendi kelimelerinizle sorun: `npm run step -- 0 "7 yıldır çalışıyorum, kaç gün yıllık iznim var?"`. Sayı değişiyor mu?</Now>
+    <Now n="2">Başka kelimelerle sorun: `npm run step -- 0 "I have worked here for 7 years. How many days of annual leave do I get?"`. Sayı değişiyor mu?</Now>
   </Step>
   <Step title="Aynı komut, beş durak">
     Bu komutu gün içinde dört kez daha çalıştıracağız; her seferinde modele bir şey daha vermiş olacağız. Her cevap bir deftere, `LEDGER`'a yazılır.
@@ -82,7 +82,7 @@ import Takeaway from '../../../components/Takeaway.astro';
 
 Çıktıda dört parça var:
 
-- `GÜNÜN SORUSU`: sorulan soru, her çalıştırmada aynı.
+- `QUESTION OF THE DAY`: sorulan soru, her çalıştırmada aynı.
 - `HOW`: cevabın nasıl üretildiği. Şimdilik `bare model, no documents`: model yalnızca soruyu gördü.
 - Cevap: modelin yazdığı metin. Kaynak listesi yok, çünkü modele kaynak verilmedi; pipeline kurulunca altına
   kullandığı parçalar gelir, örneğin `[1] hr-leave@2025#3`.
@@ -99,16 +99,16 @@ Soru kodda tek bir satır:
 <YourTurn>
 **1 · Çalıştırın.** `npm run question`. `HOW` satırı `bare model, no documents` demeli; başka bir şey yazıyorsa aşağıdaki "Sık sorulan"a bakın.
 
-**2 · Kendi kelimelerinizle sorun.** Yine hiç doküman vermeden; sayı değişiyor mu?
+**2 · Başka kelimelerle sorun.** Yine hiç doküman vermeden; sayı değişiyor mu?
 
 ```sh
-npm run step -- 0 "7 yıldır çalışıyorum, kaç gün yıllık iznim var?"
+npm run step -- 0 "I have worked here for 7 years. How many days of annual leave do I get?"
 ```
 </YourTurn>
 
 ## Elimizde ne var?
 
-İki tahmin: sizinki (sayfanın başındaki kutuda) ve modelinki (50 iş günü). Doğrusu [Model bilmiyor](/neden-rag/model-bilmiyor/) sayfasında.
+İki tahmin: sizinki (sayfanın başındaki kutuda) ve modelinki (25-30 iş günü). Doğrusu [Model bilmiyor](/neden-rag/model-bilmiyor/) sayfasında.
 
 ## Sık sorulan
 
@@ -126,7 +126,8 @@ bunu ölçmedik.
 
 <FAQ q="HOW satırında “bare model” yerine “chroma store” yazıyor.">
 `data/` klasöründe önceki adımların çıktısı duruyor; `npm run question` elindeki en eksiksiz pipeline'ı seçer. Güne
-baştan başlamak için `npm run catchup -- 0`: `data/` boşalır, komut soruyu yine modele tek başına sorar.
+baştan başlamak için `npm run catchup -- 0`: `data/` boşalır ve vector DB sıfırlanır; komut soruyu yine modele
+tek başına sorar.
 </FAQ>
 
 <FAQ q="Tahminim nerede duruyor?">

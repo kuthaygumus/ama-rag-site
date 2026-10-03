@@ -16,10 +16,10 @@ import FAQ from '../../../components/FAQ.astro';
 import Term from '../../../components/Term.astro';
 import Takeaway from '../../../components/Takeaway.astro';
 
-<DaysQuestion answer="50 iş günü (15 + 35)" how="bare model, no documents" />
+<DaysQuestion answer="25-30 iş günü" how="bare model, no documents" />
 
 <Gate>
-Model günün sorusuna bir sayı uydurdu. Politikadaki sayı başka.
+Model günün sorusuna sayı uydurdu. Politikadaki sayı başka.
 </Gate>
 
 <Deck>
@@ -29,32 +29,32 @@ Model günün sorusuna bir sayı uydurdu. Politikadaki sayı başka.
         <marker id="mb-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker>
       </defs>
       <rect x="20" y="40" width="330" height="100" rx="14" class="fbox" />
-      <text x="185" y="82" text-anchor="middle" class="flbl" data-q="code:src/lib/config.ts" data-q-mode="quote">7 yıllık bir çalışanın</text>
-      <text x="185" y="112" text-anchor="middle" class="flbl" data-q="code:src/lib/config.ts" data-q-mode="quote">yıllık izni kaç iş günü?</text>
+      <text x="185" y="70" text-anchor="middle" class="flbl tight" data-q="code:src/lib/config.ts" data-q-mode="quote"><tspan x="185" y="70">How many working days of</tspan><tspan x="185" y="96">annual leave does an employee</tspan></text>
+      <text x="185" y="122" text-anchor="middle" class="flbl tight" data-q="code:src/lib/config.ts" data-q-mode="quote">with 7 years of service get?</text>
       <path d="M352 90 H402" class="farrow" marker-end="url(#mb-a)" />
       <rect x="410" y="40" width="180" height="100" rx="14" class="fbox fbox-frozen" />
       <text x="500" y="82" text-anchor="middle" class="flbl" data-q="const">gemma3:4b</text>
       <text x="500" y="110" text-anchor="middle" class="fsub">hiç doküman yok</text>
       <path d="M592 90 H642" class="farrow" marker-end="url(#mb-a)" />
       <rect x="650" y="40" width="330" height="100" rx="14" class="fbox" />
-      <text x="815" y="82" text-anchor="middle" class="flbl" data-q="log:question-0-bare">50 iş günü</text>
-      <text x="815" y="110" text-anchor="middle" class="fsub" data-q="log:question-0-bare">(15 gün ücretli + 35 gün yıllık)</text>
+      <text x="815" y="82" text-anchor="middle" class="flbl" data-q="log:question-0-bare">25-30 iş günü</text>
+      <text x="815" y="110" text-anchor="middle" class="fsub" data-q="log:question-0-bare" data-q-mode="quote">“depending on the company's policy”</text>
       <g data-from="2">
         <text x="30" y="205" class="fsub">cevap token token yazılır — her adımda en olası devam:</text>
         <rect x="30" y="222" width="140" height="54" rx="10" class="fbox" />
-        <text x="100" y="256" text-anchor="middle" class="flbl" data-q="log:question-0-bare">… izni</text>
+        <text x="100" y="256" text-anchor="middle" class="flbl" data-q="log:question-0-bare">… service</text>
         <path d="M172 249 H192" class="farrow" marker-end="url(#mb-a)" />
         <rect x="200" y="222" width="150" height="54" rx="10" class="fbox" />
-        <text x="275" y="256" text-anchor="middle" class="flbl" data-q="log:question-0-bare">genellikle</text>
+        <text x="275" y="256" text-anchor="middle" class="flbl" data-q="log:question-0-bare">gets</text>
         <path d="M352 249 H372" class="farrow" marker-end="url(#mb-a)" />
         <rect x="380" y="222" width="130" height="54" rx="10" class="fbox fbox-gate" />
-        <text x="445" y="256" text-anchor="middle" class="flbl" data-q="log:question-0-bare">50</text>
+        <text x="445" y="256" text-anchor="middle" class="flbl" data-q="log:question-0-bare">25-30</text>
         <path d="M512 249 H532" class="farrow" marker-end="url(#mb-a)" />
         <rect x="540" y="222" width="110" height="54" rx="10" class="fbox" />
-        <text x="595" y="256" text-anchor="middle" class="flbl" data-q="log:question-0-bare">iş</text>
+        <text x="595" y="256" text-anchor="middle" class="flbl" data-q="log:question-0-bare">working</text>
         <path d="M652 249 H672" class="farrow" marker-end="url(#mb-a)" />
         <rect x="680" y="222" width="120" height="54" rx="10" class="fbox" />
-        <text x="740" y="256" text-anchor="middle" class="flbl" data-q="log:question-0-bare">günü</text>
+        <text x="740" y="256" text-anchor="middle" class="flbl" data-q="log:question-0-bare">days</text>
         <text x="830" y="256" class="flbl">…</text>
         <text x="445" y="305" text-anchor="middle" class="fsub fgate-t">bir sayı gelmesi olası;</text>
         <text x="445" y="328" text-anchor="middle" class="fsub fgate-t">doğru sayı olduğunu kontrol eden yok</text>
@@ -137,7 +137,7 @@ Model günün sorusuna bir sayı uydurdu. Politikadaki sayı başka.
     </svg>
   </DeckFigure>
   <Step title="Kaynaksız soru" stage="a">
-    Günün sorusunu modele tek başına sorduk. Önce "işverenine bağlı olarak değişir" dedi, sonra yine de bir sayı verdi: 50 iş günü, üstelik hesabıyla (15 + 35). Model Kraken Air'in politikasını hiç görmedi; bu sayı oradan gelmiyor.
+    Günün sorusunu modele tek başına sorduk. Cevabın şirketin politikasına göre değiştiğini söyledi ("depending on the company's policy"), ama yine de sayı verdi: 25-30 iş günü. Model Kraken Air'in politikasını hiç görmedi; bu sayılar oradan gelmiyor.
   </Step>
   <Step title="Nasıl yazdı?" stage="a">
     Model cevabı <Term id="token">token</Term> token yazar: her adımda, o ana kadarki metne en olası devamı seçer. "Kaç iş günü?" sorusundan sonra metinlerde hep bir sayı gelir. Sayının doğruluğunu kontrol eden bir adım yok.
@@ -151,7 +151,7 @@ Model günün sorusuna bir sayı uydurdu. Politikadaki sayı başka.
   <Step title="Bilmediğini bilmiyor" stage="a">
     Politika 22 iş günü diyor. Modelin içinde "bunu bilmiyorum" diye yanan bir ışık yok: uydurulan cevap da doğru cevap kadar akıcı çıkar. Buna <Term id="hallucination">halüsinasyon</Term> denir.
 
-    <Now>Kaynaksız başka bir soru: `npm run step -- 0 "Seyahat dönüşü fişlerimi en geç kaç gün içinde sisteme yüklemem gerekiyor?"`</Now>
+    <Now>Kaynaksız başka bir soru: `npm run step -- 0 "How many days do I have to upload my receipts after a trip?"`</Now>
   </Step>
   <Step title="Bilgiyi modele vermenin iki yolu" stage="b">
     Ya modeli kendi örneklerimizle yeniden eğitip ağırlıklarını değiştiririz (<Term id="finetune">fine-tune</Term>) ya da her soruda ilgili metni soruyla birlikte modelin önüne koyarız (<Term id="rag">RAG</Term>). Önce RAG'i deneyeceğiz; fine-tune'a bölümün sonunda döneceğiz.
@@ -159,13 +159,13 @@ Model günün sorusuna bir sayı uydurdu. Politikadaki sayı başka.
 </Deck>
 
 <Example>
-Model: "… 7 yıllık bir çalışanın yıllık izni genellikle **50 iş günü** (15 gün ücretli izin + 35 gün yıllık izin)
-olur." Politikanın kendisi `corpus/2025/hr-leave.md` içinde; her kıdem yılı bir satır:
+Model: "… gets **25-30 working days** of annual leave, depending on the company's policy."
+Politikanın kendisi `corpus/2025/hr-leave.md` içinde; her kıdem yılı bir satır:
 
 <RepoCode file="corpus/2025/hr-leave.md" from="| Years of service (full years)" to="15 or more" mark={["| 7 | 22 |"]} />
 </Example>
 
-Adım 0'ın bütün kodu: modele soruyu verir, başka hiçbir şey vermez.
+Adım 0'ın bütün kodu: soruyu modele doğrudan sorar; doküman yok, arama yok.
 
 <RepoCode file="src/steps/0-bare.ts" />
 
@@ -177,7 +177,7 @@ Adım 0'ın bütün kodu: modele soruyu verir, başka hiçbir şey vermez.
 Politikada cevabı olan başka bir soruyu modele kaynaksız sorun:
 
 ```sh
-npm run step -- 0 "Seyahat dönüşü fişlerimi en geç kaç gün içinde sisteme yüklemem gerekiyor?"
+npm run step -- 0 "How many days do I have to upload my receipts after a trip?"
 ```
 
 Sonra cevabı politikayla karşılaştırın: `corpus/2025/travel-expenses.md`, 7. bölüm. Model ne kadar emin

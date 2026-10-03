@@ -13,11 +13,11 @@ import FAQ from '../../../components/FAQ.astro';
 import Term from '../../../components/Term.astro';
 import Takeaway from '../../../components/Takeaway.astro';
 
-<DaysQuestion answer="50 iş günü (15 + 35)" how="bare model, no documents" />
+<DaysQuestion answer="25-30 iş günü" how="bare model, no documents" />
 
 <Gate>
-Model politikayı bilmiyor ve bilmediğini de söylemiyor. Peki bilgiyi modele, soruyla birlikte, her seferinde
-versek?
+Model politikayı bilmiyor. Cevabın şirketin politikasına bağlı olduğunu söylüyor, ama yine de sayı veriyor; hiçbiri
+22 değil. Peki bilgiyi modele, soruyla birlikte, her seferinde versek?
 </Gate>
 
 <Deck>
@@ -27,7 +27,7 @@ versek?
         <marker id="rr-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker>
         <marker id="rr-on" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead-on" /></marker>
       </defs>
-      <text x="500" y="34" text-anchor="middle" class="flbl" data-q="code:src/lib/config.ts" data-q-mode="quote">7 yıllık bir çalışanın yıllık izni kaç iş günü?</text>
+      <text x="500" y="34" text-anchor="middle" class="flbl tight" data-q="code:src/lib/config.ts" data-q-mode="quote">How many working days of annual leave does an employee with 7 years of service get?</text>
       <path d="M345 60 V485" class="faxis" stroke-dasharray="4 8" />
       <text x="175" y="88" text-anchor="middle" class="flbl">RAG'siz</text>
       <path d="M125 97 H225" class="faxis" />
@@ -39,7 +39,7 @@ versek?
       <path d="M88 215 H182" class="farrow" marker-end="url(#rr-h)" />
       <text x="135" y="205" text-anchor="middle" class="fsub">soru</text>
       <path d="M188 262 H94" class="farrow" marker-end="url(#rr-h)" />
-      <text x="135" y="312" text-anchor="middle" class="flbl fbad-t" data-q="log:question-0-bare">50 iş günü</text>
+      <text x="135" y="312" text-anchor="middle" class="flbl fbad-t" data-q="log:question-0-bare">25-30 iş günü</text>
       <text x="135" y="336" text-anchor="middle" class="fsub fbad-t">uydurma</text>
       <g data-from="2">
         <text x="680" y="88" text-anchor="middle" class="flbl">RAG'li</text>
@@ -56,7 +56,7 @@ versek?
       </g>
       <g data-from="2">
         <path d="M512 228 L592 190" class="farrow" marker-end="url(#rr-h)" />
-        <text x="524" y="200" class="fsub" data-q="log:04-embed">1024 sayı</text>
+        <text x="524" y="200" class="fsub" data-q="log:04-embed"><tspan x="524" y="180">1024</tspan><tspan x="524" y="200">sayı</tspan></text>
         <ellipse cx="655" cy="240" rx="55" ry="14" class="fbox" />
         <rect x="600" y="150" width="110" height="90" class="fbox" />
         <ellipse cx="655" cy="150" rx="55" ry="14" class="fbox" />
@@ -90,7 +90,7 @@ versek?
     <svg viewBox="0 0 1000 320" role="img" aria-label="Modele giden prompt token olarak: RAG ile bütün el kitabı" data-draw="token-bars">
       <text x="30" y="44" class="flbl" data-q="log:question-3-full log:stuff-everything">günün sorusu, iki yoldan — ikisinin cevabı da 22 iş günü</text>
       <text x="30" y="108" class="flbl" data-q="code:src/lib/config.ts">RAG: 3 chunk</text>
-      <text x="30" y="134" class="fsub" data-q="log:06-retrieve log:07-rerank log:08-answer">arama + rerank + cevap ≈ 3 sn</text>
+      <text x="30" y="134" class="fsub" data-q="log:06-retrieve log:07-rerank log:08-answer">arama + rerank + cevap ≈ 2 sn</text>
       <rect x="300" y="82" width="65" height="40" rx="6" class="fbox fbox-on" data-gen="rag-bar" />
       <text x="377" y="110" class="flbl fnum" data-gen="rag-label">976 prompt token</text>
       <text x="30" y="208" class="flbl" data-q="const">hepsi: 8 doküman</text>
@@ -103,7 +103,7 @@ versek?
     </svg>
   </DeckFigure>
   <Step title="RAG'siz" stage="a">
-    Soru doğrudan modele gider; cevap uydurma: 50 iş günü.
+    Soru doğrudan modele gider; cevap uydurma: 25-30 iş günü.
   </Step>
   <Step title="Soru önce aranır" stage="a">
     RAG'li düzende soru önce bir <Term id="embedding">embedding</Term>'e çevrilir; <Term id="vectordb">vector DB</Term> el kitabının anlamca en yakın <Term id="chunk">chunk</Term>'larını döndürür. Seçilen üç chunk'tan birinde izin tablosu var: 7 yıl → 22 iş günü.
@@ -115,7 +115,7 @@ versek?
     Model aynı, ağırlıklarına kimse dokunmadı. Değişen yalnızca önüne konan metin: cevap 22 iş günü, kaynağı [1] hr-leave §3.
   </Step>
   <Step title="Hepsini prompt'a koysak?" stage="b">
-    El kitabının 8 dokümanını tek prompt'a koyduk: 11358 token; RAG'in prompt'u 1155. Cevap yine 22 iş günü, ama tek çağrı 29983 ms sürdü. RAG'in bütün yolu, arama ve <Term id="rerank">rerank</Term> dahil, yaklaşık 3 saniye.
+    El kitabının 8 dokümanını tek prompt'a koyduk: 9954 token; RAG'in prompt'u 976. Cevap yine 22 iş günü, ama tek çağrı 26337 ms sürdü. RAG'in bütün yolu, arama ve <Term id="rerank">rerank</Term> dahil, yaklaşık 2 saniye.
   </Step>
   <Step title="Asıl iş seçmek" stage="b">
     Hepsini koyarsanız her soruda bütün el kitabının bedelini ödersiniz; corpus büyüdükçe bir gün <Term id="context">context window</Term>'a sığmaz; yalnızca İK'nın görebileceği ücret tablosunu da herkes okur.
@@ -144,7 +144,8 @@ sayfasında.
 
 <FAQ q="Arama yanlış parçayı getirirse ne olur?">
 Model yanlış context'le çalışır: ya "bilmiyorum" der ya da yanlış bir cevap yazar. Bunun canlı bir örneği
-[B · Chunking](/adim-adim/b-chunking/) sayfasında: doküman kötü bölündüğünde tablo hiç bulunamıyor.
+[B · Chunking](/adim-adim/b-chunking/) sayfasında: doküman kötü bölündüğünde arama tabloyu bulamıyor, model de
+kaynak göstererek yanlış bir sayı yazıyor. Kaynak göstermek cevabı doğru yapmaz.
 </FAQ>
 
 <Takeaway>Sorun bilgiyi vermek değil, doğru parçayı seçmek.</Takeaway>

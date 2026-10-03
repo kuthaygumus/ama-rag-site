@@ -90,9 +90,9 @@ Chroma imajı 649 MB. İyi bir bağlantıda indirin. Şirket ağındaysanız ön
 
 <Log name="doctor" title="npm run doctor" />
 
-İlk çalıştırmada iki süre de modellerin belleğe yüklenmesini içerir: yukarıdaki çıktı soğuk başlangıçta, M serisi
-bir Mac'te alındı (embedding 1924 ms, cevap 4590 ms). Ollama modeli birkaç dakika bellekte tutar; o arada ikinci
-çalıştırmada yükleme olmaz, süreler kısalır.
+Yukarıdaki çıktı M serisi bir Mac'te alındı; iki model de zaten bellekteydi (embedding 122 ms, cevap 172 ms).
+İlk çalıştırmada iki süreye modellerin belleğe yüklenmesi de eklenir, süreler uzar. Ollama modeli birkaç dakika
+bellekte tutar; o arada yeni bir çalıştırmada yükleme olmaz.
 
 Bir satırda `✗` varsa, yanında ne yapılacağı yazar. Hepsi tek tek:
 [Kurulum sorunları](/kurulum-sorunlari/).
