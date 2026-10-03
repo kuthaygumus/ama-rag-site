@@ -1,0 +1,309 @@
+---
+title: D · Vector DB
+description: Moving the vectors from a JSON file to Chroma. What one record stores, and what ANN search changes and what it doesn't. Step 5.
+---
+import WhereAmI from '../../../../components/WhereAmI.astro';
+import DaysQuestion from '../../../../components/DaysQuestion.astro';
+import Gate from '../../../../components/Gate.astro';
+import Deck from '../../../../components/Deck.astro';
+import DeckFigure from '../../../../components/DeckFigure.astro';
+import Step from '../../../../components/Step.astro';
+import Now from '../../../../components/Now.astro';
+import Example from '../../../../components/Example.astro';
+import RepoCode from '../../../../components/RepoCode.astro';
+import Log from '../../../../components/Log.astro';
+import YourTurn from '../../../../components/YourTurn.astro';
+import FAQ from '../../../../components/FAQ.astro';
+import Takeaway from '../../../../components/Takeaway.astro';
+import Term from '../../../../components/Term.astro';
+
+<WhereAmI at="store" />
+
+<DaysQuestion answer="“An employee with 7 years of service gets 22 working days of annual leave [1].” ✓" how="chroma store · chunker section · rerank on — same answer as the black box" />
+
+<Gate>
+So far, the "database" was a JSON file. For every question, we compared the question vector with all 60 vectors, one by one. With 60 vectors, that's no problem. With a million chunks, every question means a million comparisons.
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure" stage="r">
+    <svg viewBox="0 0 1000 330" role="img" aria-label="One record in Chroma: id, embedding, document and metadata">
+      <rect x="20" y="30" width="640" height="282" rx="12" class="fbox" />
+      <g class="ph ph1">
+        <rect x="28" y="90" width="624" height="56" rx="6" class="fbox-on" />
+        <text x="690" y="118" class="flbl">for search</text>
+        <text x="690" y="142" class="fsub">closest to the question vector</text>
+      </g>
+      <g class="ph ph2">
+        <rect x="28" y="154" width="624" height="72" rx="6" class="fbox-on" />
+        <text x="690" y="186" class="flbl">for the model</text>
+        <text x="690" y="210" class="fsub">vector → text: no way back</text>
+      </g>
+      <g class="ph ph3">
+        <rect x="28" y="234" width="624" height="70" rx="6" class="fbox-on" />
+        <text x="690" y="264" class="flbl">for filters</text>
+        <text x="690" y="288" class="fsub">edition, access …</text>
+      </g>
+      <text x="40" y="70" class="fsub">id</text>
+      <text x="170" y="70" class="fsub fnum" data-q="log:03-chunk-section">hr-leave@2025#3</text>
+      <text x="40" y="124" class="fsub">embedding</text>
+      <text x="170" y="124" class="fsub" data-q="log:04-embed">[ … 1024 numbers … ]</text>
+      <text x="40" y="186" class="fsub">document</text>
+      <text x="170" y="182" class="fsub" data-q="log:03-chunk-section">[Annual Leave Policy › 3. Annual Paid Leave]</text>
+      <text x="170" y="208" class="fsub" data-q="log:03-chunk-section">Part-time staff get the same number … | 7 | 22 | …</text>
+      <text x="40" y="264" class="fsub">metadata</text>
+      <text x="170" y="260" class="fsub" data-q="corpus:2025/hr-leave.md">docId: hr-leave · edition: 2025 · title: Annual Leave Policy</text>
+      <text x="170" y="286" class="fsub" data-q="corpus:2025/hr-leave.md log:03-chunk-section">access: all · lang: en · sections: 3</text>
+    </svg>
+  </DeckFigure>
+  <DeckFigure slot="figure" stage="a">
+    <svg viewBox="0 0 1000 380" role="img" aria-label="Schematic: brute force checks every vector. HNSW starts at an entry point and jumps from neighbor to neighbor toward the question">
+      <text x="240" y="30" text-anchor="middle" class="flbl">JSON · check them all</text>
+      <text x="760" y="30" text-anchor="middle" class="flbl">Chroma · check neighbors</text>
+      <g data-from="5">
+        <path d="M240 200 L70 90" class="faxis" />
+        <path d="M240 200 L140 65" class="faxis" />
+        <path d="M240 200 L220 60" class="faxis" />
+        <path d="M240 200 L310 70" class="faxis" />
+        <path d="M240 200 L390 95" class="faxis" />
+        <path d="M240 200 L425 160" class="faxis" />
+        <path d="M240 200 L45 170" class="faxis" />
+        <path d="M240 200 L115 145" class="faxis" />
+        <path d="M240 200 L190 130" class="faxis" />
+        <path d="M240 200 L280 140" class="faxis" />
+        <path d="M240 200 L355 155" class="faxis" />
+        <path d="M240 200 L80 250" class="faxis" />
+        <path d="M240 200 L155 230" class="faxis" />
+        <path d="M240 200 L300 235" class="faxis" />
+        <path d="M240 200 L380 255" class="faxis" />
+        <path d="M240 200 L120 320" class="faxis" />
+        <path d="M240 200 L210 310" class="faxis" />
+        <path d="M240 200 L290 325" class="faxis" />
+        <path d="M240 200 L410 320" class="faxis" />
+        <path d="M240 200 L265 188" class="faxis" />
+        <path d="M240 200 L218 238" class="faxis" />
+        <circle cx="70" cy="90" r="6" class="fbox" />
+        <circle cx="140" cy="65" r="6" class="fbox" />
+        <circle cx="220" cy="60" r="6" class="fbox" />
+        <circle cx="310" cy="70" r="6" class="fbox" />
+        <circle cx="390" cy="95" r="6" class="fbox" />
+        <circle cx="425" cy="160" r="6" class="fbox" />
+        <circle cx="45" cy="170" r="6" class="fbox" />
+        <circle cx="115" cy="145" r="6" class="fbox" />
+        <circle cx="190" cy="130" r="6" class="fbox" />
+        <circle cx="280" cy="140" r="6" class="fbox" />
+        <circle cx="355" cy="155" r="6" class="fbox" />
+        <circle cx="80" cy="250" r="6" class="fbox" />
+        <circle cx="155" cy="230" r="6" class="fbox" />
+        <circle cx="300" cy="235" r="6" class="fbox" />
+        <circle cx="380" cy="255" r="6" class="fbox" />
+        <circle cx="120" cy="320" r="6" class="fbox" />
+        <circle cx="210" cy="310" r="6" class="fbox" />
+        <circle cx="290" cy="325" r="6" class="fbox" />
+        <circle cx="410" cy="320" r="6" class="fbox" />
+        <circle cx="265" cy="188" r="6" class="fbox" />
+        <circle cx="218" cy="238" r="6" class="fbox" />
+      </g>
+      <g data-from="6">
+        <path d="M590 90 L635 145" class="faxis" />
+        <path d="M590 90 L660 65" class="faxis" />
+        <path d="M590 90 L565 170" class="faxis" />
+        <path d="M660 65 L740 60" class="faxis" />
+        <path d="M660 65 L710 130" class="faxis" />
+        <path d="M740 60 L710 130" class="faxis" />
+        <path d="M740 60 L830 70" class="faxis" />
+        <path d="M830 70 L800 140" class="faxis" />
+        <path d="M830 70 L910 95" class="faxis" />
+        <path d="M910 95 L875 155" class="faxis" />
+        <path d="M910 95 L945 160" class="faxis" />
+        <path d="M945 160 L875 155" class="faxis" />
+        <path d="M945 160 L900 255" class="faxis" />
+        <path d="M565 170 L635 145" class="faxis" />
+        <path d="M565 170 L600 250" class="faxis" />
+        <path d="M635 145 L710 130" class="faxis" />
+        <path d="M800 140 L785 188" class="faxis" />
+        <path d="M800 140 L875 155" class="faxis" />
+        <path d="M600 250 L675 230" class="faxis" />
+        <path d="M600 250 L640 320" class="faxis" />
+        <path d="M675 230 L738 238" class="faxis" />
+        <path d="M635 145 L675 230" class="faxis" />
+        <path d="M820 235 L785 188" class="faxis" />
+        <path d="M820 235 L738 238" class="faxis" />
+        <path d="M820 235 L900 255" class="faxis" />
+        <path d="M900 255 L930 320" class="faxis" />
+        <path d="M875 155 L900 255" class="faxis" />
+        <path d="M640 320 L730 310" class="faxis" />
+        <path d="M675 230 L640 320" class="faxis" />
+        <path d="M730 310 L738 238" class="faxis" />
+        <path d="M730 310 L810 325" class="faxis" />
+        <path d="M820 235 L810 325" class="faxis" />
+        <path d="M810 325 L738 238" class="faxis" />
+        <path d="M810 325 L930 320" class="faxis" />
+        <path d="M820 235 L930 320" class="faxis" />
+        <path d="M785 188 L738 238" class="faxis" />
+        <path d="M710 130 L800 140" class="faxis" />
+        <circle cx="590" cy="90" r="6" class="fbox" />
+        <circle cx="660" cy="65" r="6" class="fbox" />
+        <circle cx="740" cy="60" r="6" class="fbox" />
+        <circle cx="830" cy="70" r="6" class="fbox" />
+        <circle cx="910" cy="95" r="6" class="fbox" />
+        <circle cx="945" cy="160" r="6" class="fbox" />
+        <circle cx="565" cy="170" r="6" class="fbox" />
+        <circle cx="635" cy="145" r="6" class="fbox" />
+        <circle cx="710" cy="130" r="6" class="fbox" />
+        <circle cx="800" cy="140" r="6" class="fbox" />
+        <circle cx="875" cy="155" r="6" class="fbox" />
+        <circle cx="600" cy="250" r="6" class="fbox" />
+        <circle cx="675" cy="230" r="6" class="fbox" />
+        <circle cx="820" cy="235" r="6" class="fbox" />
+        <circle cx="900" cy="255" r="6" class="fbox" />
+        <circle cx="640" cy="320" r="6" class="fbox" />
+        <circle cx="730" cy="310" r="6" class="fbox" />
+        <circle cx="810" cy="325" r="6" class="fbox" />
+        <circle cx="930" cy="320" r="6" class="fbox" />
+        <circle cx="785" cy="188" r="6" class="fbox" />
+        <circle cx="738" cy="238" r="6" class="fbox" />
+        <path d="M590 90 L635 145 L710 130 L800 140 L785 188" class="farrow-on" />
+        <circle cx="590" cy="90" r="7" class="fdot" />
+        <circle cx="635" cy="145" r="7" class="fdot" />
+        <circle cx="710" cy="130" r="7" class="fdot" />
+        <circle cx="800" cy="140" r="7" class="fdot" />
+        <circle cx="785" cy="188" r="7" class="fdot" />
+      </g>
+      <polygon points="240,183 244,194 256,194 246,201 250,213 240,206 230,213 234,201 224,194 236,194" class="farrow fgate-t" />
+      <g data-from="6">
+        <polygon points="760,183 764,194 776,194 766,201 770,213 760,206 750,213 754,201 744,194 756,194" class="farrow fgate-t" />
+        <text x="590" y="80" text-anchor="end" class="fsub fnum">entry</text>
+      </g>
+      <g data-from="5">
+        <text x="240" y="362" text-anchor="middle" class="fsub" data-q="log:05-store-json">brute force: 60 vectors, 60 comparisons · exact</text>
+      </g>
+      <g data-from="7">
+        <text x="760" y="362" text-anchor="middle" class="fsub fnum">HNSW: a few jumps · approximate</text>
+      </g>
+      <text x="500" y="200" text-anchor="middle" class="fsub">schematic</text>
+      <g data-from="8">
+        <text x="500" y="240" text-anchor="middle" class="fsub fgood-t" data-q="const">top 5 ids: same ✓</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="What is in a record?" stage="r">
+    Step 5 writes each chunk to Chroma as one record. A record has an id, an embedding (the vector), a document (the text) and metadata.
+
+    <Now n="1">`podman compose ps` should say `healthy`. If not, run `podman compose up -d`.</Now>
+  </Step>
+  <Step title="The vector: for search" stage="r" phase="1">
+    The vector is the only way to find the records closest to the question vector. The vectors come ready from step 4.
+  </Step>
+  <Step title="The text: for the model" stage="r" phase="2">
+    You can't get a sentence back from 1024 numbers. The search uses the vector, but the prompt gets the text. So the record carries both. The vector finds, and the text tells.
+  </Step>
+  <Step title="Metadata: for filters" stage="r" phase="3">
+    `edition`, `access`, `docId` …: these are the labels we read on page A. Step 6 says "only 2025, only open to everyone". Chroma applies this filter inside the search.
+  </Step>
+  <Step title="Brute force: check them all" stage="a">
+    For every question, the JSON store computes the cosine with every vector. Then it sorts them. The result is exact, but the work grows with the number of chunks. This method is called <Term id="bruteforce">brute force</Term>.
+
+    <Now n="2">Run `npm run step -- 5 --store json`, then open `data/store.json`.</Now>
+  </Step>
+  <Step title="Vector DB: check the neighbors" stage="a">
+    Chroma builds an index called <Term id="hnsw">HNSW</Term>. It links the vectors in a graph of neighbors. A search starts at an entry point. It jumps from neighbor to neighbor toward the question. The search visits only the nearby part of the graph.
+
+    <Now n="3">Run `npm run step -- 5`.</Now>
+  </Step>
+  <Step title="The cost: approximate" stage="a">
+    This kind of search is called <Term id="ann">ANN</Term>: approximate nearest neighbor. It almost always finds the closest ones, but there's no guarantee. You give up a little exactness to get speed. The index settings decide this balance.
+
+    <Now n="4">In Bruno, pick the `local` environment. Send the requests in the `01-chroma` folder in the order the box lists. Find the `hnsw` settings in `collections`.</Now>
+  </Step>
+  <Step title="Did our ranking change?" stage="a">
+    Same question, two stores. JSON and Chroma return the same top 5 ids, in the same order. With 60 records, the approximation doesn't show.
+
+    <Now n="5">Run `podman compose down`, then `podman compose up -d`. In Bruno, send `collections` first, then `count`.</Now>
+  </Step>
+</Deck>
+
+<Example>
+After step 5 writes to Chroma, it also asks the JSON store the question of the day. Then it puts the top 5 of both stores side by side.
+</Example>
+
+<Log name="05-store-json" title="npm run step -- 5 --store json" />
+
+<Log name="05-store-chroma" title="npm run step -- 5" />
+
+Here is brute force itself: the search function of the JSON store. It filters, computes the cosine with every record, sorts, and takes the top k.
+
+<RepoCode file="src/lib/store-json.ts" from="async query" to="^  }$" />
+
+In Chroma, the same work is one query. First, the collection. We tell Chroma not to make vectors itself (`embeddingFunction: null`) and to use cosine.
+
+<RepoCode file="src/lib/chroma.ts" from="private async collection" to="^  }$" />
+
+The four parts of a record go in one call: `ids`, `embeddings`, `documents`, `metadatas`. Metadata values must be plain text or numbers. So a list of sections becomes text like `"2,3"`.
+
+<RepoCode file="src/lib/chroma.ts" from="async replaceEdition" to="^  }$" />
+
+## The four jobs of a vector DB
+
+- **Add / update.** Writing to the same id (upsert) replaces the old record. Our `replaceEdition` first deletes the records of that edition, then adds the new ones. So running step 5 twice doesn't create duplicate records.
+- **Delete.** With a `where` condition. Ours is `{ edition }`.
+- **Filter.** Also with `where`. `toWhere()` turns our filter into Chroma's format (page E).
+- **Keep.** The data survives when the container stops. `compose.yaml` writes it to a volume.
+
+## `podman compose up`, line by line
+
+The command we ran at the start of the day reads this file:
+
+<RepoCode file="compose.yaml" />
+
+- `image: docker.io/chromadb/chroma:1.5.9` — the version is pinned. Everyone gets the same Chroma and the same API.
+- `ports: "8000:8000"` — Chroma's HTTP API is on `localhost:8000`. Our code and Bruno both connect here.
+- `volumes: chroma-data:/data` — the records live in a named volume, not inside the container. `podman compose down` keeps the data. `down -v` deletes it.
+- `ANONYMIZED_TELEMETRY: "false"` — Chroma sends no usage statistics out.
+- `healthcheck` — every 5 seconds, it checks `/api/v2/heartbeat`. If `podman compose ps` says "healthy", Chroma is ready.
+
+## Look inside with Bruno
+
+The `01-chroma` folder in Bruno makes the same HTTP calls as our code, by hand. It only reads. It changes nothing.
+
+<RepoCode file="bruno/01-chroma/peek.bru" from="body:json" to="^}" lang="txt" />
+
+<YourTurn>
+**1 · Is Chroma up?** `podman compose ps` → `healthy`. If not, run `podman compose up -d`.
+
+**2 · JSON first.** Run `npm run step -- 5 --store json`, then open `data/store.json`. Each record is one chunk with a `vector` field of 1024 numbers.
+
+**3 · Then Chroma.** Run `npm run step -- 5`. The log should say "identical ✓".
+
+**4 · Look inside with Bruno** (pick the `local` environment, then the `01-chroma` folder, in order):
+
+- `heartbeat` → if you get a number back, Chroma is up.
+- `collections` → `kraken-policies`. Inside `configuration`, find `hnsw` and `space: cosine`. This request also saves the collection's id, and `count` uses that id.
+- `count` → 60. If you wrote the rule for the Turkish confidentiality line on page A, you get 59. After a catchup or a reset, the id changes. Send `collections` again first.
+- `peek at three records` → `ids`, `documents`, `metadatas`. Add `"embeddings"` to the `include` list and send it again. Now the 1024 numbers come back too.
+- `filter on metadata` → put `{ "access": "hr-only" }` in `where`. The salary bands come back. Who should be allowed to send this request? (Security page.)
+
+**5 · Persistence.** Run `podman compose down`, then `podman compose up -d`. In Bruno, send `collections` first, then `count`. The records are in the volume, so the count should not change.
+
+Fell behind? Run `npm run catchup -- 5`.
+</YourTurn>
+
+## Common questions
+
+<FAQ q="Chroma, pgvector or Qdrant?">
+All three store the same three things: the vector, the text and the metadata. The differences are in operations. If you already use Postgres, pgvector adds no new system. Scale, filter power, hybrid search support and managed service options differ. We chose Chroma because it is one container, and Bruno can read its HTTP API.
+</FAQ>
+
+<FAQ q="Can't Chroma do the embedding itself?">
+It can. We turned that off and made the vectors ourselves with Ollama. So the model name is written in one place, and ingest and questions go through the same model.
+</FAQ>
+
+<FAQ q="Chroma returns a distance, not a score, right?">
+Yes. In cosine space, distance = 1 − cosine similarity. Our code turns it back with `score: 1 - distance`. So JSON and Chroma scores are on the same scale, and we can put them side by side.
+</FAQ>
+
+<FAQ q="What do the HNSW settings change?">
+Two things: how many neighbors each node links to, and how many candidates a search visits. More means more accurate and slower. Today we use the defaults. We didn't measure other settings.
+</FAQ>
+
+<Takeaway>Embedding turns meaning into coordinates. A vector DB searches those coordinates fast.</Takeaway>
