@@ -14,7 +14,8 @@
 // Placeholder forms (one grammar; the scratch pages were normalized to it, see the dry-run notes):
 //   ⟦SRC /RE/flags⟧                 group 1 of the first match
 //   ⟦SRC /RE/flags minus /RE2/⟧     number minus number (RE2 on the same SRC); also `minus <number>`
-//   ⟦facts.json KEY.PATH⟧           a value from logs/facts.json (check:story --write-facts), `.value` unwrapped
+//   ⟦facts.json KEY.PATH⟧           a value from logs/facts.json (check:story --write-facts), `.value` unwrapped;
+//                                   facts.json never takes a /regex/ (refused as a form error)
 //   ⟦… → T → T⟧                     transforms, applied left to right (TRANSFORMS below)
 //   ⟦calc EXPR⟧                     arithmetic over [SRC /RE/] refs ([SRC /RE/g] = every match, as a list), [facts.json KEY], numbers
 //                                   and round floor ceil abs min max fmt(x,d) ordinal(n) gained(a,b) lost(a,b)
@@ -71,13 +72,17 @@ function readRegex(s, i) {
   return { re, all: flags.includes('g'), end: j + 1 + flags.length };
 }
 
+/** The text a /RE/ runs on. facts.json has none: each value sits in {value, from}, so a regex over the file
+ *  text cannot tell a key from its group and fails only at the freeze. It takes a KEY.PATH instead. */
+const regexText = (src, re) =>
+  src === 'facts.json' ? fail('form', `facts.json ${re}: use a KEY.PATH (or [facts.json KEY] in calc), not a /regex/`) : text(src);
 /** The match of RE in SRC, or a loud miss. */
 function match(src, re) {
-  const m = text(src).match(re);
-  if (!m) fail(src === 'facts.json' ? 'facts' : 'regex-miss', `regex miss ${re} in ${src}`);
+  const m = regexText(src, re).match(re);
+  if (!m) fail('regex-miss', `regex miss ${re} in ${src}`);
   return m;
 }
-const allMatches = (src, re) => [...text(src).matchAll(new RegExp(re.source, re.flags + 'g'))];
+const allMatches = (src, re) => [...regexText(src, re).matchAll(new RegExp(re.source, re.flags + 'g'))];
 
 function num(v, what) {
   const n = Number(String(v).replace(/,/g, ''));
