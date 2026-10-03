@@ -1,0 +1,149 @@
+---
+title: When the data changes
+description: The 2026 edition of the leave policy arrives. No retraining, only a new ingest. The edition filter picks which edition answers.
+---
+import WhereAmI from '../../../../components/WhereAmI.astro';
+import DaysQuestion from '../../../../components/DaysQuestion.astro';
+import Gate from '../../../../components/Gate.astro';
+import Deck from '../../../../components/Deck.astro';
+import DeckFigure from '../../../../components/DeckFigure.astro';
+import Step from '../../../../components/Step.astro';
+import Now from '../../../../components/Now.astro';
+import Example from '../../../../components/Example.astro';
+import RepoCode from '../../../../components/RepoCode.astro';
+import Log from '../../../../components/Log.astro';
+import YourTurn from '../../../../components/YourTurn.astro';
+import FAQ from '../../../../components/FAQ.astro';
+import Takeaway from '../../../../components/Takeaway.astro';
+import Term from '../../../../components/Term.astro';
+
+<WhereAmI at="load clean chunk embed store" />
+
+<DaysQuestion answer="“An employee with 7 years of service gets 24 working days of annual leave [1].” ✓ (2026)" how="chroma store · chunker section · rerank on · filter edition 2026, access all" />
+
+<Gate>
+HR published the 2026 edition of the leave policy, and the answer to the question of the day changed. For a model that keeps knowledge in its weights, this means training it again. What does it mean in our pipeline?
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure">
+    <svg viewBox="0 0 1000 340" role="img" aria-label="Two editions side by side in the store. The edition filter lets only the latest edition into the search">
+      <rect x="20" y="16" width="380" height="306" rx="12" class="fbox" />
+      <text x="210" y="50" text-anchor="middle" class="flbl">Chroma · kraken-policies</text>
+      <rect x="40" y="72" width="340" height="104" rx="8" class="fbox" />
+      <text x="210" y="112" text-anchor="middle" class="flbl" data-q="log:ingest-section">2025 · 60 records</text>
+      <text x="210" y="146" text-anchor="middle" class="fsub" data-q="log:edition-all corpus:2025/hr-leave.md">hr-leave@2025#3 · | 7 | 22 |</text>
+      <g data-from="2">
+        <rect x="40" y="198" width="340" height="104" rx="8" class="fbox-on" />
+        <text x="210" y="238" text-anchor="middle" class="flbl" data-q="log:ingest-2026">2026 · 60 records</text>
+        <text x="210" y="272" text-anchor="middle" class="fsub" data-q="log:edition-all">hr-leave@2026#3 · | 7 | 24 |</text>
+      </g>
+      <g data-from="3">
+        <path d="M384 250 C430 250 440 180 468 172" class="farrow-on" marker-end="url(#vd-on)" />
+        <path d="M384 124 C420 124 430 150 452 150" class="farrow" />
+        <text x="452" y="140" class="flbl fbad-t">✗</text>
+        <path d="M470 120 H570 L535 176 V222 H505 V176 Z" class="fbox-gate" />
+        <text x="520" y="104" text-anchor="middle" class="fsub fgate-t">edition = latest</text>
+        <text x="520" y="250" text-anchor="middle" class="flbl fgate-t" data-q="const">2026</text>
+      </g>
+      <g data-from="4">
+        <path d="M540 172 H592" class="farrow-on" marker-end="url(#vd-on)" />
+        <rect x="600" y="112" width="380" height="120" rx="10" class="fbox-good" />
+        <text x="616" y="144" class="fsub" data-q="log:question-4-2026">An employee with 7 years of service gets</text>
+        <text x="616" y="170" class="fsub" data-q="log:question-4-2026">24 working days of annual leave [1].</text>
+        <text x="616" y="210" class="fsub fnum" data-q="log:question-4-2026">[1] = hr-leave@2026#3</text>
+      </g>
+      <g data-from="5">
+        <text x="790" y="276" text-anchor="middle" class="fsub fbad-t" data-q="log:edition-all">no filter: 2026#3 (0.619) and 2025#3 (0.614)</text>
+        <text x="790" y="302" text-anchor="middle" class="fsub fbad-t" data-q="log:edition-all corpus:2025/hr-leave.md">24 and 22 side by side in the prompt</text>
+      </g>
+      <defs>
+        <marker id="vd-on" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead-on" /></marker>
+      </defs>
+    </svg>
+  </DeckFigure>
+  <Step title="A new edition arrives">
+    `corpus/2026/`: the same 8 documents, with `edition: "2026"`. In the leave table, years 5 to 9 go from 22 to 24 working days. Years 10 to 14 go from 25 to 26.
+  </Step>
+  <Step title="No retraining, only a new ingest">
+    Ingest sends only the new files through steps 1 to 5. The store now has 120 records. There are 60 from 2025 and 60 from 2026, side by side.
+
+    <Now n="1">Run `npm run ingest -- --edition 2026`. Near the end, the log should say `120 in the store`.</Now>
+  </Step>
+  <Step title="Which edition answers?">
+    Step 6 has a <Term id="metadata">metadata</Term> filter, `EDITION_FILTER`. By default it is "latest": the newest edition in the store. The filter runs inside the search, so the 2025 records never compete.
+  </Step>
+  <Step title="The answer changed">
+    The answer: "An employee with 7 years of service gets 24 working days of annual leave [1]." The source is now `hr-leave@2026#3`.
+
+    <Now n="2">Run `npm run question`. Which edition is the source from?</Now>
+
+    <Now n="3">In Bruno, open `01-chroma`. Send `collections` first, then `count`: 120.</Now>
+  </Step>
+  <Step title="What if there is no filter?">
+    With `EDITION_FILTER = "all"`, both editions compete. The 2026 table scores 0.619 and the 2025 table 0.614. Both go into the prompt, so 24 and 22 sit side by side. This time the model says 24, and SOURCE 1 is from 2026. The gap is only 0.005: almost a tie. The source in front wins.
+
+    <Now n="4">In `src/steps/6-retrieve.ts`, set the edition filter to `"all"`. Run `npm run question`. Do the sources show both editions side by side?</Now>
+  </Step>
+  <Step title="Delete or filter?">
+    Keeping the old edition helps with questions about the past and with audits. The cost: the filter must be right on every search. `replaceEdition` refreshes only its own edition, so 2026 doesn't touch 2025. Deleting 2025 needs a separate delete on `edition`. The repo has no command for that.
+
+    <Now n="5">Run `npm run ask -- "After how many days must I change my password?"`. Which edition does the answer come from?</Now>
+  </Step>
+</Deck>
+
+<Example>
+In pipeline step 3, look at the 2026 leave table. In step 5, look at the record count and the editions.
+</Example>
+
+<Log name="ingest-2026" title="npm run ingest -- --edition 2026   (output of step 3)" from={47} to={68} />
+
+<Log name="ingest-2026" title="… same command, steps 4 and 5" from={74} />
+
+Step 4 computed no new vectors. The machine that made this log embedded these texts earlier, so their vectors came from the `.cache/` folder.
+
+<Log name="question-4-2026" title="npm run question" />
+
+With the filter off, both editions come back:
+
+<Log name="edition-all" title='npm run question   (toggle: edition filter EDITION_FILTER = "all")' />
+
+The edition filter is the toggle in step 6. `EDITION` in the `.env` file is something else. It picks which `corpus/` folder step 1 reads.
+
+<RepoCode file="src/steps/6-retrieve.ts" from="// TOGGLE edition filter" to="alternative" />
+
+"latest" in the code: `(await o.store.editions()).at(-1)` inside `retrieve()`.
+
+<YourTurn>
+**1 · Add the new edition.** Run `npm run ingest -- --edition 2026`. Near the end of the log: `120 in the store · editions: 2025, 2026` (118 if you wrote the Turkish confidentiality rule).
+
+**2 · The question of the day.** `npm run question` → 24 working days, source `hr-leave@2026#3`.
+
+**3 · Look with Bruno.** Open `01-chroma`. Send `collections` first, then `count`: 120. `count` takes the collection id from the `collections` request. After a catchup or a reset, this id changes. In `filter on metadata`, type `"edition": "2026"` and send it.
+
+**4 · Turn the filter off.** In `src/steps/6-retrieve.ts`, find the `TOGGLE edition filter` block. Uncomment the `"all"; // alternative` line, and comment out the default. Run `npm run question`. Do the sources show both editions side by side? Switch the toggle back.
+
+**5 · Another change.** In 2026, the information security policy also changed how often you must change your password. Run `npm run ask -- "After how many days must I change my password?"`. Which edition does the answer come from? The question is in English. Which language are the source and the answer in?
+
+Fell behind? Run `npm run catchup -- 8`, then `npm run ingest -- --edition 2026`.
+</YourTurn>
+
+## Common questions
+
+<FAQ q="Do we process the whole corpus again on every change?">
+No. `ingest` processes only the edition you give it. Texts that didn't change come from the cache. Real systems use a finer way: delete and rewrite only the chunks of the document that changed. We didn't measure this in this repo ([Performance and cost](/en/uretim/performans-maliyet/)).
+</FAQ>
+
+<FAQ q="What about documents with no edition number?">
+The same idea works with other fields: `docId` and an update date. When a document changes, you delete the records of that `docId` and write the new ones. The search always sees the latest record.
+</FAQ>
+
+<FAQ q="What would this mean for a fine-tuned model?">
+It means training again with the new data, testing again and deploying again. Making the model forget the old number is a separate job. Here we added a folder and ran one command ([RAG or fine-tuning?](/en/neden-rag/rag-mi-fine-tune-mu/)).
+</FAQ>
+
+<FAQ q="What if a user asks about their leave in 2025?">
+With the "latest" filter, the 2025 number never reaches the prompt. You can read the year from the question and put it in the filter (question analysis). But this repo doesn't do that. Keeping the old edition helps only with a step like that.
+</FAQ>
+
+<Takeaway>The model didn't change. The documents changed, and the answer followed them.</Takeaway>
