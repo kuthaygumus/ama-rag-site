@@ -83,7 +83,10 @@ for (const f of files) {
     if (ss.length > 2 || ss.some((s) => words(s) > 15)) warn(page, `Takeaway: ${ss.length} sentence(s), longest ${Math.max(...ss.map(words))} words (aim 2 and 15)`);
   }
   const rest = main.replace(/<ol class="deck-list">[\s\S]*?<\/ol>/g, ' ');
-  for (const p of blocks(rest, /<(?:p|li)\b[^>]*>([\s\S]*?)<\/(?:p|li)>/g)) length(page, 'prose', lenText(p), 20, 25);
+  // A line of links only (the glossary's letter index) and a formula ("daily cost = … × …") are not sentences.
+  const linksOnly = /^(\s*<a\b[^>]*>[^<]*<\/a>\s*·?)+\s*$/;
+  const formula = /^[^.=]{1,40}[=≈][^.]*×[^.]*$/;
+  for (const p of blocks(rest, /<(?:p|li)\b[^>]*>([\s\S]*?)<\/(?:p|li)>/g).filter((p) => !linksOnly.test(p) && !formula.test(lenText(p).trim()))) length(page, 'prose', lenText(p), 20, 25);
 }
 if (only !== null && !pages) fail(only, `no built page at ${DIST}/${only}/index.html (run astro build first)`);
 

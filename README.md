@@ -7,7 +7,7 @@ security, performance and cost. Astro + Starlight.
 ```sh
 npm ci
 npm run dev        # http://localhost:4321
-npm run build      # check:sync + check:legacy + check:now + check:i18n + astro build + dist guards
+npm run build      # source guards + check:i18n --strict + astro build + dist guards + check:en --fail-length + check:links
 ```
 
 **No hand-typed output.** Code excerpts and terminal logs on the pages come from the workshop repo:

@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "node scripts/check-sync.mjs && node scripts/check-legacy.mjs && node scripts/check-now.mjs && node scripts/check-ranges.mjs && node scripts/check-svg-src.mjs && node scripts/check-drawings.mjs && node scripts/check-i18n.mjs && astro build && node scripts/check-legacy.mjs dist && node scripts/check-dist.mjs && node scripts/check-links.mjs",
+    "build": "node scripts/check-sync.mjs && node scripts/check-legacy.mjs && node scripts/check-now.mjs && node scripts/check-ranges.mjs && node scripts/check-svg-src.mjs && node scripts/check-drawings.mjs && node scripts/check-i18n.mjs --strict && astro build && node scripts/check-legacy.mjs dist && node scripts/check-dist.mjs && node scripts/check-en.mjs --fail-length && node scripts/check-links.mjs",
     "preview": "astro preview",
     "sync": "node scripts/sync.mjs",
     "check:sync": "node scripts/check-sync.mjs",
