@@ -1,0 +1,224 @@
+---
+title: B · Chunking
+description: Splitting documents into chunks — every 300 characters, or at the document's own headings? Step 3 and the first good answer to the question of the day.
+---
+import WhereAmI from '../../../../components/WhereAmI.astro';
+import DaysQuestion from '../../../../components/DaysQuestion.astro';
+import Gate from '../../../../components/Gate.astro';
+import Deck from '../../../../components/Deck.astro';
+import DeckFigure from '../../../../components/DeckFigure.astro';
+import Step from '../../../../components/Step.astro';
+import Now from '../../../../components/Now.astro';
+import Example from '../../../../components/Example.astro';
+import RepoCode from '../../../../components/RepoCode.astro';
+import Log from '../../../../components/Log.astro';
+import YourTurn from '../../../../components/YourTurn.astro';
+import FAQ from '../../../../components/FAQ.astro';
+import Takeaway from '../../../../components/Takeaway.astro';
+import Term from '../../../../components/Term.astro';
+
+<WhereAmI at="chunk" />
+
+<DaysQuestion answer="fixed → “An employee with 7 years of service gets at most 7 working days [1].” ✗ · section → “An employee with 7 years of service gets 22 working days of annual leave [1].” ✓" how="chunker fixed → section · in-memory search (black box) · rerank on" />
+
+<Gate>
+The answer to the question of the day is one table row in hr-leave: `| 7 | 22 |`. The document has 198 lines. How we split it decides if the search can find that row.
+</Gate>
+
+<Deck>
+  <DeckFigure slot="figure" stage="a">
+    <svg viewBox="0 0 1000 260" role="img" aria-label="A document is split into chunks. The search picks a few chunks and puts them in the prompt">
+      <rect x="30" y="30" width="190" height="200" rx="10" class="fbox" />
+      <text x="125" y="70" text-anchor="middle" class="flbl">hr-leave</text>
+      <text x="125" y="98" text-anchor="middle" class="fsub" data-q="log:01-load">198 lines</text>
+      <path d="M55 125 H195 M55 145 H180 M55 165 H195 M55 185 H170 M55 205 H190" class="faxis" />
+      <path d="M228 130 H292" class="farrow" marker-end="url(#bh-a)" />
+      <text x="260" y="118" text-anchor="middle" class="fsub">split</text>
+      <rect x="310" y="60" width="64" height="44" rx="6" class="fbox" />
+      <rect x="386" y="60" width="64" height="44" rx="6" class="fbox" />
+      <rect x="462" y="60" width="140" height="44" rx="6" class="fbox-on" />
+      <text x="532" y="88" text-anchor="middle" class="fsub" data-q="corpus:2025/hr-leave.md">| 7 | 22 |</text>
+      <rect x="310" y="116" width="64" height="44" rx="6" class="fbox" />
+      <rect x="386" y="116" width="64" height="44" rx="6" class="fbox" />
+      <rect x="462" y="116" width="64" height="44" rx="6" class="fbox" />
+      <rect x="538" y="116" width="64" height="44" rx="6" class="fbox" />
+      <text x="456" y="192" text-anchor="middle" class="fsub">chunks</text>
+      <path d="M610 100 H708" class="farrow-on" marker-end="url(#bh-b)" />
+      <text x="660" y="88" text-anchor="middle" class="fsub" data-q="code:src/lib/config.ts">top 3</text>
+      <rect x="720" y="50" width="250" height="120" rx="10" class="fbox" />
+      <text x="845" y="94" text-anchor="middle" class="flbl">prompt</text>
+      <text x="845" y="124" text-anchor="middle" class="fsub" data-q="code:src/lib/config.ts">question + 3 chunks</text>
+      <text x="500" y="245" text-anchor="middle" class="fsub" data-q="const">the model gets the chosen chunks, not all 8 documents</text>
+      <defs>
+        <marker id="bh-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker>
+        <marker id="bh-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead-on" /></marker>
+      </defs>
+    </svg>
+  </DeckFigure>
+  <DeckFigure slot="figure" stage="b">
+    <svg viewBox="0 0 1000 640" role="img" aria-label="The leave table split two ways. A cut every 300 characters puts the row for year 7 in a chunk with no header row. A cut at the headings keeps the table with its header row">
+      <g data-from="2">
+        <text x="250" y="30" text-anchor="middle" class="flbl" data-q="code:src/steps/3-chunk.ts corpus:2025/hr-leave.md">fixed · a cut every 300 characters</text>
+        <rect x="20" y="48" width="460" height="40" rx="6" class="fbox" />
+        <text x="34" y="74" class="fsub" data-q="log:03-chunk-fixed corpus:2025/hr-leave.md">… ## 3. Ann</text>
+        <text x="468" y="74" text-anchor="end" class="fsub" data-q="log:03-chunk-fixed corpus:2025/hr-leave.md">c06</text>
+        <rect x="20" y="96" width="460" height="214" rx="6" class="fbox" />
+        <text x="468" y="120" text-anchor="end" class="fsub" data-q="log:03-chunk-fixed corpus:2025/hr-leave.md">c07</text>
+        <text x="34" y="120" class="fsub" data-q="log:03-chunk-fixed corpus:2025/hr-leave.md">ual Paid Leave</text>
+        <text x="34" y="145" class="fsub" data-q="log:03-chunk-section">Part-time staff get the … HR business partner.</text>
+        <text x="34" y="170" class="fsub" data-q="log:03-chunk-section">| Years of service (full years) | Annual paid … |</text>
+        <text x="34" y="195" class="fsub">|---|---|</text>
+        <text x="34" y="220" class="fsub" data-q="corpus:2025/hr-leave.md">| 1 | 16 |</text>
+        <text x="34" y="245" class="fsub">⋮</text>
+        <text x="34" y="270" class="fsub" data-q="corpus:2025/hr-leave.md">| 4 | 18 |</text>
+        <text x="34" y="295" class="fsub" data-q="log:03-chunk-fixed corpus:2025/hr-leave.md">| 5 | 2</text>
+        <rect x="20" y="352" width="460" height="200" rx="6" class="fbox" />
+      </g>
+      <g data-from="4">
+        <rect x="20" y="352" width="460" height="200" rx="6" class="fbox-bad" />
+        <rect x="28" y="411" width="120" height="22" rx="4" class="fbox-bad" />
+        <text x="250" y="628" text-anchor="middle" class="fsub fbad-t" data-q="log:03-chunk-fixed corpus:2025/hr-leave.md">header in c07: what do c08’s “7” and “22” count?</text>
+      </g>
+      <g data-from="2">
+        <text x="468" y="376" text-anchor="end" class="fsub" data-q="log:03-chunk-fixed corpus:2025/hr-leave.md">c08</text>
+        <text x="34" y="376" class="fsub" data-q="log:03-chunk-fixed corpus:2025/hr-leave.md">2 |</text>
+        <text x="34" y="401" class="fsub" data-q="corpus:2025/hr-leave.md">| 6 | 22 |</text>
+        <text x="34" y="426" class="fsub" data-q="corpus:2025/hr-leave.md">| 7 | 22 |</text>
+        <text x="34" y="451" class="fsub" data-q="corpus:2025/hr-leave.md">| 8 | 22 |</text>
+        <text x="34" y="476" class="fsub">⋮</text>
+        <text x="34" y="501" class="fsub" data-q="log:03-chunk-section">| 15 or more | 28 |</text>
+        <text x="34" y="526" class="fsub" data-q="log:03-chunk-fixed">Leave requests … a break, the department d</text>
+        <rect x="20" y="562" width="460" height="36" rx="6" class="fbox" />
+        <text x="34" y="586" class="fsub" data-q="log:03-chunk-fixed corpus:2025/hr-leave.md">irector …</text>
+        <text x="468" y="586" text-anchor="end" class="fsub" data-q="log:03-chunk-fixed corpus:2025/hr-leave.md">c09</text>
+      </g>
+      <g data-from="3">
+        <path d="M14 322 H486" class="fbox-bad" stroke-dasharray="7 5" />
+        <text x="34" y="343" class="fsub fbad-t" data-q="code:src/steps/3-chunk.ts corpus:2025/hr-leave.md">✂ 300 (our choice) cuts year 5’s “22” in two</text>
+      </g>
+      <g data-from="5">
+        <text x="750" y="30" text-anchor="middle" class="flbl">section · cut at the headings</text>
+        <rect x="520" y="48" width="460" height="40" rx="6" class="fbox" />
+        <text x="534" y="74" class="fsub" data-q="log:03-chunk-section corpus:2025/hr-leave.md">[Annual Leave Policy › 2. Probation and …]</text>
+        <text x="968" y="74" text-anchor="end" class="fsub" data-q="log:03-chunk-section">#2</text>
+        <rect x="520" y="96" width="460" height="340" rx="6" class="fbox-on" />
+      </g>
+      <g data-from="6">
+        <rect x="528" y="280" width="120" height="22" rx="4" class="fbox-good" />
+        <text x="750" y="628" text-anchor="middle" class="fsub fgood-t">heading and table in one chunk</text>
+      </g>
+      <g data-from="5">
+        <text x="968" y="122" text-anchor="end" class="fsub" data-q="log:03-chunk-section">#3</text>
+        <text x="534" y="122" class="fsub fnum" data-q="log:03-chunk-section">[Annual Leave Policy › 3. Annual Paid Leave]</text>
+        <text x="534" y="147" class="fsub" data-q="log:03-chunk-section">Part-time staff get the … HR business partner.</text>
+        <text x="534" y="172" class="fsub" data-q="log:03-chunk-section">| Years of service (full years) | Annual paid … |</text>
+        <text x="534" y="197" class="fsub">|---|---|</text>
+        <text x="534" y="222" class="fsub" data-q="corpus:2025/hr-leave.md">| 1 | 16 |</text>
+        <text x="534" y="247" class="fsub">⋮</text>
+        <text x="534" y="272" class="fsub" data-q="corpus:2025/hr-leave.md">| 6 | 22 |</text>
+        <text x="534" y="297" class="fsub" data-q="corpus:2025/hr-leave.md">| 7 | 22 |</text>
+        <text x="534" y="322" class="fsub" data-q="corpus:2025/hr-leave.md">| 8 | 22 |</text>
+        <text x="534" y="347" class="fsub">⋮</text>
+        <text x="534" y="372" class="fsub" data-q="log:03-chunk-section">| 15 or more | 28 |</text>
+        <text x="534" y="397" class="fsub" data-q="log:03-chunk-section">Leave requests … must also approve.</text>
+        <text x="534" y="422" class="fsub" data-q="log:03-chunk-section">Up to 5 … see section 7.</text>
+        <rect x="520" y="446" width="460" height="40" rx="6" class="fbox" />
+        <text x="534" y="472" class="fsub" data-q="log:03-chunk-section corpus:2025/hr-leave.md">[Annual Leave Policy › 4. Planning and …]</text>
+        <text x="968" y="472" text-anchor="end" class="fsub" data-q="log:03-chunk-section">#4</text>
+      </g>
+      <g data-from="7">
+        <text x="750" y="536" text-anchor="middle" class="fsub" data-q="log:03-chunk-fixed">fixed: 138 chunks · average 294 characters</text>
+        <text x="750" y="566" text-anchor="middle" class="fsub fnum" data-q="log:03-chunk-section">section: 60 chunks · average 695 characters</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="Why do we split?" stage="a">
+    Sending all 8 documents with every question is expensive and noisy. So we split the documents into pieces. The search picks only the few pieces closest to the question. These pieces are called <Term id="chunk">chunks</Term>.
+  </Step>
+  <Step title="First way: cut every 300 characters" stage="b">
+    `fixedSize(doc, 300)` cuts every 300 characters. It doesn't look at the content. It doesn't see headings, tables or even words. The code is about ten lines, and everyone starts with this one. 300 is our choice, not a rule.
+
+    <Now n="1">In `src/steps/3-chunk.ts`, set the chunker to `fixed`. Then run `npm run step -- 3`.</Now>
+  </Step>
+  <Step title="The cut lands in the table" stage="b">
+    c06 cuts the section heading in the middle of a word: "Ann". c07 ends the row for year 5 with "| 5 | 2". c08 starts with "2 |".
+
+    <Now n="2">Open `data/3-chunks.json`. Find `hr-leave@2025#c07` and `hr-leave@2025#c08`. Which one has the table header row?</Now>
+  </Step>
+  <Step title="What does a row say without its header?" stage="b">
+    The answer row `| 7 | 22 |` is in c08. Its header row stayed in c07. So the chunk doesn't say what 7 and 22 count. The word "annual" is missing too. c08 is not one of the 3 sources in the prompt. The model still writes: "An employee with 7 years of service gets at most 7 working days [1]." Its source [1] is c11, from §4. There, 7 is the longest leave you can take at one time. A source, but a wrong number.
+
+    <Now n="3">Run `npm run question`.</Now>
+  </Step>
+  <Step title="Second way: cut at the document's own headings" stage="b">
+    `bySection(doc)` cuts at every `## n.` heading. It puts `[Annual Leave Policy › 3. Annual Paid Leave]` in front of each chunk. The table stays in the same chunk as the heading that explains it.
+  </Step>
+  <Step title="Same question, right answer" stage="b">
+    With section chunks, the answer is "An employee with 7 years of service gets 22 working days of annual leave [1]." The source is `hr-leave@2025#3`. Only one thing changed: where we cut.
+
+    <Now n="4">Switch the chunker back to `section`. Run `npm run step -- 3`, then `npm run question` again.</Now>
+  </Step>
+  <Step title="The cost: bigger chunks, a shared prefix" stage="b">
+    Section: 60 chunks, 695 characters on average. Fixed: 138 chunks, 294 on average. Bigger chunks take more room in the prompt. The `[Document › Section]` prefix looks like the page header we removed in A. But it carries meaning. The cost: chunks of one document move closer together (page E).
+  </Step>
+</Deck>
+
+<Example>
+In the log, look at c08. For now, `npm run question` searches with a black box. We open the vectors and the store on pages C and D.
+</Example>
+
+<Log name="03-chunk-fixed" title="npm run step -- 3   (CHUNKER = fixed)" />
+
+<Log name="question-1-fixed" title="npm run question" to={10} />
+
+The same step with the `section` chunker:
+
+<Log name="03-chunk-section" title="npm run step -- 3   (CHUNKER = section)" />
+
+<Log name="question-2-section" title="npm run question" />
+
+Both ways to split, and the switch between them, are in `src/steps/3-chunk.ts`:
+
+<RepoCode file="src/steps/3-chunk.ts" from="// TOGGLE chunker" to="alternative" />
+
+<RepoCode file="src/steps/3-chunk.ts" from="export function fixedSize" />
+
+<RepoCode file="src/steps/3-chunk.ts" from="export function bySection" />
+
+<YourTurn>
+**1 · See the cut yourself.** In `src/steps/3-chunk.ts`, find the `TOGGLE chunker` block. Put `//` before the `"section"; // default` line. Remove the `//` from the `"fixed"; // alternative` line. Run `npm run step -- 3`. The log finds the chunk with the `| 7 |` row (`hr-leave@2025#c08`) and shows the whole chunk.
+
+**2 · Open the chunks.** In `data/3-chunks.json`, find `hr-leave@2025#c07` and `hr-leave@2025#c08`. Which one has the table header row? Which one has `| 7 | 22 |`? What does the `sections` field say?
+
+**3 · Ask the question.** `npm run question` → "An employee with 7 years of service gets at most 7 working days [1]." It gives a source, but the number is wrong. The first run takes a moment: the black box embeds the chunks right then.
+
+**4 · Switch back.** Switch the toggle back to `section`. Run `npm run step -- 3`, then `npm run question` again → 22 working days, source `[1] hr-leave@2025#3`.
+
+**Homework · A third way.** At the bottom of the file, `byParagraph` is waiting. Cut at blank lines. Pack the paragraphs into chunks of at most `max` characters (`packParagraphs()` already does this). Put `[${doc.title}]` in front of each chunk. Check: `npm run check:sibling` → `step 3 · byParagraph (homework)` is green.
+
+Fell behind? Run `npm run catchup -- 3`.
+</YourTurn>
+
+## Common questions
+
+<FAQ q="Why 300? Would another number save the table?">
+Sometimes. Another number moves the cut to another place. We tried other sizes on this document. At 250, 350, 450, 500 or 1000 characters, the header row and the `| 7 |` row stay in one chunk. A cut every 300 characters doesn't. That is why we show 300. The problem stays the same: the cut doesn't look at the content. With any number, some cut lands inside a table or a sentence.
+</FAQ>
+
+<FAQ q="What if the chunks overlap a little?">
+That's a common method. Neighbor chunks share a few hundred characters. A heading at the cut sometimes lands in the next chunk too. There's no guarantee, and you get more chunks and more storage. We didn't measure this on our corpus.
+</FAQ>
+
+<FAQ q="What if the document has no headings?">
+You can split at paragraphs (the homework), at sentences, or where the meaning changes (semantic chunking). Don't guess which one wins. Measure it: on the Measuring quality page, `npm run eval` compares the two chunkers on the same question set.
+</FAQ>
+
+<FAQ q="Is a bigger chunk always better?">
+No. A bigger chunk makes the prompt longer, so it costs more and takes longer. It also mixes different topics in one vector. So `bySection` splits a section over 1500 characters again, at its paragraphs (`MAX_SECTION_CHARS`, a limit we chose).
+</FAQ>
+
+<FAQ q="What does sections: 2,3 mean on a fixed chunk?">
+When a cut crosses a section heading, the chunk touches two sections at once. The `sections` field records this. The eval (Measuring quality) checks the right answer at the section level, so this field matters.
+</FAQ>
+
+<Takeaway>The splitter made this difference, not the model.</Takeaway>
