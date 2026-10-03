@@ -19,10 +19,10 @@ import Term from '../../../components/Term.astro';
 
 <WhereAmI at="embed qembed" />
 
-<DaysQuestion answer="“Tablodan, 7 tam yıl kıdeminde 22 iş günü ücretli izin hakkı olduğunu görüyoruz [1].” ✓" how="chunker section · in-memory search (black box) — bu sayfada kutuyu açıyoruz" />
+<DaysQuestion answer="“An employee with 7 years of service gets 22 working days of annual leave [1].” ✓" how="chunker section · in-memory search (black box) — bu sayfada kutuyu açıyoruz" />
 
 <Gate>
-"Tatil hakkım kaç gün?" ile "Yıllık ücretli izin süresi kıdeme göre belirlenir." aynı konudan söz ediyor ama ortak tek bir kelimeleri yok; kelime arayan bir arama bu ikisini eşleştiremez. B sayfasındaki kara kutu ise doğru bölümü buldu.
+"How much holiday do I get?" ve "Annual paid leave depends on the length of service." cümleleri aynı konudan söz ediyor ama ortak tek bir kelimeleri yok; kelime arayan bir arama bu ikisini eşleştiremez. B sayfasındaki kara kutu ise doğru bölümü buldu.
 </Gate>
 
 <Deck>
@@ -38,12 +38,12 @@ import Term from '../../../components/Term.astro';
       <text x="475" y="168" text-anchor="middle" class="fsub">bir neural network</text>
       <text x="475" y="194" text-anchor="middle" class="fsub ffrozen-t">ağırlıklar donmuş</text>
       <path d="M595 80 H652" class="farrow" marker-end="url(#ce-a)" />
-      <text x="662" y="74" class="fsub fnum" data-q="log:04-embed">[-0.0538, -0.0108, -0.0047, … ]</text>
+      <text x="662" y="74" class="fsub fnum" data-q="log:04-embed">[-0.0356, 0.0001, -0.0278, … ]</text>
       <text x="662" y="102" class="fsub" data-q="log:04-embed">1024 sayı · uzunluk 1.000</text>
       <g data-from="4">
         <rect x="20" y="170" width="260" height="80" rx="10" class="fbox" />
         <text x="150" y="202" text-anchor="middle" class="flbl">soru</text>
-        <text x="150" y="230" text-anchor="middle" class="fsub" data-q="code:src/lib/config.ts" data-q-mode="quote">7 yıllık bir çalışanın …</text>
+        <text x="150" y="230" text-anchor="middle" class="fsub" data-q="code:src/lib/config.ts" data-q-mode="quote">… 7 years of service …</text>
         <path d="M285 210 H352" class="farrow" marker-end="url(#ce-a)" />
         <path d="M595 210 H652" class="farrow" marker-end="url(#ce-a)" />
         <text x="662" y="204" class="fsub fnum" data-q="log:04-embed">[ … 1024 sayı … ]</text>
@@ -102,7 +102,7 @@ import Term from '../../../components/Term.astro';
     <Now n="1">`npm run step -- 4`, sonra `data/4-vectors.json` dosyasını açın.</Now>
   </Step>
   <Step title="Sayıların tek tek anlamı yok" stage="v">
-    1024 sayının hiçbiri "izin" ya da "tarih" demek değil. Anlam, iki vektörün birbirine göre konumunda: yakın anlam, yakın vektör.
+    1024 sayının hiçbiri "leave" ya da "date" demek değil. Anlam, iki vektörün birbirine göre konumunda: yakın anlam, yakın vektör.
   </Step>
   <Step title="Yakınlığa kim karar verdi?" stage="v">
     Biz değil, model. bge-m3, çok sayıda "bu iki metin aynı şeyi söylüyor" örneğiyle eğitilmiş bir neural network. Hangi metinleri yakın koyacağını eğitimde öğrendi; ağırlıkları artık donmuş.
@@ -141,7 +141,7 @@ Cosine ve mesafe karşılığı L2, `src/lib/similarity.ts` içinde birkaç sat�
 
 <Deck>
   <DeckFigure slot="figure" stage="p">
-    <svg viewBox="0 0 1000 330" role="img" aria-label="Beş cümle çiftinin cosine benzerliği: paraphrase 0.599, Türkçe-İngilizce 0.752, ikiz tablolar 0.860, olumsuzluk tuzağı 0.853, ilgisiz 0.503" data-draw="similar-bars">
+    <svg viewBox="0 0 1000 330" role="img" aria-label="Beş cümle çiftinin cosine benzerliği: paraphrase 0.599, İngilizce-Türkçe 0.752, ikiz tablolar 0.860, olumsuzluk tuzağı 0.853, ilgisiz 0.503" data-draw="similar-bars">
       <path d="M330 10 V300 M630 10 V300 M930 10 V300" class="faxis" stroke-dasharray="3 5" data-gen="axis" />
       <text x="330" y="322" text-anchor="middle" class="fsub" data-q="const">0</text>
       <text x="630" y="322" text-anchor="middle" class="fsub" data-q="const">0.5</text>
@@ -153,7 +153,7 @@ Cosine ve mesafe karşılığı L2, `src/lib/similarity.ts` içinde birkaç sat�
         <text x="700" y="47" class="flbl" data-gen="score">0.599</text>
       </g>
       <g class="ph ph1">
-        <text x="20" y="96" class="flbl">TR ↔ EN</text>
+        <text x="20" y="96" class="flbl">EN ↔ TR</text>
         <text x="20" y="118" class="fsub" data-gen="pair">How often must … ↔ Şifreler 90 …</text>
         <rect x="330" y="82" width="451.2" height="28" rx="4" class="fbox-good" data-gen="bar" />
         <text x="792" y="103" class="flbl" data-gen="score">0.752</text>
@@ -264,15 +264,15 @@ Cosine ve mesafe karşılığı L2, `src/lib/similarity.ts` içinde birkaç sat�
         <text x="18" y="216" class="fsub">it-security</text>
       </g>
       <g data-from="7">
-        <text x="44" y="228" class="fsub ffrozen-t" data-gen="doc-label" data-doc="it-security">it-security · İngilizce</text>
+        <text x="44" y="228" class="fsub ffrozen-t" data-gen="doc-label" data-doc="it-security">it-security · Türkçe</text>
         <text x="512" y="97" class="fsub" data-gen="anchor" data-id="hr-leave@2025#1">§1</text>
         <text x="300" y="64" class="fsub" data-gen="anchor" data-id="code-of-conduct@2025#1">§1</text>
         <text x="435" y="45" class="fsub" data-gen="anchor" data-id="hr-working-hours@2025#1">§1</text>
         <text x="534" y="119" class="fsub" data-gen="anchor" data-id="travel-expenses@2025#1">§1</text>
         <text x="498" y="136" class="fsub" data-gen="anchor" data-id="benefits@2025#1">§1</text>
         <text x="584" y="136" class="fsub" data-gen="anchor" data-id="hr-salary-bands@2025#1">§1</text>
-        <text x="548" y="44" class="fsub" data-q="corpus:2025/hr-leave.md">§1 Amaç ve Kapsam,</text>
-        <text x="548" y="66" class="fsub" data-q="const">6 Türkçe politikada</text>
+        <text x="548" y="44" class="fsub" data-q="corpus:2025/hr-leave.md">§1 Purpose and Scope,</text>
+        <text x="548" y="66" class="fsub" data-q="const">6 İngilizce politikada</text>
       </g>
       <g data-from="8">
         <path d="M535 383 L610 444" class="farrow" stroke-dasharray="5 5" data-gen="star-line" data-id="hr-leave@2025#3" />
@@ -289,29 +289,29 @@ Cosine ve mesafe karşılığı L2, `src/lib/similarity.ts` içinde birkaç sat�
     <Now n="3">`npm run similar -- --metric dot` ve `npm run similar -- --metric l2` çalıştırın.</Now>
   </Step>
   <Step title="Beklenen: dil engel değil" stage="p" phase="1">
-    Türkçe soru, İngilizce kural: 0.701. Ortak kelime yok, dil bile farklı; model anlama bakarak yakın koydu. İlgisiz çift 0.456 aldı: "ilgisiz" bile 0 değil. Skorlar mutlak değil, görelidir.
+    İngilizce soru, Türkçe kural: 0.752. Ortak kelime yok, dil bile farklı; model anlama bakarak yakın koydu. İlgisiz çift 0.503 aldı: "ilgisiz" bile 0 değil. Skorlar mutlak değil, görelidir.
   </Step>
   <Step title="Şaşırtan: paraphrase düşük kaldı" stage="p" phase="2">
-    "Tatil hakkım kaç gün?" ile "Yıllık ücretli izin …": model bu çifti ilgisiz çiftten yakın koydu, ama fark küçük. 0.526, ilgisiz çiftin (0.456) yalnızca 0.070 üstünde.
+    "How much holiday do I get?" ile "Annual paid leave …": model bu çifti ilgisiz çiftten yakın koydu, ama fark küçük. 0.599, ilgisiz çiftin (0.503) yalnızca 0.096 üstünde.
   </Step>
   <Step title="Tuzak: olumsuzluk" stage="p" phase="3">
-    "… uzaktan çalışabilir" ile "… uzaktan çalışamaz": 0.841. Zıt anlam, çok yakın vektör. Embedding konuyu yakalar, evet mi hayır mı olduğunu kaçırabilir; bu ayrımı cevabı yazan model metni okuyarak yapmalı.
+    "… can work remotely" ile "… cannot work remotely": 0.853. Zıt anlam, çok yakın vektör. Embedding konuyu yakalar, evet mi hayır mı olduğunu kaçırabilir; bu ayrımı cevabı yazan model metni okuyarak yapmalı.
 
-    <Now n="4">`npm run similar -- "Tatil hakkım kaç gün?" "Yıllık izin kaç gün?"`, sonra kendi olumsuzluk çiftinizi deneyin.</Now>
+    <Now n="4">`npm run similar -- "How much holiday do I get?" "How many days of annual leave do I get?"`, sonra kendi olumsuzluk çiftinizi deneyin.</Now>
   </Step>
   <Step title="İkiz tablolar" stage="p" phase="4">
-    Yurt içi ve yurt dışı harcırah soruları: 0.940. Farklı tablo, farklı sayı; vektörler neredeyse aynı. Kaliteyi ölçmek sayfasındaki soru setinde bu türden 3 soru var; birinde doğru tablo ancak 2. sıraya çıktı.
+    Yurt içi ("domestic") ve yurt dışı ("international") harcırah soruları: 0.860. Farklı tablo, farklı sayı; vektörler neredeyse aynı. Kaliteyi ölçmek sayfasındaki soru setinde bu türden 3 soru var; birinde doğru tablo ancak 2. sıraya çıktı.
   </Step>
   <Step title="1024 boyutu 2'ye indirmek" stage="map">
-    `npm run map`, <Term id="pca">PCA</Term> ile 60 chunk'ı düzleme yansıtır. Yatay yön yayılımın %11,8'ini, dikey yön %8,3'ünü açıklıyor; geri kalan yaklaşık %80 bu resimde yok. Her nokta bir chunk, işaret dokümanı gösteriyor.
+    `npm run map`, <Term id="pca">PCA</Term> ile 60 chunk'ı düzleme yansıtır. Yatay yön yayılımın %12,3'ünü, dikey yön %8,8'ini açıklıyor; geri kalan yaklaşık %79 bu resimde yok. Her nokta bir chunk, işaret dokümanı gösteriyor.
   </Step>
   <Step title="Ne görüyoruz?" stage="map">
-    İngilizce doküman solda, ayrı duruyor. 6 Türkçe politikanın "Amaç ve Kapsam" bölümleri üstte yan yana: farklı dokümanlardan ama aynı türde metinler. Geri kalan Türkçe bölümler sağda iç içe.
+    Türkçe doküman solda, ayrı duruyor. 6 İngilizce politikanın "Purpose and Scope" bölümleri üstte yan yana: farklı dokümanlardan ama aynı türde metinler. Geri kalan İngilizce bölümler sağda iç içe.
   </Step>
   <Step title="Yıldız: günün sorusu" stage="map">
-    Soru haritada hr-leave §3'ün değil, travel-expenses §5'in dibine düştü. İki boyutta mesafeler bozulur. Adım 6 1024 boyutun hepsinde ölçüyor ve ilk 5'e yalnızca hr-leave koyuyor. Harita sezgi verir, karar vermez.
+    Soru haritada hr-leave §3'ün değil, travel-expenses §8'in dibine düştü. İki boyutta mesafeler bozulur. Adım 6 1024 boyutun hepsinde ölçüyor ve ilk 5'e yalnızca hr-leave koyuyor. Harita sezgi verir, karar vermez.
 
-    <Now n="5">`npm run map -- "Şifremi ne sıklıkla değiştirmeliyim?"`, sonra `data/map.html`.</Now>
+    <Now n="5">`npm run map -- "How often should I change my password?"`, sonra `data/map.html`.</Now>
   </Step>
 </Deck>
 
@@ -332,9 +332,9 @@ Boş `dot()`, `similarity.ts` dosyasının sonunda:
 
 **3 · Ölçüleri karşılaştırın.** `npm run similar -- --metric dot` ve `npm run similar -- --metric l2`. Dot çıktısını cosine çıktısıyla (yukarıdaki log) yan yana koyun: neden böyle? İpucu: adım 4'ün log'undaki uzunluk.
 
-**4 · Kendi çiftinizi deneyin.** `npm run similar -- "Tatil hakkım kaç gün?" "Yıllık izin kaç gün?"`. Sonra olumsuzluk tuzağını kendi cümlelerinizle kurun.
+**4 · Kendi çiftinizi deneyin.** `npm run similar -- "How much holiday do I get?" "How many days of annual leave do I get?"`. Sonra olumsuzluk tuzağını kendi cümlelerinizle kurun.
 
-**5 · Haritada kendi sorunuz.** `npm run map -- "Şifremi ne sıklıkla değiştirmeliyim?"` ve `data/map.html`: yıldız bu kez nereye düştü?
+**5 · Haritada kendi sorunuz.** `npm run map -- "How often should I change my password?"` ve `data/map.html`: yıldız bu kez nereye düştü?
 
 Geride kaldıysanız: `npm run catchup -- 4`.
 </YourTurn>
@@ -350,7 +350,7 @@ Bizim vektörler dense: 1024 sayının hepsi dolu, anlamı taşıyor. Sparse bir
 </FAQ>
 
 <FAQ q="Hangi embedding modelini seçmeliyim?">
-Dil desteğine (bizde Türkçe ve İngilizce), vektör boyutuna (her chunk için depolama), okuyabildiği metin uzunluğuna ve çalıştığı yere (yerel mi, API mi: veri nereye gidiyor?) bakın. Genel sıralama tabloları fikir verir; karar kendi soru setinizde ölçülerek verilir (Kaliteyi ölçmek).
+Dil desteğine (bizde İngilizce ve Türkçe), vektör boyutuna (her chunk için depolama), okuyabildiği metin uzunluğuna ve çalıştığı yere (yerel mi, API mi: veri nereye gidiyor?) bakın. Genel sıralama tabloları fikir verir; karar kendi soru setinizde ölçülerek verilir (Kaliteyi ölçmek).
 </FAQ>
 
 <FAQ q="Modeli değiştirirsem ne olur?">

@@ -19,7 +19,7 @@ import Term from '../../../components/Term.astro';
 
 <WhereAmI at="store" />
 
-<DaysQuestion answer="“Tablodan, 7 tam yıl kıdeminde 22 iş günü ücretli izin hakkı olduğunu görüyoruz [1].” ✓" how="chroma store · chunker section · rerank on — cevap kara kutudakiyle aynı" />
+<DaysQuestion answer="“An employee with 7 years of service gets 22 working days of annual leave [1].” ✓" how="chroma store · chunker section · rerank on — cevap kara kutudakiyle aynı" />
 
 <Gate>
 Şimdiye kadar "veritabanı" bir JSON dosyasıydı ve her soruda soru vektörü 60 vektörün hepsiyle tek tek karşılaştırıldı. 60 için sorun değil. Bir milyon chunk'ta her soru bir milyon karşılaştırma demek.
@@ -49,11 +49,11 @@ import Term from '../../../components/Term.astro';
       <text x="40" y="124" class="fsub">embedding</text>
       <text x="170" y="124" class="fsub" data-q="log:04-embed">[ … 1024 sayı … ]</text>
       <text x="40" y="186" class="fsub">document</text>
-      <text x="170" y="182" class="fsub" data-q="log:03-chunk-section">[Yıllık İzin Politikası › 3. Yıllık Ücretli İzin]</text>
-      <text x="170" y="208" class="fsub" data-q="log:03-chunk-section">Yıllık ücretli izin süresi, … | 7 | 22 | …</text>
+      <text x="170" y="182" class="fsub" data-q="log:03-chunk-section">[Annual Leave Policy › 3. Annual Paid Leave]</text>
+      <text x="170" y="208" class="fsub" data-q="log:03-chunk-section">Part-time staff get the same number … | 7 | 22 | …</text>
       <text x="40" y="264" class="fsub">metadata</text>
-      <text x="170" y="260" class="fsub" data-q="corpus:2025/hr-leave.md">docId: hr-leave · edition: 2025 · title: Yıllık İzin Politikası</text>
-      <text x="170" y="286" class="fsub" data-q="corpus:2025/hr-leave.md log:03-chunk-section">access: all · lang: tr · sections: 3</text>
+      <text x="170" y="260" class="fsub" data-q="corpus:2025/hr-leave.md">docId: hr-leave · edition: 2025 · title: Annual Leave Policy</text>
+      <text x="170" y="286" class="fsub" data-q="corpus:2025/hr-leave.md log:03-chunk-section">access: all · lang: en · sections: 3</text>
     </svg>
   </DeckFigure>
   <DeckFigure slot="figure" stage="a">
@@ -279,7 +279,7 @@ Bruno'daki `01-chroma` klasörü, kodumuzun yaptığı HTTP çağrılarının ay
 
 - `heartbeat` → bir sayı dönüyorsa Chroma ayakta.
 - `collections` → `kraken-policies`; `configuration` içinde `hnsw` ve `space: cosine`. Koleksiyonun id'sini de hatırlar; `count` bu id'yi kullanır.
-- `count` → 60 (A'daki İngilizce gizlilik kuralını yazdıysanız 59). Catchup ya da sıfırlamadan sonra id değişir; önce `collections`'ı yeniden gönderin.
+- `count` → 60 (A'daki Türkçe gizlilik kuralını yazdıysanız 59). Catchup ya da sıfırlamadan sonra id değişir; önce `collections`'ı yeniden gönderin.
 - `peek at three records` → `ids`, `documents`, `metadatas`. `include` listesine `"embeddings"` ekleyip tekrar gönderin: 1024 sayı da gelir.
 - `filter on metadata` → `where` içine `{ "access": "hr-only" }` yazın. Maaş bantları geliyor. Bu isteği kim gönderebilmeli? (Güvenlik sayfası.)
 
