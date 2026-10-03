@@ -6,16 +6,17 @@
  */
 interface Props { at: string }
 const lit = new Set(Astro.props.at.split(/\s+/));
+const { t } = Astro.locals;
 const X = (col: number) => 15 + col * 118;
 const W = 105;
-const top: [string, string, number][] = [["load", "Yükle", 0], ["clean", "Temizle", 1], ["chunk", "Chunk'la", 2], ["embed", "Embed", 3], ["store", "Vector DB", 4]];
-const bottom: [string, string, number][] = [["question", "Soru", 2], ["qembed", "Embed", 3], ["search", "Ara", 4], ["rerank", "Rerank", 5], ["prompt", "Prompt", 6], ["answer", "Cevap", 7]];
+const top: [string, string, number][] = [["load", t('rag.where.load'), 0], ["clean", t('rag.where.clean'), 1], ["chunk", t('rag.where.chunk'), 2], ["embed", "Embed", 3], ["store", "Vector DB", 4]];
+const bottom: [string, string, number][] = [["question", t('rag.where.question'), 2], ["qembed", "Embed", 3], ["search", t('rag.where.search'), 4], ["rerank", "Rerank", 5], ["prompt", "Prompt", 6], ["answer", t('rag.where.answer'), 7]];
 const cls = (id: string) => (lit.has(id) ? "fbox fbox-on" : "fbox");
 ---
-<div class="whereami" aria-label="Pipeline'da neredeyiz">
+<div class="whereami" aria-label={t('rag.where.label')}>
   <svg viewBox="0 0 960 165" role="img">
-    <text x="15" y="14" class="fsub">bir kere (ingest)</text>
-    <text x="15" y="138" class="fsub">her soruda</text>
+    <text x="15" y="14" class="fsub">{t('rag.where.once')}</text>
+    <text x="15" y="138" class="fsub">{t('rag.where.every')}</text>
     {top.map(([id, label, c], i) => (
       <g>
         <rect x={X(c)} y="22" width={W} height="42" rx="8" class={cls(id)} />

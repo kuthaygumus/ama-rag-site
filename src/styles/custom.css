@@ -106,6 +106,7 @@
 .dayq .q { font-weight: 600; }
 .dayq .a { margin-top: 0.3rem; font-family: var(--sl-font-system-mono); font-size: 0.92em; }
 .dayq .how { color: var(--sl-color-gray-3); font-size: 0.85em; }
+.dayq .q-tr { margin-top: 0.15rem; color: var(--sl-color-gray-3); font-size: 0.85em; }
 .dayq .guess { display: block; margin-top: 0.5rem; }
 .guess input {
   width: 5ch;
@@ -323,6 +324,15 @@
   font-weight: 700;
   letter-spacing: 0.09em;
 }
+
+/* The same labels on the English pages (<html lang="en">). */
+:lang(en) .gate::before { content: 'PROBLEM'; }
+:lang(en) .gate.gate-bridge::before { content: 'ON THIS PAGE'; }
+:lang(en) .yourturn::before { content: 'YOUR TURN'; }
+:lang(en) .yourturn.yourturn-optional::before { content: 'YOUR TURN · OPTIONAL'; }
+:lang(en) .example::before { content: 'EXAMPLE'; }
+:lang(en) .dayq::before { content: 'QUESTION OF THE DAY'; }
+:lang(en) .deck-now::before { content: '▶ NOW · YOUR TURN ' attr(data-n); }
 
 .deck-foot {
   display: flex;

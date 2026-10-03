@@ -9,12 +9,13 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "node scripts/check-sync.mjs && node scripts/check-legacy.mjs && node scripts/check-now.mjs && astro build && node scripts/check-legacy.mjs dist && node scripts/check-dist.mjs",
+    "build": "node scripts/check-sync.mjs && node scripts/check-legacy.mjs && node scripts/check-now.mjs && node scripts/check-i18n.mjs && astro build && node scripts/check-legacy.mjs dist && node scripts/check-dist.mjs",
     "preview": "astro preview",
     "sync": "node scripts/sync.mjs",
     "check:sync": "node scripts/check-sync.mjs",
     "check:legacy": "node scripts/check-legacy.mjs",
-    "check:now": "node scripts/check-now.mjs"
+    "check:now": "node scripts/check-now.mjs",
+    "check:i18n": "node scripts/check-i18n.mjs"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.42.0",

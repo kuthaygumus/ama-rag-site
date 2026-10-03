@@ -5,12 +5,13 @@
  */
 interface Props { id: string; title: string }
 const { id, title } = Astro.props;
+const { t } = Astro.locals;
 ---
 <dialog class="panel" id={`panel-${id}`} aria-label={title}>
   <div class="panel-inner">
     <div class="panel-head">
       <strong>{title}</strong>
-      <button type="button" class="panel-close" data-panel-close aria-label="Kapat">✕</button>
+      <button type="button" class="panel-close" data-panel-close aria-label={t('rag.panel.close')}>✕</button>
     </div>
     <slot />
   </div>

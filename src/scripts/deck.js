@@ -21,6 +21,7 @@
 export const deckScript = `
 (function () {
   var decks = [];
+  var EN = document.documentElement.lang === 'en';
 
   function init(deck) {
     var list = deck.querySelector('.deck-list');
@@ -47,13 +48,13 @@ export const deckScript = `
     var prev = document.createElement('button');
     prev.type = 'button';
     prev.className = 'deck-btn';
-    prev.textContent = '← Geri';
+    prev.textContent = EN ? '← Back' : '← Geri';
     var dots = document.createElement('div');
     dots.className = 'deck-dots';
     var next = document.createElement('button');
     next.type = 'button';
     next.className = 'deck-btn deck-btn-primary';
-    next.textContent = 'İleri →';
+    next.textContent = EN ? 'Next →' : 'İleri →';
     foot.appendChild(prev);
     foot.appendChild(dots);
     foot.appendChild(next);
@@ -62,7 +63,7 @@ export const deckScript = `
       var dot = document.createElement('button');
       dot.type = 'button';
       dot.className = 'deck-dot';
-      dot.setAttribute('aria-label', (i + 1) + '. adım');
+      dot.setAttribute('aria-label', EN ? 'Step ' + (i + 1) : (i + 1) + '. adım');
       dot.addEventListener('click', function () { go(i); });
       dots.appendChild(dot);
       step.setAttribute('role', 'group');

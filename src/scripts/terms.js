@@ -3,6 +3,7 @@
  * <Term id="chunk">chunk'lar</Term>; the definition lives here, written once.
  * One or two plain sentences, no second unexplained term inside. Longer explanations
  * belong on the Sözlük page. A marker with no entry here degrades to plain text.
+ * The English pages read the same ids from terms-en.js; keep the two in step.
  */
 export const terms = {
   chunk: { title: 'Chunk', body: 'Bir dokümanın parçası. Arama tüm dokümanı değil, bu parçaları bulur; modele de yalnızca seçilen birkaç parça gider.' },
@@ -45,7 +46,9 @@ export const terms = {
 
 export const termPopoverScript = `
 (function () {
-  var DEFS = __TERM_DEFS__;
+  // { tr: {...}, en: {...} }: the page's <html lang> picks the dictionary, Turkish when there is none for it.
+  var ALL = __TERM_DEFS__;
+  var DEFS = ALL[document.documentElement.lang] || ALL.tr;
   var CLOSE_DELAY = 140;
     var card = null;
   var current = null;

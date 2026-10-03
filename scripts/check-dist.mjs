@@ -6,7 +6,7 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
-const STAGE = /\b(eğitmen|projektör|salon|katılımcılar?|trainer|presenter|sunumda de|sorulabilir|fikri olan|el kaldır|odanın|odada|the room)/i;
+const STAGE = /\b(eğitmen|projektör|salon|katılımcılar?|trainer|presenter|sunumda de|sorulabilir|fikri olan|el kaldır|odanın|odada|the room|instructor|participants?\b|projector|show of hands|attendees?\b)/i;
 // Word-for-word renderings of English that were removed once; a native reader hears them as translated.
 const CALQUE = /zenginleştir|getirerek|çekin(me|di|meli|mesi)\b|çıplak model|mahalleye|düğme|tavana vurduk|günden önce|iyi geldi|üretime hazır|(?<!\p{L})çit/iu;
 const walk = (d) => readdirSync(d).flatMap((n) => (statSync(join(d, n)).isDirectory() ? walk(join(d, n)) : [join(d, n)]));

@@ -1,10 +1,16 @@
 ---
-/** The day's question and where its answer stands at this point of the day (numbers from `npm run capture`). */
+/**
+ * The day's question and where its answer stands at this point of the day (numbers from `npm run capture`).
+ * The English pages also show the Turkish wording, because that is the question the workshop's logs print.
+ */
 interface Props { answer?: string; how?: string }
 const { answer, how } = Astro.props;
+const { t } = Astro.locals;
+const en = Astro.locals.starlightRoute.lang === 'en';
 ---
 <div class="dayq">
-  <div class="q">7 yıllık bir çalışanın yıllık izni kaç iş günü?</div>
+  <div class="q">{t('rag.dayq.question')}</div>
+  {en && <div class="q-tr">{t('rag.dayq.original')} <span lang="tr">“7 yıllık bir çalışanın yıllık izni kaç iş günü?”</span></div>}
   {answer && <div class="a">→ {answer}</div>}
   {how && <div class="how">{how}</div>}
   <slot />
