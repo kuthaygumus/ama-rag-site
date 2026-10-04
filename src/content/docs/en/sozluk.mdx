@@ -71,7 +71,7 @@ How much two vectors point the same way. 1 means the same direction, so the same
 
 <h3 id="cross-encoder">Cross-encoder</h3>
 
-A model that reads the question and the chunk together and gives one relevance score. It is used as a reranker. Our reranker is not a model trained for this job. We ask the chat model for a score from 0 to 10 for each pair of one question and one chunk.
+A model that reads the question and the chunk together and gives one relevance score. It is used as a reranker. Our reranker is not a model trained for this job. We ask the chat model to score each pair of one question and one chunk, from 0 to 10.
 
 ## D
 

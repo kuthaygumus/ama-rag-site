@@ -164,7 +164,7 @@ Which RAG variant should you add, and when? The first tip in a blog post doesn't
 
 <Log name="eval-section" title="npm run eval   (EN→TR questions)" from={10} to={14} />
 
-**Diagnosis.** No failure: bge-m3 already matches the English question with the Turkish section. Keyword search would add little here ([why](/en/her-derde-deva/sinirlar-ve-turler/)). In a separate run (`npm run ask`, 2026 edition), the model answers an English password question in Turkish, the language of its source: `Şifreler 180 günde bir değiştirilmelidir [1].`
+**Diagnosis.** No failure: bge-m3 already matches the English question with the Turkish section. Keyword search would add little here ([why](/en/her-derde-deva/sinirlar-ve-turler/)). In a separate run (`npm run ask`, 2026 edition), the model gets an English password question. It answers in Turkish, the language of its source: `Şifreler 180 günde bir değiştirilmelidir [1].`
 **Technique.** <Term id="hybrid">Hybrid</Term> search helps with words you search for exactly: codes, numbers, product names. We didn't add it here.
 **Cost.** A second index, merging two lists, and maintenance.
 

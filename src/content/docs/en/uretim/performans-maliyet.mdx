@@ -61,7 +61,7 @@ The answer is right, and it cites its source. But how many seconds does one ques
     Right answer: 22. But the 8 documents include the hr-only salary table. No retrieval, no access filter: every employee's prompt gets the salaries. The answer took 26337 ms. RAG answers took from 650 to 3341 ms. We don't compute a factor from one run.
   </Step>
   <Step title="Where does the time of one question go?" phase="2">
-    Question of the day, one run. Search: 21 ms. The search itself took 7 ms of that. <Term id="rerank">Rerank</Term>: 1441 ms. Answer: 655 ms. Rerank is about 68% of the total (2117 ms), with 5 LLM calls for 5 chunks. Other questions: rerank took 3.7 to 4.4 seconds. Your times will differ.
+    Question of the day, one run. Search: 21 ms. The search itself took 7 ms of that. <Term id="rerank">Rerank</Term>: 1441 ms. Answer: 655 ms. Rerank is about 68% of the total (2117 ms). That is 5 LLM calls for 5 chunks. Other questions: rerank took 3.7 to 4.4 seconds. Your times will differ.
 
     <Now n="1">Run `npm run ask -- "I am going to Frankfurt for a two-day meeting. I am a specialist. How much is my daily per diem?"`. Note the search, rerank and answer times.</Now>
   </Step>

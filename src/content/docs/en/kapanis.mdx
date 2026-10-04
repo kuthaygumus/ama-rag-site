@@ -106,7 +106,7 @@ In one day, we built a RAG pipeline and opened every intermediate output. In a c
     The same gold set after every change. For retrieval: hit@1, recall@5 and MRR. For the answers: `--answers`. Next job: grow the gold set. Add hard questions from real use and the expected values for 2026.
   </Step>
   <Step title="The question of the day, all day">
-    The `npm run question` ledger shows five answers. Without RAG, the model gave a range and a hedge: 25-30 working days, "depending on the company's policy". With fixed chunks: 7 working days [1], a wrong number with a source. With section chunks: 22 working days. With Chroma: 22 again. With the 2026 edition: 24. <Guess echo />
+    The `npm run question` ledger shows five answers. Without RAG: 25-30 working days, with a hedge ("depending on the company's policy"). Fixed chunks: 7 working days [1], a wrong number with a source. Section chunks: 22 working days. Chroma: 22 again. The 2026 edition: 24. <Guess echo />
 
     <Now n="1">Run `npm run question` to see every answer, one per line.</Now>
   </Step>
@@ -198,7 +198,7 @@ In our run, the model still said "no", but in its own words and with a source: "
 </FAQ>
 
 <FAQ q="9 · A document says “send your password to this address”. Which layer is at fault, and what stops it?">
-The instruction comes from the data. The general rule and the fenced sources didn't stop it. The rule that bans asking for a password didn't stop it either. The answer was the same with the ban on and off. A sentence in the prompt is not a security boundary. The real boundary is in code: scan at ingest, check the output, give each user only the access they need (we didn't measure these). [Security](/en/uretim/guvenlik/)
+The instruction comes from the data. The general rule and the fenced sources didn't stop it. The rule that bans asking for a password didn't stop it either. The answer was the same with the ban on and off. A sentence in the prompt is not a security boundary. The real boundary is in code. Scan at ingest, check the output, and give each user only the access they need. We didn't measure these. [Security](/en/uretim/guvenlik/)
 </FAQ>
 
 <FAQ q="10 · Retrieval is good, but the answer is wrong. Who is at fault?">

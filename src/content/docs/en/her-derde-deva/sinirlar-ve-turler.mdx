@@ -89,7 +89,7 @@ The logs of all four failures are on this site. Retriever: [Measuring quality](/
 1. The leave table has one row for each year of service: `| 7 | 22 |`.
 2. The source marker holds only the document name. It has no ids and no section numbers.
 3. The prompt has a rule for tables: "If the answer comes from a table, first write the row you used word for word. Then give the answer in one sentence."
-4. The model doesn't follow the first half of this rule. Its answer to the question of the day doesn't write the row first: "An employee with 7 years of service gets 22 working days of annual leave [1]." A rule in the prompt does not make the model follow it.
+4. The model doesn't follow the first half of this rule. Its answer to the question of the day doesn't write the row first. It wrote: "An employee with 7 years of service gets 22 working days of annual leave [1]." A rule in the prompt does not make the model follow it.
 5. In today's logs, the table questions are right. A small model is fragile when it reads tables. Shape the data and the prompt for it, and measure anyway.
 
 ## Is there only one RAG?

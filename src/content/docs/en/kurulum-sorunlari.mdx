@@ -129,8 +129,8 @@ once. If you can't get admin rights, use `STORE=json`. Only the parts that look 
 - **If `npm` does not start in PowerShell**, the error says `running scripts is disabled on this system`. Type
   `npm.cmd` instead of `npm`, for example `npm.cmd run doctor`. If your company allows it, you can also run
   `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
-- **If a flag seems to do nothing**, for example `--store json` is ignored, write the same setting in the `.env`
-  file. `.env` doesn't depend on the shell. It works the same in PowerShell, cmd and zsh.
+- **If a flag seems to do nothing**, write the same setting in the `.env` file. For example, `--store json` may be
+  ignored. `.env` doesn't depend on the shell. It works the same in PowerShell, cmd and zsh.
 - **Line endings** are not a problem. The repo uses LF through `.gitattributes`, and step 1 also turns `\r\n` into `\n`.
 
 ## Company network
