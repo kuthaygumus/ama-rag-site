@@ -125,7 +125,7 @@ Dokümanlardaki varlıkları ve aralarındaki ilişkileri ingest'te bir grafa ç
 
 <h3 id="hallucination">Halüsinasyon</h3>
 
-Modelin gerçekmiş gibi, kendinden emin bir şekilde uydurması. RAG azaltır ama bitirmez: doğru tablo prompt'tayken bile yanlış satır okunabilir.
+Modelin gerçekmiş gibi, kendinden emin bir şekilde uydurması. RAG azaltır ama bitirmez: fixed chunk koşusunda model kaynak göstererek 7 iş günü [1] diyor ve 7 yanlış.
 
 <h3 id="hit1">hit@1</h3>
 
@@ -219,7 +219,7 @@ Dil modellerini dizüstünde çalıştıran araç. Bu kursta embedding modeli (b
 
 <h3 id="paraphrase">Paraphrase</h3>
 
-Aynı anlamı başka kelimelerle söylemek: "How much holiday do I get?" ile "Annual paid leave depends on the length of service." cümleleri: biri "holiday" diyor, öteki "annual paid leave". Kelime araması bunu kaçırır; embedding yakalar, ama bizim ölçümde ancak 5. sıradan.
+Aynı anlamı başka kelimelerle söylemek: biri "holiday" diyor, öteki "annual paid leave". Kelime araması bunu kaçırır; embedding bulur, ama test sorumuzda ("How much holiday do I get? I started here 4 years ago.") doğru bölüm ancak 5. sıraya geldi.
 
 <h3 id="parentchild">Parent-child</h3>
 
