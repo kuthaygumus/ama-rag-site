@@ -37,15 +37,15 @@ The answer is right, and it cites its source. But how many seconds does one ques
       <g class="ph ph2">
         <text x="40" y="236" class="flbl">Question of the day, one run: where does the time go?</text>
         <rect x="40" y="254" width="9" height="56" class="fbox fbox-on" data-gen="seg-search" />
-        <rect x="49" y="254" width="640" height="56" rx="6" class="fbox fbox-gate" data-gen="seg-rerank" />
-        <rect x="689" y="254" width="291" height="56" rx="6" class="fbox fbox-frozen" data-gen="seg-answer" />
-        <text x="369" y="290" text-anchor="middle" class="flbl" data-gen="seg-rerank-label">rerank · 5 LLM calls · 1441 ms</text>
-        <text x="835" y="290" text-anchor="middle" class="flbl" data-gen="seg-answer-label">answer · 655 ms</text>
+        <rect x="49" y="254" width="641" height="56" rx="6" class="fbox fbox-gate" data-gen="seg-rerank" />
+        <rect x="690" y="254" width="290" height="56" rx="6" class="fbox fbox-frozen" data-gen="seg-answer" />
+        <text x="370" y="290" text-anchor="middle" class="flbl" data-gen="seg-rerank-label">rerank · 5 LLM calls · 1500 ms</text>
+        <text x="835" y="290" text-anchor="middle" class="flbl" data-gen="seg-answer-label">answer · 678 ms</text>
         <path d="M45 314 V326" class="faxis" data-gen="search-tick" />
-        <text x="40" y="348" class="fsub" data-gen="search-label">↑ search step 21 ms (vector DB 7 ms · question embed 0 ms, from the cache)</text>
+        <text x="40" y="348" class="fsub" data-gen="search-label">↑ search step 22 ms (vector DB 8 ms · question embed 0 ms, from the cache)</text>
       </g>
       <g class="ph ph3">
-        <text x="40" y="410" class="flbl" data-q="log:04-embed">Ingest, second time: 60 of 60 vectors from the cache, step 4 = 52 ms</text>
+        <text x="40" y="410" class="flbl" data-q="log:04-embed">Ingest, second time: 60 of 60 vectors from the cache, step 4 = 55 ms</text>
         <rect x="40" y="428" width="460" height="52" rx="8" class="fbox" />
         <text x="270" y="461" text-anchor="middle" class="flbl" data-q="log:ingest-2026">2025 · 60 records · untouched</text>
         <rect x="520" y="428" width="460" height="52" rx="8" class="fbox fbox-on" />
@@ -58,15 +58,15 @@ The answer is right, and it cites its source. But how many seconds does one ques
     All 8 documents (40709 characters) in one prompt: 9954 prompt <Term id="token">tokens</Term>. RAG sends 3 chunks, 976 tokens. That is about 10 times fewer, not counting rerank. 9954 tokens don't fit in the 8192-token <Term id="context">window</Term> of our num_ctx setting. For this one measurement, we opened it to 32768.
   </Step>
   <Step title="…and the salary table goes to everyone" phase="1">
-    Right answer: 22. But the 8 documents include the hr-only salary table. No retrieval, no access filter: every employee's prompt gets the salaries. The answer took 26337 ms. RAG answers took from 650 to 3341 ms. We don't compute a factor from one run.
+    Right answer: 22. But the 8 documents include the hr-only salary table. No retrieval, no access filter: every employee's prompt gets the salaries. The answer took 27149 ms. RAG answers took from 674 to 3462 ms. We don't compute a factor from one run.
   </Step>
   <Step title="Where does the time of one question go?" phase="2">
-    Question of the day, one run. Search: 21 ms. The search itself took 7 ms of that. <Term id="rerank">Rerank</Term>: 1441 ms. Answer: 655 ms. Rerank is about 68% of the total (2117 ms). That is 5 LLM calls for 5 chunks. Other questions: rerank took 3.7 to 4.4 seconds. Your times will differ.
+    Question of the day, one run. Search: 22 ms. The search itself took 8 ms of that. <Term id="rerank">Rerank</Term>: 1500 ms. Answer: 678 ms. Rerank is about 68% of the total (2200 ms). That is 5 LLM calls for 5 chunks. Other questions: rerank took 3.8 to 4.5 seconds. Your times will differ.
 
     <Now n="1">Run `npm run ask -- "I am going to Frankfurt for a two-day meeting. I am a specialist. How much is my daily per diem?"`. Note the search, rerank and answer times.</Now>
   </Step>
   <Step title="At ingest: cache and incremental ingest" phase="3">
-    Each embedding goes into `.cache/`. The key is a hash of the model and the text. On a second run, 60 of 60 vectors came from the cache. Step 4 took 52 ms. Adding the 2026 edition wrote only the 60 records of 2026. 2025 stayed untouched.
+    Each embedding goes into `.cache/`. The key is a hash of the model and the text. On a second run, 60 of 60 vectors came from the cache. Step 4 took 55 ms. Adding the 2026 edition wrote only the 60 records of 2026. 2025 stayed untouched.
   </Step>
   <Step title="What makes the time and the bill grow?">
     How often you call the model, and how much text you send each time. One question is 6 calls: 5 rerank, 1 answer. If N people ask at once: N times 6 calls. The settings below change these numbers. Most also change accuracy. Run the eval after each change.
@@ -93,10 +93,10 @@ Search, rerank and answer for the question of the day. Each log shows its time o
 |---|---|---|
 | prompt tokens (rerank not counted) | 976 | 9954 |
 | hr-only document in the prompt | none (filter) | salary table |
-| answer time | 655 ms | 26337 ms |
+| answer time | 678 ms | 27149 ms |
 | answer | 22 working days ✓ | 22 working days ✓ |
 
-You pay the difference on every question. As the handbook grows, this approach stops working. We didn't measure how much of the 26337 ms a reload might take. The real cost is reading 9954 tokens.
+You pay the difference on every question. As the handbook grows, this approach stops working. We didn't measure how much of the 27149 ms a reload might take. The real cost is reading 9954 tokens.
 </Example>
 
 <Log name="stuff-everything" title="every document in one prompt (no retrieval)" />
@@ -113,7 +113,7 @@ The same text with the same model always gives the same vector. The cache is in 
 
 <Log name="04-embed" title="npm run step -- 4   (second time)" />
 
-In these logs, every vector comes from the cache, so they don't show the first embed time. `npm run doctor` embedded one sentence in 122 ms. If the model is not in memory yet, the first call also includes the time to load it. To see it on your machine, delete `.cache/embeddings.json` and run `npm run step -- 4`. The log shows the milliseconds per chunk.
+In these logs, every vector comes from the cache, so they don't show the first embed time. `npm run doctor` embedded one sentence in 150 ms. If the model is not in memory yet, the first call also includes the time to load it. To see it on your machine, delete `.cache/embeddings.json` and run `npm run step -- 4`. The log shows the milliseconds per chunk.
 
 The store writes one edition at a time (`replaceEdition`):
 
@@ -130,7 +130,7 @@ The store writes one edition at a time (`replaceEdition`):
 | Chunks in the prompt | 3 | more prompt tokens | 3 chunks = 976 prompt tokens (question of the day) |
 | Rerank | on | turn it off: the 5 calls go away, and the vector score sets the order | Partly: for the question of the day, the answer is 22 both ways. For q02, the right section is at rank 5 by vector score. With rerank on, the answer is right. With rerank off, we didn't measure it. |
 | Model size | gemma3:4b | more RAM and more time | No: we measured time only with gemma3:4b |
-| Embedding cache | on | none | Yes: 60 of 60 vectors from the cache, step 4 = 52 ms |
+| Embedding cache | on | none | Yes: 60 of 60 vectors from the cache, step 4 = 55 ms |
 | Incremental ingest | `replaceEdition` per edition | none | Yes: 2026 added, 120 records in the store, 2025 untouched |
 
 ## The bill: a formula without prices
@@ -153,7 +153,7 @@ Prices change from provider to provider, so here is a formula, not a number. Wit
 ## Common questions
 
 <FAQ q="Should we buy a faster vector DB?">
-Not for this. In this run the vector DB search took 7 ms. Rerank and answer together took 2096 ms (1441 + 655). The bottleneck is the calls to the model. With millions of vectors, search gets expensive too. That is what the index on page D is for.
+Not for this. In this run the vector DB search took 8 ms. Rerank and answer together took 2178 ms (1500 + 678). The bottleneck is the calls to the model. With millions of vectors, search gets expensive too. That is what the index on page D is for.
 </FAQ>
 
 <FAQ q="Should we turn rerank off to save time?">

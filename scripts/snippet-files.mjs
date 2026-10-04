@@ -4,7 +4,7 @@ import { join, relative } from 'node:path';
 
 export const WORKSHOP = process.env.WORKSHOP_DIR ?? '../ama-rag-workshop';
 const CODE_ROOTS = ['src', 'bruno', 'solutions'];
-const CODE_FILES = ['compose.yaml', 'package.json', 'env.example', 'eval/gold.jsonl', 'corpus/2025/hr-leave.md', 'corpus/2025/it-security.md', 'corpus/2025/announcement-meal-card.md'];
+const CODE_FILES = ['compose.yaml', 'package.json', 'env.example', 'eval/gold.jsonl', 'corpus/2025/hr-leave.md', 'corpus/2025/it-security.md', 'corpus/2025/announcement-meal-card.md', 'corpus/2025/travel-expenses.md'];
 
 function walk(dir) {
   return readdirSync(dir).flatMap((n) => {

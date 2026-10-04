@@ -90,7 +90,7 @@ with `ollama list` and `podman image ls`. Download them on a good connection. On
 
 <Log name="doctor" title="npm run doctor" />
 
-The output above is from an M-series Mac. Both models were already in memory (embedding 122 ms, answer 172 ms).
+The output above is from an M-series Mac. Both models were already in memory (embedding 150 ms, answer 176 ms).
 On the first run, both times also include loading the models into memory, so they are longer.
 Ollama keeps a model in memory for a few minutes. A new run in that time doesn't load it again.
 The corpus line says "7 en, 1 tr". One of the 8 documents is in Turkish. We use it later.

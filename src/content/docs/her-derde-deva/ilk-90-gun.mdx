@@ -124,7 +124,7 @@ Hangi RAG türünü ne zaman eklemeli? Bir blog yazısının ilk önerisi değil
 
 > **Kurgu.** Ekip eval sonuçlarını okurken fark etti: "I am a director travelling to London. How much can I spend on a hotel per night?" sorusunda kaynakların ilki yurt içi tablo.
 
-**Ölçüm.** Bu soru gold set'te var (q06). Retriever önce yurt içi harcırah bölümünü (§3), sonra yurt dışını (§4) getiriyor; cevap kontrolü ✓:
+**Ölçüm.** Bu soru gold set'te var (q06). Retriever önce yurt içi harcırah bölümünü (§3), sonra yurt dışını (§4) getiriyor; eval cevabı ✓ sayıyor:
 
 <Log name="eval-answers" title="npm run eval -- --answers   (q06)" from={8} to={9} />
 
@@ -211,7 +211,7 @@ Hangi RAG türünü ne zaman eklemeli? Bir blog yazısının ilk önerisi değil
 
 <Log name="ask-injection" title="npm run ask -- &quot;How much is loaded onto the meal card each day?&quot;" from={29} />
 
-**Teşhis.** Duyurunun yan haklar §2'deki tutarı güncellediği yalnızca metinde yazıyor. Bu koşuda iki chunk birlikte geldi; model ikisini yan yana koydu, 330'un eski tutar olduğunu söylemedi. Duyuru ilk 3'ten düşerse ne olacağını ölçmedik.
+**Teşhis.** Duyurunun yan haklar §2'deki tutarı güncellediği yalnızca metinde yazıyor. Bu koşuda iki chunk birlikte geldi; model ikisini yan yana koydu, 330'un eski tutar olduğunu söylemedi. Duyuru ilk 3'ten düşerse ne olacağını ölçmedik. Koddaki cevap kontrolü de bunu çözmez: isteği siler, ama 330 [2] cümlesini bırakır, çünkü o cümlenin kaynak numarası var ([Güvenlik](/uretim/guvenlik/)).
 **Teknik.** Dokümanlar arası ilişkiyi ingest'te çıkar ("duyuru → günceller → yan haklar §2"), sorguda bu bağı izle: <Term id="graphrag">GraphRAG</Term>. En basit hâli: güncellenen bölüme metadata ile "güncellendi" etiketi.
 **Bedel.** Bütün corpus bir kez modelden geçer; ilişki yanlış çıkarılırsa arama sessizce yanlış yere gider. "Hangi durumlarda direktör onayı gerekir?" gibi, cevabı birçok bölüme dağılmış özet soruları da aynı aileden. **Ölçmedik.**
 

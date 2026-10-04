@@ -101,7 +101,7 @@ The store is full, so now we ask questions. For the question of the day, the rig
         <text x="765" y="410" text-anchor="middle" class="fsub fbad-t" data-q="log:07-rerank">§7 and §4 get in: rel 6, but not the answer</text>
       </g>
       <g data-from="8">
-        <text x="765" y="452" text-anchor="middle" class="fsub" data-gen="timing">search: 7 ms · rerank: 5 calls, 1439 ms</text>
+        <text x="765" y="452" text-anchor="middle" class="fsub" data-gen="timing">search: 8 ms · rerank: 5 calls, 1498 ms</text>
         <text x="765" y="478" text-anchor="middle" class="fsub">(measured on an M-series Mac)</text>
       </g>
     </svg>
@@ -165,7 +165,7 @@ The store is full, so now we ask questions. For the question of the day, the rig
     §3 stays first with a score of 10. The others score 6 or less, so the 0.016 gap becomes a clear split. §2 scores 3, drops to 4th and leaves the prompt. The reranker is wrong too: §7 and §4 score 6 and move up. Both are in the prompt, but they don't answer the question.
   </Step>
   <Step title="The cost" stage="list">
-    The search itself took 7 ms (the whole step, 21 ms). Rerank took 1439 ms. For this question, the answer didn't change: 22 working days in both runs. Rerank does its real job when the right chunk is outside the top 3.
+    The search itself took 8 ms (the whole step, 22 ms). Rerank took 1498 ms. For this question, the answer didn't change: 22 working days in both runs. Rerank does its real job when the right chunk is outside the top 3.
 
     <Now n="2">In `src/steps/7-rerank.ts`, turn rerank off. Run `npm run step -- 7` and `npm run step -- 8`.</Now>
   </Step>

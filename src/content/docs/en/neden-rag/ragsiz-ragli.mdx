@@ -94,7 +94,7 @@ None of them is 22. What if we give the model the knowledge with the question, e
       <rect x="300" y="82" width="65" height="40" rx="6" class="fbox fbox-on" data-gen="rag-bar" />
       <text x="377" y="110" class="flbl fnum" data-gen="rag-label">976 prompt tokens</text>
       <text x="30" y="208" class="flbl" data-q="const">all: 8 documents</text>
-      <text x="30" y="234" class="fsub fbad-t" data-q="log:stuff-everything">answer call 26337 ms</text>
+      <text x="30" y="234" class="fsub fbad-t" data-q="log:stuff-everything">answer call 27149 ms</text>
       <rect x="300" y="182" width="660" height="40" rx="6" class="fbox fbox-bad" data-gen="all-bar" />
       <text x="318" y="210" class="flbl" data-gen="all-label">9954 prompt tokens</text>
       <g data-from="6">
@@ -115,7 +115,7 @@ None of them is 22. What if we give the model the knowledge with the question, e
     The model is the same. Nobody touched its weights. Only the text in front of it changed. The answer is 22 working days, with the source [1] hr-leave §3.
   </Step>
   <Step title="What if we put everything in the prompt?" stage="b">
-    We put all 8 handbook documents into one prompt: 9954 tokens. The RAG prompt is 976 tokens. The answer is still 22 working days, but one call took 26337 ms, about 26 seconds. The whole RAG path, with search and <Term id="rerank">rerank</Term>, takes about 2 seconds.
+    We put all 8 handbook documents into one prompt: 9954 tokens. The RAG prompt is 976 tokens. The answer is still 22 working days, but one call took 27149 ms, about 27 seconds. The whole RAG path, with search and <Term id="rerank">rerank</Term>, takes about 2 seconds.
   </Step>
   <Step title="The real job is choosing" stage="b">
     If you put everything in, you pay for the whole handbook on every question. As the corpus grows, one day it won't fit in the <Term id="context">context window</Term>. And everyone reads the salary table that only HR may see.

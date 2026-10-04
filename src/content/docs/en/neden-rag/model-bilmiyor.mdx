@@ -185,6 +185,16 @@ Then compare the answer with the policy: `corpus/2025/travel-expenses.md`, secti
 sound?
 </YourTurn>
 
+## How sure does it sound?
+
+<Log name="00-bare-receipts" title="npm run step -- 0   (receipts)" />
+
+The model writes **30 days**, in bold. It sounds sure. Now the policy:
+
+<RepoCode file="corpus/2025/travel-expenses.md" from="## 7. Expense Reports" to="not processed and not paid" mark={["Reports sent after 15 days are not processed and not paid."]} />
+
+The policy says 15 days, not 30. Trust the model, and you send your receipts too late. Then you don't get paid. A wrong answer sounds as sure as a right one.
+
 ## Common questions
 
 <FAQ q="Does any model say “I don’t know” with no setup?">

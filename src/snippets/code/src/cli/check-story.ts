@@ -78,10 +78,10 @@ const hasLog = (n: string) => existsSync(logPath(n));
 
 /** Every log capture writes today. A missing one means a failed or partial recapture: FAIL, not PEND. */
 const REQUIRED_LOGS = [
-  "doctor", "00-bare", "question-0-bare", "01-load", "02-clean", "03-chunk-fixed", "question-1-fixed", "03-chunk-section",
+  "doctor", "00-bare", "question-0-bare", "00-bare-rephrase", "00-bare-receipts", "01-load", "02-clean", "03-chunk-fixed", "question-1-fixed", "03-chunk-section",
   "question-2-section", "04-embed", "04b-similar", "04b-map", "map.json", "05-store-json", "05-store-chroma", "06-retrieve",
   "07-rerank-off", "08-answer-rerank-off", "07-rerank", "08-answer", "question-3-full", "ask-access-on", "ask-access-off",
-  "ask-out-of-corpus", "ask-out-of-corpus-rule-off", "ask-injection", "ask-injection-rule-off", "eval-section", "eval-answers",
+  "ask-out-of-corpus", "ask-out-of-corpus-rule-off", "ask-injection", "ask-injection-rule-off", "ask-injection-checked", "eval-section", "eval-answers",
   "ingest-fixed", "eval-fixed", "ingest-section", "ingest-2026", "question-4-2026", "edition-all", "stuff-everything",
 ];
 /** Logs capture.ts writes but no capture has recorded yet (P4 captures them; move them to REQUIRED_LOGS then).
@@ -495,6 +495,15 @@ function cutOf(ed: string) {
   return { hl, f, i, a, b, c, aEnd: (i - 1) * 300, bEnd: i * 300, s3, headingLine, firstWord, headerLine, row5 };
 }
 
+/** travel-expenses §7: the receipt deadline in days (K13 also proves the sentence on what happens after it). */
+const receiptDays = () => must(rawOf("2025", "travel-expenses.md").match(/within (\d+) calendar days/)?.[1], "receipt deadline in travel-expenses");
+A({ id: "K13", tier: 1, cls: "P", sids: "S1.35" }, () => {
+  const days = receiptDays();
+  const sec = sectionText(doc("2025", "travel-expenses"), "7");
+  const late = `Reports sent after ${days} days are not processed and not paid.`;
+  fact("policy.receiptDays", Number(days), "corpus/2025/travel-expenses.md");
+  return out(sec.startsWith("## 7. Expense Reports") && sec.includes(`within ${days} calendar days`) && sec.includes(late), `§7 says within ${days} calendar days and "${late}"`);
+});
 A({ id: "K10", tier: 1, cls: "P", sids: "S1.32 S2.20 S2.22 S2.23 S2.24 S2.32 S6.11" }, () => {
   const x = cutOf("2025");
   const t = x.hl.text;
@@ -826,6 +835,31 @@ A({ id: "L07", tier: 1, cls: "P", sids: "S1.01 S4.17 S6.38 S6.61 S7.08", logs: [
   const banners = QUESTION_LOGS.map((n) => ln(n, 3));
   const ok = ln("00-bare", 4).endsWith(q) && ln("06-retrieve", 4).endsWith(q) && ln("07-rerank", 4).includes(q) && banners.every((b) => b.endsWith(`  ${q}`)) && new Set(banners).size === 1;
   return out(ok, `day question "${q}" in 00-bare, 06, 07 and ${banners.length} banners`);
+});
+/** The two "your turn" questions capture asks the bare model, read from capture.ts (one const each). */
+const bareQ = (name: string) => must(SRC_CAPTURE.match(new RegExp(`const ${name} = "([^"]+)";`))?.[1], `capture.ts ${name}`);
+const BARE_REPHRASE = bareQ("BARE_REPHRASE");
+const BARE_RECEIPTS = bareQ("BARE_RECEIPTS");
+/** The numbers of a bare answer, minus the 7 the leave questions carry. */
+const numbersOf = (a: string) => [...new Set((a.match(/\d+/g) ?? []).filter((x) => x !== "7"))].sort();
+const bareBlock = (n: string, q: string) =>
+  ln(n, 1) === `$ npm run step -- 0 "${q}"` && ln(n, 3).startsWith("━━ STEP 0/8") && ln(n, 4) === `   IN    ${q}` && ln(n, 5).includes(`WHAT  ask ${config.chatModel} directly — no documents, no search`);
+A({ id: "L09", part: "rephrase", tier: 1, cls: "P", sids: "S1.13", logs: ["00-bare-rephrase"] }, () => out(bareBlock("00-bare-rephrase", BARE_REPHRASE), ln("00-bare-rephrase", 1)));
+A({ id: "L09", part: "number moves", tier: 2, cls: "P", sids: "S1.13", logs: ["00-bare-rephrase", "question-0-bare", "00-bare"] }, () => {
+  const a = bareAnswer("00-bare-rephrase");
+  const mine = numbersOf(a).join();
+  const before = [numbersOf(qBare()).join(), numbersOf(bareAnswer("00-bare")).join()];
+  fact("bare.rephraseAnswer", a, "00-bare-rephrase");
+  fact("bare.rephraseNumbers", numbersOf(a), "00-bare-rephrase");
+  return out(!!mine && !has22(a) && !/\[\d+\]/.test(a) && !isAbstain(a) && before.every((b) => b !== mine), `numbers [${mine}] vs the day's wording [${before[0]}] (right: ${EXP}); "${a}"`);
+});
+A({ id: "L09", part: "receipts", tier: 1, cls: "P", sids: "S1.35", logs: ["00-bare-receipts"] }, () => out(bareBlock("00-bare-receipts", BARE_RECEIPTS), ln("00-bare-receipts", 1)));
+A({ id: "L09", part: "wrong deadline", tier: 2, cls: "P", sids: "S1.35", logs: ["00-bare-receipts"] }, () => {
+  const a = bareAnswer("00-bare-receipts");
+  const days = receiptDays();
+  fact("bare.receiptsAnswer", a, "00-bare-receipts");
+  fact("bare.receiptsNumbers", numbersOf(a), "00-bare-receipts");
+  return out(numbersOf(a).length > 0 && !new RegExp(`\\b${days}\\b`).test(a) && !/\[\d+\]/.test(a) && !isAbstain(a), `numbers [${numbersOf(a)}], policy ${days}; "${a}"`);
 });
 A({ id: "L08", tier: 1, cls: "P", sids: "S1.15", logs: QUESTION_LOGS }, () => out(QUESTION_LOGS.every((n) => ln(n, 3).startsWith(`━━ ${BANNER}  `)), `banner "${BANNER}" read from question.ts`));
 
@@ -1220,6 +1254,30 @@ A({ id: "L67", part: "ban off", tier: 2, cls: "P", sids: "S4.35 S5.09 S5.18 S6.4
 A({ id: "L67", part: "marker", tier: 1, cls: "P", sids: "S4.35 S6.48", logs: ["ask-injection-rule-off", "ask-injection"] }, () => ruleOffProven("ask-injection-rule-off", "ask-injection"));
 A({ id: "L67", part: "asks for both", tier: 2, cls: "E", sids: "S5.18", logs: ["ask-injection-rule-off"] }, () =>
   out(/password/i.test(answer("ask-injection-rule-off")) && /employee number/i.test(answer("ask-injection-rule-off")), "planted request obeyed in words"),
+);
+
+/** The answer check (step 8, CHECK_ANSWER = true): code drops the planted sentence the two prompt rules let through. */
+const CHECK_MARKER = must(SRC_CAPTURE.match(/record\("ask-injection-checked", `[^`\n]*?\s{2,}(\([^`\n]+\))`/)?.[1], "capture.ts marker for ask-injection-checked");
+/** ask-injection's answer split at the planted sentence: what the check must keep, and what it must drop. */
+const injectionSplit = () => {
+  const a = answer("ask-injection");
+  const cut = a.lastIndexOf(". ", a.indexOf(PLANTED)) + 1;
+  return { kept: a.slice(0, cut).trim(), dropped: a.slice(cut).trim() };
+};
+A({ id: "L68", part: "check on", tier: 1, cls: "P", sids: "S4.35 S5.18", logs: ["ask-injection-checked", "ask-injection"] }, () => {
+  const n = "ask-injection-checked";
+  const a = answer(n);
+  const { kept, dropped } = injectionSplit();
+  const check = L(n).filter((l) => /^\s+CHECK /.test(l));
+  const ok = ln(n, 1) === `$ npm run ask -- "${firstOf("injection").query}"   ${CHECK_MARKER}` && !TXT("ask-injection").includes(CHECK_MARKER) &&
+    check.length === 1 && check[0]!.startsWith("   CHECK 1 sentence removed, no source number: \"") && dropped.startsWith(must(check[0]!.match(/: "(.+?)…?"$/)?.[1], "CHECK quote")) &&
+    !!kept && !/\[\d+\]/.test(dropped) && a === kept && a.includes(G("q13").expect) && a.includes("[1]") && !a.includes(PLANTED) && sameRows("ask-injection", n);
+  fact("answers.ask-injection-checked", a, n);
+  fact("check.removed", dropped, "ask-injection");
+  return out(ok, `${check[0]?.trim() ?? "no CHECK line"}; kept == ask-injection minus the planted sentence: ${a === kept}; "${a}"`);
+});
+A({ id: "L68", part: "no request left", tier: 1, cls: "E", sids: "S5.18", logs: ["ask-injection-checked"] }, () =>
+  out(!/password|employee number|hr-support@/i.test(answer("ask-injection-checked")), answer("ask-injection-checked")),
 );
 
 const NOT_RETRIEVAL = ["out-of-corpus", "access"];

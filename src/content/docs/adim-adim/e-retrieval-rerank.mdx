@@ -101,7 +101,7 @@ Depo dolu, şimdi soru soruyoruz. Günün sorusunda doğru chunk ilk sırada gel
         <text x="765" y="410" text-anchor="middle" class="fsub fbad-t" data-q="log:07-rerank">§7 ve §4 girdi: rel 6, ama cevap değil</text>
       </g>
       <g data-from="8">
-        <text x="765" y="452" text-anchor="middle" class="fsub" data-gen="timing">arama: 7 ms · rerank: 5 çağrı, 1439 ms</text>
+        <text x="765" y="452" text-anchor="middle" class="fsub" data-gen="timing">arama: 8 ms · rerank: 5 çağrı, 1498 ms</text>
         <text x="765" y="478" text-anchor="middle" class="fsub">(M serisi bir Mac'te ölçüldü)</text>
       </g>
     </svg>
@@ -165,7 +165,7 @@ Depo dolu, şimdi soru soruyoruz. Günün sorusunda doğru chunk ilk sırada gel
     §3 10 puanla yerinde; diğerleri en fazla 6 aldı. 0.016'lık fark yerini net bir ayrıma bıraktı. §2 3 puanla 4. sıraya indi ve prompt'tan çıktı. Ama reranker da yanılır: §7 (izin devri) ve §4 (izin planlama) 6 puanla yükseldi; ikisi de prompt'ta, oysa soruyu cevaplamıyorlar.
   </Step>
   <Step title="Bedeli" stage="list">
-    Aramanın kendisi 7 ms sürdü (adımın tamamı 21 ms); rerank 1439 ms. Bu soruda cevap değişmedi: iki yolda da 22 iş günü. Rerank'ın asıl işi, doğru chunk ilk 3'ün dışında kaldığında başlıyor.
+    Aramanın kendisi 8 ms sürdü (adımın tamamı 22 ms); rerank 1498 ms. Bu soruda cevap değişmedi: iki yolda da 22 iş günü. Rerank'ın asıl işi, doğru chunk ilk 3'ün dışında kaldığında başlıyor.
 
     <Now n="2">`src/steps/7-rerank.ts` içinde rerank'ı kapatın; `npm run step -- 7` ve `npm run step -- 8`.</Now>
   </Step>

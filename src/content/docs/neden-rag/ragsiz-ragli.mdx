@@ -94,7 +94,7 @@ Model politikayı bilmiyor. Cevabın şirketin politikasına bağlı olduğunu s
       <rect x="300" y="82" width="65" height="40" rx="6" class="fbox fbox-on" data-gen="rag-bar" />
       <text x="377" y="110" class="flbl fnum" data-gen="rag-label">976 prompt token</text>
       <text x="30" y="208" class="flbl" data-q="const">hepsi: 8 doküman</text>
-      <text x="30" y="234" class="fsub fbad-t" data-q="log:stuff-everything">cevap çağrısı 26337 ms</text>
+      <text x="30" y="234" class="fsub fbad-t" data-q="log:stuff-everything">cevap çağrısı 27149 ms</text>
       <rect x="300" y="182" width="660" height="40" rx="6" class="fbox fbox-bad" data-gen="all-bar" />
       <text x="318" y="210" class="flbl" data-gen="all-label">9954 prompt token</text>
       <g data-from="6">
@@ -115,7 +115,7 @@ Model politikayı bilmiyor. Cevabın şirketin politikasına bağlı olduğunu s
     Model aynı, ağırlıklarına kimse dokunmadı. Değişen yalnızca önüne konan metin: cevap 22 iş günü, kaynağı [1] hr-leave §3.
   </Step>
   <Step title="Hepsini prompt'a koysak?" stage="b">
-    El kitabının 8 dokümanını tek prompt'a koyduk: 9954 token; RAG'in prompt'u 976. Cevap yine 22 iş günü, ama tek çağrı 26337 ms, yani yaklaşık 26 saniye sürdü. RAG'in bütün yolu, arama ve <Term id="rerank">rerank</Term> dahil, yaklaşık 2 saniye.
+    El kitabının 8 dokümanını tek prompt'a koyduk: 9954 token; RAG'in prompt'u 976. Cevap yine 22 iş günü, ama tek çağrı 27149 ms, yani yaklaşık 27 saniye sürdü. RAG'in bütün yolu, arama ve <Term id="rerank">rerank</Term> dahil, yaklaşık 2 saniye.
   </Step>
   <Step title="Asıl iş seçmek" stage="b">
     Hepsini koyarsanız her soruda bütün el kitabının bedelini ödersiniz; corpus büyüdükçe bir gün <Term id="context">context window</Term>'a sığmaz; yalnızca İK'nın görebileceği ücret tablosunu da herkes okur.

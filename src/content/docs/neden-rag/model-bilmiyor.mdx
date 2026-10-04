@@ -184,6 +184,16 @@ Sonra cevabı politikayla karşılaştırın: `corpus/2025/travel-expenses.md`, 
 konuşuyor?
 </YourTurn>
 
+## Ne kadar emin konuşuyor?
+
+<Log name="00-bare-receipts" title="npm run step -- 0   (fişler)" />
+
+Model **30 gün** yazıyor, hem de kalın. Emin konuşuyor. Şimdi politika:
+
+<RepoCode file="corpus/2025/travel-expenses.md" from="## 7. Expense Reports" to="not processed and not paid" mark={["Reports sent after 15 days are not processed and not paid."]} />
+
+Politika 30 değil, 15 gün diyor. Modele güvenen, fişlerini geç yükler ve parasını alamaz. Yanlış cevap da doğrusu kadar emin konuşur.
+
 ## Sık sorulan
 
 <FAQ q="Hiç ayar yapmadan “bilmiyorum” diyen model var mı?">

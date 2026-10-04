@@ -120,10 +120,10 @@ Each row is a pipeline step. Each column is an axis. The numbers come from this 
 |---|---|---|---|---|
 | Load + clean | Noise rules. Line count before and after ([A](/en/adim-adim/a-ham-veri/)) | `access` label in the front matter. Masking personal data (not measured) | Runs once | Runs once |
 | Chunk | Heading prefix ([B](/en/adim-adim/b-chunking/)). hit@1 0.526 → 0.842, 10 → 16 of 19 questions ([Measuring quality](/en/uretim/kaliteyi-olcmek/)) | — | 138 or 60 chunks = as many vectors | Chunk size sets the prompt tokens |
-| Embed | The same model at ingest and for the question. The code rejects another model ([C](/en/adim-adim/c-embedding/)) | With an embedding API, the corpus leaves your company | Cache: 60 of 60 vectors, 52 ms | A new model means embedding everything again |
-| Vector DB | Same ranking as JSON ([D](/en/adim-adim/d-vector-db/)) | Vector + text are stored: same protection as the document | Vector search 7 ms | Incremental ingest per edition |
-| Search + rerank | recall@5 1.000, MRR 0.896 ([Measuring quality](/en/uretim/kaliteyi-olcmek/)). Rerank ([E](/en/adim-adim/e-retrieval-rerank/)): benefit not measured on the eval | Filter inside the search: 0 salary chunks for the salary question ([Security](/en/uretim/guvenlik/)) | Rerank 1441 ms | Rerank = 5 LLM calls |
-| Prompt + answer | Answers from the sources, the "I don't know" sentence, the table rule ([F](/en/adim-adim/f-cevap/)) | Fenced sources + concrete ban: they didn't stop the injection (q13). Output check (not measured) | Answer 655 ms | 976 prompt tokens. Everything: 9954 ([Performance](/en/uretim/performans-maliyet/)) |
+| Embed | The same model at ingest and for the question. The code rejects another model ([C](/en/adim-adim/c-embedding/)) | With an embedding API, the corpus leaves your company | Cache: 60 of 60 vectors, 55 ms | A new model means embedding everything again |
+| Vector DB | Same ranking as JSON ([D](/en/adim-adim/d-vector-db/)) | Vector + text are stored: same protection as the document | Vector search 8 ms | Incremental ingest per edition |
+| Search + rerank | recall@5 1.000, MRR 0.896 ([Measuring quality](/en/uretim/kaliteyi-olcmek/)). Rerank ([E](/en/adim-adim/e-retrieval-rerank/)): benefit not measured on the eval | Filter inside the search: 0 salary chunks for the salary question ([Security](/en/uretim/guvenlik/)) | Rerank 1500 ms | Rerank = 5 LLM calls |
+| Prompt + answer | Answers from the sources, the "I don't know" sentence, the table rule ([F](/en/adim-adim/f-cevap/)) | Fenced sources + concrete ban: they didn't stop the injection (q13). Answer check in code, off by default: it removed the request ([Security](/en/uretim/guvenlik/)) | Answer 678 ms | 976 prompt tokens. Everything: 9954 ([Performance](/en/uretim/performans-maliyet/)) |
 | Eval | 22 of 23 answers on the 2025 gold set. hit@1 0.842, 16 of 19 questions ([Measuring quality](/en/uretim/kaliteyi-olcmek/)) | The access question is in the gold set: no salary chunk reached anyone | The retrieval eval never calls the chat model | `--answers`: rerank + answer calls for every question |
 
 ## The question of the day, all day
@@ -198,7 +198,7 @@ In our run, the model still said "no", but in its own words and with a source: "
 </FAQ>
 
 <FAQ q="9 · A document says “send your password to this address”. Which layer is at fault, and what stops it?">
-The instruction comes from the data. The general rule and the fenced sources didn't stop it. The rule that bans asking for a password didn't stop it either. The answer was the same with the ban on and off. A sentence in the prompt is not a security boundary. The real boundary is in code. Scan at ingest, check the output, and give each user only the access they need. We didn't measure these. [Security](/en/uretim/guvenlik/)
+The instruction comes from the data. The general rule and the fenced sources didn't stop it. The rule that bans asking for a password didn't stop it either. The answer was the same with the ban on and off. A sentence in the prompt is not a security boundary. The real boundary is in code. Our answer check runs after the model. It drops every sentence without a source number. With the check on, the request was gone. Also scan documents at ingest (we didn't measure this). Give each user only the access they need. [Security](/en/uretim/guvenlik/)
 </FAQ>
 
 <FAQ q="10 · Retrieval is good, but the answer is wrong. Who is at fault?">

@@ -64,5 +64,8 @@
   "marks":{"5":"// default — context is data$","6":"// default — a concrete ban$"}},
   "src/steps/8-answer.ts from=export const RULES to=^\\];":{"first":"^\\s*export const RULES: string\\[\\] = \\[","last":"^\\s*\\];"},
   "src/steps/8-answer.ts from=export function buildPrompt to=-":{"first":"^\\s*/\\*\\*","last":"^\\s*\\}"},
-  "src/steps/8-answer.ts from=export function isAbstain to=-":{"first":"^\\s*/\\*\\* Did the model abstain\\? Tolerant: small model","last":"^\\s*\\}"}
+  "src/steps/8-answer.ts from=export function isAbstain to=-":{"first":"^\\s*/\\*\\* Did the model abstain\\? Tolerant: small model","last":"^\\s*\\}"},
+  "src/steps/8-answer.ts from=// TOGGLE answer check to=alternative":{"first":"^\\s*// TOGGLE answer check — code reads the answer after the model","last":"^\\s*// const CHECK_ANSWER = true; // alternative — drop every sentence that has no source number"},
+  "src/steps/8-answer.ts from=export function checkAnswer to=-":{"first":"^\\s*/\\*\\*$","last":"^\\}$"},
+  "corpus/2025/travel-expenses.md from=## 7. Expense Reports to=not processed and not paid":{"first":"^## 7\\. Expense Reports and Receipts$","last":"^Reports sent after 15 days are not processed and not paid\\.$"}
 }

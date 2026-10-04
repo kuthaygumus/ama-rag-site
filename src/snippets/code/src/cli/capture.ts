@@ -63,13 +63,13 @@ const noRule = (fragment: string) => {
 };
 
 /** Steps 6 → 7 → 8 with explicit settings, printed like the real steps. */
-async function pipeline(question: string, o: { access?: string[] | undefined; edition?: "latest" | "all"; rules?: string[]; rerank?: boolean } = {}) {
+async function pipeline(question: string, o: { access?: string[] | undefined; edition?: "latest" | "all"; rules?: string[]; rerank?: boolean; check?: boolean } = {}) {
   const store = openStore();
   const r = await steps.s6.retrieve(question, { store, ...("access" in o ? { access: o.access } : {}), ...(o.edition ? { edition: o.edition } : {}) });
   console.log(`   filter ${JSON.stringify(r.filter)}`);
   steps.s6.printRanked(r);
   const rr = await steps.s7.rerank(r, o.rerank ?? true);
-  const a = await steps.s8.answer(rr, o.rules);
+  const a = await steps.s8.answer(rr, o.rules, o.check);
   steps.s8.printAnswer(a, false);
 }
 
@@ -83,6 +83,11 @@ console.log("capture: playing the day …");
 await run("doctor", ["src/cli/doctor.ts"]);
 await record("00-bare", "npm run step -- 0", () => steps.s0.run());
 await run("question-0-bare", ["src/cli/question.ts"]);
+// the two "your turn" questions of the first pages: the same leave question in other words, and a travel question
+const BARE_REPHRASE = "I have worked here for 7 years. How many days of annual leave do I get?";
+const BARE_RECEIPTS = "How many days do I have to upload my receipts after a trip?";
+await record("00-bare-rephrase", `npm run step -- 0 "${BARE_REPHRASE}"`, () => steps.s0.run(BARE_REPHRASE));
+await record("00-bare-receipts", `npm run step -- 0 "${BARE_RECEIPTS}"`, () => steps.s0.run(BARE_RECEIPTS));
 
 // A · raw data + clean
 await record("01-load", "npm run step -- 1", () => steps.s1.run());
@@ -122,6 +127,7 @@ await run("ask-out-of-corpus", ["src/cli/ask.ts", first("out-of-corpus")]);
 await record("ask-out-of-corpus-rule-off", `npm run ask -- "${first("out-of-corpus")}"   (abstain rule commented out)`, () => pipeline(first("out-of-corpus"), { rules: noRule("write only this") }));
 await run("ask-injection", ["src/cli/ask.ts", first("injection")]);
 await record("ask-injection-rule-off", `npm run ask -- "${first("injection")}"   (the concrete-ban rule commented out)`, () => pipeline(first("injection"), { rules: noRule("Never ask the user for a password") }));
+await record("ask-injection-checked", `npm run ask -- "${first("injection")}"   (CHECK_ANSWER = true)`, () => pipeline(first("injection"), { check: true }));
 
 // 4 · quality: section vs fixed, then answers
 await run("eval-section", ["src/cli/eval.ts"]);

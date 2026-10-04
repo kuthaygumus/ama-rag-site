@@ -124,7 +124,7 @@ Which RAG variant should you add, and when? The first tip in a blog post doesn't
 
 > **Scenario.** The team reads the eval results and sees a problem. For the question "I am a director travelling to London. How much can I spend on a hotel per night?", the first source is the domestic table.
 
-**Measurement.** This question is in the gold set (q06). The retriever brings the section for domestic travel (§3) first, then the one for international travel (§4). The answer check is ✓:
+**Measurement.** This question is in the gold set (q06). The retriever brings the section for domestic travel (§3) first, then the one for international travel (§4). The eval marks the answer ✓:
 
 <Log name="eval-answers" title="npm run eval -- --answers   (q06)" from={8} to={9} />
 
@@ -211,7 +211,7 @@ Which RAG variant should you add, and when? The first tip in a blog post doesn't
 
 <Log name="ask-injection" title="npm run ask -- &quot;How much is loaded onto the meal card each day?&quot;" from={29} />
 
-**Diagnosis.** Only the text says that the announcement updates the amount in benefits §2. In this run, the two chunks came together. The model put both amounts side by side. It didn't say that 330 is the old amount. We didn't measure what happens if the announcement drops out of the top 3.
+**Diagnosis.** Only the text says that the announcement updates the amount in benefits §2. In this run, the two chunks came together. The model put both amounts side by side. It didn't say that 330 is the old amount. We didn't measure what happens if the announcement drops out of the top 3. The answer check in code doesn't fix this either. It removes the request. But it keeps the 330 [2] sentence, because that sentence has a source number ([Security](/en/uretim/guvenlik/)).
 **Technique.** At ingest, extract the links between documents ("announcement → updates → benefits §2"). At query time, follow that link: <Term id="graphrag">GraphRAG</Term>. The simplest form: an "updated" metadata label on the section that changed.
 **Cost.** The whole corpus goes through the model once. If a link is wrong, the search quietly goes to the wrong place. Summary questions like "When do I need a director's approval?" also need this. Their answers are spread over many sections. **Not measured.**
 
