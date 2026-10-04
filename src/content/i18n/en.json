@@ -4,7 +4,7 @@
   "rag.guess.unit": "working days",
   "rag.guess.note": "kept in this browser",
   "rag.guess.echoBefore": "This morning you guessed ",
-  "rag.guess.echoAfter": " working days. Which answer is it closer to?",
+  "rag.guess.echoAfter": " working days. Which answer is closer to your guess?",
   "rag.panel.close": "Close",
   "rag.where.label": "Where we are in the pipeline",
   "rag.where.once": "once (ingest)",

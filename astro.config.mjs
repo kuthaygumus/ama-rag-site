@@ -83,7 +83,7 @@ export default defineConfig({
           label: '5 · Her derde deva mı?',
           translations: { en: '5 · Does RAG fix everything?' },
           items: items([
-            ['her-derde-deva/sinirlar-ve-turler', 'Sınırlar ve RAG türleri', 'Limits and RAG variants'],
+            ['her-derde-deva/sinirlar-ve-turler', 'Sınırlar ve RAG türleri', 'Limits and RAG types'],
             ['her-derde-deva/ilk-90-gun', 'İlk 90 gün', 'The first 90 days'],
           ]),
         },
