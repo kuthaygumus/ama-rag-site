@@ -1,6 +1,6 @@
 ---
 title: C · Embedding
-description: Metni 1024 sayıya çevirmek, yakınlığı ölçmek (cosine, dot, L2) ve "embedding bitti — elimizde ne var?" sorusuna bakmak. Adım 4 ve 4b.
+description: Metni 1024 sayıya çevirmek, yakınlığı ölçmek (cosine, dot, L2) ve modelin neleri yakın koyduğunu görmek. Adım 4 ve 4b.
 ---
 import WhereAmI from '../../../components/WhereAmI.astro';
 import DaysQuestion from '../../../components/DaysQuestion.astro';
@@ -22,7 +22,7 @@ import Term from '../../../components/Term.astro';
 <DaysQuestion answer="“An employee with 7 years of service gets 22 working days of annual leave [1].” ✓" how="chunker section · in-memory search (black box) — bu sayfada kutuyu açıyoruz" />
 
 <Gate>
-"How much holiday do I get?" ve "Annual paid leave depends on the length of service." cümleleri aynı konudan söz ediyor ama ortak tek bir kelimeleri yok; kelime arayan bir arama bu ikisini eşleştiremez. B sayfasındaki kara kutu ise doğru bölümü buldu.
+"How much holiday do I get?" ve "Annual paid leave depends on the length of service." cümleleri aynı konudan söz ediyor ama tek bir ortak kelimeleri yok; anahtar kelime araması bu ikisini eşleştiremez. B sayfasındaki kara kutu ise doğru bölümü buldu.
 </Gate>
 
 <Deck>
@@ -292,7 +292,7 @@ Cosine ve mesafe karşılığı L2, `src/lib/similarity.ts` içinde birkaç sat�
     İngilizce soru, Türkçe kural: 0.752. Ortak kelime yok, dil bile farklı; model anlama bakarak yakın koydu. İlgisiz çift 0.503 aldı: "ilgisiz" bile 0 değil. Skorlar mutlak değil, görelidir.
   </Step>
   <Step title="Şaşırtan: paraphrase düşük kaldı" stage="p" phase="2">
-    "How much holiday do I get?" ile "Annual paid leave …": model bu çifti ilgisiz çiftten yakın koydu, ama fark küçük. 0.599, ilgisiz çiftin (0.503) yalnızca 0.096 üstünde.
+    "How much holiday do I get?" ile "Annual paid leave depends on the length of service." çiftine bakın: model bu çifti ilgisiz çiftten yakın koydu, ama fark küçük. 0.599, ilgisiz çiftin (0.503) yalnızca 0.096 üstünde.
   </Step>
   <Step title="Tuzak: olumsuzluk" stage="p" phase="3">
     "… can work remotely" ile "… cannot work remotely": 0.853. Zıt anlam, çok yakın vektör. Embedding konuyu yakalar, evet mi hayır mı olduğunu kaçırabilir; bu ayrımı cevabı yazan model metni okuyarak yapmalı.
@@ -309,7 +309,7 @@ Cosine ve mesafe karşılığı L2, `src/lib/similarity.ts` içinde birkaç sat�
     Türkçe doküman solda, ayrı duruyor. 6 İngilizce politikanın "Purpose and Scope" bölümleri üstte yan yana: farklı dokümanlardan ama aynı türde metinler. Geri kalan İngilizce bölümler sağda iç içe.
   </Step>
   <Step title="Yıldız: günün sorusu" stage="map">
-    Soru haritada hr-leave §3'ün değil, travel-expenses §8'in dibine düştü. İki boyutta mesafeler bozulur. Adım 6 1024 boyutun hepsinde ölçüyor ve ilk 5'e yalnızca hr-leave koyuyor. Harita sezgi verir, karar vermez.
+    Soru haritada travel-expenses ve benefits parçalarının arasına düştü; en yakını travel-expenses §8. Cevabın parçası hr-leave §3 daha uzakta. İki boyutta mesafeler bozulur. Adım 6 1024 boyutun hepsinde ölçüyor ve ilk 5'e yalnızca hr-leave koyuyor. Harita sezgi verir, karar vermez.
 
     <Now n="5">`npm run map -- "How often should I change my password?"`, sonra `data/map.html`.</Now>
   </Step>
