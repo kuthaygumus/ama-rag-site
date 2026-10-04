@@ -69,13 +69,13 @@ None of them is 22. What if we give the model the knowledge with the question, e
         <text x="877" y="198" text-anchor="middle" class="fsub fnum" data-q="corpus:2025/hr-leave.md">leave table: 7 years → 22</text>
         <text x="877" y="232" text-anchor="middle" class="fsub">+ two more chunks</text>
       </g>
-      <g data-from="3">
+      <g data-from="4">
         <path d="M877 262 V284" class="farrow-on" marker-end="url(#rr-on)" />
         <rect x="760" y="292" width="235" height="80" rx="12" class="fbox fbox-on" />
         <text x="877" y="326" text-anchor="middle" class="flbl">prompt</text>
         <text x="877" y="352" text-anchor="middle" class="fsub">rules + sources + question</text>
       </g>
-      <g data-from="4">
+      <g data-from="5">
         <path d="M877 374 V396" class="farrow-on" marker-end="url(#rr-on)" />
         <rect x="800" y="404" width="155" height="76" rx="12" class="fbox fbox-frozen" />
         <text x="877" y="438" text-anchor="middle" class="flbl" data-q="const">gemma3:4b</text>
@@ -97,7 +97,7 @@ None of them is 22. What if we give the model the knowledge with the question, e
       <text x="30" y="234" class="fsub fbad-t" data-q="log:stuff-everything">answer call 27149 ms</text>
       <rect x="300" y="182" width="660" height="40" rx="6" class="fbox fbox-bad" data-gen="all-bar" />
       <text x="318" y="210" class="flbl" data-gen="all-label">9954 prompt tokens</text>
-      <g data-from="6">
+      <g data-from="7">
         <text x="300" y="282" class="fsub fgate-t" data-q="const">one of these 8 documents is HR-only: salary bands</text>
       </g>
     </svg>
@@ -106,7 +106,10 @@ None of them is 22. What if we give the model the knowledge with the question, e
     The question goes straight to the model. The answer is made up: 25-30 working days.
   </Step>
   <Step title="Search comes first" stage="a">
-    With RAG, the question first becomes an <Term id="embedding">embedding</Term>. The <Term id="vectordb">vector DB</Term> returns the handbook <Term id="chunk">chunks</Term> that are closest in meaning. One of the three chosen chunks holds the leave table. For 7 years, it says 22 working days.
+    With RAG, we search first. Beforehand, the handbook was cut into small pieces, called <Term id="chunk">chunks</Term>. The search picks the three chunks closest in meaning to the question. One of them holds the leave table: for 7 years, 22 working days.
+  </Step>
+  <Step title="How do we search by meaning?" stage="a">
+    A second model, bge-m3, turns text into a list of numbers: an <Term id="embedding">embedding</Term>. Close meanings get close numbers. Every chunk got its numbers once. Chroma, our <Term id="vectordb">vector DB</Term>, stores them. The question gets numbers too, and Chroma returns the closest chunks.
   </Step>
   <Step title="Prompt: sources + question" stage="a">
     The chosen chunks go in front of the question, together with the rules. We call the whole text that goes to the model the <Term id="prompt">prompt</Term>.
