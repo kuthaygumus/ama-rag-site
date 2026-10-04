@@ -138,7 +138,7 @@ The right chunk is first in the prompt. But that is not the right answer yet. Th
   <Step title="All the model sees" stage="p" phase="1">
     The answer call doesn't see the search. The model gets only this text: 976 tokens for the question of the day. The model gets 7 rules at the top. They are the system prompt. Each rule has a job. Rules 3, 4, 5 and 7 are tested on this page.
 
-    <Now n="1">Run `npm run step -- 8 --prompt`. How many sources are there, and which one is [1]?</Now>
+    <Now n="1">Run `npm run step -- 6`, `npm run step -- 7`, then `npm run step -- 8 --prompt`. How many sources are there, and which one is [1]?</Now>
   </Step>
   <Step title="Sources: numbered and fenced" stage="p" phase="2">
     Each chunk starts with `<<<SOURCE 1: Annual Leave Policy>>>` and ends with `<<<END SOURCE 1>>>`. The number lets the answer cite the source as [1]. The start and end markers show where untrusted text starts and ends.
@@ -196,7 +196,7 @@ The second answer doesn't contain "not in the policies", so it has no `ABSTAINED
 <Log name="ask-injection-rule-off" title="same question · concrete ban commented out" from={12} />
 
 <YourTurn>
-**1 · Read the prompt.** Run `npm run step -- 8 --prompt`. How many sources are there, and which one is [1]? Then open `data/8-answer.json` and find the fields `system`, `prompt`, `answer`, `sources` and `promptTokens`.
+**1 · Read the prompt.** Run `npm run step -- 6`, `npm run step -- 7`, then `npm run step -- 8 --prompt`. Steps 6 and 7 bring back the question of the day. How many sources are there, and which one is [1]? Then open `data/8-answer.json` and find the fields `system`, `prompt`, `answer`, `sources` and `promptTokens`.
 
 **2 · When it doesn't know.** Run `npm run ask -- "Do employees get stock options?"`. The OUT line should say `ABSTAINED`.
 

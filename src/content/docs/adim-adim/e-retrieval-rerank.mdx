@@ -218,7 +218,7 @@ Filtre açıkken model yine de cevap veriyor: seyahat politikasından bir otel l
 Filtre kapalıyken cevap maaş rakamını veriyor. Bu iki cevabın ne anlattığı [Güvenlik](/uretim/guvenlik/) sayfasında.
 
 <YourTurn>
-**1 · Listeyi açın.** `npm run step -- 6` ve `data/6-retrieved.json`: `hits` (prompt'a aday 5 chunk), `below` (kesme çizgisinin altındaki 3), `filter`. Başka bir soru: `npm run step -- 6 "How much holiday do I get?"`.
+**1 · Listeyi açın.** `npm run step -- 6` ve `data/6-retrieved.json`: `hits` (prompt'a aday 5 chunk), `below` (kesme çizgisinin altındaki 3), `filter`. Başka bir soru: `npm run step -- 6 "How much holiday do I get?"`. Sonra `npm run step -- 6` komutunu tekrar çalıştırın.
 
 **2 · Rerank'ı kapatın.** `src/steps/7-rerank.ts` → `TOGGLE rerank` bloğunda `true; // default` satırını kapatın, `false; // alternative` satırını açın. `npm run step -- 7` ve `npm run step -- 8`. Toggle'ı geri alıp `npm run step -- 7`: `data/7-reranked.json` içinde her chunk için `was` (eski sıra), `relevance` (rerank puanı) ve `score` (vektör skoru). Sonra `npm run step -- 8`.
 

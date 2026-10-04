@@ -218,7 +218,7 @@ With the filter on, the model answers anyway, with a hotel limit from the travel
 With the filter off, the answer gives the salary figure. The [Security](/en/uretim/guvenlik/) page explains what these two answers mean.
 
 <YourTurn>
-**1 · Open the list.** Run `npm run step -- 6` and open `data/6-retrieved.json`. Look at `hits` (the 5 candidate chunks for the prompt), `below` (the 3 below the cutoff) and `filter`. Try another question: `npm run step -- 6 "How much holiday do I get?"`.
+**1 · Open the list.** Run `npm run step -- 6` and open `data/6-retrieved.json`. Look at `hits` (the 5 candidate chunks for the prompt), `below` (the 3 below the cutoff) and `filter`. Try another question: `npm run step -- 6 "How much holiday do I get?"`. Then run `npm run step -- 6` again.
 
 **2 · Turn rerank off.** In `src/steps/7-rerank.ts`, find the `TOGGLE rerank` block. Comment out the `true; // default` line and uncomment the `false; // alternative` line. Run `npm run step -- 7` and `npm run step -- 8`. Then switch the toggle back and run `npm run step -- 7`. In `data/7-reranked.json`, each chunk has `was` (its old rank), `relevance` (the rerank score) and `score` (the vector score). Then run `npm run step -- 8`.
 

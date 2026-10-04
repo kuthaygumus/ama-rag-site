@@ -138,7 +138,7 @@ Doğru chunk prompt'ta birinci sırada; ama bu henüz doğru cevap değil. Model
   <Step title="Modelin gördüğü tek şey" stage="p" phase="1">
     Cevap çağrısı aramayı görmez; modele giden tek şey bu metin, günün sorusunda 976 token. En üstte 7 kural (system prompt). Her kuralın bir işi var; 3, 4, 5 ve 7. kuralı bu sayfada deniyoruz.
 
-    <Now n="1">`npm run step -- 8 --prompt`: kaç kaynak var, [1] hangisi?</Now>
+    <Now n="1">`npm run step -- 6`, `npm run step -- 7`, sonra `npm run step -- 8 --prompt`: kaç kaynak var, [1] hangisi?</Now>
   </Step>
   <Step title="Kaynaklar: numaralı ve işaretli" stage="p" phase="2">
     Her chunk `<<<SOURCE 1: Annual Leave Policy>>>` ile açılır, `<<<END SOURCE 1>>>` ile kapanır. Numara, cevabın [1] diye kaynak göstermesi için; işaretler, güvenilmeyen metnin nerede başlayıp bittiğini gösterir.
@@ -196,7 +196,7 @@ Kurallar bir listede, her satır bir toggle: birini `//` ile kapatıp aynı soru
 <Log name="ask-injection-rule-off" title="aynı soru · somut yasak yoruma alındı" from={12} />
 
 <YourTurn>
-**1 · Prompt'u okuyun.** `npm run step -- 8 --prompt`. Kaç kaynak var, [1] hangisi? Sonra `data/8-answer.json`: `system`, `prompt`, `answer`, `sources` ve `promptTokens` alanları.
+**1 · Prompt'u okuyun.** `npm run step -- 6`, `npm run step -- 7`, sonra `npm run step -- 8 --prompt`. Adım 6 ve 7 günün sorusunu geri getirir. Kaç kaynak var, [1] hangisi? Sonra `data/8-answer.json`: `system`, `prompt`, `answer`, `sources` ve `promptTokens` alanları.
 
 **2 · Bilmiyorsa.** `npm run ask -- "Do employees get stock options?"` → OUT satırında `ABSTAINED` yazmalı.
 
