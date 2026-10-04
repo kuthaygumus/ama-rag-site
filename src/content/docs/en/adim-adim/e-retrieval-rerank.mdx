@@ -22,7 +22,7 @@ import Term from '../../../../components/Term.astro';
 <DaysQuestion answer="rerank off → “An employee with 7 years of service gets 22 working days of annual leave [1].” · rerank on → “An employee with 7 years of service gets 22 working days …” ✓" how="chroma · section · filter edition 2025, access all — 22 in both runs" />
 
 <Gate>
-The store is full, so now we ask questions. For the question of the day, the right chunk comes first. But look closely at the scores, and you see how small that lead is.
+The store is full, so now we ask questions. For the question of the day, the right chunk comes first. But the scores are almost equal. The lead is small.
 </Gate>
 
 <Deck>
@@ -144,38 +144,38 @@ The store is full, so now we ask questions. For the question of the day, the rig
   <Step title="The question becomes a vector too" stage="list">
     Step 6 embeds the question and asks Chroma for the 5 closest chunks. The filter runs inside the search: only the 2025 edition, only documents open to everyone.
   </Step>
-  <Step title="What did the retriever bring?" stage="list">
+  <Step title="What did the retriever return?" stage="list">
     5 chunks, all from the Annual Leave Policy. §3, the leave table with the answer, comes first.
   </Step>
   <Step title="The scores are almost equal" stage="list">
-    First: 0.614. Fifth: 0.598. The gap is 0.016. Every hr-leave chunk starts with the prefix `[Annual Leave Policy › …]`, and the question says "annual leave" too. So the prefix pulls them all equally close to the question. Small differences in content decide the order. §3 is first, but only by a little.
+    First: 0.614. Fifth: 0.598. The gap is 0.016. Every hr-leave chunk starts with the prefix `[Annual Leave Policy › …]`, and the question says "annual leave" too. The prefix may help all five score high. We didn't test this. §3 is first, but only by a little.
   </Step>
   <Step title="The cutoff: k" stage="list">
-    Taking the k closest chunks is called <Term id="topk">top-k</Term>. Here k = 5, so benefits §6 in 6th place (0.585) stays out. If k is small, the answer can miss the list. If k is large, more noise goes to the next steps.
+    Taking the k closest chunks is called <Term id="topk">top-k</Term>. Here k = 5, so benefits §6 in 6th place (0.585) stays out. If k is small, the right chunk can fall outside the list. If k is large, the next steps get more noise.
 
     <Now n="1">Run `npm run step -- 6`, then open `data/6-retrieved.json`.</Now>
   </Step>
   <Step title="Only 3 chunks go into the prompt" stage="list">
-    With rerank off, the top 3 by vector go in: §3, §2, §7. §2 is about probation, and §7 is about leave carry-over. Neither answers the question, but both take room in the prompt. Special leave (§5) is not even in the top 5. It is only 7th.
+    With rerank off, the top 3 by vector go in: §3, §2, §7. §2 is about probation, and §7 is about leave carry-over. They don't answer the question, but both take room in the prompt. Special leave (§5) is not even in the top 5. It is only 7th.
   </Step>
   <Step title="Rerank: read the question and the chunk together" stage="list">
-    We made the vectors one at a time: the question alone, each chunk alone. A <Term id="rerank">reranker</Term> scores each (question, chunk) pair from 0 to 10. Here our chat model gemma3:4b does this job: 5 chunks, 5 calls.
+    We made the vectors one at a time: the question alone, each chunk alone. A <Term id="rerank">reranker</Term> gives each pair of question and chunk a score from 0 to 10. The score is the rel value in the log. Here our chat model gemma3:4b does this job: 5 chunks, 5 calls.
   </Step>
   <Step title="After rerank" stage="list">
-    §3 stays first with 10. The others get 6 or less, so the gap of 0.016 becomes a clear split. §2 gets 3, drops to 4th and leaves the prompt. But the reranker makes mistakes too. §7 (leave carry-over) and §4 (leave planning) get 6 and move up. Both are in the prompt, but neither answers the question.
+    §3 stays first with a score of 10. The others score 6 or less, so the 0.016 gap becomes a clear split. §2 scores 3, drops to 4th and leaves the prompt. The reranker is wrong too: §7 and §4 score 6 and move up. Both are in the prompt, but they don't answer the question.
   </Step>
   <Step title="The cost" stage="list">
-    The search took 7 ms. Rerank took 1439 ms. For this question, the answer didn't change: 22 working days in both runs. Rerank does its real job when the right chunk is outside the top 3.
+    The search itself took 7 ms (the whole step, 21 ms). Rerank took 1439 ms. For this question, the answer didn't change: 22 working days in both runs. Rerank does its real job when the right chunk is outside the top 3.
 
     <Now n="2">In `src/steps/7-rerank.ts`, turn rerank off. Run `npm run step -- 7` and `npm run step -- 8`.</Now>
   </Step>
   <Step title="The right chunk is not always in front" stage="list">
-    Ask "How much holiday do I get? I started here 4 years ago." and look at the leave table. By vector, it is only at rank 5. Without rerank, it never gets into the prompt. After rerank, it is at rank 1. With rerank on, the answer is right: 18 working days.
+    Ask "How much holiday do I get? I started here 4 years ago." and look at the leave table. In the vector ranking, it is only 5th. Without rerank, it never gets into the prompt. After rerank, it is at rank 1. With rerank on, the answer is right: 18 working days.
 
     <Now n="3">Run `npm run ask -- "How much holiday do I get? I started here 4 years ago."`. What rank is the leave table by vector, and what rank after rerank?</Now>
   </Step>
   <Step title="Top-k is not the only way" stage="yol">
-    A threshold is a score limit, not a fixed k. On page C, even the "unrelated" pair scored 0.503. So pick the threshold on your own data. <Term id="mmr">MMR</Term> skips near-copies. Hybrid adds keyword search (BM25). Of these, only the metadata filter (`access`, `edition`) is in this repo.
+    A threshold is a score limit, not a fixed k. On page C, even the "unrelated" pair scored 0.503. So pick the threshold on your own data. <Term id="mmr">MMR</Term> skips near-copies. Hybrid adds keyword search (BM25). The threshold, MMR and hybrid are only ideas here. The metadata filter (`access`, `edition`) is in this repo.
 
     <Now n="4">In `src/steps/6-retrieve.ts`, turn the access filter off. Run `npm run ask -- "What is the upper limit of the monthly gross salary band for a senior specialist?"`.</Now>
   </Step>
@@ -193,7 +193,7 @@ The same ranking in the terminal: first the retriever's list, then rerank off an
 
 <Log name="07-rerank" title="npm run step -- 7" />
 
-This is all the retriever does: build the filter, embed the question, ask for `k + 3` results. The extra results show what is below the cutoff.
+The retriever does only three things: it builds the filter, embeds the question and asks for `k + 3` results. The extra results show what is below the cutoff.
 
 <RepoCode file="src/steps/6-retrieve.ts" from="export async function retrieve" />
 
@@ -210,6 +210,8 @@ The salary bands document is `access: hr-only`. The toggle in step 6 decides wha
 <Log name="ask-access-on" title='npm run ask -- "What is the upper limit of the monthly gross salary band for a senior specialist?"' from={2} to={16} />
 
 <Log name="ask-access-on" title="… the same command, continued: rerank and answer" from={17} />
+
+With the filter on, the model answers anyway, with a hotel limit from the travel policy.
 
 <Log name="ask-access-off" title="ASKER_MAY_READ = undefined (nobody checks)" />
 
@@ -242,7 +244,7 @@ No. If the retriever already puts the right chunk in the top 3, the rerank time 
 </FAQ>
 
 <FAQ q="Can the reranker be wrong?">
-Yes. For the salary question, it gave 10 to both per diem and hotel tables of the travel policy. Ties happen too. The `ties` count in the log shows how many chunks got the same score.
+Yes. For the salary question, it gave a score of 10 to both travel tables: international (EUR) and domestic (TRY). Ties happen too. The `ties` count in the log shows how many chunks got the same score.
 </FAQ>
 
 <FAQ q="What do bi-encoder and cross-encoder mean?">

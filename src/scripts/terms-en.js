@@ -38,5 +38,5 @@ export const termsEn = {
   prompt: { title: 'Prompt', body: 'The full text the model gets. In RAG, it holds the rules, the numbered sources and the question. The model sees nothing else.' },
   bruteforce: { title: 'Brute force', body: 'Comparing the question with every vector in the store, one by one. The result is exact, but the work grows with the number of vectors.' },
   ann: { title: 'ANN', body: 'Approximate nearest neighbor. It finds the closest vectors without checking them all. It jumps from neighbor to neighbor inside an index. It is fast. It usually finds the closest one, but there’s no guarantee.' },
-  mmr: { title: 'MMR', body: 'Maximal Marginal Relevance. Each pick must be close to the question. It must also differ from the picks before it. You get varied chunks, not copies.' },
+  mmr: { title: 'MMR (Maximal Marginal Relevance)', body: 'MMR picks results one by one. Each pick must be close to the question and different from the picks before it. You get varied chunks, not copies.' },
 };

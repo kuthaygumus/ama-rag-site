@@ -148,7 +148,7 @@ Depo dolu, şimdi soru soruyoruz. Günün sorusunda doğru chunk ilk sırada gel
     5 chunk, hepsi izin politikasından (`hr-leave`). Cevabı taşıyan §3, yani izin tablosu, ilk sırada.
   </Step>
   <Step title="Skorlar neredeyse eşit" stage="list">
-    Birinci 0.614, beşinci 0.598: fark 0.016. Her hr-leave chunk'ı `[Annual Leave Policy › …]` ön ekiyle başlıyor, sorunun içinde de "annual leave" geçiyor; ön ek hepsini soruya eşit yaklaştırıyor. Sırayı küçük içerik farkları belirliyor: §3'ün birinciliği pamuk ipliğine bağlı.
+    Birinci 0.614, beşinci 0.598: fark 0.016. Her hr-leave chunk'ı `[Annual Leave Policy › …]` ön ekiyle başlıyor, sorunun içinde de "annual leave" geçiyor; ön ek hepsini soruya yakın tutuyor olabilir; bunu ayrıca denemedik. Sırayı küçük içerik farkları belirliyor olabilir: §3'ün birinciliği pamuk ipliğine bağlı.
   </Step>
   <Step title="Kesme çizgisi: k" stage="list">
     En yakın k tanesini almaya <Term id="topk">top-k</Term> denir. k = 5: 6. sıradaki benefits §6 (0.585) dışarıda kaldı. k küçükse cevap kaçabilir, büyükse sonraki adımlara gürültü taşınır.
@@ -159,13 +159,13 @@ Depo dolu, şimdi soru soruyoruz. Günün sorusunda doğru chunk ilk sırada gel
     Rerank kapalıyken vektör sırasındaki ilk 3 gider: §3, §2, §7. §2 deneme süresini, §7 izin devrini anlatıyor: ikisi de soruyu cevaplamıyor ama prompt'ta yer kaplıyor. Mazeret izinleri (§5) ilk 5'e bile girmedi; 7. sırada.
   </Step>
   <Step title="Rerank: soruyu ve chunk'ı birlikte oku" stage="list">
-    Vektörler ayrı ayrı yapıldı: soru tek başına, chunk tek başına. <Term id="rerank">Reranker</Term> her (soru, chunk) çiftine 0–10 arası puan verir. Bizde bu işi gemma3:4b yapıyor: 5 chunk, 5 çağrı.
+    Vektörler ayrı ayrı yapıldı: soru tek başına, chunk tek başına. <Term id="rerank">Reranker</Term> her (soru, chunk) çiftine 0–10 arası puan verir. Puan, log'daki rel değeri. Bizde bu işi gemma3:4b yapıyor: 5 chunk, 5 çağrı.
   </Step>
   <Step title="Rerank sonrası" stage="list">
-    §3 10 puanla yerinde; diğerleri en fazla 6 aldı. 0.016'lık farkın yerini net bir ayrım aldı. §2 3 puanla 4. sıraya indi ve prompt'tan çıktı. Ama reranker da yanılır: §7 (izin devri) ve §4 (izin planlama) 6 puanla yükseldi; ikisi de prompt'ta, oysa soruyu cevaplamıyorlar.
+    §3 10 puanla yerinde; diğerleri en fazla 6 aldı. 0.016'lık fark yerini net bir ayrıma bıraktı. §2 3 puanla 4. sıraya indi ve prompt'tan çıktı. Ama reranker da yanılır: §7 (izin devri) ve §4 (izin planlama) 6 puanla yükseldi; ikisi de prompt'ta, oysa soruyu cevaplamıyorlar.
   </Step>
   <Step title="Bedeli" stage="list">
-    Arama 7 ms sürdü; rerank 1439 ms. Bu soruda cevap değişmedi: iki yolda da 22 iş günü. Rerank'ın asıl işi, doğru chunk ilk 3'ün dışında kaldığında başlıyor.
+    Aramanın kendisi 7 ms sürdü (adımın tamamı 21 ms); rerank 1439 ms. Bu soruda cevap değişmedi: iki yolda da 22 iş günü. Rerank'ın asıl işi, doğru chunk ilk 3'ün dışında kaldığında başlıyor.
 
     <Now n="2">`src/steps/7-rerank.ts` içinde rerank'ı kapatın; `npm run step -- 7` ve `npm run step -- 8`.</Now>
   </Step>
@@ -211,6 +211,8 @@ Maaş bantları dokümanı `access: hr-only`. Adım 6'daki toggle, soran kişini
 
 <Log name="ask-access-on" title="… aynı komutun devamı: rerank ve cevap" from={17} />
 
+Filtre açıkken model yine de cevap veriyor: seyahat politikasından bir otel limiti.
+
 <Log name="ask-access-off" title="ASKER_MAY_READ = undefined (kimse kontrol etmiyor)" />
 
 Filtre kapalıyken cevap maaş rakamını veriyor. Bu iki cevabın ne anlattığı [Güvenlik](/uretim/guvenlik/) sayfasında.
@@ -242,7 +244,7 @@ Retriever doğru chunk'ı zaten ilk 3'e koyuyorsa rerank süresi boşa gider. Ka
 </FAQ>
 
 <FAQ q="Reranker yanılır mı?">
-Evet. Maaş sorusunda seyahat politikasının iki harcırah ve otel tablosuna da 10 verdi. Beraberlikler de oluyor: log'daki `ties` satırı, aynı puanı alan chunk sayısını yazıyor.
+Evet. Maaş sorusunda seyahat politikasının iki tablosuna da 10 puan verdi: yurt dışı (EUR) ve yurt içi (TRY). Beraberlikler de oluyor: log'daki `ties` satırı, aynı puanı alan chunk sayısını yazıyor.
 </FAQ>
 
 <FAQ q="Bi-encoder ve cross-encoder ne demek?">
