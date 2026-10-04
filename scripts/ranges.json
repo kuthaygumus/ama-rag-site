@@ -1,8 +1,7 @@
 {
   "//":"Content anchors for scripts/check-ranges.mjs. Key = the tag's own values (Log: name from to; RepoCode: file from to), shared by TR and EN. first/last = regex on the first/last shown line; after = regex on the line just below; marks = {line: regex}; toEOF = a RepoCode may run to the end of the file.",
   "03-chunk-fixed from=5 to=21":{"first":"^\\s+OUT\\s+\\d+ chunks · avg \\d+ chars","last":"^\\s+│ \\S","after":"^\\s+TIME\\s"},
-  "06-retrieve from=0 to=6":{"first":"^\\$ npm run step -- 6$","last":"^\\s+OUT\\s+\\d+ chunks handed on"},
-  "07-rerank from=0 to=6":{"first":"^\\$ npm run step -- 7$","last":"^\\s+OUT\\s+\\d+ chunks scored"},
+  "08-answer from=77 to=-":{"first":"^\\s*TIME  \\d+ ms  →  data/\\d+-answer\\.json","last":"^\\s*TIME  \\d+ ms  →  data/\\d+-answer\\.json"},
   "08-answer from=0 to=6":{"first":"^\\$ npm run step -- 8 --prompt","last":"^\\s+OUT\\s+\\d+ prompt tokens"},
   "08-answer-rerank-off from=2 to=-":{"first":"^━━ STEP 8/8 · ANSWER","last":"^\\s+TIME\\s+\\d+ ms\\s+→\\s+data/8-answer\\.json"},
   "ask-access-on from=0 to=16":{"first":"^\\$ npm run ask -- \"","last":"^\\s+TIME\\s+\\d+ ms\\s+→\\s+data/6-retrieved\\.json"},

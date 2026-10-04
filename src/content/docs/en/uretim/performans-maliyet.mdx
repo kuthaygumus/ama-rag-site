@@ -16,7 +16,7 @@ import FAQ from '../../../../components/FAQ.astro';
 import Term from '../../../../components/Term.astro';
 import Takeaway from '../../../../components/Takeaway.astro';
 
-<DaysQuestion answer="24 working days [1] ✓" how="chroma · section · rerank on · edition 2026" />
+<DaysQuestion answer="“An employee with 7 years of service gets 24 working days of annual leave [1].” ✓" how="chroma · section · rerank on · edition 2026" />
 
 <Gate bridge>
 The answer is right, and it cites its source. But how many seconds does one question take? And with an API model, what makes the bill grow? No need to guess. Each step prints its own time and token count.
@@ -58,10 +58,10 @@ The answer is right, and it cites its source. But how many seconds does one ques
     All 8 documents (40709 characters) in one prompt: 9954 prompt <Term id="token">tokens</Term>. RAG sends 3 chunks, 976 tokens. That is about 10 times fewer, not counting rerank. 9954 tokens don't fit in the 8192-token <Term id="context">window</Term> of our num_ctx setting. For this one measurement, we opened it to 32768.
   </Step>
   <Step title="…and the salary table goes to everyone" phase="1">
-    Right answer: 22. But the 8 documents include the hr-only salary table. No retrieval, no access filter: every employee's prompt gets the salaries. The answer took 26337 ms. RAG answers took from 650 to 3341 ms. We don't compute a factor from one run. A model reload for the bigger window may also be in that time. We didn't measure it.
+    Right answer: 22. But the 8 documents include the hr-only salary table. No retrieval, no access filter: every employee's prompt gets the salaries. The answer took 26337 ms. RAG answers took from 650 to 3341 ms. We don't compute a factor from one run.
   </Step>
   <Step title="Where does the time of one question go?" phase="2">
-    Question of the day, one run, on an M-series Mac. Search: 21 ms. <Term id="rerank">Rerank</Term>: 1441 ms. Answer: 655 ms. Rerank is about 68% of the total (2117 ms). That is 5 LLM calls for 5 chunks. Other questions: rerank took from 3662 to 4334 ms. Your times will differ.
+    Question of the day, one run. Search: 21 ms. The search itself took 7 ms of that. <Term id="rerank">Rerank</Term>: 1441 ms. Answer: 655 ms. Rerank is about 68% of the total (2117 ms), with 5 LLM calls for 5 chunks. Other questions: rerank took 3.7 to 4.4 seconds. Your times will differ.
 
     <Now n="1">Run `npm run ask -- "I am going to Frankfurt for a two-day meeting. I am a specialist. How much is my daily per diem?"`. Note the search, rerank and answer times.</Now>
   </Step>
@@ -81,9 +81,10 @@ The answer is right, and it cites its source. But how many seconds does one ques
 
 Search, rerank and answer for the question of the day. Each log shows its time on the `TIME` line:
 
-<Log name="06-retrieve" title="npm run step -- 6" from={0} to={6} />
-<Log name="07-rerank" title="npm run step -- 7" from={0} to={6} />
+<Log name="06-retrieve" title="npm run step -- 6" />
+<Log name="07-rerank" title="npm run step -- 7" />
 <Log name="08-answer" title="npm run step -- 8 --prompt" from={0} to={6} />
+<Log name="08-answer" title="… the same command, last line" from={77} />
 
 <Example>
 **Put everything in the prompt.** There is no retrieval. The clean text of all 8 documents goes into one prompt, one after another. The rules and the question stay the same.
@@ -92,7 +93,7 @@ Search, rerank and answer for the question of the day. Each log shows its time o
 |---|---|---|
 | prompt tokens (rerank not counted) | 976 | 9954 |
 | hr-only document in the prompt | none (filter) | salary table |
-| answer call | 650 ms | 26337 ms |
+| answer time | 655 ms | 26337 ms |
 | answer | 22 working days ✓ | 22 working days ✓ |
 
 You pay the difference on every question. As the handbook grows, this approach stops working. We didn't measure how much of the 26337 ms a reload might take. The real cost is reading 9954 tokens.
@@ -129,8 +130,8 @@ The store writes one edition at a time (`replaceEdition`):
 | Chunks in the prompt | 3 | more prompt tokens | 3 chunks = 976 prompt tokens (question of the day) |
 | Rerank | on | turn it off: the 5 calls go away, and the vector score sets the order | Partly: for the question of the day, the answer is 22 both ways. For q02, the right section is at rank 5 by vector score. With rerank on, the answer is right. With rerank off, we didn't measure it. |
 | Model size | gemma3:4b | more RAM and more time | No: we measured time only with gemma3:4b |
-| Embedding cache | on | — | Yes: 60 of 60 vectors from the cache, step 4 = 52 ms |
-| Incremental ingest | `replaceEdition` per edition | — | Yes: 2026 added, 120 records in the store, 2025 untouched |
+| Embedding cache | on | none | Yes: 60 of 60 vectors from the cache, step 4 = 52 ms |
+| Incremental ingest | `replaceEdition` per edition | none | Yes: 2026 added, 120 records in the store, 2025 untouched |
 
 ## The bill: a formula without prices
 

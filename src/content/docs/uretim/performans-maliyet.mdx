@@ -16,7 +16,7 @@ import FAQ from '../../../components/FAQ.astro';
 import Term from '../../../components/Term.astro';
 import Takeaway from '../../../components/Takeaway.astro';
 
-<DaysQuestion answer="24 iş günü [1] ✓" how="chroma · section · rerank on · sürüm 2026" />
+<DaysQuestion answer="“An employee with 7 years of service gets 24 working days of annual leave [1].” ✓" how="chroma · section · rerank on · sürüm 2026" />
 
 <Gate bridge>
 Cevap doğru ve kaynaklı. Peki bir soru kaç saniye sürüyor, API'li bir modelde fatura neye göre büyür? Tahmine gerek yok: her adım kendi süresini ve token sayısını yazıyor.
@@ -58,10 +58,10 @@ Cevap doğru ve kaynaklı. Peki bir soru kaç saniye sürüyor, API'li bir model
     8 dokümanın tamamı (40709 karakter) tek prompt'ta: 9954 prompt <Term id="token">token</Term>. RAG'de 3 chunk, 976 token: yaklaşık 10 kat az (rerank hariç). 9954, num_ctx ayarımız olan 8192'lik <Term id="context">pencereye</Term> sığmaz; bu ölçüm için 32768'e açtık.
   </Step>
   <Step title="…ve maaş tablosu herkese" phase="1">
-    Cevap doğru (22). Ama 8 dokümanın biri hr-only maaş tablosu: retrieval yoksa erişim filtresi de yok, maaşlar her çalışanın prompt'una girer. Cevap 26337 ms sürdü; RAG koşularında 650–3341 ms. Kat olarak karşılaştırmıyoruz: tek koşu. Model büyük pencere için belleğe yeniden yüklenmiş de olabilir; bunu ayrıca ölçmedik.
+    Cevap doğru (22). Ama 8 dokümanın biri hr-only maaş tablosu: retrieval yoksa erişim filtresi de yok, maaşlar her çalışanın prompt'una girer. Cevap 26337 ms sürdü; RAG koşularında 650–3341 ms. Kat olarak karşılaştırmıyoruz: tek koşu.
   </Step>
   <Step title="Bir sorunun süresi nereye gidiyor?" phase="2">
-    Günün sorusu, M serisi bir Mac'te, tek koşu: arama 21 ms, <Term id="rerank">rerank</Term> 1441 ms, cevap 655 ms. Rerank toplamın (2117 ms) yaklaşık %68'i: 5 chunk için 5 ayrı LLM çağrısı. Başka sorularda 3662–4334 ms sürdü; sizde süreler farklı olur.
+    Günün sorusu, tek koşu: arama 21 ms (aramanın kendisi 7 ms), <Term id="rerank">rerank</Term> 1441 ms, cevap 655 ms. Rerank toplamın (2117 ms) yaklaşık %68'i: 5 chunk için 5 ayrı LLM çağrısı. Başka sorularda rerank 3,7 ile 4,4 saniye sürdü; sizde süreler farklı olur.
 
     <Now n="1">`npm run ask -- "I am going to Frankfurt for a two-day meeting. I am a specialist. How much is my daily per diem?"`: arama, rerank ve cevap sürelerini not edin.</Now>
   </Step>
@@ -69,7 +69,7 @@ Cevap doğru ve kaynaklı. Peki bir soru kaç saniye sürüyor, API'li bir model
     Her embedding, model + metin hash'iyle `.cache/` altına yazılır; yeniden çalıştırınca 60 vektörün 60'ı cache'ten geldi, adım 4 52 ms sürdü. 2026 sürümü eklenince depo yalnızca 2026'nın 60 kaydını yazdı; 2025 yerinde kaldı.
   </Step>
   <Step title="Süreyi ve faturayı ne büyütür?">
-    Modele kaç kez gittiğiniz ve her seferinde ne kadar metin gönderdiğiniz. Bir soru 6 çağrı: 5 rerank, 1 cevap; N kişi aynı anda sorarsa N × 6. Aşağıdaki ayarlar bu sayıları, çoğu doğruluğu da değiştirir; her ayardan sonra eval.
+    Modele kaç kez gittiğiniz ve her seferinde ne kadar metin gönderdiğiniz. Bir soru 6 çağrı: 5 rerank, 1 cevap; N kişi aynı anda sorarsa N × 6. Aşağıdaki ayarlar bu sayıları, çoğu doğruluğu da değiştirir. Her ayardan sonra eval'ı koşun.
 
     <Now n="2">Aynı soruyu `--k 10` ile sorun: rerank kaç chunk puanladı, süre nasıl değişti?</Now>
 
@@ -81,9 +81,10 @@ Cevap doğru ve kaynaklı. Peki bir soru kaç saniye sürüyor, API'li bir model
 
 Günün sorusu için arama, rerank ve cevap; süreler her logun `TIME` satırında:
 
-<Log name="06-retrieve" title="npm run step -- 6" from={0} to={6} />
-<Log name="07-rerank" title="npm run step -- 7" from={0} to={6} />
+<Log name="06-retrieve" title="npm run step -- 6" />
+<Log name="07-rerank" title="npm run step -- 7" />
 <Log name="08-answer" title="npm run step -- 8 --prompt" from={0} to={6} />
+<Log name="08-answer" title="… aynı komut, son satır" from={77} />
 
 <Example>
 **Hepsini prompt'a koymak.** Retrieval yok: 8 dokümanın temiz metni art arda tek prompt'a girer; kurallar ve soru aynı.
@@ -92,7 +93,7 @@ Günün sorusu için arama, rerank ve cevap; süreler her logun `TIME` satırın
 |---|---|---|
 | prompt token (rerank hariç) | 976 | 9954 |
 | prompt'taki hr-only doküman | yok (filtre) | maaş tablosu |
-| cevap çağrısı | 650 ms | 26337 ms |
+| cevap süresi | 655 ms | 26337 ms |
 | cevap | 22 iş günü ✓ | 22 iş günü ✓ |
 
 Fark, her soruda ödenen bedelde; el kitabı büyüdükçe bu yol kapanır. Olası bir yeniden yüklemenin 26337 ms içindeki payını ölçmedik; asıl maliyet 9954 token'ı okumak.
