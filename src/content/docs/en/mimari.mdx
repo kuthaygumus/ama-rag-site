@@ -135,26 +135,43 @@ up. For example, on the chunking page:
 
 <FileTree>
 - src/
-  - steps/ one file and one command per box (table below)
+  - steps/ one file per box. The table below shows how to run each one
     - 0-bare.ts step 0: the model alone, no documents
+    - 1-load.ts reads the policy files and what each file says about itself
+    - 2-clean.ts removes the page headers and joins broken lines
+    - 3-chunk.ts cuts each document into chunks
+    - 4-embed.ts turns each chunk into 1024 numbers
+    - 5-store.ts writes the chunks into the vector DB
+    - 6-retrieve.ts turns the question into numbers and finds the 5 closest chunks
+    - 7-rerank.ts scores those 5 again and keeps the best 3
+    - 8-answer.ts builds the prompt and writes the answer with its sources
   - lib/
+    - types.ts the records that go from step to step
     - ollama.ts the two calls to the model: embed and generate
+    - similarity.ts cosine, L2 and dot. On page C, you write dot()
+    - store.ts one interface for both stores
     - chroma.ts writes to Chroma and searches it
     - store-json.ts the same job, with a JSON file
+    - metrics.ts the scores eval prints: hit@1, recall@k, MRR
     - config.ts every setting in one place
   - cli/
+    - step.ts runs one step: npm run step -- n
     - ingest.ts top lane: steps 1–5
     - ask.ts bottom lane: steps 6–8
     - question.ts the question of the day and its ledger
     - eval.ts measures quality
     - doctor.ts checks the setup
     - catchup.ts helps you catch up if you fall behind
+    - capture.ts records every log this site shows
   - explore/
     - similar.ts which texts are close?
     - map.ts the vector space, in 2 dimensions
+    - pca.ts brings 1024 dimensions down to 2 for the map
 - corpus/ Kraken Air policies, 2025 and 2026
 - data/ each step writes its output here. Open it and look
 </FileTree>
+
+Small helper files are left out: reading and writing data/, logging, errors, toggle reset and repo checks.
 
 | Box | File | Run it with | Writes |
 |---|---|---|---|

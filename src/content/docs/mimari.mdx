@@ -135,26 +135,43 @@ chunking sayfasında:
 
 <FileTree>
 - src/
-  - steps/ her kutu için bir dosya ve bir komut (aşağıdaki tablo)
+  - steps/ her kutu için bir dosya. Her birinin nasıl çalıştırılacağı aşağıdaki tabloda
     - 0-bare.ts adım 0: model tek başına, doküman yok
+    - 1-load.ts politika dosyalarını ve her birinin üst bilgisini okur
+    - 2-clean.ts sayfa başlıklarını atar, kırık satırları birleştirir
+    - 3-chunk.ts her dokümanı chunk'lara böler
+    - 4-embed.ts her chunk'ı 1024 sayıya çevirir
+    - 5-store.ts chunk'ları vector DB'ye yazar
+    - 6-retrieve.ts soruyu sayılara çevirir, en yakın 5 chunk'ı bulur
+    - 7-rerank.ts bu 5 chunk'ı yeniden puanlar, en iyi 3'ünü tutar
+    - 8-answer.ts prompt'u kurar, cevabı kaynaklarıyla yazar
   - lib/
+    - types.ts adımdan adıma taşınan kayıtlar
     - ollama.ts modele giden iki çağrı: embed ve generate
+    - similarity.ts cosine, L2 ve dot. C sayfasında dot()'u siz yazarsınız
+    - store.ts iki store için tek arayüz
     - chroma.ts Chroma'ya yazma ve arama
     - store-json.ts aynı iş, JSON dosyasıyla
+    - metrics.ts eval'in yazdığı skorlar: hit@1, recall@k, MRR
     - config.ts bütün ayarlar tek yerde
   - cli/
+    - step.ts tek bir adımı çalıştırır: npm run step -- n
     - ingest.ts üst şerit: adım 1–5
     - ask.ts alt şerit: adım 6–8
     - question.ts günün sorusu ve defteri
     - eval.ts kaliteyi ölçer
     - doctor.ts kurulumu kontrol eder
     - catchup.ts geride kalırsanız yetişmenize yardım eder
+    - capture.ts bu sitedeki bütün log'ları kaydeder
   - explore/
     - similar.ts hangi metinler yakın?
     - map.ts vektör uzayı, 2 boyutta
+    - pca.ts harita için 1024 boyutu 2'ye indirir
 - corpus/ Kraken Air politikaları, 2025 ve 2026
 - data/ her adımın çıktısı buraya yazılır — açıp bakın
 </FileTree>
+
+Küçük yardımcı dosyalar listede yok: data/ okuma-yazma, log, hata mesajları, toggle sıfırlama ve repo kontrolleri.
 
 | Kutu | Dosya | Çalıştırma komutu | Yazdığı |
 |---|---|---|---|
