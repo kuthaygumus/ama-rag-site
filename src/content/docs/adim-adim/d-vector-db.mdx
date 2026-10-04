@@ -220,6 +220,8 @@ import Term from '../../../components/Term.astro';
     Aynı soru, iki depo: JSON'un ve Chroma'nın ilk 5 id'si aynı, aynı sırada. 60 kayıtta yaklaşıklık görünmüyor.
 
     <Now n="5">`podman compose down`, sonra `podman compose up -d`; Bruno'da önce `collections`, sonra `count`.</Now>
+
+    <Now n="6">`npm run question`: HOW satırında artık `chroma store` yazıyor. Cevap yine 22 mi?</Now>
   </Step>
 </Deck>
 
@@ -284,6 +286,8 @@ Bruno'daki `01-chroma` klasörü, kodumuzun yaptığı HTTP çağrılarının ay
 - `filter on metadata` → `where` içine `{ "access": "hr-only" }` yazın. Maaş bantları geliyor. Bu isteği kim gönderebilmeli? (Güvenlik sayfası.)
 
 **5 · Kalıcılık.** `podman compose down`, sonra `podman compose up -d` ve Bruno'da önce `collections`, sonra `count`: kayıtlar volume'da, sayı değişmemeli.
+
+**6 · Günün sorusu.** `npm run question`: HOW satırında artık `chroma store` yazıyor. Cevap, section chunk'lardaki gibi yine 22 mi? Deftere bir satır daha eklenir.
 
 Geride kaldıysanız: `npm run catchup -- 5`.
 </YourTurn>

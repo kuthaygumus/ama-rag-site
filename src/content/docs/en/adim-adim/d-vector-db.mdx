@@ -220,6 +220,8 @@ So far, the "database" was a JSON file. For every question, we compared the ques
     Same question, two stores. JSON and Chroma return the same top 5 ids, in the same order. With 60 records, the approximation doesn't show.
 
     <Now n="5">Run `podman compose down`, then `podman compose up -d`. In Bruno, send `collections` first, then `count`.</Now>
+
+    <Now n="6">Run `npm run question`. The HOW line now says `chroma store`. Is the answer still 22?</Now>
   </Step>
 </Deck>
 
@@ -284,6 +286,8 @@ The `01-chroma` folder in Bruno makes the same HTTP calls as our code, by hand. 
 - `filter on metadata` → put `{ "access": "hr-only" }` in `where`. The salary bands come back. Who should be allowed to send this request? (Security page.)
 
 **5 · Persistence.** Run `podman compose down`, then `podman compose up -d`. In Bruno, send `collections` first, then `count`. The records are in the volume, so the count should not change.
+
+**6 · The question of the day.** Run `npm run question`. The HOW line now says `chroma store`. Is the answer still 22, as with section chunks? Your ledger gets one more line.
 
 Are you behind? Run `npm run catchup -- 5`.
 </YourTurn>

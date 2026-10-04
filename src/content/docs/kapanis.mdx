@@ -66,7 +66,7 @@ Bir günde bir RAG pipeline'ı kurduk ve her ara çıktısını açtık. Kurumsa
         <text x="490" y="306" text-anchor="middle" class="flbl" data-q="log:eval-section">Eval: her değişiklikten sonra aynı 23 soru</text>
       </g>
       <g data-from="8">
-        <text x="20" y="362" class="fsub">npm run question defteri: aynı soru, aynı model, beş cevap</text>
+        <text x="20" y="362" class="fsub">npm run question defteri: aynı soru, aynı model, beş durak</text>
         <rect x="20" y="374" width="176" height="56" rx="10" class="fbox fbox-bad" />
         <text x="108" y="410" text-anchor="middle" class="flbl fbad-t" data-q="log:question-0-bare">25-30</text>
         <rect x="216" y="374" width="176" height="56" rx="10" class="fbox fbox-bad" />
@@ -106,7 +106,7 @@ Bir günde bir RAG pipeline'ı kurduk ve her ara çıktısını açtık. Kurumsa
     Her değişiklikten sonra aynı gold set: retrieval için hit@1, recall@5, MRR; cevap için `--answers`. Sıradaki iş: gold set'i kullanımdan gelen zor sorularla ve 2026'nın beklenen değerleriyle büyütmek.
   </Step>
   <Step title="Günün sorusu, bütün gün">
-    `npm run question` defteri: RAG'siz model bir aralık ve bir çekince verdi: 25-30 iş günü, "depending on the company's policy". Fixed chunk'larla 7 iş günü [1]: kaynaklı ama yanlış bir sayı. Section'la 22 iş günü; Chroma'yla yine 22; 2026 sürümüyle 24. <Guess echo />
+    `npm run question` defteri: RAG'siz model bir aralık ve bir çekince verdi: 25-30 iş günü, "depending on the company's policy". Fixed chunk'larla 7 iş günü [1]: kaynaklı ama yanlış bir sayı. Section'la 22 iş günü; Chroma'yla yine 22; 2026 sürümüyle 24. 24 diyen iki satır daha var: bütün sürümlerde arayan koşu ve şimdi yapacağınız koşu. <Guess echo />
 
     <Now n="1">`npm run question`: bütün cevaplar alt alta.</Now>
   </Step>
@@ -129,7 +129,7 @@ Her satır bir pipeline adımı, her sütun bir eksen; sayılar bu sitenin logla
 ## Günün sorusu: bütün gün
 
 <Figure caption="Kaynak: beş npm run question koşusu; aşağıdaki ledger son üç sayıyı gösteriyor, ilk ikisi önceki sayfaların loglarında">
-  <svg viewBox="0 0 1000 230" role="img" aria-label="Günün sorusunun gün boyunca aldığı beş cevap">
+  <svg viewBox="0 0 1000 230" role="img" aria-label="Günün sorusunun beş duraktaki cevabı">
     <defs><marker id="kp-l" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker></defs>
     <text x="108" y="40" text-anchor="middle" class="fsub">RAG'siz model</text>
     <text x="304" y="40" text-anchor="middle" class="fsub">fixed chunk</text>

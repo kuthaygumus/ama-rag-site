@@ -66,7 +66,7 @@ In one day, we built a RAG pipeline and opened every intermediate output. In a c
         <text x="490" y="306" text-anchor="middle" class="flbl" data-q="log:eval-section">Eval: the same 23 questions after every change</text>
       </g>
       <g data-from="8">
-        <text x="20" y="362" class="fsub">npm run question ledger: same question, same model, five answers</text>
+        <text x="20" y="362" class="fsub">npm run question ledger: same question, same model, five stops</text>
         <rect x="20" y="374" width="176" height="56" rx="10" class="fbox fbox-bad" />
         <text x="108" y="410" text-anchor="middle" class="flbl fbad-t" data-q="log:question-0-bare">25-30</text>
         <rect x="216" y="374" width="176" height="56" rx="10" class="fbox fbox-bad" />
@@ -106,7 +106,7 @@ In one day, we built a RAG pipeline and opened every intermediate output. In a c
     The same gold set after every change. For retrieval: hit@1, recall@5 and MRR. For the answers: `--answers`. Next job: grow the gold set. Add hard questions from real use and the expected values for 2026.
   </Step>
   <Step title="The question of the day, all day">
-    The `npm run question` ledger shows five answers. Without RAG: 25-30 working days, with a hedge ("depending on the company's policy"). Fixed chunks: 7 working days [1], a wrong number with a source. Section chunks: 22 working days. Chroma: 22 again. The 2026 edition: 24. <Guess echo />
+    The `npm run question` ledger has five stops. Without RAG: 25-30 working days, with a hedge ("depending on the company's policy"). Fixed chunks: 7 working days [1], a wrong number with a source. Section chunks: 22 working days. Chroma: 22 again. The 2026 edition: 24. Two more lines say 24: the search in all editions, and this run. <Guess echo />
 
     <Now n="1">Run `npm run question` to see every answer, one per line.</Now>
   </Step>
@@ -129,7 +129,7 @@ Each row is a pipeline step. Each column is an axis. The numbers come from this 
 ## The question of the day, all day
 
 <Figure caption="Source: five npm run question runs. The ledger below shows the last three numbers. The first two are in the logs of the earlier pages.">
-  <svg viewBox="0 0 1000 230" role="img" aria-label="The five answers the question of the day got during the day">
+  <svg viewBox="0 0 1000 230" role="img" aria-label="The answer to the question of the day at its five stops">
     <defs><marker id="kp-l" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker></defs>
     <text x="108" y="40" text-anchor="middle" class="fsub">without RAG</text>
     <text x="304" y="40" text-anchor="middle" class="fsub">fixed chunk</text>
