@@ -1,6 +1,6 @@
 ---
 title: Architecture
-description: Two lanes and one vector space — the lane that prepares the documents once, the lane that runs on every question, and the place where they meet. Every box is a file in the repo.
+description: Two lanes and one vector space. One lane prepares the documents once. One lane runs on every question. Every box is a file in the repo.
 ---
 import { FileTree } from '@astrojs/starlight/components';
 import Deck from '../../../components/Deck.astro';
@@ -29,8 +29,8 @@ Who prepares them, when, and where do they go?
         <rect x="22" y="48" width="120" height="64" rx="10" class="fbox" />
         <rect x="18" y="52" width="120" height="64" rx="10" class="fbox" />
         <rect x="14" y="56" width="120" height="64" rx="10" class="fbox" />
-        <text x="78" y="84" text-anchor="middle" class="flbl">Document</text>
-        <text x="78" y="108" text-anchor="middle" class="fsub" data-q="const">8 documents</text>
+        <text x="74" y="84" text-anchor="middle" class="flbl">Document</text>
+        <text x="74" y="108" text-anchor="middle" class="fsub" data-q="const">8 documents</text>
       </g>
       <g data-from="2">
         <path d="M144 88 H150" class="farrow" marker-end="url(#mi-h)" />
@@ -116,10 +116,10 @@ Who prepares them, when, and where do they go?
     The bottom lane runs on every question. The question also becomes 1024 numbers, with the same model as the top lane. A different model means a different space, and you can't compare the two.
   </Step>
   <Step title="Search and rerank">
-    `6-retrieve.ts` asks for the 5 chunks closest to the question. A metadata filter keeps old editions out of the search. It also keeps out documents the asker may not read. `7-rerank.ts` has the chat model score these 5 chunks, then sorts them again.
+    `6-retrieve.ts` asks for the 5 chunks closest to the question. A metadata filter keeps old editions out of the search. The same filter keeps out documents the asker may not read. `7-rerank.ts` asks the chat model to score each of the 5 chunks. Then it sorts them by score. This step is called rerank.
   </Step>
   <Step title="Prompt and answer">
-    `8-answer.ts` puts the rules, the best 3 sources and the question into one text. The model cites the source by number: 22 working days, [1] Annual Leave Policy §3.
+    `8-answer.ts` puts the rules, the best 3 sources and the question into one text. This text is the prompt. For 7 years of service, the model answers 22 working days and cites the source as [1]: Annual Leave Policy, section 3.
   </Step>
   <Step title="Two lanes, two meeting points">
     The lanes meet in only two places: the vector DB and the same embedding model. The chat model works only in the bottom lane, for rerank and the answer.
@@ -135,7 +135,7 @@ up. For example, on the chunking page:
 
 <FileTree>
 - src/
-  - steps/ one file and one command per box (steps 1–8: table below)
+  - steps/ one file and one command per box (steps 1 to 8, see the table below)
     - 0-bare.ts step 0: the model alone, no documents
   - lib/
     - ollama.ts the two calls to the model: embed and generate
@@ -156,7 +156,7 @@ up. For example, on the chunking page:
 - data/ each step writes its output here. Open it and look
 </FileTree>
 
-| Box | File | On its own | Writes |
+| Box | File | Run it with | Writes |
 |---|---|---|---|
 | Load | `src/steps/1-load.ts` | `npm run step -- 1` | `data/1-docs.json` |
 | Clean | `src/steps/2-clean.ts` | `npm run step -- 2` | `data/2-clean.json` |

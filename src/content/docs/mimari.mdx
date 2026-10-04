@@ -29,8 +29,8 @@ Kim hazırlıyor, ne zaman, nereye koyuyor?
         <rect x="22" y="48" width="120" height="64" rx="10" class="fbox" />
         <rect x="18" y="52" width="120" height="64" rx="10" class="fbox" />
         <rect x="14" y="56" width="120" height="64" rx="10" class="fbox" />
-        <text x="78" y="84" text-anchor="middle" class="flbl">Doküman</text>
-        <text x="78" y="108" text-anchor="middle" class="fsub" data-q="const">8 doküman</text>
+        <text x="74" y="84" text-anchor="middle" class="flbl">Doküman</text>
+        <text x="74" y="108" text-anchor="middle" class="fsub" data-q="const">8 doküman</text>
       </g>
       <g data-from="2">
         <path d="M144 88 H150" class="farrow" marker-end="url(#mi-h)" />
@@ -119,7 +119,7 @@ Kim hazırlıyor, ne zaman, nereye koyuyor?
     `6-retrieve.ts` soruya en yakın 5 chunk'ı ister; eski sürümler ve sorana kapalı dokümanlar metadata filtresiyle aramaya hiç girmez. `7-rerank.ts` bu 5 chunk'ı chat modeline puanlatıp yeniden sıralar.
   </Step>
   <Step title="Prompt ve cevap">
-    `8-answer.ts` kuralları, en iyi 3 kaynağı ve soruyu tek bir metinde birleştirir. Model cevabı kaynak numarasıyla yazar: 22 iş günü, [1] Annual Leave Policy §3.
+    `8-answer.ts` kuralları, en iyi 3 kaynağı ve soruyu tek bir metinde birleştirir. Bu metin prompt'tur. 7 yıllık kıdem için model 22 iş günü cevabını verir ve kaynağı numarasıyla yazar: [1] Annual Leave Policy §3.
   </Step>
   <Step title="İki şerit, iki buluşma noktası">
     Şeritler yalnızca iki yerde buluşur: vector DB ve aynı embedding modeli. Chat modeli yalnızca alt şeritte çalışır: rerank ve cevap.
@@ -156,7 +156,7 @@ chunking sayfasında:
 - data/ her adımın çıktısı buraya yazılır — açıp bakın
 </FileTree>
 
-| Kutu | Dosya | Tek başına | Yazdığı |
+| Kutu | Dosya | Şununla çalışır | Yazdığı |
 |---|---|---|---|
 | Yükle | `src/steps/1-load.ts` | `npm run step -- 1` | `data/1-docs.json` |
 | Temizle | `src/steps/2-clean.ts` | `npm run step -- 2` | `data/2-clean.json` |

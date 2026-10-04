@@ -19,7 +19,7 @@ The messages below are exactly as the repo's code writes them. Your own value go
 |---|---|
 | `✗ Node.js` `found <version>, need 22 or newer — https://nodejs.org` | Install Node.js 22 or newer. Close the terminal, open it again, and check with `node -v`. |
 | `✗ Ollama` `not reachable at http://localhost:11434 — start the Ollama app` | Open the Ollama app. No app? Run `ollama serve` in a terminal. If Ollama runs at another address, write `OLLAMA_URL=…` in `.env`. |
-| `✗ model gemma3:4b` `not pulled — run: ollama pull gemma3:4b` | Run the command from the line. The same for `bge-m3`: `ollama pull bge-m3`. |
+| `✗ model gemma3:4b` `not pulled — run: ollama pull gemma3:4b` | Run the command from the line. Do the same for `bge-m3`: `ollama pull bge-m3`. |
 | `✗ Chroma` `not reachable — run: podman compose up -d   (or set STORE=json in .env)` | Run `podman compose up -d` in the repo folder. If that fails, see the [Podman](#podman) section below. If nothing works, write `STORE=json` in `.env`. |
 | `✗ corpus/2025` `missing — run npm run doctor from the repo folder` | Run the command from inside the repo folder: `cd ama-rag-workshop`. |
 | `slow laptop: answers will take a while — that is fine, the steps still work` | Not an error. One answer took longer than 20 seconds. On the first run, this time also includes loading the model into memory. Run `npm run doctor` once more right away. If the warning stays, you only have to wait longer. |
@@ -28,7 +28,7 @@ The messages below are exactly as the repo's code writes them. Your own value go
 ## Error lines from the steps
 
 When a step hits a known problem, it prints one line: `✗` and the message. On an unknown error, it prints the whole
-stack trace. Then read the first line.
+stack trace. In that case, read the first line of the trace.
 
 **Ollama**
 
@@ -80,7 +80,7 @@ Two functions are empty on purpose. Until you write them, they print these messa
 | `dot() is not written yet — see the YOUR TURN note above it in src/lib/similarity.ts` | `npm run similar -- --metric dot`, before you write `dot()` |
 | `byParagraph() is homework — see the note above it in src/steps/3-chunk.ts` | `npm run check:sibling`, before you write `byParagraph()` |
 
-`npm run check:sibling` stays red until you write them. The finished versions are in the `solutions/` folder.
+`npm run check:sibling` stays red until you write them. The third item, the `turkishConfidential` rule in `src/steps/2-clean.ts`, prints no message, but `npm run check:sibling` needs it too. The finished versions are in the `solutions/` folder.
 
 ## Podman
 
@@ -126,10 +126,10 @@ once. If you can't get admin rights, use `STORE=json`. Only the parts that look 
 
 - **`VAR=x npm run …` doesn't work.** This form exists only in Mac and Linux shells. So the repo takes every setting
   from a flag (`npm run step -- 5 --store json`) or from the `.env` file.
-- **If `npm` doesn't start in PowerShell** and the error says `running scripts is disabled on this system`: type
-  `npm.cmd` in place of `npm` (`npm.cmd run doctor`). If your company policy allows it, you can also run
+- **If `npm` does not start in PowerShell**, the error says `running scripts is disabled on this system`. Type
+  `npm.cmd` instead of `npm`, for example `npm.cmd run doctor`. If your company allows it, you can also run
   `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
-- **If a flag seems to do nothing** (for example, `--store json` is ignored): write the same setting in the `.env`
+- **If a flag seems to do nothing**, for example `--store json` is ignored, write the same setting in the `.env`
   file. `.env` doesn't depend on the shell. It works the same in PowerShell, cmd and zsh.
 - **Line endings** are not a problem. The repo uses LF through `.gitattributes`, and step 1 also turns `\r\n` into `\n`.
 
@@ -182,7 +182,7 @@ npm run catchup -- 5
 
 <RepoCode file="src/cli/catchup.ts" from="// npm run catchup" to="Your own functions" />
 
-So: every `TOGGLE` block goes back to its default line. `data/` is emptied, and the vector DB is reset for every N.
+Catch-up does this: every `TOGGLE` block goes back to its default line. `data/` is emptied, and the vector DB is reset for every N.
 If Chroma is not running, catch-up prints one line, skips the reset and goes on. Then all steps from 1 to N run.
 Catch-up doesn't touch the functions you wrote, and it doesn't touch the question ledger either. The embeddings stay
 in the `.cache/` folder, so they are not computed again. Catch-up is fast.
