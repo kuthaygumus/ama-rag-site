@@ -113,7 +113,7 @@ The same text with the same model always gives the same vector. The cache is in 
 
 <Log name="04-embed" title="npm run step -- 4   (second time)" />
 
-In these logs, every vector comes from the cache, so they don't show the first embed time. `npm run doctor` embedded one sentence in 122 ms. If the model is not in memory yet, the first call also includes the time to load it. To see it on your machine, delete the `.cache/` folder and run `npm run step -- 4`. The log shows the milliseconds per chunk.
+In these logs, every vector comes from the cache, so they don't show the first embed time. `npm run doctor` embedded one sentence in 122 ms. If the model is not in memory yet, the first call also includes the time to load it. To see it on your machine, delete `.cache/embeddings.json` and run `npm run step -- 4`. The log shows the milliseconds per chunk.
 
 The store writes one edition at a time (`replaceEdition`):
 
