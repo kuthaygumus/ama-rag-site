@@ -96,18 +96,18 @@ Günün sorusunun cevabı hr-leave'in 198 satırından tek bir tablo satırında
         <path d="M14 322 H486" class="fbox-bad" stroke-dasharray="7 5" />
         <text x="34" y="343" class="fsub fbad-t" data-q="code:src/steps/3-chunk.ts corpus:2025/hr-leave.md">✂ 300 (bizim seçimimiz), 5. yılın “22”sini böldü</text>
       </g>
-      <g data-from="5">
+      <g data-from="6">
         <text x="750" y="30" text-anchor="middle" class="flbl">section · başlıklardan kes</text>
         <rect x="520" y="48" width="460" height="40" rx="6" class="fbox" />
         <text x="534" y="74" class="fsub" data-q="log:03-chunk-section corpus:2025/hr-leave.md">[Annual Leave Policy › 2. Probation and …]</text>
         <text x="968" y="74" text-anchor="end" class="fsub" data-q="log:03-chunk-section">#2</text>
         <rect x="520" y="96" width="460" height="340" rx="6" class="fbox-on" />
       </g>
-      <g data-from="6">
+      <g data-from="7">
         <rect x="528" y="280" width="120" height="22" rx="4" class="fbox-good" />
         <text x="750" y="628" text-anchor="middle" class="fsub fgood-t">başlık ve tablo aynı chunk'ta</text>
       </g>
-      <g data-from="5">
+      <g data-from="6">
         <text x="968" y="122" text-anchor="end" class="fsub" data-q="log:03-chunk-section">#3</text>
         <text x="534" y="122" class="fsub fnum" data-q="log:03-chunk-section">[Annual Leave Policy › 3. Annual Paid Leave]</text>
         <text x="534" y="147" class="fsub" data-q="log:03-chunk-section">Part-time staff get the … HR business partner.</text>
@@ -126,7 +126,7 @@ Günün sorusunun cevabı hr-leave'in 198 satırından tek bir tablo satırında
         <text x="534" y="472" class="fsub" data-q="log:03-chunk-section corpus:2025/hr-leave.md">[Annual Leave Policy › 4. Planning and …]</text>
         <text x="968" y="472" text-anchor="end" class="fsub" data-q="log:03-chunk-section">#4</text>
       </g>
-      <g data-from="7">
+      <g data-from="8">
         <text x="750" y="536" text-anchor="middle" class="fsub" data-q="log:03-chunk-fixed">fixed: 138 chunk · ortalama 294 karakter</text>
         <text x="750" y="566" text-anchor="middle" class="fsub fnum" data-q="log:03-chunk-section">section: 60 chunk · ortalama 695 karakter</text>
       </g>
@@ -136,7 +136,7 @@ Günün sorusunun cevabı hr-leave'in 198 satırından tek bir tablo satırında
     Her soruda 8 dokümanın hepsini modele vermek pahalı ve gürültülü. Dokümanları parçalara böleriz; arama yalnızca soruya en yakın birkaç parçayı seçer. Bu parçaların adı <Term id="chunk">chunk</Term>.
   </Step>
   <Step title="Birinci yol: her 300 karakterde bir kes" stage="b">
-    `fixedSize(doc, 300)`: içeriğe bakmadan her 300 karakterde bir makas; başlık, tablo, kelime tanımaz. Kodu on satır kadar, herkes işe bununla başlar. 300 bizim seçimimiz, bir kural değil.
+    `fixedSize(doc, 300)`: içeriğe bakmadan her 300 karakterde bir makas; başlık, tablo, kelime tanımaz. Kod kısa bir fonksiyon. Herkes işe bununla başlar. 300 bizim seçimimiz, bir kural değil.
 
     <Now n="1">`src/steps/3-chunk.ts` içinde chunker'ı `fixed` yapın ve `npm run step -- 3` çalıştırın.</Now>
   </Step>
@@ -146,7 +146,14 @@ Günün sorusunun cevabı hr-leave'in 198 satırından tek bir tablo satırında
     <Now n="2">`data/3-chunks.json` içinde `hr-leave@2025#c07` ve `hr-leave@2025#c08` kayıtlarını bulun: tablo başlığı hangisinde?</Now>
   </Step>
   <Step title="Başlıksız satır ne anlatır?" stage="b">
-    Cevap satırı `| 7 | 22 |` c08'de, ama başlığı c07'de kaldı: 7 yıl mı, 22 gün mü, parça söylemiyor; "annual" kelimesi de geçmiyor. Prompt'a giden 3 kaynak arasında c08 yok. Model yine de şunu yazdı: "An employee with 7 years of service gets at most 7 working days [1]." Gösterdiği kaynak [1], §4'teki c11. Oradaki 7, tek seferde alınabilecek en uzun izin. Kaynak var ama sayı yanlış.
+    Cevap satırı `| 7 | 22 |` c08'de, ama başlığı c07'de kaldı: 7 yıl mı, 22 gün mü, c08 söylemiyor; "annual" kelimesi de geçmiyor.
+  </Step>
+  <Step title="Model yine de cevap veriyor" stage="b">
+    Prompt'a giden 3 kaynak arasında c08 yok. Model yine de şunu yazdı:
+
+    "An employee with 7 years of service gets at most 7 working days [1]."
+
+    Gösterdiği kaynak [1], 4. bölümdeki c11. Orada 7 iş günü, yoğun sezonda tek bir izin bloğu için üst sınır. Kaynak var ama sayı yanlış.
 
     <Now n="3">`npm run question` çalıştırın.</Now>
   </Step>
@@ -167,13 +174,13 @@ Günün sorusunun cevabı hr-leave'in 198 satırından tek bir tablo satırında
 Log'da c08'e bakın. `npm run question` şimdilik bir kara kutuyla arıyor; vektörleri ve depoyu C ve D sayfalarında açacağız.
 </Example>
 
-<Log name="03-chunk-fixed" title="npm run step -- 3   (CHUNKER = fixed)" />
+<Log name="03-chunk-fixed" title="npm run step -- 3   (chunker: fixed)" />
 
 <Log name="question-1-fixed" title="npm run question" to={10} />
 
 Aynı adım, chunker `section`:
 
-<Log name="03-chunk-section" title="npm run step -- 3   (CHUNKER = section)" />
+<Log name="03-chunk-section" title="npm run step -- 3   (chunker: section)" />
 
 <Log name="question-2-section" title="npm run question" />
 
@@ -202,11 +209,11 @@ Geride kaldıysanız: `npm run catchup -- 3`.
 ## Sık sorulan
 
 <FAQ q="Neden 300? Başka bir sayı tabloyu kurtarmaz mıydı?">
-Bazen. Başka bir sayı makası başka bir yere düşürür. Bu dokümanda başka boyutları da denedik: 250, 350, 450, 500 ya da 1000 karakterde başlık satırı ve `| 7 |` satırı aynı parçada kalır. 300 tutmaz; 300'ü bu yüzden gösteriyoruz. Sorun aynı kalır: makas içeriğe bakmıyor. Hangi sayı olursa olsun bir kesik bir gün bir tablonun ya da bir cümlenin ortasına denk gelir.
+Bazen. Başka bir sayı makası başka bir yere düşürür. Bu dokümanda başka boyutları da denedik: 250, 350, 450, 500 ya da 1000 karakterde başlık satırı ve `| 7 |` satırı aynı parçada kalır. 300 tutmaz; 300'ü, tabloyu bölen bir boyut olduğu için kullanıyoruz. Sorun aynı kalır: makas içeriğe bakmıyor. Hangi sayı olursa olsun makas bir gün bir tablonun ya da bir cümlenin ortasına denk gelir.
 </FAQ>
 
 <FAQ q="Parçalar biraz örtüşse (overlap)?">
-Komşu parçaların birkaç yüz karakteri paylaşması yaygın bir yöntem: kesikte kalan başlık bazen komşu parçaya da düşer. Garantisi yoktur, parça sayısı ve depolama artar. Bu korpusta ölçmedik.
+Komşu parçaların birkaç yüz karakteri paylaşması yaygın bir yöntem: makasın düştüğü yerdeki başlık bazen komşu parçaya da düşer. Garantisi yoktur, parça sayısı ve depolama artar. Bu korpusta ölçmedik.
 </FAQ>
 
 <FAQ q="Dokümanın başlıkları yoksa ne yaparız?">
@@ -221,4 +228,4 @@ Hayır. Büyük parça prompt'u uzatır (maliyet ve süre) ve farklı konuları 
 Makas bir bölüm başlığının üstünden geçtiğinde parça iki bölüme birden dokunur; `sections` alanı bunu kaydeder. Değerlendirme (Kaliteyi ölçmek) doğru cevabı bölüm düzeyinde kontrol ettiği için bu alan önemli.
 </FAQ>
 
-<Takeaway>Bu farkı model değil, splitter yarattı.</Takeaway>
+<Takeaway>Bu farkı model değil, chunker yarattı.</Takeaway>

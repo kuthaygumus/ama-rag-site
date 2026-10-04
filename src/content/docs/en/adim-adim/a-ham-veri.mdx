@@ -19,7 +19,7 @@ import Term from '../../../../components/Term.astro';
 
 <WhereAmI at="load clean" />
 
-<DaysQuestion answer="“Typically, an employee with 7 years of service gets 25-30 working days of annual leave, depending on the company's policy.” ✗ made up" how="bare model, no documents — we haven't read a document yet" />
+<DaysQuestion answer="“Typically, an employee with 7 years of service gets 25-30 working days of annual leave, depending on the company's policy.” ✗ wrong" how="bare model, no documents. We haven't read a document yet." />
 
 <Gate>
 The model never saw these files. And even if it did, the raw files are dirty. If we split this text into chunks as it is, the noise goes into the chunks too.
@@ -46,7 +46,7 @@ The model never saw these files. And even if it did, the raw files are dirty. If
         <text x="367" y="158" text-anchor="middle" class="fmono" data-q="const">corpus/2025/</text>
         <text x="367" y="180" text-anchor="middle" class="fmono">hr-leave.md</text>
         <text x="140" y="234" text-anchor="middle" class="fsub">skipped here:</text>
-        <text x="140" y="258" text-anchor="middle" class="fsub">the text comes ready</text>
+        <text x="140" y="258" text-anchor="middle" class="fsub">the text is ready</text>
       </g>
       <g data-from="3">
         <text x="499" y="116" text-anchor="middle" class="fsub" data-q="const">step 1</text>
@@ -185,7 +185,7 @@ The model never saw these files. And even if it did, the raw files are dirty. If
   <Step title="The block at the top: metadata" stage="b" phase="1">
     Between two `---` lines at the top, the document describes itself. It gives its name (`id`), edition (`edition`) and department. It says who may read it (`access`) and its language (`lang`). We call this <Term id="metadata">metadata</Term>. Step 1 stores each field.
 
-    <Now n="1">Run `npm run step -- 1`, then open `data/1-docs.json`. Which field is different for `hr-salary-bands`?</Now>
+    <Now n="1">Run `npm run step -- 1`, then open `data/1-docs.json`. Which field shows that only HR may read `hr-salary-bands`?</Now>
   </Step>
   <Step title="Does a real PDF have this block?" stage="b" phase="1">
     No. In a real project, another system keeps the edition and read access. It is the system that holds the document: SharePoint, Confluence or an archive. We wrote them at the top of the file to keep everything in one file.
@@ -197,15 +197,15 @@ The model never saw these files. And even if it did, the raw files are dirty. If
     The hr-leave file looks like text from a 4-page PDF. Each page starts with the same header and a confidentiality line. Each page ends with a number like `Page 1 of 4`. These lines have nothing to do with the content. We call them noise.
   </Step>
   <Step title="Why is noise a problem?" stage="b" phase="2">
-    The header line repeats on every page. When we split the text, it lands in many chunks. Then the chunks look alike because of this shared line, not because of their content. So the search has a hard time telling them apart.
+    The header line repeats on every page. When we split the text, it lands in many chunks. Then many chunks share this line, so they look more alike. That can make them harder to tell apart.
   </Step>
   <Step title="Broken lines, too" stage="b" phase="3">
     The page width also broke sentences apart. "special" ends one line, and "leave" starts the next. A person reads this fine. But a program that works line by line sees two separate parts.
   </Step>
-  <Step title="Cleaning: 4 rules and a joiner" stage="b">
+  <Step title="Cleaning: 4 rules and a line joiner" stage="b">
     Step 2 drops the noise with 4 rules (regex). The rules catch the page header and the English confidentiality line. They also catch page numbers in English and in Turkish. Then the step joins the broken lines of plain text. Headings, tables and blank lines stay as they are.
 
-    <Now n="2">In `src/steps/2-clean.ts`, comment out the first rule of the `NOISE` list. Run `npm run step -- 2`. The `hr-leave` line should show −8.</Now>
+    <Now n="2">In `src/steps/2-clean.ts`, comment out the first rule of the `NOISE` list. Run `npm run step -- 2`. The `hr-leave` line should show −8 noise lines.</Now>
   </Step>
   <Step title="Result: raw data in, clean text out" stage="b">
     In the 8 documents, 1078 lines went down to 512. Of the 566 removed lines, 74 are noise. The rest are joined lines and extra blank lines that the cleaning deleted. Both steps took a few milliseconds.
@@ -252,7 +252,7 @@ Each record it returns is a `Doc`. That is a TypeScript interface in `src/lib/ty
 
 The line drops `path`: it takes it as `_path` and never uses it. It copies the metadata (`...meta`) as it is. `cleanText(body)` adds the clean `text` field and the number of dropped lines (`noiseLines`). The record's shape is `CleanDoc`, right below `Doc` in `types.ts`.
 
-The joiner has a limit. It never adds a heading, a table row, a blank line or a list item to another line.
+The line joiner has a limit. It never adds a heading, a table row, a blank line or a list item to another line.
 
 <RepoCode file="src/steps/2-clean.ts" from="const closed" />
 
@@ -267,19 +267,19 @@ The noise rules are in a list. Lines marked `// default` are on by default. The 
 The Turkish document (`it-security`) has the line `GİZLİ – Yalnızca şirket içi kullanım içindir` on every page. In English, it means: confidential, for internal use only. No rule removes this line. In the log, `it-security` shows −8. Its 4 page headers and 4 page numbers are gone. Its 4 confidentiality lines stay. The leftover noise doesn't go away. With the split method of page B, it becomes a chunk named `it-security@2025#0`. That chunk holds only the document title and this line. It gets embedded and stored, and it competes in the search.
 
 <YourTurn>
-**1 · Look at the raw data.** Open `corpus/2025/hr-leave.md`. Find the `---` block, the page header and the `Page 1 of 4` line. Then run `npm run step -- 1` and open `data/1-docs.json`. Look at the `access` and `lang` fields of each document. Which field is different for `hr-salary-bands`?
+**1 · Look at the raw data.** Open `corpus/2025/hr-leave.md`. Find the `---` block, the page header and the `Page 1 of 4` line. Then run `npm run step -- 1` and open `data/1-docs.json`. Look at the `access` and `lang` fields of each document. Which field shows that only HR may read `hr-salary-bands`?
 
-**2 · Comment out a rule.** In `src/steps/2-clean.ts`, find the first line of the `NOISE` list: the page header rule. Put `//` before it and run `npm run step -- 2`. In the log, the `hr-leave` line should show −8, not −12. Search `data/2-clean.json` for `Edition 2025`: the page header is back in the text. Uncomment the line and run step 2 again.
+**2 · Comment out a rule.** In `src/steps/2-clean.ts`, find the first line of the `NOISE` list: the page header rule. Put `//` before it and run `npm run step -- 2`. In the log, the `hr-leave` line should show −8 noise lines, not −12. Search `data/2-clean.json` for `Edition 2025`: the page header is back in the text. Uncomment the line and run step 2 again.
 
 **3 · Write a similar rule.** In the same file, `turkishConfidential` is empty. The rule for the English line looks like `/^CONFIDENTIAL – .+$/`. Write the same kind of rule for the Turkish confidentiality line. Hint: the dash is an en dash (–), and the `İ` has a dot. Copy the line from the file. Don't type `GIZLI`. Then:
 
-- `npm run step -- 2` → the `it-security` line should show −12, not −8.
+- `npm run step -- 2` → the `it-security` line should show −12 noise lines, not −8.
 - `npm run check:sibling` → the `step 2 · turkishConfidential` test should be green. The `dot` and `byParagraph` tests stay red for now. They belong to page C and to the homework on page B.
 - If you like, run `npm run step -- 3` and open `data/3-chunks.json`: `it-security@2025#0` is gone.
 
 With the rule in place, step 2 drops 78 noise lines, not 74. The 1078 lines go down to 504. We captured the logs on the next pages without this rule. So the logs show 60 chunks, or 120 records with both editions. On your machine, you get 59 chunks (118 records). This difference is expected.
 
-Fell behind? Run `npm run catchup -- 2`.
+Are you behind? Run `npm run catchup -- 2`.
 </YourTurn>
 
 ## Common questions
