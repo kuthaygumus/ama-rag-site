@@ -43,11 +43,19 @@ Klasik kelime araması puanı: sorudaki kelimelerin dokümanda ne sıklıkla ge�
 
 HTTP isteklerini elle göndermek için bir masaüstü uygulaması. Bu kursta Ollama ve Chroma'nın içine bakmak için kullanılır; pipeline'ı terminal çalıştırır.
 
+<h3 id="bruteforce">Brute force</h3>
+
+Soruyu depodaki her vektörle tek tek karşılaştırmak. Sonuç kesindir, ama iş vektör sayısıyla birlikte büyür. JSON store'umuz böyle çalışır.
+
 ## C
 
 <h3 id="catchup">Catch-up</h3>
 
 `npm run catchup -- N`: toggle'ları varsayılana döndürür, `data/` klasörünü boşaltır, vector DB'yi de sıfırlar. Sonra 1'den N'ye kadar adımları yeniden çalıştırır. Yazdığınız fonksiyonlar olduğu gibi kalır. `N = 0` hiçbir adımı çalıştırmaz: günün başına dönersiniz.
+
+<h3 id="answer-check">Cevap kontrolü (answer check)</h3>
+
+Cevabı, model yazdıktan sonra okuyan kod. Kaynak numarası [n] olmayan her cümleyi siler. "This is not in the policies." cümlesi kalır. Bu repoda 8. adımdaki `CHECK_ANSWER` toggle'ı. Varsayılan olarak kapalı.
 
 <h3 id="chroma">Chroma</h3>
 
@@ -92,6 +100,10 @@ Bir politikanın yılı: 2025 ya da 2026. Metadata olarak saklanır; arama varsa
 <h3 id="embedding">Embedding</h3>
 
 Bir metnin sayı listesi (vektör) hâli. Anlamı yakın metinlerin sayıları da birbirine yakın çıkar; neyin yakın olduğuna embedding modeli karar verir.
+
+<h3 id="access">Erişim filtresi (access filter)</h3>
+
+Aramanın içindeki bir filtre. Her chunk, dokümanının `access` etiketini taşır. Arama yalnızca soran kişinin okuyabileceği chunk'ları döndürür. Bu repoda soranın erişim listesi 6. adımdaki bir toggle. Veriyi korur, cevabı değil.
 
 <h3 id="eval">Eval</h3>
 

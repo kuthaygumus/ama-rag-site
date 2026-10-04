@@ -13,6 +13,10 @@ These are the longer explanations of the words with a dotted underline on the pa
 
 The model says "I don't know" on purpose when the answer isn't in the sources. This doesn't happen by itself. You design it with a rule in the prompt. Our rule uses this sentence: "This is not in the policies." The code finds this answer by searching for part of that sentence. If the model says no in its own words, the code misses it. With the rule off, it wrote: "No, this policy does not cover stock options [1]."
 
+<h3 id="access">Access filter</h3>
+
+A filter inside the search. Each chunk carries the `access` label of its document. The search returns only the chunks the asker may read. In this repo, the asker's access list is a toggle in step 6. It protects the data, not the answer.
+
 <h3 id="agentic">Agentic RAG</h3>
 
 RAG where the model runs the search. It splits the question into parts and searches for each part. It checks "is this enough?", then it answers. It is for questions that need several documents. The cost: many calls and more time. This repo doesn't have it.
@@ -20,6 +24,10 @@ RAG where the model runs the search. It splits the question into parts and searc
 <h3 id="ann">ANN (approximate nearest neighbor)</h3>
 
 A search that uses an index and visits only the nearby vectors, not every vector one by one. It loses a little accuracy. But it stays fast, even on millions of vectors.
+
+<h3 id="answer-check">Answer check</h3>
+
+Code that reads the answer after the model writes it. It drops every sentence that has no source number [n]. The sentence "This is not in the policies." stays. In this repo, it is the `CHECK_ANSWER` toggle in step 8. It is off by default.
 
 ## B
 
@@ -38,6 +46,10 @@ The classic keyword search score. It looks at how often the words of the questio
 <h3 id="bruno">Bruno</h3>
 
 A desktop app for sending HTTP requests by hand. In this course we use it to look inside Ollama and Chroma. The terminal runs the pipeline.
+
+<h3 id="bruteforce">Brute force</h3>
+
+Comparing the question with every vector in the store, one by one. The result is exact, but the work grows with the number of vectors. Our JSON store works this way.
 
 ## C
 
