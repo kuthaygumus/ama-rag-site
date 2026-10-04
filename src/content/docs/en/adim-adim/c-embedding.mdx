@@ -111,7 +111,7 @@ Here are two sentences. "How much holiday do I get?" "Annual paid leave depends 
     The question also becomes 1024 numbers. Without that, we can't compare it with the chunks. The model must be the same. Another model puts its vectors in another space.
   </Step>
   <Step title="Measuring closeness: cosine" stage="m" phase="1">
-    The angle between two vectors. It ignores length and looks only at direction. The result is between −1 and 1, and 1 means the same direction. Our retriever and our Chroma collection both use it: <Term id="cosine">cosine similarity</Term>.
+    It compares two vectors by the angle between them. It ignores length and looks only at direction. The result is between −1 and 1, and 1 means the same direction. Our retriever and our Chroma collection both use it: <Term id="cosine">cosine similarity</Term>.
   </Step>
   <Step title="L2: the distance between the tips" stage="m" phase="2">
     The straight-line distance between two points. Careful: the scale runs the other way. A small number means close.
@@ -129,7 +129,7 @@ In the log, look at the first 6 numbers of the first chunk (an announcement). Lo
 
 <Log name="04-embed" title="npm run step -- 4" />
 
-Cosine and its distance version, L2, take a few lines in `src/lib/similarity.ts`:
+Cosine and L2 take a few lines each in `src/lib/similarity.ts`:
 
 <RepoCode file="src/lib/similarity.ts" from="export function cosine" />
 

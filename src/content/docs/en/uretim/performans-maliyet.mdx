@@ -161,11 +161,11 @@ Only if the eval says so. The first homework on the wrap-up page measures exactl
 </FAQ>
 
 <FAQ q="Can we cache the answers too?">
-Yes. With temperature 0 and a fixed seed, the same question and sources give the same answer. This holds on the same machine. So you can store the answer. The key needs three parts: question + edition + access scope. Without the scope in the key, the cache can give an employee the salary answer that HR got. When you ingest a new edition, delete the cache for that edition. This repo has no answer cache.
+Yes. With temperature 0 and a fixed seed, the same question and sources give the same answer. This holds on the same machine. So you can store the answer. The key needs the question, the edition and the access scope. It also needs the model and the prompt version. Without the scope in the key, the cache can give an employee the salary answer that HR got. When you ingest a new edition, delete the cache for that edition. This repo has no answer cache.
 </FAQ>
 
 <FAQ q="Is a bigger model better?">
-Only the eval can tell. A bigger model is slower and needs more RAM. On this site we measured times only with gemma3:4b. To change the model, copy `env.example` to `.env` and uncomment the `CHAT_MODEL` line. Then run `npm run eval -- --answers`.
+Only the eval can tell. A bigger model is slower and needs more RAM. On this site we measured times only with gemma3:4b. To change the model, add a `CHAT_MODEL=` line with another model name to `.env`. No `.env` yet? Copy `env.example` to `.env` first. Pull that model first with `ollama pull`. Rerank uses the same model, so its time changes too. Then run `npm run eval -- --answers`.
 </FAQ>
 
 <Takeaway>Time and cost are not in the search. They are in every model call and every token.</Takeaway>

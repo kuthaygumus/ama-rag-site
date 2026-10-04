@@ -161,11 +161,11 @@ Yalnızca eval öyle derse. Kapanış sayfasındaki ilk ödev tam bunu ölçer. 
 </FAQ>
 
 <FAQ q="Cevapları da cache'lesek?">
-Evet. Temperature 0 ve sabit seed ile aynı soru ve kaynaklar aynı cevabı verir. Bu, aynı makinede geçerli. Cevabı saklamak mümkün. Anahtar üç parçalı olmalı: soru + sürüm + erişim kapsamı. Kapsam anahtarda yoksa İK'nın aldığı maaş cevabı önbellekten bir çalışana gider. Yeni bir sürüm ingest edilince o sürümün cache'i silinir. Bu repoda cevap cache'i yok.
+Evet. Temperature 0 ve sabit seed ile aynı soru ve kaynaklar aynı cevabı verir. Bu, aynı makinede geçerli. Cevabı saklamak mümkün. Anahtarda soru, sürüm ve erişim kapsamı olmalı. Model ve prompt sürümü de olmalı. Kapsam anahtarda yoksa İK'nın aldığı maaş cevabı önbellekten bir çalışana gider. Yeni bir sürüm ingest edilince o sürümün cache'i silinir. Bu repoda cevap cache'i yok.
 </FAQ>
 
 <FAQ q="Daha büyük bir model daha mı iyi?">
-Daha yavaş ve daha çok RAM ister; daha iyi olup olmadığını eval söyler. Bu sitede süreler yalnızca gemma3:4b ile ölçüldü. Model değiştirmek için `env.example` dosyasını `.env` adıyla kopyalayıp `CHAT_MODEL` satırını açmak yeter; sonra `npm run eval -- --answers`.
+Daha yavaş ve daha çok RAM ister; daha iyi olup olmadığını eval söyler. Bu sitede süreler yalnızca gemma3:4b ile ölçüldü. Model değiştirmek için başka bir model adıyla bir `CHAT_MODEL=` satırını `.env` dosyasına ekleyin. `.env` yok mu? Önce `env.example` dosyasını `.env` adıyla kopyalayın. O modeli önce `ollama pull` ile indirin. Rerank da aynı modeli kullanır, yani onun süresi de değişir. Sonra `npm run eval -- --answers`.
 </FAQ>
 
 <Takeaway>Süre ve maliyet aramada değil, modele giden her çağrıda ve her token'da.</Takeaway>

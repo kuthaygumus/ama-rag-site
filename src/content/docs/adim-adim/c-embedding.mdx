@@ -111,7 +111,7 @@ import Term from '../../../components/Term.astro';
     Soru da 1024 sayıya döner; yoksa chunk'larla karşılaştırılamaz. Model aynı olmalı: başka bir modelin vektörleri başka bir uzaydadır.
   </Step>
   <Step title="Yakınlığı ölçmek: cosine" stage="m" phase="1">
-    İki vektör arasındaki açı. Uzunluğa bakmaz, yöne bakar; sonuç −1 ile 1 arasında, 1 = aynı yön. Retriever'ımız da Chroma koleksiyonumuz da bunu kullanıyor: <Term id="cosine">cosine benzerliği</Term>.
+    İki vektörü aralarındaki açıya göre karşılaştırır. Uzunluğa bakmaz, yöne bakar; sonuç −1 ile 1 arasında, 1 = aynı yön. Retriever'ımız da Chroma koleksiyonumuz da bunu kullanıyor: <Term id="cosine">cosine benzerliği</Term>.
   </Step>
   <Step title="L2: uçlar arası mesafe" stage="m" phase="2">
     İki noktanın düz çizgi uzaklığı. Dikkat, ölçek ters: küçük sayı = yakın.
@@ -129,7 +129,7 @@ Log'da ilk chunk'ın (bir duyuru) ilk 6 sayısına ve vektörün uzunluğuna bak
 
 <Log name="04-embed" title="npm run step -- 4" />
 
-Cosine ve mesafe karşılığı L2, `src/lib/similarity.ts` içinde birkaç satır:
+Cosine ve L2, `src/lib/similarity.ts` içinde birkaçar satır:
 
 <RepoCode file="src/lib/similarity.ts" from="export function cosine" />
 
