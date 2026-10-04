@@ -11,6 +11,8 @@ Start with `npm run doctor`. Each `✗` line names the problem and its fix. On a
 
 <Log name="doctor" title="npm run doctor" />
 
+The corpus line counts the documents: 7 in English, 1 in Turkish. The `one answer` line asks the chat model a short test question: the capital of Turkey. It shows the start of the answer.
+
 The messages below are exactly as the repo's code writes them. Your own value goes where you see `<…>`.
 
 ## `npm run doctor` lines
@@ -80,7 +82,7 @@ Two functions are empty on purpose. Until you write them, they print these messa
 | `dot() is not written yet — see the YOUR TURN note above it in src/lib/similarity.ts` | `npm run similar -- --metric dot`, before you write `dot()` |
 | `byParagraph() is homework — see the note above it in src/steps/3-chunk.ts` | `npm run check:sibling`, before you write `byParagraph()` |
 
-`npm run check:sibling` stays red until you write them. The third item, the `turkishConfidential` rule in `src/steps/2-clean.ts`, prints no message, but `npm run check:sibling` needs it too. The finished versions are in the `solutions/` folder.
+`npm run check:sibling` stays red until you write them. There is a third item: the `turkishConfidential` rule in `src/steps/2-clean.ts`. It prints no message. But `npm run check:sibling` needs it too. The finished versions are in the `solutions/` folder.
 
 ## Podman
 
@@ -171,6 +173,19 @@ On Windows, Desktop and Documents are often in OneDrive. Use a folder like `$HOM
 On a Mac, the same is true if iCloud syncs Desktop and Documents. Use `~/dev`.
 
 Already cloned into OneDrive? The cleanest fix: delete the folder, clone again under `$HOME\dev`, then run `npm ci`.
+
+## Cloned the Turkish version earlier?
+
+`git pull` can stop with `cannot pull with rebase: You have unstaged changes`. Run these in the repo folder, in order:
+
+```sh
+git stash
+git pull
+podman compose up -d
+npm run catchup -- 0
+```
+
+Delete `.cache/question-ledger.jsonl`. Then run `npm run doctor`. The corpus line must say `8 documents · 7 en, 1 tr`.
 
 ## Are you behind? `npm run catchup -- N`
 

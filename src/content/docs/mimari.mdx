@@ -1,6 +1,6 @@
 ---
 title: Mimari
-description: İki şerit ve bir vektör uzayı — dokümanları bir kere hazırlayan şerit, her soruda çalışan şerit, ikisinin buluştuğu yer. Her kutu repodaki bir dosya.
+description: İki şerit ve bir vektör uzayı. Bir şerit dokümanları bir kere hazırlar. Öteki her soruda çalışır. Her kutu repodaki bir dosya.
 ---
 import { FileTree } from '@astrojs/starlight/components';
 import Deck from '../../components/Deck.astro';
@@ -116,13 +116,13 @@ Kim hazırlıyor, ne zaman, nereye koyuyor?
     Her soruda alt şerit çalışır. Soru da üst şeritteki modelin aynısıyla 1024 sayıya çevrilir; başka bir model, karşılaştırılamayan başka bir uzay demektir.
   </Step>
   <Step title="Ara ve rerank">
-    `6-retrieve.ts` soruya en yakın 5 chunk'ı ister; eski sürümler ve sorana kapalı dokümanlar metadata filtresiyle aramaya hiç girmez. `7-rerank.ts` bu 5 chunk'ı chat modeline puanlatıp yeniden sıralar.
+    `6-retrieve.ts` soruya en yakın 5 chunk'ı bulur. Metadata filtresi eski sürümleri ve soranın okuyamayacağı dokümanları dışarıda tutar. `7-rerank.ts` her chunk'ı sohbet modeline puanlatır ve yeniden sıralar. Buna rerank denir.
   </Step>
   <Step title="Prompt ve cevap">
-    `8-answer.ts` kuralları, en iyi 3 kaynağı ve soruyu tek bir metinde birleştirir. Bu metin prompt'tur. 7 yıllık kıdem için model 22 iş günü cevabını verir ve kaynağı numarasıyla yazar: [1] Annual Leave Policy §3.
+    `8-answer.ts` kuralları, en iyi 3 kaynağı ve soruyu tek bir metinde birleştirir. Buna prompt denir. 7 yıllık kıdem için model 22 iş günü der. Kaynağı [1]: Annual Leave Policy, §3.
   </Step>
   <Step title="İki şerit, iki buluşma noktası">
-    Şeritler yalnızca iki yerde buluşur: vector DB ve aynı embedding modeli. Chat modeli yalnızca alt şeritte çalışır: rerank ve cevap.
+    Şeritler yalnızca iki yerde buluşur: vector DB ve aynı embedding modeli. Sohbet modeli yalnızca alt şeritte çalışır: rerank ve cevap.
   </Step>
 </Deck>
 
@@ -146,9 +146,9 @@ chunking sayfasında:
     - ingest.ts üst şerit: adım 1–5
     - ask.ts alt şerit: adım 6–8
     - question.ts günün sorusu ve defteri
-    - eval.ts kaliteyi ölçmek
-    - doctor.ts kurulum kontrolü
-    - catchup.ts geride kalana yetişme
+    - eval.ts kaliteyi ölçer
+    - doctor.ts kurulumu kontrol eder
+    - catchup.ts geride kalırsanız yetişmenize yardım eder
   - explore/
     - similar.ts hangi metinler yakın?
     - map.ts vektör uzayı, 2 boyutta
@@ -156,7 +156,7 @@ chunking sayfasında:
 - data/ her adımın çıktısı buraya yazılır — açıp bakın
 </FileTree>
 
-| Kutu | Dosya | Şununla çalışır | Yazdığı |
+| Kutu | Dosya | Çalıştırma komutu | Yazdığı |
 |---|---|---|---|
 | Yükle | `src/steps/1-load.ts` | `npm run step -- 1` | `data/1-docs.json` |
 | Temizle | `src/steps/2-clean.ts` | `npm run step -- 2` | `data/2-clean.json` |

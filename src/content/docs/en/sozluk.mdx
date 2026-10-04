@@ -11,7 +11,7 @@ These are the longer explanations of the words with a dotted underline on the pa
 
 <h3 id="abstain">Abstain (saying "I don't know")</h3>
 
-The model says "I don't know" on purpose when the answer isn't in the sources. This doesn't happen by itself. You design it with a rule in the prompt. Our rule uses this sentence: "This is not in the policies." The code finds this answer by searching for part of that sentence.
+The model says "I don't know" on purpose when the answer isn't in the sources. This doesn't happen by itself. You design it with a rule in the prompt. Our rule uses this sentence: "This is not in the policies." The code finds this answer by searching for part of that sentence. If the model says no in its own words, the code misses it. With the rule off, it wrote: "No, this policy does not cover stock options [1]."
 
 <h3 id="agentic">Agentic RAG</h3>
 
@@ -19,7 +19,7 @@ RAG where the model runs the search. It splits the question into parts and searc
 
 <h3 id="ann">ANN (approximate nearest neighbor)</h3>
 
-A search that uses an index and visits only the nearby vectors, not every vector one by one. It loses a little accuracy. In return, it is fast on millions of vectors.
+A search that uses an index and visits only the nearby vectors, not every vector one by one. It loses a little accuracy. But it stays fast, even on millions of vectors.
 
 ## B
 
@@ -59,7 +59,7 @@ Splitting a document into chunks. Where you cut decides what the search can find
 
 <h3 id="kaynak">Citation</h3>
 
-Writing which chunk each fact in the answer came from, with a number like `[1]`. It makes the answer checkable. By itself, it doesn't stop made-up answers.
+Writing which chunk each fact in the answer came from, with a number like `[1]`. With it, you can check the answer. But a source alone doesn't make the answer right: see [Hallucination](#hallucination).
 
 <h3 id="context">Context window</h3>
 
@@ -71,7 +71,7 @@ How much two vectors point the same way. 1 means the same direction, so the same
 
 <h3 id="cross-encoder">Cross-encoder</h3>
 
-A model that reads the question and the chunk together and gives one relevance score. It is used as a reranker. Our reranker is not a model trained for this job. We ask the chat model to score each pair of one question and one chunk, from 0 to 10.
+A model that reads the question and the chunk together and gives one relevance score. It is used as a reranker. Our reranker is not a model trained for this job. We ask the chat model to score each chunk for the question, from 0 to 10.
 
 ## D
 
@@ -87,7 +87,7 @@ Multiply two vectors number by number, then add up the results. For vectors of l
 
 <h3 id="edition">Edition</h3>
 
-The year of a policy: 2025 or 2026. It is stored as metadata. By default, the search looks only at the latest edition.
+The year of a policy: 2025 or 2026. It is stored as metadata. By default, the search looks only at the latest edition. Why filter? With every edition in the search, the 2026 and 2025 leave tables score almost the same: 0.619 and 0.614.
 
 <h3 id="embedding">Embedding</h3>
 
@@ -101,7 +101,7 @@ Scoring the system with questions whose answers we know. Ours is `npm run eval`.
 
 <h3 id="isaretli-kaynak">Fenced source</h3>
 
-Each source in the prompt starts with a start marker, `<<<SOURCE n: document title>>>`. It ends with an end marker, `<<<END SOURCE n>>>`. The markers show where the text from a document starts and ends. They didn't stop the injection. The rules in the prompt didn't stop it either.
+Each source in the prompt starts with a start marker, `<<<SOURCE n: document title>>>`. It ends with an end marker, `<<<END SOURCE n>>>`. The markers show where the text from a document starts and ends. They didn't stop the injection. The rules in the prompt didn't stop it either. A small check in code, run on the answer, removed the request: see [Prompt injection](#injection).
 
 <h3 id="finetune">Fine-tuning</h3>
 
@@ -129,7 +129,7 @@ At ingest, it builds a graph of the things in the documents and their links. At 
 
 <h3 id="hallucination">Hallucination</h3>
 
-The model makes something up and says it with confidence, like a fact. RAG reduces this but doesn't end it. On the fixed-chunk run, the model answers 7 working days with a source [1], and 7 is wrong.
+The model makes something up and says it with confidence, like a fact. RAG reduces this but doesn't end it. On the fixed-chunk run, the model answers "at most 7 working days" with a source [1]. The 7 is in the policy, but it is another rule: the longest block of leave in peak season. The right table row never reached the prompt.
 
 <h3 id="hit1">hit@1</h3>
 
@@ -169,7 +169,7 @@ Large language model: a model that predicts the next part of a text, one token a
 
 <h3 id="judge">LLM-as-judge</h3>
 
-Asking another language model to score an answer. For example: "Is every claim in this answer in the sources?" The judge can be wrong too, so you measure its decisions as well.
+Asking another language model to score an answer. For example: "Is every claim in this answer in the sources?" The judge can be wrong too. Check its scores as well.
 
 <h3 id="lora">LoRA</h3>
 
@@ -179,7 +179,7 @@ A cheap kind of fine-tuning. It doesn't train all the weights of the model. It t
 
 <h3 id="metadata">Metadata</h3>
 
-The labels on a chunk, apart from its text. They say which document, which edition and who may read it. The search uses them as filters. The filter runs inside the search.
+The labels on a chunk, next to its text. They say which document, which edition and who may read it. The search uses them as filters. The filter runs inside the search.
 
 <h3 id="mmr">MMR</h3>
 
@@ -209,7 +209,7 @@ A tool that runs language models on your laptop. In this course, both the embedd
 
 <h3 id="paraphrase">Paraphrase</h3>
 
-Saying the same thing with different words. One text says "holiday", the other says "annual paid leave". Keyword search misses this. Embedding search finds it, but in our test question ("How much holiday do I get? I started here 4 years ago.") the right section came only 5th.
+Saying the same thing with different words. One text says "holiday", the other says "annual paid leave". Keyword search misses this. Embedding search finds it, but in our test question ("How much holiday do I get? I started here 4 years ago.") the right section came only 5th. Rerank then moved it to 1st, and the answer was right: 18 working days [1].
 
 <h3 id="parentchild">Parent-child</h3>
 
@@ -233,7 +233,7 @@ The full text the model gets. Ours has the rules, then the fenced and numbered s
 
 <h3 id="injection">Prompt injection</h3>
 
-Hiding an instruction inside a text the model reads. In RAG, that text can be a document, like our meal card announcement. The rules in our prompt didn't stop it. A check in code, after the model, removed the request ([Security](/en/uretim/guvenlik/)).
+Hiding an instruction inside a text the model reads. In RAG, that text can be a document, like our meal card announcement. In our run, the model obeyed it. The answer asked for the employee number and password. The rules in our prompt didn't stop it. A check in code, after the model, removed the request ([Security](/en/uretim/guvenlik/)).
 
 ## R
 
@@ -255,7 +255,7 @@ Merging several result lists by scoring each chunk on its rank in each list. RAG
 
 <h3 id="rerank">Rerank</h3>
 
-Sorting the search results again with a second, more careful model. It reads the question and the chunk together. Ours makes 5 LLM calls for 5 candidates.
+Sorting the search results again with a second, more careful model. It reads the question and the chunk together. Ours makes 5 LLM calls for 5 candidates. For a case where it saves the answer, see [Paraphrase](#paraphrase).
 
 <h3 id="retrieval">Retrieval and retriever</h3>
 
@@ -273,7 +273,7 @@ The repo has a finished example of a rule or a function. Under it, you write a s
 
 <h3 id="system-prompt">System prompt</h3>
 
-The fixed rules the model sees with every question. Ours has 7 lines. They set the role and say: answer only from the sources. They give the "I don't know" sentence and say that sources are data. Then come the ban on passwords and personal data, citing sources, and quoting the table row first.
+The fixed rules the model sees with every question. Ours has 7 lines. They set the role and say: answer only from the sources. They give the "I don't know" sentence and say that sources are data, not instructions. Then come the ban on passwords and personal data, citing sources, and quoting the table row first.
 
 ## T
 
@@ -311,4 +311,4 @@ The space with many dimensions where the embeddings live. Ours has 1024 dimensio
 
 <h3 id="weights">Weights</h3>
 
-The billions of numbers a model learns in training. The model keeps what it knows here. When training ends, they freeze. That is why the model doesn't know the company's new policy.
+The billions of numbers a model learns in training. The model keeps what it knows here. When training ends, they freeze. That is why the model doesn't know the company's new policy. Asked about our leave, it says "25-30 working days of annual leave, depending on the company's policy".

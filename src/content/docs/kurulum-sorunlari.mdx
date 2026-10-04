@@ -11,6 +11,8 @@ import Takeaway from '../../components/Takeaway.astro';
 
 <Log name="doctor" title="npm run doctor" />
 
+Corpus satırı dokümanları sayar: 7'si İngilizce, 1'i Türkçe. `one answer` satırı sohbet modeline kısa bir deneme sorusu sorar: Türkiye'nin başkenti. Cevabın başını gösterir.
+
 Aşağıdaki mesajlar repodaki kodda yazıldığı gibi; `<…>` olan yerlere sizin değeriniz gelir.
 
 ## `npm run doctor` satırları
@@ -80,7 +82,7 @@ Bir adım bilinen bir sorunla karşılaşınca tek satır yazar: `✗` ve mesaj.
 | `dot() is not written yet — see the YOUR TURN note above it in src/lib/similarity.ts` | `npm run similar -- --metric dot`, `dot()` yazılmadan önce |
 | `byParagraph() is homework — see the note above it in src/steps/3-chunk.ts` | `npm run check:sibling`, `byParagraph()` yazılmadan önce |
 
-`npm run check:sibling` siz yazana kadar kırmızıdır. Üçüncü parça, `src/steps/2-clean.ts` içindeki `turkishConfidential` kuralı, mesaj vermez; ama `npm run check:sibling` onu da ister. Bitmiş hâlleri `solutions/` klasöründe.
+`npm run check:sibling` siz yazana kadar kırmızıdır. Bir üçüncü parça daha var: `src/steps/2-clean.ts` içindeki `turkishConfidential` kuralı. Mesaj vermez. Ama `npm run check:sibling` onu da ister. Bitmiş hâlleri `solutions/` klasöründe.
 
 ## Podman
 
@@ -171,6 +173,19 @@ Windows'ta Masaüstü ve Belgeler çoğu zaman OneDrive'dadır: `$HOME\dev` gibi
 Mac'te iCloud'un Masaüstü ve Belgeler senkronizasyonu açıksa aynısı: `~/dev`.
 
 Zaten OneDrive'a klonladıysanız en temizi: klasörü silin, `$HOME\dev` altına yeniden klonlayın, `npm ci`.
+
+## Daha önce Türkçe sürümü mü klonladınız?
+
+`git pull` şu mesajla durabilir: `cannot pull with rebase: You have unstaged changes`. Repo klasöründe şunları sırayla çalıştırın:
+
+```sh
+git stash
+git pull
+podman compose up -d
+npm run catchup -- 0
+```
+
+`.cache/question-ledger.jsonl` dosyasını silin. Sonra `npm run doctor` çalıştırın. Corpus satırında `8 documents · 7 en, 1 tr` yazmalı.
 
 ## Geride kaldıysanız: `npm run catchup -- N`
 

@@ -11,7 +11,7 @@ Sayfalardaki noktalı altı çizili kelimelerin uzun hâli. Alfabetik; her terim
 
 <h3 id="abstain">Abstain ("bilmiyorum" demek)</h3>
 
-Cevap kaynaklarda yoksa modelin bilerek "bilmiyorum" demesi. Kendiliğinden olmaz, prompt'taki bir kuralla tasarlanır; bizde cümlesi "This is not in the policies." Kod bu cevabı o cümlenin bir parçasını arayarak tanır.
+Cevap kaynaklarda yoksa modelin bilerek "bilmiyorum" demesi. Kendiliğinden olmaz, prompt'taki bir kuralla tasarlanır; bizde cümlesi "This is not in the policies." Kod bu cevabı o cümlenin bir parçasını arayarak tanır. Model kendi cümlesiyle hayır derse kod bunu yakalayamaz. Kural kapalıyken cevap şuydu: "No, this policy does not cover stock options [1]."
 
 <h3 id="agentic">Agentic RAG</h3>
 
@@ -19,11 +19,11 @@ Aramayı modelin yönettiği RAG: soruyu parçalara böler, her parça için ara
 
 <h3 id="weights">Ağırlıklar (weights)</h3>
 
-Modelin eğitimde öğrendiği milyarlarca sayı. Model bildiğini burada tutar; eğitim bitince donarlar. Bu yüzden şirketin yeni politikasını bilmez.
+Modelin eğitimde öğrendiği milyarlarca sayı. Model bildiğini burada tutar; eğitim bitince donarlar. Bu yüzden şirketin yeni politikasını bilmez. İznimizi sorunca "25-30 working days of annual leave, depending on the company's policy" diyor.
 
 <h3 id="ann">ANN (yaklaşık en yakın komşu)</h3>
 
-Her vektörü tek tek gezmek yerine bir indeksle yalnızca yakın komşuları gezen arama. Çok küçük bir doğruluk kaybı karşılığında milyonlarca vektörde hızlıdır.
+Her vektörü tek tek gezmek yerine bir indeksle yalnızca yakın komşuları gezen arama. Biraz doğruluk kaybeder, ama milyonlarca vektörde bile hızlıdır.
 
 ## B
 
@@ -71,7 +71,7 @@ Modelin tek seferde okuyabileceği token sınırı; prompt, kaynaklar ve cevap b
 
 <h3 id="cross-encoder">Cross-encoder</h3>
 
-Soruyu ve chunk'ı birlikte okuyup tek bir alaka puanı veren model; reranker olarak kullanılır. Bizim reranker'ımız bu iş için eğitilmiş bir model değil: sohbet modelinden her (soru, chunk) çifti için 0–10 arası bir puan istiyoruz.
+Soruyu ve chunk'ı birlikte okuyup tek bir alaka puanı veren model; reranker olarak kullanılır. Bizim reranker'ımız bu iş için eğitilmiş bir model değil: sohbet modeline her chunk'ı soruya göre 0 ile 10 arasında puanlatıyoruz.
 
 ## D
 
@@ -87,7 +87,7 @@ Dense vektörün her boyutu doludur ve anlamı taşır (embedding). Sparse vekt�
 
 <h3 id="edition">Edition (sürüm)</h3>
 
-Bir politikanın yılı: 2025 ya da 2026. Metadata olarak saklanır; arama varsayılan olarak yalnızca en yeni sürümde yapılır.
+Bir politikanın yılı: 2025 ya da 2026. Metadata olarak saklanır; arama varsayılan olarak yalnızca en yeni sürümde yapılır. Neden filtre? Bütün sürümler aramaya girince 2026 ve 2025 izin tabloları neredeyse aynı skoru alır: 0.619 ve 0.614.
 
 <h3 id="embedding">Embedding</h3>
 
@@ -125,7 +125,7 @@ Dokümanlardaki varlıkları ve aralarındaki ilişkileri ingest'te bir grafa ç
 
 <h3 id="hallucination">Halüsinasyon</h3>
 
-Modelin gerçekmiş gibi, kendinden emin bir şekilde uydurması. RAG azaltır ama bitirmez: fixed chunk koşusunda model kaynak göstererek 7 iş günü [1] diyor ve 7 yanlış.
+Modelin gerçekmiş gibi, kendinden emin bir şekilde uydurması. RAG azaltır ama bitirmez. Fixed chunk koşusunda model kaynak göstererek "at most 7 working days" [1] diyor. 7 politikada geçiyor, ama başka bir kuralın sayısı: yoğun sezonda tek seferde alınabilecek en uzun izin. Doğru tablo satırı prompt'a hiç ulaşmadı.
 
 <h3 id="hit1">hit@1</h3>
 
@@ -151,13 +151,13 @@ Dokümanları aranabilir hâle getiren hazırlık: yükle, temizle, chunk'la, em
 
 <h3 id="isaretli-kaynak">İşaretli kaynak</h3>
 
-Prompt'taki her kaynağın `<<<SOURCE n: document title>>>` ile açılıp `<<<END SOURCE n>>>` ile kapanması. Dokümandan gelen metnin nerede başlayıp bittiğini işaretler. Injection'ı durdurmadı; prompt'taki kurallar da durdurmadı.
+Prompt'taki her kaynağın `<<<SOURCE n: document title>>>` ile açılıp `<<<END SOURCE n>>>` ile kapanması. Dokümandan gelen metnin nerede başlayıp bittiğini işaretler. Injection'ı durdurmadı; prompt'taki kurallar da durdurmadı. Cevabın üzerinde çalışan küçük bir kod kontrolü isteği sildi: [Prompt injection](#injection).
 
 ## K
 
 <h3 id="kaynak">Kaynak gösterme</h3>
 
-Cevaptaki her bilginin hangi chunk'tan geldiğini `[1]` gibi bir numarayla yazmak. Cevabı denetlenebilir kılar; uydurmayı tek başına durdurmaz.
+Cevaptaki her bilginin hangi chunk'tan geldiğini `[1]` gibi bir numarayla yazmak. Böylece cevap kontrol edilebilir. Ama kaynak tek başına cevabı doğru yapmaz: [Halüsinasyon](#hallucination).
 
 <h3 id="pii">Kişisel veri (PII)</h3>
 
@@ -179,7 +179,7 @@ Büyük dil modeli: metnin devamını token token tahmin eden model. Bildiği he
 
 <h3 id="judge">LLM-as-judge</h3>
 
-Bir cevabı başka bir dil modeline puanlatmak, örneğin "bu cevaptaki her iddia kaynaklarda var mı?". Hakem de yanılabilir; onun kararlarını da ölçmek gerekir.
+Bir cevabı başka bir dil modeline puanlatmak, örneğin "bu cevaptaki her iddia kaynaklarda var mı?". Hakem de yanılabilir. Onun puanlarını da kontrol edin.
 
 <h3 id="lora">LoRA</h3>
 
@@ -189,7 +189,7 @@ Fine-tuning'in ucuz bir türü: modelin bütün ağırlıklarını değil, yanı
 
 <h3 id="metadata">Metadata</h3>
 
-Bir chunk'ın içeriği dışındaki etiketleri: hangi doküman, hangi sürüm, kim okuyabilir. Aramada filtre olarak kullanılır; filtre aramanın içinde çalışır.
+Bir chunk'ın metninin yanındaki etiketleri: hangi doküman, hangi sürüm, kim okuyabilir. Aramada filtre olarak kullanılır; filtre aramanın içinde çalışır.
 
 <h3 id="mmr">MMR</h3>
 
@@ -219,7 +219,7 @@ Dil modellerini dizüstünde çalıştıran araç. Bu kursta embedding modeli (b
 
 <h3 id="paraphrase">Paraphrase</h3>
 
-Aynı anlamı başka kelimelerle söylemek: biri "holiday" diyor, öteki "annual paid leave". Kelime araması bunu kaçırır; embedding bulur, ama test sorumuzda ("How much holiday do I get? I started here 4 years ago.") doğru bölüm ancak 5. sıraya geldi.
+Aynı anlamı başka kelimelerle söylemek: biri "holiday" diyor, öteki "annual paid leave". Kelime araması bunu kaçırır; embedding bulur, ama test sorumuzda ("How much holiday do I get? I started here 4 years ago.") doğru bölüm ancak 5. sıraya geldi. Rerank onu 1. sıraya taşıdı ve cevap doğru çıktı: 18 iş günü [1].
 
 <h3 id="parentchild">Parent-child</h3>
 
@@ -239,7 +239,7 @@ Modele giden metnin tamamı. Bizde kurallar, işaretli ve numaralı kaynaklar, s
 
 <h3 id="injection">Prompt injection</h3>
 
-Modelin okuduğu bir metnin içine talimat gizlemek. RAG'de bu metin bir doküman olabilir: bizim yemek kartı duyurumuz gibi. Prompt'taki kurallarımız onu durdurmadı; modelden sonra çalışan bir kod kontrolü isteği sildi ([Güvenlik](/uretim/guvenlik/)).
+Modelin okuduğu bir metnin içine talimat gizlemek. RAG'de bu metin bir doküman olabilir: bizim yemek kartı duyurumuz gibi. Bizim koşumuzda model talimata uydu: cevap sicil numarası ve şifre istedi. Prompt'taki kurallarımız onu durdurmadı; modelden sonra çalışan bir kod kontrolü isteği sildi ([Güvenlik](/uretim/guvenlik/)).
 
 ## R
 
@@ -261,7 +261,7 @@ Birkaç sonuç listesini, her parçanın listelerdeki sırasına göre puanlayı
 
 <h3 id="rerank">Rerank</h3>
 
-Arama sonuçlarını ikinci, daha dikkatli bir modelle yeniden sıralamak; soruyu ve chunk'ı birlikte okur. Bizde 5 aday için 5 LLM çağrısı.
+Arama sonuçlarını ikinci, daha dikkatli bir modelle yeniden sıralamak; soruyu ve chunk'ı birlikte okur. Bizde 5 aday için 5 LLM çağrısı. Cevabı kurtardığı bir örnek: [Paraphrase](#paraphrase).
 
 <h3 id="retrieval">Retrieval ve retriever</h3>
 
@@ -269,7 +269,7 @@ Retrieval, soru anında depodan en ilgili chunk'ları bulmaktır. Retriever bu i
 
 ## S
 
-<h3 id="sibling">Sibling (benzer fonksiyon)</h3>
+<h3 id="sibling">Sibling (benzer örnek)</h3>
 
 Repoda örneği yazılmış bir kuralın ya da fonksiyonun altına sizin yazacağınız benzeri: `turkishConfidential` bir kural (RegExp), `dot` ve `byParagraph` birer fonksiyon. `npm run check:sibling` üçünü de test eder.
 
@@ -293,7 +293,7 @@ Repodaki `// TOGGLE` bloğu: biri açık (`// default`), öteki yorumda (`// alt
 
 <h3 id="token">Token</h3>
 
-Modelin okuduğu ve yazdığı en küçük metin parçası; kabaca bir kelimenin bir kısmı. Maliyet ve sınırlar token ile ölçülür.
+Modelin okuduğu ve yazdığı en küçük metin parçası; kabaca bir kelime ya da bir kelimenin parçası. Maliyet ve sınırlar token ile ölçülür.
 
 <h3 id="topk">Top-k</h3>
 
