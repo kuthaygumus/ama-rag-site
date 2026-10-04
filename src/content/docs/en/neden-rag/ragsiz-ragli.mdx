@@ -1,6 +1,6 @@
 ---
 title: Without RAG / with RAG
-description: Same question, same model — once with no sources, once with the right chunks in front of it. And why "put everything in the prompt" is not the fix.
+description: Same question, same model. Once with no sources, once with the right chunks in front of it. And why "put everything in the prompt" is not the fix.
 ---
 import Deck from '../../../../components/Deck.astro';
 import DeckFigure from '../../../../components/DeckFigure.astro';
@@ -115,21 +115,21 @@ None of them is 22. What if we give the model the knowledge with the question, e
     The model is the same. Nobody touched its weights. Only the text in front of it changed. The answer is 22 working days, with the source [1] hr-leave §3.
   </Step>
   <Step title="What if we put everything in the prompt?" stage="b">
-    We put all 8 handbook documents into one prompt: 9954 tokens. The RAG prompt is 976 tokens. The answer is still 22 working days, but one call took 27149 ms, about 27 seconds. The whole RAG path, with search and <Term id="rerank">rerank</Term>, takes about 2 seconds.
+    We put all 8 handbook documents into one prompt: 9954 tokens. The RAG prompt is 976 tokens. The answer is still 22 working days. But one call took 27149 ms, about 27 seconds. The whole RAG path, with search and <Term id="rerank">rerank</Term>, takes about 2 seconds.
   </Step>
   <Step title="The real job is choosing" stage="b">
-    If you put everything in, you pay for the whole handbook on every question. As the corpus grows, one day it won't fit in the <Term id="context">context window</Term>. And everyone reads the salary table that only HR may see.
+    If you put everything in, you pay for the whole handbook on every question. Even today, it doesn't fit our default <Term id="context">context window</Term>. And everyone reads the salary table that only HR may see.
   </Step>
 </Deck>
 
 <Example>
 First, with nothing built yet:
 
-<Log name="question-0-bare" title="npm run question — before we start" from={0} to={6} />
+<Log name="question-0-bare" title="npm run question, before we start" from={0} to={6} />
 
 Then the same command, with the whole pipeline built. Look at the `HOW` line and the sources under it:
 
-<Log name="question-3-full" title="npm run question — with the vector DB filled" from={0} to={10} />
+<Log name="question-3-full" title="npm run question, with the vector DB filled" from={0} to={10} />
 </Example>
 
 The full text the model gets (rules, numbered sources, question) is on the

@@ -1,6 +1,6 @@
 ---
 title: Setup
-description: Once, before the course — Node 22, git, Ollama and two models, Chroma in Podman, the repo and npm run doctor.
+description: Once, before the course: Node 22, git, Ollama and two models, Chroma in Podman, the repo and npm run doctor.
 ---
 import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
 import RepoCode from '../../../../components/RepoCode.astro';
@@ -30,7 +30,8 @@ with `ollama list` and `podman image ls`. Download them on a good connection. On
 <Steps>
 
 1. **Node.js, git, Ollama, Podman Desktop, Bruno.** Install them from the links above. On first start, Podman Desktop
-   offers to create a Podman machine (a small Linux virtual machine) and to install Compose. Accept both.
+   offers two things. It can create a Podman machine, a small Linux virtual machine. It can also install Compose.
+   Accept both.
    `podman compose` calls that Compose tool. You can also start the machine from the terminal:
 
    ```sh
@@ -91,7 +92,7 @@ with `ollama list` and `podman image ls`. Download them on a good connection. On
 <Log name="doctor" title="npm run doctor" />
 
 The output above is from an M-series Mac. Both models were already in memory (embedding 150 ms, answer 176 ms).
-On the first run, both times also include loading the models into memory, so they are longer.
+On the first run, both times are longer. They also include loading the models into memory.
 Ollama keeps a model in memory for a few minutes. A new run in that time doesn't load it again.
 The corpus line says "7 en, 1 tr". One of the 8 documents is in Turkish. We use it later.
 
@@ -126,8 +127,8 @@ npm run doctor
 </TabItem>
 </Tabs>
 
-Now `npm run doctor` doesn't check Chroma. Its `store` line says `json (no Podman needed)`. To change the setting
-for one command only, you can use a flag: `npm run step -- 5 --store json`.
+Now `npm run doctor` doesn't check Chroma. Its `store` line says `json (no Podman needed)`. For one command only,
+use a flag: `npm run step -- 5 --store json`.
 
 All settings are in the repo's `env.example` file, as comment lines. They are `OLLAMA_URL`, `CHROMA_URL`,
 `CHAT_MODEL`, `EMBED_MODEL`, `STORE` and `EDITION`. To change one, copy its line into your `.env` file and

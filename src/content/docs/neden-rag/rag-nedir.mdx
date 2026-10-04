@@ -56,7 +56,7 @@ söylüyor.
     </svg>
   </DeckFigure>
   <Step title="Adın açılımı">
-    <Term id="rag">RAG</Term> = Retrieval-Augmented Generation. Türkçede oturmuş bir karşılığı yok, herkes RAG diyor; anlamca "bilgi erişimi destekli üretim". Üç kelime, sırayla çalışan üç iş: bul, ekle, yaz.
+    <Term id="rag">RAG</Term> = Retrieval-Augmented Generation. Üç kelime, sırayla çalışan üç iş: bul, ekle, yaz.
   </Step>
   <Step title="R · Retrieval: bul" phase="1">
     Soru, dokümanlardan önceden hazırlanmış parçalar arasında aranır ve en ilgili birkaçı seçilir. Bizde iki dosya: `6-retrieve.ts` (arama) ve `7-rerank.ts` (<Term id="rerank">rerank</Term>).
@@ -65,7 +65,7 @@ söylüyor.
     Seçilen parçalar numaralanıp sorunun önüne konur, üstüne kurallar eklenir. Model cevabı bu girdiden yazar ve kaynağın numarasını ekler. İkisi tek dosyada, `8-answer.ts`.
   </Step>
   <Step title="Tek cümlede">
-    <p class="key">RAG, soruyu cevaplamadan önce ilgili doküman parçalarını bulup modelin önüne koyan ve cevabı bu parçalardan yazdıran düzenektir.</p>
+    <p class="key">RAG ilgili parçaları bulur, prompt'a ekler; model cevabı bu parçalardan yazar.</p>
   </Step>
 </Deck>
 

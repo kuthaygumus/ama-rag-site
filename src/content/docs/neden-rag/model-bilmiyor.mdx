@@ -40,7 +40,7 @@ Model günün sorusuna sayı uydurdu. Politikadaki sayı başka.
       <text x="815" y="82" text-anchor="middle" class="flbl" data-q="log:question-0-bare">25-30 iş günü</text>
       <text x="815" y="110" text-anchor="middle" class="fsub" data-q="log:question-0-bare" data-q-mode="quote">“depending on the company's policy”</text>
       <g data-from="2">
-        <text x="30" y="205" class="fsub">cevap token token yazılır — her adımda en olası devam:</text>
+        <text x="30" y="205" class="fsub">cevap token token yazılır, her adımda en olası devam:</text>
         <rect x="30" y="222" width="140" height="54" rx="10" class="fbox" />
         <text x="100" y="256" text-anchor="middle" class="flbl" data-q="log:question-0-bare">… service</text>
         <path d="M172 249 H192" class="farrow" marker-end="url(#mb-a)" />
@@ -137,7 +137,7 @@ Model günün sorusuna sayı uydurdu. Politikadaki sayı başka.
     </svg>
   </DeckFigure>
   <Step title="Kaynaksız soru" stage="a">
-    Günün sorusunu modele tek başına sorduk. Cevabın şirketin politikasına göre değiştiğini söyledi ("depending on the company's policy"), ama yine de sayı verdi: 25-30 iş günü. Model Kraken Air'in politikasını hiç görmedi; bu sayılar oradan gelmiyor.
+    Günün sorusunu modele tek başına sorduk. Cevabın şirketin politikasına göre değiştiğini söyledi ("depending on the company's policy"). Bu kulağa temkinli geliyor. Ama yine de sayı verdi: 25-30 iş günü. Model Kraken Air'in politikasını hiç görmedi; bu sayılar oradan gelmiyor.
   </Step>
   <Step title="Nasıl yazdı?" stage="a">
     Model cevabı <Term id="token">token</Term> token yazar: her adımda, o ana kadarki metne en olası devamı seçer. "How many working days" gibi bir sorudan sonra metinlerde çoğunlukla bir sayı gelir. Sayının doğruluğunu kontrol eden bir adım yok.
@@ -149,7 +149,7 @@ Model günün sorusuna sayı uydurdu. Politikadaki sayı başka.
     Eğitim bitince ağırlıklar dondurulur. Her soru onları okur, hiçbiri yazmaz; sohbet de modele bir şey öğretmez. Kraken Air'in politikası eğitim verisinde yoktu, yani bu sayılarda da yok.
   </Step>
   <Step title="Bilmediğini bilmiyor" stage="a">
-    Politika 22 iş günü diyor. Model çekince koydu ama "bilmiyorum" demedi; yine de sayı verdi. Modelin içinde "bunu bilmiyorum" diye yanan bir ışık yok: uydurulan cevap da doğru cevap kadar akıcı çıkar. Buna <Term id="hallucination">halüsinasyon</Term> denir.
+    Politika 22 iş günü diyor. Bu sayı modelin verdiği aralığın içinde bile değil. Model çekince koydu ama "bilmiyorum" demedi. Modelin içinde "bunu bilmiyorum" diye yanan bir ışık yok. Uydurulan cevap da doğru cevap kadar akıcı çıkar. Buna <Term id="hallucination">halüsinasyon</Term> denir.
 
     <Now>Kaynaksız başka bir soru: `npm run step -- 0 "How many days do I have to upload my receipts after a trip?"`</Now>
   </Step>
