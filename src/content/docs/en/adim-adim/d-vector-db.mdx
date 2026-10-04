@@ -19,7 +19,7 @@ import Term from '../../../../components/Term.astro';
 
 <WhereAmI at="store" />
 
-<DaysQuestion answer="“An employee with 7 years of service gets 22 working days of annual leave [1].” ✓" how="chroma store · chunker section · rerank on — same answer as the black box" />
+<DaysQuestion answer="“An employee with 7 years of service gets 22 working days of annual leave [1].” ✓" how="chroma store · chunker section · rerank on. Same answer as the black box." />
 
 <Gate>
 So far, the "database" was a JSON file. For every question, we compared the question vector with all 60 vectors, one by one. With 60 vectors, that's no problem. With a million chunks, every question means a million comparisons.
@@ -193,13 +193,13 @@ So far, the "database" was a JSON file. For every question, we compared the ques
     <Now n="1">`podman compose ps` should say `healthy`. If not, run `podman compose up -d`.</Now>
   </Step>
   <Step title="The vector: for search" stage="r" phase="1">
-    The vector is the only way to find the records closest to the question vector. The vectors come ready from step 4.
+    Search works on the vector. It finds the records closest to the question. The vectors come from step 4, already computed.
   </Step>
   <Step title="The text: for the model" stage="r" phase="2">
     You can't get a sentence back from 1024 numbers. The search uses the vector, but the prompt gets the text. So the record carries both. The vector finds, and the text tells.
   </Step>
   <Step title="Metadata: for filters" stage="r" phase="3">
-    `edition`, `access`, `docId` …: these are the labels we read on page A. Step 6 says "only 2025, only open to everyone". Chroma applies this filter inside the search.
+    Metadata holds labels like `edition`, `access` and `docId`. We read these labels on page A. Step 6 says: only edition 2025, only documents open to all. Chroma applies this filter inside the search.
   </Step>
   <Step title="Brute force: check them all" stage="a">
     For every question, the JSON store computes the cosine with every vector. Then it sorts them. The result is exact, but the work grows with the number of chunks. This method is called <Term id="bruteforce">brute force</Term>.
@@ -256,11 +256,11 @@ The command we ran at the start of the day reads this file:
 
 <RepoCode file="compose.yaml" />
 
-- `image: docker.io/chromadb/chroma:1.5.9` — the version is pinned. Everyone gets the same Chroma and the same API.
-- `ports: "8000:8000"` — Chroma's HTTP API is on `localhost:8000`. Our code and Bruno both connect here.
-- `volumes: chroma-data:/data` — the records live in a named volume, not inside the container. `podman compose down` keeps the data. `down -v` deletes it.
-- `ANONYMIZED_TELEMETRY: "false"` — Chroma sends no usage statistics out.
-- `healthcheck` — every 5 seconds, it checks `/api/v2/heartbeat`. If `podman compose ps` says "healthy", Chroma is ready.
+- `image: docker.io/chromadb/chroma:1.5.9`. The version is pinned. Everyone gets the same Chroma and the same API.
+- `ports: "8000:8000"`. Chroma's HTTP API is on `localhost:8000`. Our code and Bruno both connect here.
+- `volumes: chroma-data:/data`. The records live in a named volume, not inside the container. `podman compose down` keeps the data. `down -v` deletes it.
+- `ANONYMIZED_TELEMETRY: "false"`. Chroma sends no usage statistics out.
+- `healthcheck`. Every 5 seconds, it checks `/api/v2/heartbeat`. If `podman compose ps` says "healthy", Chroma is ready.
 
 ## Look inside with Bruno
 
@@ -291,7 +291,7 @@ Fell behind? Run `npm run catchup -- 5`.
 ## Common questions
 
 <FAQ q="Chroma, pgvector or Qdrant?">
-All three store the same three things: the vector, the text and the metadata. The differences are in operations. If you already use Postgres, pgvector adds no new system. Scale, filter power, hybrid search support and managed service options differ. We chose Chroma because it is one container, and Bruno can read its HTTP API.
+All three store the same three things: the vector, the text and the metadata. The differences are in operations. If you already use Postgres, pgvector adds no new system. They differ in scale, in how well they filter, in hybrid search and in managed hosting. We chose Chroma because it is one container, and Bruno can read its HTTP API.
 </FAQ>
 
 <FAQ q="Can't Chroma do the embedding itself?">
