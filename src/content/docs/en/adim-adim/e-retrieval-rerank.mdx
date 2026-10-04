@@ -19,7 +19,7 @@ import Term from '../../../../components/Term.astro';
 
 <WhereAmI at="qembed search rerank" />
 
-<DaysQuestion answer="rerank off → “An employee with 7 years of service gets 22 working days of annual leave [1].” · rerank on → “An employee with 7 years of service gets 22 working days …” ✓" how="chroma · section · filter edition 2025, access all — 22 in both runs" />
+<DaysQuestion answer="rerank off and on → the same sentence: “An employee with 7 years of service gets 22 working days of annual leave [1].” ✓" how="chroma · section · filter edition 2025, access all · 22 in both runs" />
 
 <Gate>
 The store is full, so now we ask questions. For the question of the day, the right chunk comes first. But the scores are almost equal. The lead is small.
@@ -98,7 +98,7 @@ The store is full, so now we ask questions. For the question of the day, the rig
         <path d="M472 285 L548 325" class="farrow" data-gen="arrow" />
         <path d="M472 325 L548 211" class="farrow-on" data-gen="arrow" />
         <text x="765" y="384" text-anchor="middle" class="fsub fgood-t" data-q="log:07-rerank">§2 (probation) leaves the prompt</text>
-        <text x="765" y="410" text-anchor="middle" class="fsub fbad-t" data-q="log:07-rerank">§7 and §4 get in: rel 6, but not the answer</text>
+        <text x="765" y="410" text-anchor="middle" class="fsub fbad-t" data-q="log:07-rerank">§4 gets in: rel 6, but not the answer</text>
       </g>
       <g data-from="8">
         <text x="765" y="452" text-anchor="middle" class="fsub" data-gen="timing">search: 8 ms · rerank: 5 calls, 1498 ms</text>
@@ -148,34 +148,34 @@ The store is full, so now we ask questions. For the question of the day, the rig
     5 chunks, all from the Annual Leave Policy. §3, the leave table with the answer, comes first.
   </Step>
   <Step title="The scores are almost equal" stage="list">
-    First: 0.614. Fifth: 0.598. The gap is 0.016. Every hr-leave chunk starts with the prefix `[Annual Leave Policy › …]`, and the question says "annual leave" too. The prefix may help all five score high. We didn't test this. §3 is first, but only by a little.
+    First: 0.614. Fifth: 0.598. The gap is only 0.016. Every hr-leave chunk starts with `[Annual Leave Policy › …]`. The question also says "annual leave". That may pull all five close. We didn't test this. §3 is first, but only by a little.
   </Step>
   <Step title="The cutoff: k" stage="list">
-    Taking the k closest chunks is called <Term id="topk">top-k</Term>. Here k = 5, so benefits §6 in 6th place (0.585) stays out. If k is small, the right chunk can fall outside the list. If k is large, the next steps get more noise.
+    Taking the k closest chunks is called <Term id="topk">top-k</Term>. Here k = 5, so benefits §6 in 6th place (0.585) stays out. A small k can miss the right chunk. A large k sends more noise to the next steps.
 
     <Now n="1">Run `npm run step -- 6`, then open `data/6-retrieved.json`.</Now>
   </Step>
   <Step title="Only 3 chunks go into the prompt" stage="list">
-    With rerank off, the top 3 by vector go in: §3, §2, §7. §2 is about probation, and §7 is about leave carry-over. They don't answer the question, but both take room in the prompt. Special leave (§5) is not even in the top 5. It is only 7th.
+    With rerank off, the top 3 by vector go in: §3, §2 and §7. §2 is about probation. §7 is about carrying leave over. Neither answers the question, but both take room in the prompt.
   </Step>
   <Step title="Rerank: read the question and the chunk together" stage="list">
-    We made the vectors one at a time: the question alone, each chunk alone. A <Term id="rerank">reranker</Term> gives each pair of question and chunk a score from 0 to 10. The score is the rel value in the log. Here our chat model gemma3:4b does this job: 5 chunks, 5 calls.
+    We made each vector alone: the question, then each chunk. A <Term id="rerank">reranker</Term> scores each pair of question and chunk from 0 to 10. That is rel in the log. Here our chat model gemma3:4b does it: 5 chunks, 5 calls.
   </Step>
   <Step title="After rerank" stage="list">
-    §3 stays first with a score of 10. The others score 6 or less, so the 0.016 gap becomes a clear split. §2 scores 3, drops to 4th and leaves the prompt. The reranker is wrong too: §7 and §4 score 6 and move up. Both are in the prompt, but they don't answer the question.
+    §3 stays first with 10. The rest get 6 or less. The 0.016 gap is now a clear split. §2 gets 3 and drops out. §7 and §4, the next best, take places 2 and 3. Neither has the answer.
   </Step>
   <Step title="The cost" stage="list">
-    The search itself took 8 ms (the whole step, 22 ms). Rerank took 1498 ms. For this question, the answer didn't change: 22 working days in both runs. Rerank does its real job when the right chunk is outside the top 3.
+    The search itself took 8 ms (the whole step, 22 ms). Rerank took 1498 ms. For this question, the answer didn't change: 22 working days in both runs. Rerank matters when the right chunk is not in the top 3.
 
     <Now n="2">In `src/steps/7-rerank.ts`, turn rerank off. Run `npm run step -- 7` and `npm run step -- 8`.</Now>
   </Step>
   <Step title="The right chunk is not always in front" stage="list">
-    Ask "How much holiday do I get? I started here 4 years ago." and look at the leave table. In the vector ranking, it is only 5th. Without rerank, it never gets into the prompt. After rerank, it is at rank 1. With rerank on, the answer is right: 18 working days.
+    Now use other words: "How much holiday do I get? I started here 4 years ago." The leave policy never says "holiday". It says "annual leave". By vector, the leave table is only 5th, so it misses the prompt. Rerank lifts it to rank 1. The answer: 18 working days.
 
     <Now n="3">Run `npm run ask -- "How much holiday do I get? I started here 4 years ago."`. What rank is the leave table by vector, and what rank after rerank?</Now>
   </Step>
   <Step title="Top-k is not the only way" stage="yol">
-    A threshold is a score limit, not a fixed k. On page C, even the "unrelated" pair scored 0.503. So pick the threshold on your own data. <Term id="mmr">MMR</Term> skips near-copies. Hybrid adds keyword search (BM25). The threshold, MMR and hybrid are only ideas here. The metadata filter (`access`, `edition`) is in this repo.
+    A threshold keeps chunks above a score. On page C, even the "unrelated" pair scored 0.503. Set it on your data. <Term id="mmr">MMR</Term> skips near-copies. Hybrid adds keyword search (BM25). This repo has top-k and the filter. The rest are ideas.
 
     <Now n="4">In `src/steps/6-retrieve.ts`, turn the access filter off. Run `npm run ask -- "What is the upper limit of the monthly gross salary band for a senior specialist?"`.</Now>
   </Step>
@@ -211,11 +211,11 @@ The salary bands document is `access: hr-only`. The toggle in step 6 decides wha
 
 <Log name="ask-access-on" title="… the same command, continued: rerank and answer" from={17} />
 
-With the filter on, the model answers anyway, with a hotel limit from the travel policy.
+With the filter on, the salary table never reaches the prompt. That part works. But the model doesn't say "This is not in the policies." The travel table also has a "Senior specialist" row and an "upper limit". So the model answers a question nobody asked: a hotel limit of 4,000 TRY a night. The filter protects the data. It doesn't make the answer right.
 
 <Log name="ask-access-off" title="ASKER_MAY_READ = undefined (nobody checks)" />
 
-With the filter off, the answer gives the salary figure. The [Security](/en/uretim/guvenlik/) page explains what these two answers mean.
+With the filter off, the answer gives the salary figure: 115,000 TRY. One toggle in code is all that stands between this number and every employee. It cites [2], but the number is in [1]. See "Is the [1] in the answer right?" on page F. The [Security](/en/uretim/guvenlik/) page explains what these two answers mean.
 
 <YourTurn>
 **1 · Open the list.** Run `npm run step -- 6` and open `data/6-retrieved.json`. Look at `hits` (the 5 candidate chunks for the prompt), `below` (the 3 below the cutoff) and `filter`. Try another question: `npm run step -- 6 "How much holiday do I get?"`. Then run `npm run step -- 6` again.

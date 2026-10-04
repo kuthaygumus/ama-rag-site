@@ -19,10 +19,10 @@ import Term from '../../../components/Term.astro';
 
 <WhereAmI at="qembed search rerank" />
 
-<DaysQuestion answer="rerank kapalı → “An employee with 7 years of service gets 22 working days of annual leave [1].” · rerank açık → “An employee with 7 years of service gets 22 working days …” ✓" how="chroma · section · filter edition 2025, access all — iki yolda da 22" />
+<DaysQuestion answer="rerank kapalı ve açık → aynı cümle: “An employee with 7 years of service gets 22 working days of annual leave [1].” ✓" how="chroma · section · filter edition 2025, access all · iki yolda da 22" />
 
 <Gate>
-Depo dolu, şimdi soru soruyoruz. Günün sorusunda doğru chunk ilk sırada geldi; ama skorlara yakından bakınca bu birinciliğin ne kadar ince olduğu görünüyor.
+Depo dolu, şimdi soru soruyoruz. Günün sorusunda doğru chunk ilk sırada. Ama skorlar neredeyse eşit; fark çok küçük.
 </Gate>
 
 <Deck>
@@ -98,7 +98,7 @@ Depo dolu, şimdi soru soruyoruz. Günün sorusunda doğru chunk ilk sırada gel
         <path d="M472 285 L548 325" class="farrow" data-gen="arrow" />
         <path d="M472 325 L548 211" class="farrow-on" data-gen="arrow" />
         <text x="765" y="384" text-anchor="middle" class="fsub fgood-t" data-q="log:07-rerank">§2 (deneme süresi) prompt'tan çıktı</text>
-        <text x="765" y="410" text-anchor="middle" class="fsub fbad-t" data-q="log:07-rerank">§7 ve §4 girdi: rel 6, ama cevap değil</text>
+        <text x="765" y="410" text-anchor="middle" class="fsub fbad-t" data-q="log:07-rerank">§4 girdi: rel 6, ama cevap değil</text>
       </g>
       <g data-from="8">
         <text x="765" y="452" text-anchor="middle" class="fsub" data-gen="timing">arama: 8 ms · rerank: 5 çağrı, 1498 ms</text>
@@ -148,7 +148,7 @@ Depo dolu, şimdi soru soruyoruz. Günün sorusunda doğru chunk ilk sırada gel
     5 chunk, hepsi izin politikasından (`hr-leave`). Cevabı taşıyan §3, yani izin tablosu, ilk sırada.
   </Step>
   <Step title="Skorlar neredeyse eşit" stage="list">
-    Birinci 0.614, beşinci 0.598: fark 0.016. Her hr-leave chunk'ı `[Annual Leave Policy › …]` ön ekiyle başlıyor, sorunun içinde de "annual leave" geçiyor; ön ek hepsini soruya yakın tutuyor olabilir; bunu ayrıca denemedik. Sırayı küçük içerik farkları belirliyor olabilir: §3'ün birinciliği pamuk ipliğine bağlı.
+    Birinci 0.614, beşinci 0.598: fark yalnızca 0.016. Her hr-leave chunk'ı `[Annual Leave Policy › …]` ile başlıyor; soruda da "annual leave" geçiyor. Bu, beşini de soruya yakın tutuyor olabilir; bunu denemedik. §3 birinci, ama çok az farkla.
   </Step>
   <Step title="Kesme çizgisi: k" stage="list">
     En yakın k tanesini almaya <Term id="topk">top-k</Term> denir. k = 5: 6. sıradaki benefits §6 (0.585) dışarıda kaldı. k küçükse cevap kaçabilir, büyükse sonraki adımlara gürültü taşınır.
@@ -156,26 +156,26 @@ Depo dolu, şimdi soru soruyoruz. Günün sorusunda doğru chunk ilk sırada gel
     <Now n="1">`npm run step -- 6`, sonra `data/6-retrieved.json` dosyasını açın.</Now>
   </Step>
   <Step title="Prompt'a yalnızca 3 chunk girer" stage="list">
-    Rerank kapalıyken vektör sırasındaki ilk 3 gider: §3, §2, §7. §2 deneme süresini, §7 izin devrini anlatıyor: ikisi de soruyu cevaplamıyor ama prompt'ta yer kaplıyor. Mazeret izinleri (§5) ilk 5'e bile girmedi; 7. sırada.
+    Rerank kapalıyken vektör sırasındaki ilk 3 girer: §3, §2 ve §7. §2 deneme süresini, §7 izin devrini anlatıyor. İkisi de soruyu cevaplamıyor ama prompt'ta yer kaplıyor.
   </Step>
   <Step title="Rerank: soruyu ve chunk'ı birlikte oku" stage="list">
-    Vektörler ayrı ayrı yapıldı: soru tek başına, chunk tek başına. <Term id="rerank">Reranker</Term> her (soru, chunk) çiftine 0–10 arası puan verir. Puan, log'daki rel değeri. Bizde bu işi gemma3:4b yapıyor: 5 chunk, 5 çağrı.
+    Her vektörü ayrı yaptık: önce soruyu, sonra her chunk'ı. <Term id="rerank">Reranker</Term> her (soru, chunk) çiftine 0–10 arası puan verir. Log'daki rel bu. Bizde bu işi sohbet modelimiz gemma3:4b yapıyor: 5 chunk, 5 çağrı.
   </Step>
   <Step title="Rerank sonrası" stage="list">
-    §3 10 puanla yerinde; diğerleri en fazla 6 aldı. 0.016'lık fark yerini net bir ayrıma bıraktı. §2 3 puanla 4. sıraya indi ve prompt'tan çıktı. Ama reranker da yanılır: §7 (izin devri) ve §4 (izin planlama) 6 puanla yükseldi; ikisi de prompt'ta, oysa soruyu cevaplamıyorlar.
+    §3 10 puanla birinci kalıyor. Diğerleri en fazla 6 aldı. 0.016'lık fark artık net bir ayrım. §2 3 aldı ve dışarıda kaldı. Kalanların en iyileri, §7 ve §4, 2. ve 3. sıraya geçti. İkisinde de cevap yok.
   </Step>
   <Step title="Bedeli" stage="list">
-    Aramanın kendisi 8 ms sürdü (adımın tamamı 22 ms); rerank 1498 ms. Bu soruda cevap değişmedi: iki yolda da 22 iş günü. Rerank'ın asıl işi, doğru chunk ilk 3'ün dışında kaldığında başlıyor.
+    Aramanın kendisi 8 ms sürdü (adımın tamamı 22 ms); rerank 1498 ms. Bu soruda cevap değişmedi: iki yolda da 22 iş günü. Rerank, doğru chunk ilk 3'te olmadığında işe yarıyor.
 
     <Now n="2">`src/steps/7-rerank.ts` içinde rerank'ı kapatın; `npm run step -- 7` ve `npm run step -- 8`.</Now>
   </Step>
   <Step title="Doğru chunk hep önde değil" stage="list">
-    "How much holiday do I get? I started here 4 years ago." sorusunda izin tablosu vektör sırasında ancak 5. geldi; rerank olmasa prompt'a hiç girmezdi. Rerank sonrası 1. sırada. Rerank açıkken cevap doğru: 18 iş günü.
+    Şimdi başka kelimelerle sorun: "How much holiday do I get? I started here 4 years ago." İzin politikasında "holiday" kelimesi hiç geçmiyor; orada "annual leave" yazıyor. Vektör sırasında izin tablosu ancak 5. geliyor, prompt'a giremiyor. Rerank onu 1. sıraya çıkarıyor. Cevap: 18 iş günü.
 
     <Now n="3">`npm run ask -- "How much holiday do I get? I started here 4 years ago."`: izin tablosu vektör sırasında kaçıncı, rerank sonrası kaçıncı?</Now>
   </Step>
   <Step title="Top-k tek yol değil" stage="yol">
-    Eşik: sabit k yerine bir skor sınırı; C'de "ilgisiz" çift bile 0.503 aldı, eşik kendi verinizde ölçülerek seçilir. Metadata filtresi (`access`, `edition`) bu repoda var. <Term id="mmr">MMR</Term> neredeyse aynı chunk'lardan birini alır; hybrid vektöre kelime aramasını (BM25) ekler. İkisi bu repoda yok.
+    Eşik, bir skorun üstündeki chunk'ları tutar. C'de "ilgisiz" çift bile 0.503 aldı; eşiği kendi verinizde seçin. <Term id="mmr">MMR</Term> birbirinin kopyası olan chunk'ları atlar. Hybrid, kelime aramasını (BM25) ekler. Bu repoda top-k ve filtre var; gerisi fikir.
 
     <Now n="4">`src/steps/6-retrieve.ts` içinde erişim filtresini kapatın; `npm run ask -- "What is the upper limit of the monthly gross salary band for a senior specialist?"`.</Now>
   </Step>
@@ -211,11 +211,11 @@ Maaş bantları dokümanı `access: hr-only`. Adım 6'daki toggle, soran kişini
 
 <Log name="ask-access-on" title="… aynı komutun devamı: rerank ve cevap" from={17} />
 
-Filtre açıkken model yine de cevap veriyor: seyahat politikasından bir otel limiti.
+Filtre açıkken maaş tablosu prompt'a hiç gelmiyor; bu kısım çalışıyor. Ama model "This is not in the policies." demiyor. Seyahat tablosunda da "Senior specialist" satırı ve bir "upper limit" var. Model kimsenin sormadığı bir soruyu cevaplıyor: gecelik 4,000 TRY otel limiti. Filtre veriyi korur; cevabı doğru yapmaz.
 
 <Log name="ask-access-off" title="ASKER_MAY_READ = undefined (kimse kontrol etmiyor)" />
 
-Filtre kapalıyken cevap maaş rakamını veriyor. Bu iki cevabın ne anlattığı [Güvenlik](/uretim/guvenlik/) sayfasında.
+Filtre kapalıyken cevap maaş rakamını veriyor: 115,000 TRY. Bu sayıyla her çalışan arasında yalnızca koddaki tek bir toggle var. Cevap [2]'yi gösteriyor ama sayı [1]'de. F sayfasındaki "Cevaptaki [1] doğru mu, nasıl bilirim?" sorusuna bakın. Bu iki cevabın ne anlattığı [Güvenlik](/uretim/guvenlik/) sayfasında.
 
 <YourTurn>
 **1 · Listeyi açın.** `npm run step -- 6` ve `data/6-retrieved.json`: `hits` (prompt'a aday 5 chunk), `below` (kesme çizgisinin altındaki 3), `filter`. Başka bir soru: `npm run step -- 6 "How much holiday do I get?"`. Sonra `npm run step -- 6` komutunu tekrar çalıştırın.
@@ -240,7 +240,7 @@ Geride kaldıysanız: `npm run catchup -- 7`.
 </FAQ>
 
 <FAQ q="Rerank her soruda şart mı?">
-Retriever doğru chunk'ı zaten ilk 3'e koyuyorsa rerank süresi boşa gider. Kaç soruda gerektiğini değerlendirme gösterir.
+Hayır. Retriever doğru chunk'ı zaten ilk 3'e koyuyorsa rerank süresi boşa gider. Kaç soruda gerektiğini değerlendirme gösterir.
 </FAQ>
 
 <FAQ q="Reranker yanılır mı?">

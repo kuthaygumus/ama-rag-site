@@ -22,7 +22,7 @@ import Term from '../../../components/Term.astro';
 <DaysQuestion answer="“An employee with 7 years of service gets 24 working days of annual leave [1].” ✓ (2026)" how="chroma store · chunker section · rerank on · filter edition 2026, access all" />
 
 <Gate>
-İK, izin politikasının 2026 sürümünü yayınladı ve günün sorusunun cevabı değişti. Bilgiyi ağırlıklarına yazmış bir model için bu yeniden eğitim demek. Bizim pipeline'da ne demek?
+İK, izin politikasının 2026 sürümünü yayınladı. Günün sorusunun cevabı değişti. Bilgiyi ağırlıklarına yazmış bir model için bu yeniden eğitim demek. Bizim pipeline'da ne demek?
 </Gate>
 
 <Deck>
@@ -81,12 +81,12 @@ import Term from '../../../components/Term.astro';
     <Now n="3">Bruno'da `01-chroma` → önce `collections`, sonra `count`: 120.</Now>
   </Step>
   <Step title="Filtre olmasa?">
-    `EDITION_FILTER = "all"` olunca iki sürüm yarışıyor: tablonun 2026 hâli 0.619, 2025 hâli 0.614 aldı; ikisi de prompt'a girdi, prompt'ta 24 ve 22 iş günü var. Model bu kez 24 dedi; SOURCE 1 2026'ydı. Fark 0.005: neredeyse beraberlik. Bu çalıştırmada ilk kaynağın sayısı kazandı.
+    `EDITION_FILTER = "all"` olunca iki sürüm yarışıyor: 2026 0.619, 2025 0.614 aldı. İki tablo da prompt'a giriyor; prompt'ta hem 24 hem 22 var. İki işaret de "Annual Leave Policy" diyor. Hangisinin yeni olduğunu hiçbir şey söylemiyor. Model 24 dedi, SOURCE 1'den.
 
     <Now n="4">`src/steps/6-retrieve.ts` içinde sürüm filtresini `"all"` yapın ve `npm run question`: kaynaklarda iki sürüm yan yana mı?</Now>
   </Step>
   <Step title="Silmek mi, filtrelemek mi?">
-    Eski sürümü tutmak geçmişe dönük soruları ve denetimi mümkün kılar; bedeli, filtreyi her aramada doğru kurmak. `replaceEdition` yalnızca aynı sürümü yerinde yeniler; 2026 gelince 2025'e dokunmaz. 2025'i silmek, `edition` koşuluyla ayrı bir silme; repoda bunun komutu yok.
+    Eski sürüm geçmişe dönük sorulara ve denetime yarar. Bedeli: filtre her aramada doğru olmalı. `replaceEdition` yalnızca kendi sürümünü yeniler. 2025'i silmek için ayrı bir silme adımı gerekir; repoda bunun komutu yok.
 
     <Now n="5">`npm run ask -- "After how many days must I change my password?"`: cevap hangi sürümden geldi?</Now>
   </Step>
@@ -100,7 +100,7 @@ Adım 3'te izin tablosunun 2026 hâline, adım 5'te kayıt sayısına ve sürüm
 
 <Log name="ingest-2026" title="… aynı komut, adım 4 ve 5" from={74} />
 
-Adım 4 hiçbir vektörü yeniden hesaplamadı: bu metinler log'un alındığı makinede daha önce embed edilmişti ve `.cache/` klasöründen geldi.
+Adım 4 burada hiçbir vektörü yeniden hesaplamadı: bu makine bu metinleri daha önce embed etmişti, vektörler `.cache/` klasöründen geldi. Sizin ilk çalıştırmanızda `3 computed, 57 from cache` görürsünüz. Metni değişen yalnızca 3 chunk var: izin tablosu, şifre kuralı ve seyahat tablosu.
 
 <Log name="question-4-2026" title="npm run question" />
 
@@ -147,7 +147,7 @@ Yeni veriyle yeniden eğitim, yeniden değerlendirme, yeniden dağıtım; eski s
 </FAQ>
 
 <FAQ q="İngilizce şifre sorusuna neden Türkçe cevap geliyor?">
-Çünkü politika Türkçe. Cevap: `Şifreler 180 günde bir değiştirilmelidir [1].` Model kaynağın dilinde cevap verdi. Kaynak `it-security@2026#2`.
+Soru İngilizce, politika Türkçe. Arama yine de doğru bölümü ilk sıraya koydu (0.665); rerank 10 verdi. bge-m3 iki dili aynı uzayda tutuyor. Cevap: `Şifreler 180 günde bir değiştirilmelidir [1].` Model kaynağın dilinde cevap veriyor. Kaynak `it-security@2026#2`; yani 180, 2026 kuralı.
 </FAQ>
 
 <Takeaway>Model değişmedi; dokümanlar değişti, cevap onları izledi.</Takeaway>
