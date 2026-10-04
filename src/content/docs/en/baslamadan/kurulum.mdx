@@ -9,7 +9,7 @@ import FAQ from '../../../../components/FAQ.astro';
 import Takeaway from '../../../../components/Takeaway.astro';
 
 Do this once, before the course. Everything runs on your own laptop. The language models run in **Ollama**. The vector DB (Chroma)
-runs as a container in **Podman**. The pipeline itself is TypeScript on **Node.js**. No data leaves your laptop.
+runs as a container in **Podman**. The pipeline itself is TypeScript on **Node.js**. After setup, no data leaves your laptop.
 
 Downloads: `gemma3:4b` 3.3 GB · `bge-m3` 1.2 GB · the Chroma image 649 MB. We measured these sizes on an M-series Mac
 with `ollama list` and `podman image ls`. Download them on a good connection. On a company network, read
@@ -93,6 +93,7 @@ with `ollama list` and `podman image ls`. Download them on a good connection. On
 The output above is from an M-series Mac. Both models were already in memory (embedding 122 ms, answer 172 ms).
 On the first run, both times also include loading the models into memory, so they are longer.
 Ollama keeps a model in memory for a few minutes. A new run in that time doesn't load it again.
+The corpus line says "7 en, 1 tr". One of the 8 documents is in Turkish. We use it later.
 
 If a line has a `✗`, the same line says what to do. All of them, one by one:
 [Setup problems](/en/kurulum-sorunlari/).

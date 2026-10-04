@@ -9,7 +9,7 @@ import FAQ from '../../../components/FAQ.astro';
 import Takeaway from '../../../components/Takeaway.astro';
 
 Eğitimden önce, bir kez. Her şey kendi dizüstünüzde çalışır: dil modelleri **Ollama**'da, vector DB (Chroma)
-**Podman**'da bir container olarak, pipeline'ın kendisi **Node.js** ile TypeScript olarak. Hiçbir veri dışarı çıkmaz.
+**Podman**'da bir container olarak, pipeline'ın kendisi **Node.js** ile TypeScript olarak. Kurulumdan sonra hiçbir veri dışarı çıkmaz.
 
 İnecekler (M serisi bir Mac'te `ollama list` ve `podman image ls` ile ölçüldü): `gemma3:4b` 3,3 GB · `bge-m3` 1,2 GB ·
 Chroma imajı 649 MB. İyi bir bağlantıda indirin. Şirket ağındaysanız önce
@@ -93,6 +93,7 @@ Chroma imajı 649 MB. İyi bir bağlantıda indirin. Şirket ağındaysanız ön
 Yukarıdaki çıktı M serisi bir Mac'te alındı; iki model de zaten bellekteydi (embedding 122 ms, cevap 172 ms).
 İlk çalıştırmada iki süreye modellerin belleğe yüklenmesi de eklenir, süreler uzar. Ollama modeli birkaç dakika
 bellekte tutar; o arada yeni bir çalıştırmada yükleme olmaz.
+Corpus satırındaki "7 en, 1 tr": 8 dokümandan biri Türkçe. Onu ileride kullanacağız.
 
 Bir satırda `✗` varsa, yanında ne yapılacağı yazar. Hepsi tek tek:
 [Kurulum sorunları](/kurulum-sorunlari/).

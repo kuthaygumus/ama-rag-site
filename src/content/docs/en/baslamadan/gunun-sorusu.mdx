@@ -86,7 +86,7 @@ The output has four parts:
 - `HOW`: how the answer was made. For now it says `bare model, no documents`: the model saw only the question.
 - The answer: the text the model writes. There is no source list, because the model got no sources. Once the pipeline
   is built, the chunks it used appear below the answer, for example `[1] hr-leave@2025#3`.
-- `LEDGER`: the ledger. Every run adds one line. When the day ends, it holds the answer from every stop, one under the other.
+- `LEDGER`: the list of every answer so far. Every run adds one line. When the day ends, it holds the answer from every stop, one under the other.
 
 In code, the question is one line:
 
@@ -120,7 +120,7 @@ One question is still not a measurement. We measure quality with a set of questi
 </FAQ>
 
 <FAQ q="Does the model give the same answer every time?">
-With the same prompt on the same machine, yes. On an M-series Mac, `npm run step -- 0` and `npm run question` gave the same answer, word for word.
+Yes, with the same prompt on the same machine. On an M-series Mac, `npm run step -- 0` and `npm run question` gave the same answer, word for word.
 The repo does this on purpose: `temperature: 0` and a fixed `seed`. You can see small differences on other hardware.
 We didn't measure this.
 </FAQ>
