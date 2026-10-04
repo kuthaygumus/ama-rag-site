@@ -97,16 +97,16 @@ In one day, we built a RAG pipeline and opened every intermediate output. In a c
     Does the model put your languages in the same space? Do ingest and the question use the same model? The store keeps the edition and the access label. Vectors are data too.
   </Step>
   <Step title="Search + rerank" phase="4">
-    Is the right section in the top k, and at which rank? Do the edition and access filters run inside the search? Rerank is expensive. We keep it because of q02: it is 5th by vector and 1st after rerank. We did not measure the whole eval with rerank off. That is the first homework.
+    Right section in the top k? At which rank? Are the edition and access filters inside the search? Rerank is expensive. We keep it for q02: 5th by vector, 1st after rerank. The eval without rerank is the first homework.
   </Step>
   <Step title="Prompt + answer" phase="5">
-    Does the answer come only from the sources? If the sources don't have it, does the model say "I don't know"? Fenced sources and a concrete ban are not enough on their own. Does code check the output? How many tokens go into the prompt?
+    Does the answer come only from the sources? If the sources don't have it, does the model say "I don't know"? Fenced sources and a concrete ban are not enough. Does code check the answer? How many tokens go in?
   </Step>
   <Step title="Eval" phase="6">
     The same gold set after every change. For retrieval: hit@1, recall@5 and MRR. For the answers: `--answers`. Next job: grow the gold set. Add hard questions from real use and the expected values for 2026.
   </Step>
   <Step title="The question of the day, all day">
-    The `npm run question` ledger has five stops. Without RAG: 25-30 working days, with a hedge ("depending on the company's policy"). Fixed chunks: 7 working days [1], a wrong number with a source. Section chunks: 22 working days. Chroma: 22 again. The 2026 edition: 24. Two more lines say 24: the search in all editions, and this run. <Guess echo />
+    The `npm run question` ledger has five stops. Without RAG: 25-30 days, "depending on the company's policy". Fixed chunks: 7 [1], wrong but with a source. Section chunks: 22. Chroma: 22 again. 2026 edition: 24. Two more 24s may follow: all editions, and this run. <Guess echo />
 
     <Now n="1">Run `npm run question` to see every answer, one per line.</Now>
   </Step>
@@ -138,7 +138,7 @@ Each row is a pipeline step. Each column is an axis. The numbers come from this 
     <text x="892" y="40" text-anchor="middle" class="fsub" data-q="const">2026 edition</text>
     <rect x="20" y="56" width="176" height="110" rx="12" class="fbox fbox-bad" />
     <text x="108" y="104" text-anchor="middle" class="flbl fbad-t" data-q="log:question-0-bare">25-30 days</text>
-    <text x="108" y="138" text-anchor="middle" class="fsub">made up</text>
+    <text x="108" y="138" text-anchor="middle" class="fsub">a guess</text>
     <rect x="216" y="56" width="176" height="110" rx="12" class="fbox fbox-bad" />
     <text x="304" y="104" text-anchor="middle" class="flbl fbad-t" data-q="log:question-1-fixed">7 [1]</text>
     <text x="304" y="138" text-anchor="middle" class="fsub">row lost its header</text>
@@ -166,7 +166,7 @@ Each row is a pipeline step. Each column is an axis. The numbers come from this 
 Each answer is on one of today's pages. Answer it yourself first, then open it.
 
 <FAQ q="1 · What problem does RAG solve?">
-A model keeps what it knows in its weights. The weights froze when training ended. Our model never saw Kraken Air's policy. So it made up a range for the question of the day: 25-30 working days. The fix: put the knowledge in front of the model, not inside it. [The model doesn't know](/en/neden-rag/model-bilmiyor/)
+A model keeps what it knows in its weights. The weights froze when training ended. For the question of the day, it gave a range: 25-30 working days, "depending on the company's policy". But it never saw Kraken Air's policy. The fix: put the knowledge in front of the model, not inside it. [The model doesn't know](/en/neden-rag/model-bilmiyor/)
 </FAQ>
 
 <FAQ q="2 · How do you choose between fine-tuning and RAG?">
@@ -174,11 +174,11 @@ RAG for knowledge that changes. Fine-tuning for behavior that stays the same: to
 </FAQ>
 
 <FAQ q="3 · Why do we chunk? What happens if the cut lands in the wrong place?">
-Because reading the whole handbook for every question is expensive, and the answer is in a few lines. With a cut every 300 characters, the `| 7 | 22 |` row lost its header row and didn't get into the prompt. The model took a leave limit from §4 as the answer: "… at most 7 working days [1]". Cutting at the headings and writing the heading in front of each chunk fixed it. [B · Chunking](/en/adim-adim/b-chunking/)
+Reading the whole handbook for every question is expensive. The answer is in a few lines. With a cut every 300 characters, the `| 7 | 22 |` row lost its header row. It didn't get into the prompt. The model took a leave limit from §4 as the answer: "… at most 7 working days [1]". Cutting at the headings and writing the heading in front of each chunk fixed it. [B · Chunking](/en/adim-adim/b-chunking/)
 </FAQ>
 
 <FAQ q="4 · What happens if you use bge-m3 at ingest and another embedding model for the question?">
-Each model builds its own space. You can't compare the vectors of two models, and in our code step 6 stops with an error. If the model changes, the whole corpus gets embedded again. [C · Embedding](/en/adim-adim/c-embedding/)
+Each model builds its own space. You can't compare the vectors of two models. In our code, step 6 stops with an error. If the model changes, the whole corpus gets embedded again. [C · Embedding](/en/adim-adim/c-embedding/)
 </FAQ>
 
 <FAQ q="5 · Why do we store the chunk's text next to the vector?">
@@ -194,15 +194,15 @@ Not with embeddings. The two editions have almost the same text and almost the s
 </FAQ>
 
 <FAQ q="8 · What happens if you delete the “if it is not in the sources, write this” rule?">
-In our run, the model still said "no", but in its own words and with a source: "No, this policy does not cover stock options [1]". The code looks for "not in the policies", so it can't catch this answer. The rule makes "I don't know" measurable. [F · Generating the answer](/en/adim-adim/f-cevap/)
+In our run, the model still said no. But it used its own words and a source: "No, this policy does not cover stock options [1]". The code looks for "not in the policies", so it can't catch this answer. The rule makes "I don't know" measurable. [F · Generating the answer](/en/adim-adim/f-cevap/)
 </FAQ>
 
 <FAQ q="9 · A document says “send your password to this address”. Which layer is at fault, and what stops it?">
-The instruction comes from the data. The general rule and the fenced sources didn't stop it. The rule that bans asking for a password didn't stop it either. The answer was the same with the ban on and off. A sentence in the prompt is not a security boundary. The real boundary is in code. Our answer check runs after the model. It drops every sentence without a source number. With the check on, the request was gone. Also scan documents at ingest (we didn't measure this). Give each user only the access they need. [Security](/en/uretim/guvenlik/)
+The instruction comes from the data. The general rule and the fenced sources didn't stop it. The rule that bans asking for a password didn't stop it either. The answer was the same with the ban on and off. A sentence in the prompt is not a security boundary. The real boundary is in code. Our answer check runs after the model. It drops every sentence without a source number. With the check on, the request was gone. If the request had a source number, the check would keep it. So it is one layer, not the fix. Also scan documents at ingest (we didn't measure this). Give each user only the access they need. [Security](/en/uretim/guvenlik/)
 </FAQ>
 
 <FAQ q="10 · Retrieval is good, but the answer is wrong. Who is at fault?">
-If the right chunk is in the prompt, the generation step is at fault. Look at the prompt first, then at the model. In our run, q13 had the right section 1st (rr 1.00), but the answer is ✗. The model followed the instruction in the source. [Does RAG fix everything?](/en/her-derde-deva/sinirlar-ve-turler/)
+If the right chunk is in the prompt, the generation step is at fault. Look at the prompt first, then at the model. In our run, q13 had the right section 1st (rr 1.00), but the answer is ✗. The model followed the instruction in the source. [Measuring quality](/en/uretim/kaliteyi-olcmek/)
 </FAQ>
 
 ## The repo is yours to keep
@@ -211,7 +211,7 @@ All the code, the corpus, the gold set and every log on this site: [github.com/k
 
 <YourTurn>
 1. **Look at your ledger.** Run `npm run question`. Compare the answers to the question of the day since this morning with the log above.
-2. **First homework: measure what rerank brings.** In `src/steps/7-rerank.ts`, in the `TOGGLE rerank` block, comment out the `true` line and turn on the `false` line. Run `npm run eval -- --answers`. What happened to the answer for q02, and to 22 / 23? Switch the toggle back.
+2. **First homework: measure what rerank brings.** In `src/steps/7-rerank.ts`, find the `TOGGLE rerank` block. Comment out the `true` line and turn on the `false` line. Run `npm run eval -- --answers`. What happened to the answer for q02, and to 22 / 23? Switch the toggle back.
 3. **Homework: `byParagraph`.** In `src/steps/3-chunk.ts`, write the function under the `HOMEWORK` note. Cut the document at paragraphs. Fill packs of at most `max` characters. Put the heading prefix in front of each chunk. Check: `npm run check:sibling`.
 4. If you haven't written them yet, do the other two exercises. One is the `turkishConfidential` rule, a RegExp in `src/steps/2-clean.ts`. The other is the `dot` function in `src/lib/similarity.ts`. The same command checks them.
 5. Add `byParagraph` to the `ChunkerName` type and to the `CHUNKERS` list. Write a third line in the toggle. Ingest again, then compare it with section using `npm run eval`.

@@ -97,16 +97,16 @@ Bir günde bir RAG pipeline'ı kurduk ve her ara çıktısını açtık. Kurumsa
     Model dillerinizi aynı uzaya koyuyor mu, ingest'te ve soruda aynı model mi? Depo sürüm ve erişim etiketini saklar; vektör de veridir.
   </Step>
   <Step title="Ara + rerank" phase="4">
-    Doğru bölüm ilk k'da mı, kaçıncı sırada? Sürüm ve erişim filtresi aramanın içinde mi? Rerank pahalı. q02 yüzünden tutuyoruz: vektör sırasında 5., rerank sonrası 1. Bütün eval'ı rerank kapalıyken ölçmedik; ilk ödev bu.
+    Doğru bölüm ilk k'da mı? Kaçıncı sırada? Sürüm ve erişim filtresi aramanın içinde mi? Rerank pahalı. q02 için tutuyoruz: vektör sırasında 5., rerank sonrası 1. Rerank'sız eval ilk ödev.
   </Step>
   <Step title="Prompt + cevap" phase="5">
-    Cevap yalnızca kaynaktan mı, kaynakta yoksa "bilmiyorum" diyor mu? İşaretli kaynaklar ve somut yasak tek başına yetmez: çıktı kodla kontrol ediliyor mu? Prompt'a kaç token giriyor?
+    Cevap yalnızca kaynaktan mı, kaynakta yoksa "bilmiyorum" diyor mu? İşaretli kaynaklar ve somut yasak yetmez. Cevabı kod kontrol ediyor mu? Kaç token giriyor?
   </Step>
   <Step title="Eval" phase="6">
     Her değişiklikten sonra aynı gold set: retrieval için hit@1, recall@5, MRR; cevap için `--answers`. Sıradaki iş: gold set'i kullanımdan gelen zor sorularla ve 2026'nın beklenen değerleriyle büyütmek.
   </Step>
   <Step title="Günün sorusu, bütün gün">
-    `npm run question` defteri: RAG'siz model bir aralık ve bir çekince verdi: 25-30 iş günü, "depending on the company's policy". Fixed chunk'larla 7 iş günü [1]: kaynaklı ama yanlış bir sayı. Section'la 22 iş günü; Chroma'yla yine 22; 2026 sürümüyle 24. 24 diyen iki satır daha var: bütün sürümlerde arayan koşu ve şimdi yapacağınız koşu. <Guess echo />
+    `npm run question` defterinde beş durak var. RAG'siz: 25-30 gün, "depending on the company's policy". Fixed chunk'lar: 7 [1], yanlış ama kaynaklı. Section chunk'lar: 22. Chroma: yine 22. 2026 sürümü: 24. Defterinizde 24 diyen iki satır daha olabilir: bütün sürümlerde arayan koşu ve bu koşu. <Guess echo />
 
     <Now n="1">`npm run question`: bütün cevaplar alt alta.</Now>
   </Step>
@@ -128,7 +128,7 @@ Her satır bir pipeline adımı, her sütun bir eksen; sayılar bu sitenin logla
 
 ## Günün sorusu: bütün gün
 
-<Figure caption="Kaynak: beş npm run question koşusu; aşağıdaki ledger son üç sayıyı gösteriyor, ilk ikisi önceki sayfaların loglarında">
+<Figure caption="Kaynak: beş npm run question koşusu; aşağıdaki defter son üç sayıyı gösteriyor, ilk ikisi önceki sayfaların loglarında">
   <svg viewBox="0 0 1000 230" role="img" aria-label="Günün sorusunun beş duraktaki cevabı">
     <defs><marker id="kp-l" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker></defs>
     <text x="108" y="40" text-anchor="middle" class="fsub">RAG'siz model</text>
@@ -138,7 +138,7 @@ Her satır bir pipeline adımı, her sütun bir eksen; sayılar bu sitenin logla
     <text x="892" y="40" text-anchor="middle" class="fsub" data-q="const">2026 sürümü</text>
     <rect x="20" y="56" width="176" height="110" rx="12" class="fbox fbox-bad" />
     <text x="108" y="104" text-anchor="middle" class="flbl fbad-t" data-q="log:question-0-bare">25-30 iş günü</text>
-    <text x="108" y="138" text-anchor="middle" class="fsub">uydurdu</text>
+    <text x="108" y="138" text-anchor="middle" class="fsub">tahmin</text>
     <rect x="216" y="56" width="176" height="110" rx="12" class="fbox fbox-bad" />
     <text x="304" y="104" text-anchor="middle" class="flbl fbad-t" data-q="log:question-1-fixed">7 [1]</text>
     <text x="304" y="138" text-anchor="middle" class="fsub">satır başlıksız kaldı</text>
@@ -159,14 +159,14 @@ Her satır bir pipeline adımı, her sütun bir eksen; sayılar bu sitenin logla
   </svg>
 </Figure>
 
-<Log name="question-4-2026" title="npm run question   (son koşu ve ledger)" from={11} />
+<Log name="question-4-2026" title="npm run question   (son koşu ve defter)" from={11} />
 
 ## 10 soru
 
 Her birinin cevabı bu günün sayfalarında. Önce kendiniz cevaplayın, sonra açın.
 
 <FAQ q="1 · RAG hangi ihtiyaçtan doğdu?">
-Model bildiğini eğitimde donan ağırlıklarında taşır; Kraken Air'in politikasını hiç görmedi ve günün sorusuna bir aralık uydurdu: 25-30 iş günü. Çözüm: bilgiyi modelin içine değil, önüne koymak. [Model bilmiyor](/neden-rag/model-bilmiyor/)
+Model bildiğini eğitimde donan ağırlıklarında taşır. Günün sorusuna bir aralık verdi: 25-30 iş günü, "depending on the company's policy". Ama Kraken Air'in politikasını hiç görmedi. Çözüm: bilgiyi modelin içine değil, önüne koymak. [Model bilmiyor](/neden-rag/model-bilmiyor/)
 </FAQ>
 
 <FAQ q="2 · Fine-tune ile RAG arasında nasıl seçersin?">
@@ -174,11 +174,11 @@ Değişen bilgi için RAG, değişmeyen davranış (ton, biçim, terim) için fi
 </FAQ>
 
 <FAQ q="3 · Neden chunk'lıyoruz? Kesim yanlış yere düşerse ne olur?">
-Çünkü her soruda bütün el kitabını okutmak pahalı ve cevap birkaç satırda. 300 karakterlik kesimde `| 7 | 22 |` satırı başlığından ayrıldı ve prompt'a girmedi. Model §4'teki bir izin sınırını cevap sandı: "… at most 7 working days [1]". Başlıktan kesip başlığı her chunk'ın önüne yazmak düzeltti. [B · Chunking](/adim-adim/b-chunking/)
+Her soruda bütün el kitabını okutmak pahalı. Cevap birkaç satırda. 300 karakterlik kesimde `| 7 | 22 |` satırı başlığından ayrıldı. Prompt'a girmedi. Model §4'teki bir izin sınırını cevap sandı: "… at most 7 working days [1]". Başlıktan kesip başlığı her chunk'ın önüne yazmak düzeltti. [B · Chunking](/adim-adim/b-chunking/)
 </FAQ>
 
 <FAQ q="4 · Ingest'te bge-m3, soruda başka bir embedding modeli kullanırsan ne olur?">
-Her model kendi uzayını kurar; iki modelin vektörleri karşılaştırılamaz, bizim kodda adım 6 hata verir. Model değişirse bütün corpus yeniden embed edilir. [C · Embedding](/adim-adim/c-embedding/)
+Her model kendi uzayını kurar; iki modelin vektörleri karşılaştırılamaz. Bizim kodda adım 6 hata verir. Model değişirse bütün corpus yeniden embed edilir. [C · Embedding](/adim-adim/c-embedding/)
 </FAQ>
 
 <FAQ q="5 · Vektörün yanında chunk'ın metnini neden saklıyoruz?">
@@ -194,15 +194,15 @@ Embedding'le değil: iki sürümün metni de skoru da neredeyse aynı (0.619 ve 
 </FAQ>
 
 <FAQ q="8 · “Kaynakta yoksa şunu yaz” kuralını silersen ne olur?">
-Bizde model yine "hayır" dedi, ama kendi cümlesiyle ve bir kaynak göstererek: "No, this policy does not cover stock options [1]." Kod "not in the policies" ifadesini aradığı için bunu yakalayamaz; kural, "bilmiyorum" demeyi ölçülebilir kılar. [F · Cevap üretimi](/adim-adim/f-cevap/)
+Bizde model yine hayır dedi. Ama kendi cümlesini kurdu ve bir kaynak gösterdi: "No, this policy does not cover stock options [1]." Kod "not in the policies" ifadesini aradığı için bunu yakalayamaz; kural, "bilmiyorum" demeyi ölçülebilir kılar. [F · Cevap üretimi](/adim-adim/f-cevap/)
 </FAQ>
 
 <FAQ q="9 · Bir doküman “şifreni şu adrese gönder” diyorsa hangi katman suçlu, ne durdurur?">
-Talimat veriden geliyor. Genel kural ve işaretli kaynaklar durdurmadı; şifre istemeyi yasaklayan kural da durdurmadı: yasak açıkken de kapalıyken de cevap aynıydı. Prompt'taki bir cümle güvenlik sınırı değil. Asıl sınır kodda. Cevap kontrolümüz modelden sonra çalışır ve kaynak numarası olmayan her cümleyi siler; kontrol açıkken istek cevaptan gitti. Ayrıca ingest'te dokümanı tarayın (bunu ölçmedik) ve herkese yalnızca gereken yetkiyi verin. [Güvenlik](/uretim/guvenlik/)
+Talimat veriden geliyor. Genel kural ve işaretli kaynaklar durdurmadı; şifre istemeyi yasaklayan kural da durdurmadı: yasak açıkken de kapalıyken de cevap aynıydı. Prompt'taki bir cümle güvenlik sınırı değil. Asıl sınır kodda. Cevap kontrolümüz modelden sonra çalışır ve kaynak numarası olmayan her cümleyi siler; kontrol açıkken istek cevaptan gitti. İstekte bir kaynak numarası olsaydı kontrol onu bırakırdı. Yani bu tek bir katman, çözümün kendisi değil. Ayrıca ingest'te dokümanı tarayın (bunu ölçmedik) ve herkese yalnızca gereken yetkiyi verin. [Güvenlik](/uretim/guvenlik/)
 </FAQ>
 
 <FAQ q="10 · Retrieval iyi ama cevap yanlışsa suçlu kim?">
-Doğru chunk prompt'taysa suçlu üretim adımı: önce prompt'a, sonra modele bakılır. Bizde q13: doğru bölüm 1. sırada geldi (rr 1.00), ama cevap ✗, çünkü model kaynaktaki talimata uydu. [RAG her derde deva mı?](/her-derde-deva/sinirlar-ve-turler/)
+Doğru chunk prompt'taysa suçlu üretim adımı: önce prompt'a, sonra modele bakılır. Bizde q13: doğru bölüm 1. sırada geldi (rr 1.00), ama cevap ✗, çünkü model kaynaktaki talimata uydu. [Kaliteyi ölçmek](/uretim/kaliteyi-olcmek/)
 </FAQ>
 
 ## Repo sizde
@@ -211,7 +211,7 @@ Bütün kod, corpus, gold set ve bu sitedeki her log: [github.com/kuthaygumus/am
 
 <YourTurn>
 1. **Defterinize bakın.** `npm run question` çalıştırın; günün sorusuna sabahtan beri verilen cevapları yukarıdaki log'la karşılaştırın.
-2. **İlk ödev: rerank'ın faydasını ölçün.** `src/steps/7-rerank.ts` içindeki `TOGGLE rerank` bloğunda `true` satırını yoruma alın, `false` satırını açın, `npm run eval -- --answers` koşun. q02'nin cevabı ve 22/23 ne oldu? Toggle'ı geri alın.
+2. **İlk ödev: rerank'ın faydasını ölçün.** `src/steps/7-rerank.ts` içinde `TOGGLE rerank` bloğunu bulun. `true` satırını yoruma alın, `false` satırını açın, `npm run eval -- --answers` koşun. q02'nin cevabı ve 22/23 ne oldu? Toggle'ı geri alın.
 3. **Ödev: `byParagraph`.** `src/steps/3-chunk.ts` içindeki `HOMEWORK` notunun altındaki fonksiyonu yazın: dokümanı paragraflardan kesin, en fazla `max` karakterlik paketlere doldurun, her chunk'ın önüne başlık önekini koyun. Kontrol: `npm run check:sibling`.
 4. Henüz yazmadıysanız öteki iki alıştırma: `turkishConfidential` kuralı (bir RegExp, `src/steps/2-clean.ts`) ve `dot` fonksiyonu (`src/lib/similarity.ts`). Aynı komut kontrol eder.
 5. `byParagraph`'ı `ChunkerName` tipine ve `CHUNKERS` listesine ekleyin, toggle'a üçüncü bir satır yazın, yeniden ingest edin ve `npm run eval` ile section'la karşılaştırın.

@@ -1,6 +1,6 @@
 ---
 title: İlk 90 gün
-description: Pipeline canlıya çıktı ve ticket'lar geliyor; her ticket bir hata, her hata bir teknik, ölçülen ve ölçülmeyen ayrı ayrı.
+description: Pipeline canlıya çıktı ve ticket'lar geliyor. Her ticket bir hata ve bir teknik. Neyi ölçtüğümüzü, neyi ölçmediğimizi işaretliyoruz.
 ---
 import Deck from '../../../components/Deck.astro';
 import DeckFigure from '../../../components/DeckFigure.astro';
@@ -98,22 +98,22 @@ Hangi RAG türünü ne zaman eklemeli? Bir blog yazısının ilk önerisi değil
     </svg>
   </DeckFigure>
   <Step title="Canlıya çıktık">
-    Pipeline Kraken Air'in İK asistanı oldu; model 90 gün boyunca değişmeyecek. Ticket'lar kurgu, içlerindeki ölçümler bu günün loglarından. Her basamağın sağındaki rozet, ölçülüp ölçülmediğini söyler.
+    Pipeline artık Kraken Air'in İK asistanı. Model 90 gün boyunca aynı kalıyor. Ticket'lar kurgu. İçlerindeki ölçümler bugünün loglarından. Her basamaktaki rozet, ölçüp ölçmediğimizi söylüyor.
   </Step>
   <Step title="T1 · T2 · Etiketle, filtrele" phase="1">
-    T1: Londra otel limiti sorusunda (q06) yurt içi tablo 1. sırada; cevap doğru, ama ikiz tabloları ayıran etiket yok. T2: sürüm filtresi kapatılınca 2025'in tablosu (22 gün) da prompt'a girdi; model bu koşuda 24 günü seçti. İkisinin çözümü metadata filtresi.
+    T1: Londra oteli (q06). Yurt içi tablo 1. sırada. Cevap doğru. İkiz tabloları ayıran bir etiket yok. T2: sürüm filtresi kapalı. 2025 tablosu (22 gün) de prompt'a girdi. Model 24'ü seçti. Çözüm: metadata filtresi.
   </Step>
   <Step title="T3 · Hepsini prompt'a koyalım" phase="2">
-    Biri "el kitabının tamamını koyalım" dedi. Cevap doğru, ama RAG'in 976 token'ına karşı 9954 token, yarım dakikaya yakın bir çağrı ve her prompt'ta hr-only maaş tablosu. Çözüm: az ve seçilmiş context.
+    Biri "el kitabının tamamını koyalım" dedi. Cevap doğru. Ama 9954 token tutuyor. RAG'e 976 yetiyor. Bir çağrı yarım dakikaya yakın sürüyor. Üstelik her prompt'ta hr-only maaş tablosu var. Çözüm: az ve seçilmiş context.
   </Step>
   <Step title="T4 · T5 · Kelimeler tutmayınca" phase="3">
-    T4: IT güvenlik politikası Türkçe; ekip hybrid istedi. Eval'da 4 EN→TR sorusunun 4'ünde doğru bölüm 1. sırada: hata yok, hybrid eklenmedi. T5: "holiday" kelimeli soruda (q02) izin tablosu vektör sırasında 5.; rerank açıkken cevap doğru, ama rerank pahalı.
+    T4: Türkçe IT politikası için hybrid mi? Eval'da bu politikayla ilgili 4 İngilizce sorunun hepsinde doğru bölüm 1. sırada. Hata yok, hybrid yok. T5: "holiday" (q02) izin tablosunu 5. sıraya koyuyor. Rerank onu 1. sıraya çıkarıyor, ama rerank çağrı harcıyor.
   </Step>
   <Step title="T6 · T7 · Başlık yok, soru üç parçalı" phase="4">
-    T6: İK duyuruları başlıksız e-posta olarak geliyor; küçük chunk iyi bulunur ama başlığını kaybeder. Çözüm: küçükle ara, büyüğü ver (parent-child). T7: tek soruda üç soru, cevap üç ayrı bölümde. Çözüm: soruyu parçalara bölen agentic RAG.
+    T6: başlıksız İK e-postaları. Küçük chunk kolay bulunur ama zor okunur. Çözüm: küçükle ara, modele büyüğü ver (parent-child). T7: tek soruda üç soru, cevap üç ayrı bölümde. Çözüm: agentic RAG soruyu parçalara böler.
   </Step>
   <Step title="T8 · 330 mu, 400 mü?" phase="5">
-    Yan haklar politikası 330 TRY diyor, duyuru 400 TRY. İki chunk da prompt'taydı; model ikisini de yazdı, hangisinin geçerli olduğunu söylemedi. Doğrusu 400: duyuru o bölümü güncelliyor, ama bu bağ yalnızca metinde yazıyor. Çözüm: dokümanlar arası ilişki (GraphRAG).
+    Yan haklar politikası 330 TRY diyor. Duyuru 400 diyor. Model ikisini de aldı, ikisini de yazdı. Hangisinin geçerli olduğunu söylemedi. Doğrusu 400: duyuru yan hakları güncelliyor. Bunu yalnızca metin söylüyor. Çözüm: GraphRAG, dokümanlar arası bağlar.
   </Step>
   <Step title="Sekiz ticket, bir merdiven">
     Basamaklar maliyet sırasıyla: en ucuzdan başla, ölç, yetmezse bir üst basamak. T1-T5 ve T8'in teşhisi loglardan; T6 ve T7'ninki akıl yürütme.
@@ -122,13 +122,13 @@ Hangi RAG türünü ne zaman eklemeli? Bir blog yazısının ilk önerisi değil
 
 ## T1 · 1. hafta — Londra'da yurt içi tablo önde
 
-> **Kurgu.** Ekip eval sonuçlarını okurken fark etti: "I am a director travelling to London. How much can I spend on a hotel per night?" sorusunda kaynakların ilki yurt içi tablo.
+> **Kurgu.** Ekip eval sonuçlarını okurken fark etti: "I am a director travelling to London. How much can I spend on a hotel per night?" sorusunda arama sonuçlarının ilki yurt içi tablo.
 
 **Ölçüm.** Bu soru gold set'te var (q06). Retriever önce yurt içi harcırah bölümünü (§3), sonra yurt dışını (§4) getiriyor; eval cevabı ✓ sayıyor:
 
 <Log name="eval-answers" title="npm run eval -- --answers   (q06)" from={8} to={9} />
 
-**Teşhis.** İkiz tablolar: iki bölüm de `Job title · Daily per diem · Hotel upper limit` kalıbında. Embedding için ikisi de "otel limiti". Vektör araması yurt içi tabloyu öne koyuyor; cevap yine de doğru (✓). Ayrı bir denemede rerank yurt dışı tablosunu öne aldı; bu deneme loglarda yok. Seçimi rerank'a ve modele bırakan bir sistem bir dahaki sefere yanlış tabloyu seçebilir.
+**Teşhis.** İkiz tablolar: iki bölüm de `Job title · Daily per diem · Hotel upper limit` kalıbında. Embedding için ikisi de "otel limiti". Vektör araması yurt içi tabloyu öne koyuyor; cevap yine de doğru (✓). Arama sonuçlarının ilki yanlış tablo; düzeltmek rerank'a ve modele kaldı. Bu sefer düzelttiler, bir dahaki sefere düzeltmeyebilirler.
 **Teknik.** <Term id="metadata">Metadata</Term> filtresi: chunk'a kapsam etiketi (yurt içi / yurt dışı), sorudan kapsamı çıkarıp aramada filtre.
 **Bedel.** Ingest'te bir alan. İşin zor kısmı, etiketi soru sorulurken kimin seçeceği: soruda "London" kelimesi var, "international" kelimesi yok. **Ölçmedik.**
 
@@ -140,8 +140,8 @@ Hangi RAG türünü ne zaman eklemeli? Bir blog yazısının ilk önerisi değil
 
 <Log name="edition-all" title={'npm run question   (EDITION_FILTER = "all")'} />
 
-**Teşhis.** İki sürümün metinleri neredeyse aynı: her chunk'ın bir ikizi var, skorları neredeyse eşit (0.619 ve 0.614). Kaynak işaretinde ve chunk metninde yıl yazmıyor; modelin 22'yi seçmesini engelleyen hiçbir şey yok.
-**Teknik.** Sürüm filtresi: yalnızca en yeni sürüm yarışır. Bizde varsayılan; filtre açıkken kaynakların üçü de 2026 ([Veri değişince](/adim-adim/veri-degisince/)).
+**Teşhis.** İki sürümün metinleri neredeyse aynı. Listeye bakın: id'ler çift çift geliyor, 2026 ve 2025, skorları neredeyse aynı (0.619 ve 0.614). Prompt'ta iki tablo da var: [1] 24 diyor, [2] 22. Model [1]'i aldı. Kaynak işaretinde ve chunk metninde yıl yazmıyor; modelin 22'yi seçmesini engelleyen hiçbir şey yok.
+**Teknik.** Sürüm filtresi: arama yalnızca en yeni sürümü görür. Bizde varsayılan; filtre açıkken kaynakların üçü de 2026 ([Veri değişince](/adim-adim/veri-degisince/)).
 **Bedel.** Kod tarafında yok. Asıl iş içerikte: hangi sürümün geçerli olduğu ingest'te doğru etiketlenmeli.
 
 ## T3 · 2. hafta — "Hepsini prompt'a koyalım"
@@ -164,7 +164,7 @@ Hangi RAG türünü ne zaman eklemeli? Bir blog yazısının ilk önerisi değil
 
 <Log name="eval-section" title="npm run eval   (EN→TR soruları)" from={10} to={14} />
 
-**Teşhis.** Hata yok: bge-m3 İngilizce soruyu Türkçe bölümle zaten eşleştiriyor. Kelime araması burada az şey eklerdi ([neden](/her-derde-deva/sinirlar-ve-turler/)). Ayrı bir koşuda (`npm run ask`, 2026 sürümü) model İngilizce şifre sorusuna kaynağın dilinde, Türkçe cevap verdi: `Şifreler 180 günde bir değiştirilmelidir [1].`
+**Teşhis.** Hata yok: bge-m3 İngilizce soruyu Türkçe bölümle zaten eşleştiriyor. Kelime araması burada az şey eklerdi ([neden](/her-derde-deva/sinirlar-ve-turler/)). Ayrı bir koşuda (`npm run ask`, 2026 sürümü) İngilizce bir şifre sorusu sorduk. Model kaynağın dilinde, Türkçe cevap verdi: `Şifreler 180 günde bir değiştirilmelidir [1].`
 **Teknik.** <Term id="hybrid">Hybrid</Term> arama: kod, numara, ürün adı gibi birebir aranan kelimelerde işe yarar. Burada eklemedik.
 **Bedel.** İkinci bir indeks, iki listeyi birleştirme, bakım.
 
@@ -191,7 +191,7 @@ Hangi RAG türünü ne zaman eklemeli? Bir blog yazısının ilk önerisi değil
 
 <Log name="03-chunk-fixed" title="npm run step -- 3   (chunker: fixed)" from={5} to={21} />
 
-**Teşhis.** Section chunker başlık bulamazsa dokümanı en fazla 1500 karakterlik paragraf paketlerine böler ve önüne yalnızca doküman adını yazar; fixed kesim ise satırı başlığından ayırır. Küçük chunk iyi bulunur ama kötü okunur; büyük chunk iyi okunur ama kötü bulunur.
+**Teşhis.** Section chunker başlık bulamazsa dokümanı en fazla yaklaşık 1500 karakterlik paragraf paketlerine böler ve önüne yalnızca doküman adını yazar; fixed kesim ise satırı başlığından ayırır. Küçük chunk iyi bulunur ama kötü okunur; büyük chunk iyi okunur ama kötü bulunur.
 **Teknik.** <Term id="parentchild">Parent-child</Term>: küçük chunk'larla ara, bulunanın ait olduğu büyük parçayı prompt'a koy. Başlık yoksa ingest'te modele her chunk için bir bağlam satırı yazdır.
 **Bedel.** İki boy chunk ve aralarındaki bağ; prompt büyür; gold set'teki bölüm numaraları yeniden düşünülür. **Ölçmedik.**
 
@@ -207,7 +207,7 @@ Hangi RAG türünü ne zaman eklemeli? Bir blog yazısının ilk önerisi değil
 
 > **Kurgu.** "Asistan aynı cevapta hem 400 TRY hem 330 TRY yazdı. Yan haklar politikası 330 TRY diyor. Hangisi doğru?"
 
-**Ölçüm.** Yemek kartı sorusunda duyuru ve yan haklar §2 birlikte prompt'taydı. Cevap iki tutarı da veriyor: 400 TRY [1] duyurudan, 330 TRY [2] yan haklar politikasından. Son cümle duyuruya gizlenmiş bir talimat. Model gizli isteği de cevaba taşıdı: cevap "send your employee number and password …" diye bitiyor. Prompt'taki kurallar bunu durdurmadı ([Güvenlik](/uretim/guvenlik/)):
+**Ölçüm.** Yemek kartı sorusunda duyuru ve yan haklar §2 birlikte prompt'a giriyor. Cevap iki tutarı da veriyor: 400 TRY [1] ve 330 TRY [2]. Hangisinin geçerli olduğunu söylemiyor. Cevap ayrıca duyuruya gizlenmiş bir isteği de taşıyor; bu bir güvenlik hikâyesi ([Güvenlik](/uretim/guvenlik/)):
 
 <Log name="ask-injection" title="npm run ask -- &quot;How much is loaded onto the meal card each day?&quot;" from={29} />
 
