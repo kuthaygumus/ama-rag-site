@@ -55,7 +55,7 @@ import Term from '../../../components/Term.astro';
       </g>
       <g data-from="5">
         <text x="790" y="276" text-anchor="middle" class="fsub fbad-t" data-q="log:edition-all">filtre yoksa: 2026#3 (0.619) ve 2025#3 (0.614)</text>
-        <text x="790" y="302" text-anchor="middle" class="fsub fbad-t" data-q="log:edition-all corpus:2025/hr-leave.md">ikisi birden prompt'ta — 24 ve 22 yan yana</text>
+        <text x="790" y="302" text-anchor="middle" class="fsub fbad-t" data-q="log:edition-all corpus:2025/hr-leave.md">prompt'ta 24 ve 22 iş günü</text>
       </g>
       <defs>
         <marker id="vd-on" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead-on" /></marker>
@@ -81,7 +81,7 @@ import Term from '../../../components/Term.astro';
     <Now n="3">Bruno'da `01-chroma` → önce `collections`, sonra `count`: 120.</Now>
   </Step>
   <Step title="Filtre olmasa?">
-    `EDITION_FILTER = "all"` olunca iki sürüm yarışıyor: tablonun 2026 hâli 0.619, 2025 hâli 0.614 aldı; ikisi de prompt'a girdi, 24 ve 22 yan yana. Model bu kez 24 dedi; SOURCE 1 2026'ydı. Fark yalnızca 0.005: neredeyse beraberlik. Önde duran kaynak kazandı.
+    `EDITION_FILTER = "all"` olunca iki sürüm yarışıyor: tablonun 2026 hâli 0.619, 2025 hâli 0.614 aldı; ikisi de prompt'a girdi, prompt'ta 24 ve 22 iş günü var. Model bu kez 24 dedi; SOURCE 1 2026'ydı. Fark 0.005: neredeyse beraberlik. Bu çalıştırmada ilk kaynağın sayısı kazandı.
 
     <Now n="4">`src/steps/6-retrieve.ts` içinde sürüm filtresini `"all"` yapın ve `npm run question`: kaynaklarda iki sürüm yan yana mı?</Now>
   </Step>
@@ -123,7 +123,7 @@ Sürüm filtresi adım 6'daki toggle'da. `.env` dosyasındaki `EDITION` ise baş
 
 **4 · Filtreyi kapatın.** `src/steps/6-retrieve.ts` → `TOGGLE edition filter` bloğunda `"all"; // alternative` satırını açın, varsayılanı kapatın. `npm run question`: kaynaklarda iki sürüm yan yana mı? Toggle'ı geri alın.
 
-**5 · Başka bir değişiklik.** 2026'da bilgi güvenliği politikasında şifre değiştirme süresi de değişti. `npm run ask -- "After how many days must I change my password?"`: cevap hangi sürümden geldi? Soru İngilizce; kaynak ve cevap hangi dilde?
+**5 · Başka bir değişiklik.** 2026'da bilgi güvenliği politikasında şifre değiştirme süresi de değişti. `npm run ask -- "After how many days must I change my password?"`: cevap hangi sürümden geldi? Soru İngilizce; kaynak ve cevap hangi dilde? Cevabı aşağıdaki sık sorulanlarda.
 
 Geride kaldıysanız: `npm run catchup -- 8`, ardından `npm run ingest -- --edition 2026`.
 </YourTurn>
@@ -144,6 +144,10 @@ Yeni veriyle yeniden eğitim, yeniden değerlendirme, yeniden dağıtım; eski s
 
 <FAQ q="Kullanıcı 2025'teki hakkını sorarsa?">
 "latest" filtresiyle 2025'teki sayı prompt'a hiç gelmez. Sorudaki yılı okuyup filtreye koymak (soru analizi) mümkün ama bu repoda yok; eski sürümü tutmanın faydası ancak böyle bir yolla ortaya çıkar.
+</FAQ>
+
+<FAQ q="İngilizce şifre sorusuna neden Türkçe cevap geliyor?">
+Çünkü politika Türkçe. Cevap: `Şifreler 180 günde bir değiştirilmelidir [1].` Model kaynağın dilinde cevap verdi. Kaynak `it-security@2026#2`.
 </FAQ>
 
 <Takeaway>Model değişmedi; dokümanlar değişti, cevap onları izledi.</Takeaway>

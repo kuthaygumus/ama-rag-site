@@ -22,7 +22,7 @@ import Term from '../../../../components/Term.astro';
 <DaysQuestion answer="“An employee with 7 years of service gets 24 working days of annual leave [1].” ✓ (2026)" how="chroma store · chunker section · rerank on · filter edition 2026, access all" />
 
 <Gate>
-HR published the 2026 edition of the leave policy, and the answer to the question of the day changed. For a model that keeps knowledge in its weights, this means training it again. What does it mean in our pipeline?
+HR published the 2026 edition of the leave policy, and the answer to the question of the day changed. For a model that stores facts in its weights, this means training it again. What does it mean in our pipeline?
 </Gate>
 
 <Deck>
@@ -55,7 +55,7 @@ HR published the 2026 edition of the leave policy, and the answer to the questio
       </g>
       <g data-from="5">
         <text x="790" y="276" text-anchor="middle" class="fsub fbad-t" data-q="log:edition-all">no filter: 2026#3 (0.619) and 2025#3 (0.614)</text>
-        <text x="790" y="302" text-anchor="middle" class="fsub fbad-t" data-q="log:edition-all corpus:2025/hr-leave.md">24 and 22 side by side in the prompt</text>
+        <text x="790" y="302" text-anchor="middle" class="fsub fbad-t" data-q="log:edition-all corpus:2025/hr-leave.md">24 and 22 working days in the prompt</text>
       </g>
       <defs>
         <marker id="vd-on" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead-on" /></marker>
@@ -63,7 +63,7 @@ HR published the 2026 edition of the leave policy, and the answer to the questio
     </svg>
   </DeckFigure>
   <Step title="A new edition arrives">
-    `corpus/2026/`: the same 8 documents, with `edition: "2026"`. In the leave table, years 5 to 9 go from 22 to 24 working days. Years 10 to 14 go from 25 to 26.
+    The folder `corpus/2026/` holds the same 8 documents, with `edition: "2026"`. In the leave table, years 5 to 9 go from 22 to 24 working days. Years 10 to 14 go from 25 to 26.
   </Step>
   <Step title="No retraining, only a new ingest">
     Ingest sends only the new files through steps 1 to 5. The store now has 120 records. There are 60 from 2025 and 60 from 2026, side by side.
@@ -81,12 +81,12 @@ HR published the 2026 edition of the leave policy, and the answer to the questio
     <Now n="3">In Bruno, open `01-chroma`. Send `collections` first, then `count`: 120.</Now>
   </Step>
   <Step title="What if there is no filter?">
-    With `EDITION_FILTER = "all"`, both editions compete. The 2026 table scores 0.619 and the 2025 table 0.614. Both go into the prompt, so 24 and 22 sit side by side. This time the model says 24, and SOURCE 1 is from 2026. The gap is only 0.005: almost a tie. The source in front wins.
+    With `EDITION_FILTER = "all"`, both editions compete. The 2026 table scores 0.619 and the 2025 table 0.614. Both tables go into the prompt, so the prompt holds 24 and 22 working days. This time the model says 24, and SOURCE 1 is from 2026. The gap is 0.005, almost a tie. In this run, the first source won.
 
     <Now n="4">In `src/steps/6-retrieve.ts`, set the edition filter to `"all"`. Run `npm run question`. Do the sources show both editions side by side?</Now>
   </Step>
   <Step title="Delete or filter?">
-    Keeping the old edition helps with questions about the past and with audits. The cost: the filter must be right on every search. `replaceEdition` refreshes only its own edition, so 2026 doesn't touch 2025. Deleting 2025 needs a separate delete on `edition`. The repo has no command for that.
+    Keeping the old edition helps with questions about the past and with audits. The cost is this: the filter must be right on every search. `replaceEdition` refreshes only its own edition, so 2026 doesn't touch 2025. To delete 2025, you need a separate delete that matches `edition`. The repo has no command for that.
 
     <Now n="5">Run `npm run ask -- "After how many days must I change my password?"`. Which edition does the answer come from?</Now>
   </Step>
@@ -123,9 +123,9 @@ The edition filter is the toggle in step 6. `EDITION` in the `.env` file is some
 
 **4 · Turn the filter off.** In `src/steps/6-retrieve.ts`, find the `TOGGLE edition filter` block. Uncomment the `"all"; // alternative` line, and comment out the default. Run `npm run question`. Do the sources show both editions side by side? Switch the toggle back.
 
-**5 · Another change.** In 2026, the information security policy also changed how often you must change your password. Run `npm run ask -- "After how many days must I change my password?"`. Which edition does the answer come from? The question is in English. Which language are the source and the answer in?
+**5 · Another change.** In 2026, the information security policy also changed how often you must change your password. Run `npm run ask -- "After how many days must I change my password?"`. Which edition does the answer come from? The question is in English. Which language are the source and the answer in? The answer is in the FAQ below.
 
-Fell behind? Run `npm run catchup -- 8`, then `npm run ingest -- --edition 2026`.
+Are you behind? Run `npm run catchup -- 8`, then `npm run ingest -- --edition 2026`.
 </YourTurn>
 
 ## Common questions
@@ -144,6 +144,10 @@ It means training again with the new data, testing again and deploying again. Ma
 
 <FAQ q="What if a user asks about their leave in 2025?">
 With the "latest" filter, the 2025 number never reaches the prompt. You can read the year from the question and put it in the filter (question analysis). But this repo doesn't do that. Keeping the old edition helps only with a step like that.
+</FAQ>
+
+<FAQ q="Why does the English password question get a Turkish answer?">
+Because the policy is Turkish. The answer is `Şifreler 180 günde bir değiştirilmelidir [1].` The model copies the language of its sources. The source is `it-security@2026#2`.
 </FAQ>
 
 <Takeaway>The model didn't change. The documents changed, and the answer followed them.</Takeaway>
