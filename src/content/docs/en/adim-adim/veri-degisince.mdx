@@ -83,7 +83,7 @@ HR published the 2026 edition of the leave policy. The answer to the question of
   <Step title="What if there is no filter?">
     With `EDITION_FILTER = "all"`, both editions compete: 2026 scores 0.619, 2025 scores 0.614. Both tables go in, so the prompt holds 24 and 22. Both markers say "Annual Leave Policy". Nothing says which is newer. The model says 24, from SOURCE 1.
 
-    <Now n="4">In `src/steps/6-retrieve.ts`, set the edition filter to `"all"`. Run `npm run question`. Do the sources show both editions side by side?</Now>
+    <Now n="4">In `src/steps/6-retrieve.ts`, set the edition filter to `"all"`. Run `npm run question`. Do the sources show both editions side by side? Then set the filter back to "latest".</Now>
   </Step>
   <Step title="Delete or filter?">
     The old edition helps with past questions and audits. The cost: the filter must be right on every search. `replaceEdition` refreshes only its own edition. Deleting 2025 needs a separate delete step. The repo has no command for it.

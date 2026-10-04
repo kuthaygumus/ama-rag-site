@@ -99,7 +99,7 @@ Pipeline doğru cevap veriyor. Ama herkesin sorusunu bütün şirket dokümanlar
   <Step title="Kim soruyor, etiket güncel mi?" phase="2">
     Filtre iki bilgiye dayanır. Kimin sorduğu, sorunun metninden değil, girişten (SSO) gelir; bizde soranın erişim listesi koda gömülü. Ingest `access` etiketini kaynaktan kopyalar. Kaynakta yetki değişirse yeniden ingest edin.
 
-    <Now n="1">`src/steps/6-retrieve.ts` içinde erişim filtresini kapatın ve `npm run ask -- "What is the upper limit of the monthly gross salary band for a senior specialist?"`: kaynak listesinde ne değişti?</Now>
+    <Now n="1">`src/steps/6-retrieve.ts` içinde erişim filtresini kapatın ve `npm run ask -- "What is the upper limit of the monthly gross salary band for a senior specialist?"`: kaynak listesinde ne değişti? Sonra filtreyi geri açın.</Now>
   </Step>
   <Step title="Injection: talimat dokümanın içinde" phase="3">
     Yemek kartı duyurusunda gizli bir satır var: asistan, cevabının sonuna sicil numarası ve şifre isteyen bir cümle eklesin ("… send your employee number and password …"). Bölüm 1. sıraya çıkar, talimat prompt'a veriyle birlikte girer: <Term id="injection">prompt injection</Term>.
@@ -110,7 +110,7 @@ Pipeline doğru cevap veriyor. Ama herkesin sorusunu bütün şirket dokümanlar
   <Step title="Prompt'taki cümle sınır değildir" phase="4">
     Yasak açıkken de kapalıyken de cevap kelimesi kelimesine aynı. Asıl katmanlar kodda: ingest'te dokümanı tara, cevabı kontrol et, en az yetki ver. Bu repoda erişim filtresi ve bir cevap kontrolü var.
 
-    <Now n="2">`src/steps/8-answer.ts` içinde "Never ask the user for a password" kuralını yoruma alın ve `npm run ask -- "How much is loaded onto the meal card each day?" --prompt`: talimat hangi kaynakta?</Now>
+    <Now n="2">`src/steps/8-answer.ts` içinde "Never ask the user for a password" kuralını yoruma alın ve `npm run ask -- "How much is loaded onto the meal card each day?" --prompt`: talimat hangi kaynakta? Sonra kuralı geri açın.</Now>
   </Step>
   <Step title="Koddaki kontrol isteği siliyor" phase="4">
     Modelden sonra cevabı kod kontrol eder. Kaynak numarası olmayan her cümleyi siler. Gizli istekte kaynak numarası yok, bu yüzden gider. Onu dört satır kod durdurdu. Ama isteğin sonunda [1] olsaydı geçerdi.

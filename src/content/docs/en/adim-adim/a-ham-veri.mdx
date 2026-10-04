@@ -205,7 +205,7 @@ The model never saw these files. And even if it did, the raw files are dirty. If
   <Step title="Cleaning: 4 rules and a line joiner" stage="b">
     Step 2 drops the noise with 4 rules (regex). They catch the page header and the English confidentiality line. They also catch page numbers in English and Turkish. Then it joins the broken lines. Headings, tables and blank lines stay.
 
-    <Now n="2">In `src/steps/2-clean.ts`, comment out the first rule of the `NOISE` list. Run `npm run step -- 2`. The `hr-leave` line should show −8 noise lines.</Now>
+    <Now n="2">In `src/steps/2-clean.ts`, comment out the first rule of the `NOISE` list. Run `npm run step -- 2`. The `hr-leave` line should show −8 noise lines. Then turn the rule back on and run `npm run step -- 2` again.</Now>
   </Step>
   <Step title="Result: raw data in, clean text out" stage="b">
     In the 8 documents, 1078 lines went down to 512. Of the 566 removed lines, 74 are noise. The rest are joined lines and extra blank lines that the cleaning deleted. Both steps took a few milliseconds.
@@ -216,7 +216,7 @@ The model never saw these files. And even if it did, the raw files are dirty. If
   <Step title="Step 2 in code: 1-docs.json → 2-clean.json" stage="c" phase="2">
     Step 2 doesn't run step 1. It reads that step's output, `data/1-docs.json`. It puts the clean text into the `text` field. It copies the metadata as it is and writes the result to `data/2-clean.json`.
 
-    <Now n="3">Read the section "Where does the leftover noise go?" below. Then write the `turkishConfidential` rule. Check: `npm run check:sibling`.</Now>
+    <Now n="3">Read the section "Where does the leftover noise go?" below. Then write the `turkishConfidential` rule. Check: `npm run check:sibling`. Only the `turkishConfidential` test needs to be green.</Now>
   </Step>
 </Deck>
 

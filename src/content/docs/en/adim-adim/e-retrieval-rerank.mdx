@@ -167,7 +167,7 @@ The store is full, so now we ask questions. For the question of the day, the rig
   <Step title="The cost" stage="list">
     The search itself took 8 ms (the whole step, 22 ms). Rerank took 1498 ms. For this question, the answer didn't change: 22 working days in both runs. Rerank matters when the right chunk is not in the top 3.
 
-    <Now n="2">In `src/steps/7-rerank.ts`, turn rerank off. Run `npm run step -- 7` and `npm run step -- 8`.</Now>
+    <Now n="2">In `src/steps/7-rerank.ts`, turn rerank off. Run `npm run step -- 7` and `npm run step -- 8`. Then turn rerank back on.</Now>
   </Step>
   <Step title="The right chunk is not always in front" stage="list">
     Now use other words: "How much holiday do I get? I started here 4 years ago." The leave policy never says "holiday". It says "annual leave". By vector, the leave table is only 5th, so it misses the prompt. Rerank lifts it to rank 1. The answer: 18 working days.
@@ -177,7 +177,7 @@ The store is full, so now we ask questions. For the question of the day, the rig
   <Step title="Top-k is not the only way" stage="yol">
     A threshold keeps chunks above a score. On page C, even the "unrelated" pair scored 0.503. Set it on your data. <Term id="mmr">MMR</Term> skips near-copies. Hybrid adds keyword search (BM25). This repo has top-k and the filter. The rest are ideas.
 
-    <Now n="4">In `src/steps/6-retrieve.ts`, turn the access filter off. Run `npm run ask -- "What is the upper limit of the monthly gross salary band for a senior specialist?"`.</Now>
+    <Now n="4">In `src/steps/6-retrieve.ts`, turn the access filter off. Run `npm run ask -- "What is the upper limit of the monthly gross salary band for a senior specialist?"`. Then turn the filter back on.</Now>
   </Step>
 </Deck>
 

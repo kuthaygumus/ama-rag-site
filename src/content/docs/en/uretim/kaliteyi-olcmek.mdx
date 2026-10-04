@@ -5,6 +5,7 @@ description: Gold set, hit@1, recall@k and MRR at section level. Checking the an
 import Deck from '../../../../components/Deck.astro';
 import DeckFigure from '../../../../components/DeckFigure.astro';
 import Step from '../../../../components/Step.astro';
+import Now from '../../../../components/Now.astro';
 import DaysQuestion from '../../../../components/DaysQuestion.astro';
 import Gate from '../../../../components/Gate.astro';
 import Example from '../../../../components/Example.astro';
@@ -20,8 +21,6 @@ import Takeaway from '../../../../components/Takeaway.astro';
 <Gate>
 On page B we changed the chunker. The question of the day got a wrong number with a source: "… at most 7 working days [1]". Now it is "22 working days". But that is one question. Did the same change break other questions? "Looks better to me" can't tell you. You need a number.
 </Gate>
-
-Start this command first, because it takes a while: `npm run eval -- --answers`.
 
 <Deck>
   <DeckFigure slot="figure">
@@ -83,6 +82,8 @@ Start this command first, because it takes a while: `npm run eval -- --answers`.
   </DeckFigure>
   <Step title="The task: an exam with an answer key">
     We test with 23 questions. We know their answers: `eval/gold.jsonl`. Each line has the question, right section, expected value and type. That is a <Term id="goldset">gold set</Term>. The values are from 2025, so the gold set has versions.
+
+    <Now n="1">Start `npm run eval -- --answers` now. It runs while we talk.</Now>
   </Step>
   <Step title="What did the retriever return? hit@1">
     For q02, the right section (hr-leave#3) is 5th. The question says "holiday", the policy "leave". <Term id="hit1">hit@1</Term> is 1 if the first result is right, 0 if not. q02 gets 0. The question of the day gets 1.

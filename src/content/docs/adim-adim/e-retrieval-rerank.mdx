@@ -167,7 +167,7 @@ Depo dolu, şimdi soru soruyoruz. Günün sorusunda doğru chunk ilk sırada. Am
   <Step title="Bedeli" stage="list">
     Aramanın kendisi 8 ms sürdü (adımın tamamı 22 ms); rerank 1498 ms. Bu soruda cevap değişmedi: iki yolda da 22 iş günü. Rerank, doğru chunk ilk 3'te olmadığında işe yarıyor.
 
-    <Now n="2">`src/steps/7-rerank.ts` içinde rerank'ı kapatın; `npm run step -- 7` ve `npm run step -- 8`.</Now>
+    <Now n="2">`src/steps/7-rerank.ts` içinde rerank'ı kapatın; `npm run step -- 7` ve `npm run step -- 8`. Sonra rerank'ı geri açın.</Now>
   </Step>
   <Step title="Doğru chunk hep önde değil" stage="list">
     Şimdi başka kelimelerle sorun: "How much holiday do I get? I started here 4 years ago." İzin politikasında "holiday" kelimesi hiç geçmiyor; orada "annual leave" yazıyor. Vektör sırasında izin tablosu ancak 5. geliyor, prompt'a giremiyor. Rerank onu 1. sıraya çıkarıyor. Cevap: 18 iş günü.
@@ -177,7 +177,7 @@ Depo dolu, şimdi soru soruyoruz. Günün sorusunda doğru chunk ilk sırada. Am
   <Step title="Top-k tek yol değil" stage="yol">
     Eşik, bir skorun üstündeki chunk'ları tutar. C'de "ilgisiz" çift bile 0.503 aldı; eşiği kendi verinizde seçin. <Term id="mmr">MMR</Term> birbirinin kopyası olan chunk'ları atlar. Hybrid, kelime aramasını (BM25) ekler. Bu repoda top-k ve filtre var; gerisi fikir.
 
-    <Now n="4">`src/steps/6-retrieve.ts` içinde erişim filtresini kapatın; `npm run ask -- "What is the upper limit of the monthly gross salary band for a senior specialist?"`.</Now>
+    <Now n="4">`src/steps/6-retrieve.ts` içinde erişim filtresini kapatın; `npm run ask -- "What is the upper limit of the monthly gross salary band for a senior specialist?"`. Sonra filtreyi geri açın.</Now>
   </Step>
 </Deck>
 

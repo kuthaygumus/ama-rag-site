@@ -5,6 +5,7 @@ description: Gold set, hit@1, recall@k ve MRR bölüm seviyesinde; cevap kontrol
 import Deck from '../../../components/Deck.astro';
 import DeckFigure from '../../../components/DeckFigure.astro';
 import Step from '../../../components/Step.astro';
+import Now from '../../../components/Now.astro';
 import DaysQuestion from '../../../components/DaysQuestion.astro';
 import Gate from '../../../components/Gate.astro';
 import Example from '../../../components/Example.astro';
@@ -20,8 +21,6 @@ import Takeaway from '../../../components/Takeaway.astro';
 <Gate>
 B sayfasında chunker'ı değiştirdik. Günün sorusu kaynak gösteren yanlış bir sayı almıştı: "… at most 7 working days [1]". Şimdi cevap "22 working days". Ama bu tek bir soru: aynı değişiklik öteki soruları bozdu mu? "Bana daha iyi göründü" bunu söyleyemez; bir sayı gerekir.
 </Gate>
-
-Önce bu komutu başlatın, uzun sürer: `npm run eval -- --answers`.
 
 <Deck>
   <DeckFigure slot="figure">
@@ -83,6 +82,8 @@ B sayfasında chunker'ı değiştirdik. Günün sorusu kaynak gösteren yanlış
   </DeckFigure>
   <Step title="Görev: bir sınav kâğıdı">
     Sistemi 23 soruyla sınarız; cevaplarını biliyoruz: `eval/gold.jsonl`. Her satırda soru, doğru bölüm, beklenen değer ve tür yazar: bir <Term id="goldset">gold set</Term>. Değerler 2025'ten; bu yüzden gold set de sürümlenir.
+
+    <Now n="1">`npm run eval -- --answers` komutunu şimdi başlatın. Biz konuşurken çalışır.</Now>
   </Step>
   <Step title="Retriever ne getirdi? hit@1">
     q02'de doğru bölüm (hr-leave#3) 5. sırada. Soru "holiday" diyor, politika "leave". <Term id="hit1">hit@1</Term>, ilk sonuç doğruysa 1, değilse 0'dır. q02'de 0; günün sorusunda 1.

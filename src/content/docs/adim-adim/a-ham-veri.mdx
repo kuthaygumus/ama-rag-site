@@ -205,7 +205,7 @@ Model bu dosyaları hiç görmedi; görse de ham hâlleri kirli. Bu metni olduğ
   <Step title="Temizlik: 4 kural ve bir birleştirici" stage="b">
     Adım 2 gürültüyü 4 kuralla (regex) atar: sayfa başlığı, İngilizce gizlilik satırı, İngilizce ve Türkçe sayfa numarası. Sonra bölünmüş satırları birleştirir; başlık, tablo ve boş satırlar kalır.
 
-    <Now n="2">`src/steps/2-clean.ts` içinde `NOISE` listesinin ilk kuralını kapatın, `npm run step -- 2`: `hr-leave` −8 gürültü satırı göstermeli.</Now>
+    <Now n="2">`src/steps/2-clean.ts` içinde `NOISE` listesinin ilk kuralını kapatın, `npm run step -- 2`: `hr-leave` −8 gürültü satırı göstermeli. Sonra kuralı geri açıp `npm run step -- 2` komutunu tekrar çalıştırın.</Now>
   </Step>
   <Step title="Sonuç: ham veri girdi, temiz metin çıktı" stage="b">
     8 dokümanda 1078 satır 512 satıra indi. Eksilen 566 satırın 74'ü atılan gürültü; gerisi birleşen satırlar ve silinen fazla boş satırlar. İki adım birkaç milisaniye sürdü.
@@ -216,7 +216,7 @@ Model bu dosyaları hiç görmedi; görse de ham hâlleri kirli. Bu metni olduğ
   <Step title="Adım 2 kodda: 1-docs.json → 2-clean.json" stage="c" phase="2">
     Adım 2 adım 1'i çağırmaz; onun yazdığı `data/1-docs.json` dosyasını okur. Temizlenen metin `text` alanına girer, metadata olduğu gibi kopyalanır, sonuç `data/2-clean.json` dosyasına yazılır.
 
-    <Now n="3">Aşağıdaki "Kaçan gürültü nereye gider?" bölümünü okuyup `turkishConfidential` kuralını yazın. Kontrol: `npm run check:sibling`.</Now>
+    <Now n="3">Aşağıdaki "Kaçan gürültü nereye gider?" bölümünü okuyup `turkishConfidential` kuralını yazın. Kontrol: `npm run check:sibling`. Yalnızca `turkishConfidential` testinin yeşil olması yeter.</Now>
   </Step>
 </Deck>
 

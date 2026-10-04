@@ -83,7 +83,7 @@ import Term from '../../../components/Term.astro';
   <Step title="Filtre olmasa?">
     `EDITION_FILTER = "all"` olunca iki sürüm yarışıyor: 2026 0.619, 2025 0.614 aldı. İki tablo da prompt'a giriyor; prompt'ta hem 24 hem 22 var. İki işaret de "Annual Leave Policy" diyor. Hangisinin yeni olduğunu hiçbir şey söylemiyor. Model 24 dedi, SOURCE 1'den.
 
-    <Now n="4">`src/steps/6-retrieve.ts` içinde sürüm filtresini `"all"` yapın ve `npm run question`: kaynaklarda iki sürüm yan yana mı?</Now>
+    <Now n="4">`src/steps/6-retrieve.ts` içinde sürüm filtresini `"all"` yapın ve `npm run question`: kaynaklarda iki sürüm yan yana mı? Sonra filtreyi yine "latest" yapın.</Now>
   </Step>
   <Step title="Silmek mi, filtrelemek mi?">
     Eski sürüm geçmişe dönük sorulara ve denetime yarar. Bedeli: filtre her aramada doğru olmalı. `replaceEdition` yalnızca kendi sürümünü yeniler. 2025'i silmek için ayrı bir silme adımı gerekir; repoda bunun komutu yok.
