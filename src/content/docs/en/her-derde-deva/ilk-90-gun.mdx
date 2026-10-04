@@ -101,13 +101,13 @@ Which RAG variant should you add, and when? The first tip in a blog post doesn't
     The pipeline is now Kraken Air's HR assistant. The model stays the same for 90 days. The tickets are fiction, but the measurements in them come from today's logs. The badge on the right of each level says if we measured it.
   </Step>
   <Step title="T1 · T2 · Label, then filter" phase="1">
-    T1: for the London hotel question (q06), the domestic table ranks 1st. Rerank saved the answer, but no label separates the twin tables. T2: with the edition filter off, the 2025 table (22) got into the prompt too. In this run, the model picked 24. Both need a metadata filter.
+    T1: for the London hotel question (q06), the domestic table ranks 1st. The answer is right, but no label separates the twin tables. T2: with the edition filter off, the 2025 table (22 days) got into the prompt too. In this run, the model picked 24 days. Both need a metadata filter.
   </Step>
   <Step title="T3 · Let's put it all in the prompt" phase="2">
-    Someone said: "Let's put in the whole handbook." The answer is right. But it costs 9954 tokens, against RAG's 976. One call takes about half a minute. And the hr-only salary table is in every prompt. The fix: a small, chosen context.
+    Someone said: "Let's put in the whole handbook." The answer is right. But it costs 9954 tokens, against 976 tokens for RAG. One call takes about half a minute. And the hr-only salary table is in every prompt. The fix: a small, chosen context.
   </Step>
   <Step title="T4 · T5 · When the words don't match" phase="3">
-    T4: the team wants hybrid for the Turkish IT security policy. In the eval, 4 of 4 EN→TR questions have the right section 1st. No failure, no hybrid. T5: for "holiday" (q02), the leave table is 5th by vector. With rerank on, the answer is right. But rerank is expensive.
+    T4: the team wants hybrid for the Turkish IT security policy. In the eval, 4 of 4 English questions about the Turkish policy have the right section 1st. No failure, no hybrid. T5: for "holiday" (q02), the leave table is 5th by vector. With rerank on, the answer is right. But rerank is expensive.
   </Step>
   <Step title="T6 · T7 · No headings, a three-part question" phase="4">
     T6: HR announcements arrive as emails with no headings. A small chunk is easy to find but loses its heading. The fix: search with small chunks, give the model big ones (parent-child). T7: three questions in one, answers in three sections. The fix: agentic RAG, which splits the question.
@@ -128,7 +128,7 @@ Which RAG variant should you add, and when? The first tip in a blog post doesn't
 
 <Log name="eval-answers" title="npm run eval -- --answers   (q06)" from={8} to={9} />
 
-**Diagnosis.** Twin tables: both sections use the same pattern, `Job title · Daily per diem · Hotel upper limit`. To the embedding, both are "hotel limit". In this run, rerank brought the right answer: it moved the international table up. A system that leaves the choice to rerank and the model can one day pick the wrong one.
+**Diagnosis.** Twin tables: both sections use the same pattern, `Job title · Daily per diem · Hotel upper limit`. To the embedding, both are "hotel limit". Vector search puts the domestic table first. The answer is still right (✓). In a separate probe, rerank lifted the international table. That probe is not in the logs. A system that leaves the choice to rerank and the model may pick the wrong table next time.
 **Technique.** A <Term id="metadata">metadata</Term> filter. Give each chunk a scope label (domestic / international). Read the scope from the question, and filter the search with it.
 **Cost.** One field at ingest. The hard part: who picks the label when a question comes in? The question says "London". It doesn't say "international". **Not measured.**
 
@@ -164,7 +164,7 @@ Which RAG variant should you add, and when? The first tip in a blog post doesn't
 
 <Log name="eval-section" title="npm run eval   (EN→TR questions)" from={10} to={14} />
 
-**Diagnosis.** No failure: bge-m3 already matches the English question with the Turkish section. Keyword search would add little here ([why](/en/her-derde-deva/sinirlar-ve-turler/)).
+**Diagnosis.** No failure: bge-m3 already matches the English question with the Turkish section. Keyword search would add little here ([why](/en/her-derde-deva/sinirlar-ve-turler/)). In a separate run (`npm run ask`, 2026 edition), the model answers an English password question in Turkish, the language of its source: `Şifreler 180 günde bir değiştirilmelidir [1].`
 **Technique.** <Term id="hybrid">Hybrid</Term> search helps with words you search for exactly: codes, numbers, product names. We didn't add it here.
 **Cost.** A second index, merging two lists, and maintenance.
 
@@ -176,9 +176,12 @@ Which RAG variant should you add, and when? The first tip in a blog post doesn't
 
 <Log name="eval-answers" title="npm run eval -- --answers   (q02)" from={4} to={5} />
 
-**Diagnosis.** The question says "holiday". The document says "annual paid leave". The meaning is shared, not the words. The embedding finds the section, but barely (rank 5). Only the top 3 chunks go into the prompt. Asked on its own, the same question goes from 5th to 1st with rerank.
+**Diagnosis.** The question says "holiday". The document says "annual paid leave". The question and the document share the meaning, but not the words. The embedding finds the section, but barely (rank 5). Only the top 3 chunks go into the prompt. When we ask this question alone, rerank moves the table from 5th to 1st:
+
+<Log name="ask-paraphrase" title='npm run ask -- "How much holiday do I get? I started here 4 years ago."' from={17} to={28} />
+
 **Technique.** <Term id="rerank">Rerank</Term> ([E](/en/adim-adim/e-retrieval-rerank/)). A cheaper option: have the model rewrite the question in the document's words. Or have it write a guessed answer first, and search with that answer (<Term id="hyde">HyDE</Term>).
-**Cost.** Rerank is one LLM call per candidate ([Performance](/en/uretim/performans-maliyet/)). We didn't measure q02 with rerank off. We didn't measure HyDE either. Rerank makes mistakes too: on the salary question, it gave the top score (10) to two per diem sections ([Security](/en/uretim/guvenlik/)).
+**Cost.** Rerank is one LLM call per candidate ([Performance](/en/uretim/performans-maliyet/)). We didn't measure q02 with rerank off. We didn't measure HyDE either. Rerank makes mistakes too. On the salary question, it gave the top score (10) to two per diem sections ([Security](/en/uretim/guvenlik/)).
 
 ## T6 · Month 2 — Documents without headings
 
@@ -198,19 +201,19 @@ Which RAG variant should you add, and when? The first tip in a blog post doesn't
 
 **Diagnosis.** The answer is spread over three sections. Leave for the birth: leave policy §5. The days the meal card is not topped up: benefits policy §2. Carrying over leave: leave policy §7. One search looks for one "average" question. The prompt gets 3 chunks.
 **Technique.** <Term id="agentic">Agentic RAG</Term>: the model splits the question into parts. It searches for each part and checks "is this enough?". Then it answers.
-**Cost.** Many calls instead of one. The time multiplies with the number of rounds. Two runs can split the question in different ways. You need a limit on rounds. **Not measured:** we didn't ask the pipeline this question.
+**Cost.** Many calls instead of one. The time grows with every round. Two runs can split the question in different ways. You need a limit on rounds. **Not measured:** we didn't ask the pipeline this question.
 
 ## T8 · Month 3 — 330 or 400?
 
 > **Scenario.** "The assistant wrote both 400 TRY and 330 TRY in one answer. The benefits policy says 330 TRY. Which one is right?"
 
-**Measurement.** On the meal card question, the announcement and benefits §2 were in the prompt together. The answer gives both amounts: 400 TRY [1] from the announcement, and 330 TRY [2] from the benefits policy. The last sentence is an instruction hidden in the announcement ([Security](/en/uretim/guvenlik/)):
+**Measurement.** On the meal card question, the announcement and benefits §2 were in the prompt together. The answer gives both amounts: 400 TRY [1] from the announcement, and 330 TRY [2] from the benefits policy. The last sentence is an instruction hidden in the announcement. The model copied this hidden request: the answer ends with "send your employee number and password". The rules in the prompt did not stop it ([Security](/en/uretim/guvenlik/)):
 
 <Log name="ask-injection" title="npm run ask -- &quot;How much is loaded onto the meal card each day?&quot;" from={29} />
 
 **Diagnosis.** Only the text says that the announcement updates the amount in benefits §2. In this run, the two chunks came together. The model put both amounts side by side. It didn't say that 330 is the old amount. We didn't measure what happens if the announcement drops out of the top 3.
 **Technique.** At ingest, extract the links between documents ("announcement → updates → benefits §2"). At query time, follow that link: <Term id="graphrag">GraphRAG</Term>. The simplest form: an "updated" metadata label on the section that changed.
-**Cost.** The whole corpus goes through the model once. If a link is wrong, the search quietly goes to the wrong place. Summary questions like "When do I need a director's approval?" belong here too. Their answers are spread over many sections. **Not measured.**
+**Cost.** The whole corpus goes through the model once. If a link is wrong, the search quietly goes to the wrong place. Summary questions like "When do I need a director's approval?" also need this. Their answers are spread over many sections. **Not measured.**
 
 ## Common questions
 

@@ -101,7 +101,7 @@ Hangi RAG türünü ne zaman eklemeli? Bir blog yazısının ilk önerisi değil
     Pipeline Kraken Air'in İK asistanı oldu; model 90 gün boyunca değişmeyecek. Ticket'lar kurgu, içlerindeki ölçümler bu günün loglarından. Her basamağın sağındaki rozet, ölçülüp ölçülmediğini söyler.
   </Step>
   <Step title="T1 · T2 · Etiketle, filtrele" phase="1">
-    T1: Londra otel limiti sorusunda (q06) yurt içi tablo 1. sırada; cevabı rerank kurtardı, ama ikiz tabloları ayıran etiket yok. T2: sürüm filtresi kapatılınca 2025'in tablosu (22) da prompt'a girdi; model bu koşuda 24'ü seçti. İkisinin çözümü metadata filtresi.
+    T1: Londra otel limiti sorusunda (q06) yurt içi tablo 1. sırada; cevap doğru, ama ikiz tabloları ayıran etiket yok. T2: sürüm filtresi kapatılınca 2025'in tablosu (22 gün) da prompt'a girdi; model bu koşuda 24 günü seçti. İkisinin çözümü metadata filtresi.
   </Step>
   <Step title="T3 · Hepsini prompt'a koyalım" phase="2">
     Biri "el kitabının tamamını koyalım" dedi. Cevap doğru, ama RAG'in 976 token'ına karşı 9954 token, yarım dakikaya yakın bir çağrı ve her prompt'ta hr-only maaş tablosu. Çözüm: az ve seçilmiş context.
@@ -128,7 +128,7 @@ Hangi RAG türünü ne zaman eklemeli? Bir blog yazısının ilk önerisi değil
 
 <Log name="eval-answers" title="npm run eval -- --answers   (q06)" from={8} to={9} />
 
-**Teşhis.** İkiz tablolar: iki bölüm de `Job title · Daily per diem · Hotel upper limit` kalıbında. Embedding için ikisi de "otel limiti". Bu koşuda doğru cevabı rerank getirdi: yurt dışı tablosunu öne aldı. Seçimi rerank'a ve modele bırakan bir sistem, bir gün yanlışını da seçebilir.
+**Teşhis.** İkiz tablolar: iki bölüm de `Job title · Daily per diem · Hotel upper limit` kalıbında. Embedding için ikisi de "otel limiti". Vektör araması yurt içi tabloyu öne koyuyor; cevap yine de doğru (✓). Ayrı bir denemede rerank yurt dışı tablosunu öne aldı; bu deneme loglarda yok. Seçimi rerank'a ve modele bırakan bir sistem bir dahaki sefere yanlış tabloyu seçebilir.
 **Teknik.** <Term id="metadata">Metadata</Term> filtresi: chunk'a kapsam etiketi (yurt içi / yurt dışı), sorudan kapsamı çıkarıp aramada filtre.
 **Bedel.** Ingest'te bir alan. İşin zor kısmı, etiketi soru sorulurken kimin seçeceği: soruda "London" kelimesi var, "international" kelimesi yok. **Ölçmedik.**
 
@@ -164,7 +164,7 @@ Hangi RAG türünü ne zaman eklemeli? Bir blog yazısının ilk önerisi değil
 
 <Log name="eval-section" title="npm run eval   (EN→TR soruları)" from={10} to={14} />
 
-**Teşhis.** Hata yok: bge-m3 İngilizce soruyu Türkçe bölümle zaten eşleştiriyor. Kelime araması burada az şey eklerdi ([neden](/her-derde-deva/sinirlar-ve-turler/)).
+**Teşhis.** Hata yok: bge-m3 İngilizce soruyu Türkçe bölümle zaten eşleştiriyor. Kelime araması burada az şey eklerdi ([neden](/her-derde-deva/sinirlar-ve-turler/)). Ayrı bir koşuda (`npm run ask`, 2026 sürümü) model İngilizce şifre sorusuna kaynağın dilinde, Türkçe cevap verdi: `Şifreler 180 günde bir değiştirilmelidir [1].`
 **Teknik.** <Term id="hybrid">Hybrid</Term> arama: kod, numara, ürün adı gibi birebir aranan kelimelerde işe yarar. Burada eklemedik.
 **Bedel.** İkinci bir indeks, iki listeyi birleştirme, bakım.
 
@@ -176,7 +176,10 @@ Hangi RAG türünü ne zaman eklemeli? Bir blog yazısının ilk önerisi değil
 
 <Log name="eval-answers" title="npm run eval -- --answers   (q02)" from={4} to={5} />
 
-**Teşhis.** Soru "holiday" diyor, doküman "annual paid leave": anlam ortak, kelime değil. Embedding buluyor ama zar zor (5. sıra); prompt'a yalnızca ilk 3 chunk girer. Aynı soru tek başına sorulunca rerank tabloyu 5. sıradan 1. sıraya taşıyor.
+**Teşhis.** Soru "holiday" diyor, doküman "annual paid leave": anlam ortak, kelime değil. Embedding buluyor ama zar zor (5. sıra); prompt'a yalnızca ilk 3 chunk girer. Aynı soru tek başına sorulunca rerank tabloyu 5. sıradan 1. sıraya taşıyor:
+
+<Log name="ask-paraphrase" title='npm run ask -- "How much holiday do I get? I started here 4 years ago."' from={17} to={28} />
+
 **Teknik.** <Term id="rerank">Rerank</Term> ([E](/adim-adim/e-retrieval-rerank/)). Daha ucuz bir aday: soruyu dokümanın diliyle yeniden yazdırmak ya da önce varsayımsal bir cevap yazdırıp onunla aramak (<Term id="hyde">HyDE</Term>).
 **Bedel.** Rerank her aday için bir LLM çağrısı ([Performans](/uretim/performans-maliyet/)). Rerank kapalıyken q02'yi ölçmedik; HyDE'yi de ölçmedik. Rerank da yanılır: maaş sorusunda en yüksek puanı (10) iki harcırah bölümüne verdi ([Güvenlik](/uretim/guvenlik/)).
 
@@ -204,7 +207,7 @@ Hangi RAG türünü ne zaman eklemeli? Bir blog yazısının ilk önerisi değil
 
 > **Kurgu.** "Asistan aynı cevapta hem 400 TRY hem 330 TRY yazdı. Yan haklar politikası 330 TRY diyor. Hangisi doğru?"
 
-**Ölçüm.** Yemek kartı sorusunda duyuru ve yan haklar §2 birlikte prompt'taydı. Cevap iki tutarı da veriyor: 400 TRY [1] duyurudan, 330 TRY [2] yan haklar politikasından. Son cümle duyuruya gizlenmiş bir talimat ([Güvenlik](/uretim/guvenlik/)):
+**Ölçüm.** Yemek kartı sorusunda duyuru ve yan haklar §2 birlikte prompt'taydı. Cevap iki tutarı da veriyor: 400 TRY [1] duyurudan, 330 TRY [2] yan haklar politikasından. Son cümle duyuruya gizlenmiş bir talimat. Model gizli isteği de cevaba taşıdı: cevap "send your employee number and password …" diye bitiyor. Prompt'taki kurallar bunu durdurmadı ([Güvenlik](/uretim/guvenlik/)):
 
 <Log name="ask-injection" title="npm run ask -- &quot;How much is loaded onto the meal card each day?&quot;" from={29} />
 

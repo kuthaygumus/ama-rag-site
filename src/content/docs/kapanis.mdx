@@ -16,7 +16,7 @@ import FAQ from '../../components/FAQ.astro';
 import Term from '../../components/Term.astro';
 import Takeaway from '../../components/Takeaway.astro';
 
-<DaysQuestion answer="24 iş günü [1] ✓" how="chroma · section · rerank on · sürüm 2026" />
+<DaysQuestion answer="“An employee with 7 years of service gets 24 working days of annual leave [1].” ✓" how="chroma · section · rerank on · sürüm 2026" />
 
 <Gate bridge>
 Bir günde bir RAG pipeline'ı kurduk ve her ara çıktısını açtık. Kurumsal bir sistemde her adım dört soruya cevap vermek zorunda: doğru mu, güvenli mi, yeterince hızlı mı, maliyeti ne?
@@ -91,13 +91,13 @@ Bir günde bir RAG pipeline'ı kurduk ve her ara çıktısını açtık. Kurumsa
     Gürültü ve kırık satırlar temizlendi mi? Erişim etiketi burada okunur, kişisel veri burada maskelenir. Bir kez çalışır, ama gerçek projelerde emeğin çoğu bu adıma gider.
   </Step>
   <Step title="Chunk" phase="2">
-    Tablo, başlığıyla aynı chunk'ta mı? Chunk büyüdükçe prompt da büyür. Hangi kesim, bir tasarım tercihi; kararı eval verir.
+    Tablo, başlığıyla aynı chunk'ta mı? Chunk büyüdükçe prompt da büyür. Nereden keseceğiniz bir tasarım tercihi; kararı eval verir.
   </Step>
   <Step title="Embed + Vector DB" phase="3">
     Model dillerinizi aynı uzaya koyuyor mu, ingest'te ve soruda aynı model mi? Depo sürüm ve erişim etiketini saklar; vektör de veridir.
   </Step>
   <Step title="Ara + rerank" phase="4">
-    Doğru bölüm ilk k'da mı, kaçıncı sırada? Sürüm ve erişim filtresi aramanın içinde mi? Rerank pahalı ve eval'da faydası henüz ölçülmedi. Gerekçesi q02: vektör sırasında 5., rerank sonrası 1. Rerank kapalıyken eval: ilk ödev.
+    Doğru bölüm ilk k'da mı, kaçıncı sırada? Sürüm ve erişim filtresi aramanın içinde mi? Rerank pahalı. q02 yüzünden tutuyoruz: vektör sırasında 5., rerank sonrası 1. Bütün eval'ı rerank kapalıyken ölçmedik; ilk ödev bu.
   </Step>
   <Step title="Prompt + cevap" phase="5">
     Cevap yalnızca kaynaktan mı, kaynakta yoksa "bilmiyorum" diyor mu? İşaretli kaynaklar ve somut yasak tek başına yetmez: çıktı kodla kontrol ediliyor mu? Prompt'a kaç token giriyor?
@@ -106,7 +106,7 @@ Bir günde bir RAG pipeline'ı kurduk ve her ara çıktısını açtık. Kurumsa
     Her değişiklikten sonra aynı gold set: retrieval için hit@1, recall@5, MRR; cevap için `--answers`. Sıradaki iş: gold set'i kullanımdan gelen zor sorularla ve 2026'nın beklenen değerleriyle büyütmek.
   </Step>
   <Step title="Günün sorusu, bütün gün">
-    `npm run question` defteri: RAG'siz model cevabın şirkete göre değiştiğini söyledi ("depending on the company's policy"), yine de bir aralık uydurdu: 25-30 iş günü. Fixed chunk'larla kaynaklı ama yanlış bir sayı, 7 [1]. Section'la 22; Chroma'yla yine 22; 2026 sürümüyle 24. <Guess echo />
+    `npm run question` defteri: RAG'siz model bir aralık ve bir çekince verdi: 25-30 iş günü, "depending on the company's policy". Fixed chunk'larla 7 iş günü [1]: kaynaklı ama yanlış bir sayı. Section'la 22 iş günü; Chroma'yla yine 22; 2026 sürümüyle 24. <Guess echo />
 
     <Now n="1">`npm run question`: bütün cevaplar alt alta.</Now>
   </Step>
@@ -121,14 +121,14 @@ Her satır bir pipeline adımı, her sütun bir eksen; sayılar bu sitenin logla
 | Yükle + temizle | Gürültü kuralları; önce/sonra satır sayısı ([A](/adim-adim/a-ham-veri/)) | `access` etiketi front matter'da; kişisel veri maskesi (ölçmedik) | Bir kez çalışır | Bir kez çalışır |
 | Chunk | Başlık öneki ([B](/adim-adim/b-chunking/)); hit@1 0.526 → 0.842, 19 sorunun 10'u → 16'sı ([Kaliteyi ölçmek](/uretim/kaliteyi-olcmek/)) | — | 138 ya da 60 chunk = o kadar vektör | Chunk boyu prompt token'ını belirler |
 | Embed | Aynı model ingest'te ve soruda; kod farklı modeli reddeder ([C](/adim-adim/c-embedding/)) | API'li embedding'de corpus dışarı çıkar | Cache: 60 vektörün 60'ı, 52 ms | Model değişirse hepsi yeniden |
-| Vector DB | JSON ile aynı sıralama ([D](/adim-adim/d-vector-db/)) | Vektör + metin saklanır: dokümanla aynı koruma | Arama 7 ms | Sürüm başına artımlı ingest |
+| Vector DB | JSON ile aynı sıralama ([D](/adim-adim/d-vector-db/)) | Vektör + metin saklanır: dokümanla aynı koruma | Vektör araması 7 ms | Sürüm başına artımlı ingest |
 | Ara + rerank | recall@5 1.000, MRR 0.896 ([Kaliteyi ölçmek](/uretim/kaliteyi-olcmek/)); rerank ([E](/adim-adim/e-retrieval-rerank/)), eval'da faydası ölçülmedi | Filtre aramanın içinde: maaş sorusunda 0 maaş chunk'ı ([Güvenlik](/uretim/guvenlik/)) | Rerank 1441 ms | Rerank = 5 LLM çağrısı |
-| Prompt + cevap | Kaynaktan cevap, "bilmiyorum" cümlesi, tablo kuralı ([F](/adim-adim/f-cevap/)) | İşaretli kaynaklar + somut yasak: enjeksiyonu durdurmadı (q13); çıktı kontrolü (ölçmedik) | Cevap 650 ms | 976 prompt token; hepsi 9954 ([Performans](/uretim/performans-maliyet/)) |
+| Prompt + cevap | Kaynaktan cevap, "bilmiyorum" cümlesi, tablo kuralı ([F](/adim-adim/f-cevap/)) | İşaretli kaynaklar + somut yasak: enjeksiyonu durdurmadı (q13); çıktı kontrolü (ölçmedik) | Cevap 655 ms | 976 prompt token; hepsi 9954 ([Performans](/uretim/performans-maliyet/)) |
 | Eval | 2025 gold set'te 23 cevabın 22'si; hit@1 0.842, 19 sorunun 16'sı ([Kaliteyi ölçmek](/uretim/kaliteyi-olcmek/)) | Erişim sorusu gold set'te: maaş chunk'ı kimseye ulaşmadı | Retrieval eval'ı sohbet modeline gitmez | `--answers` her soruda rerank + cevap çağrısı |
 
 ## Günün sorusu: bütün gün
 
-<Figure caption="Kaynak: beş npm run question koşusu; ledger aşağıdaki log'da">
+<Figure caption="Kaynak: beş npm run question koşusu; aşağıdaki ledger son üç sayıyı gösteriyor, ilk ikisi önceki sayfaların loglarında">
   <svg viewBox="0 0 1000 230" role="img" aria-label="Günün sorusunun gün boyunca aldığı beş cevap">
     <defs><marker id="kp-l" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker></defs>
     <text x="108" y="40" text-anchor="middle" class="fsub">RAG'siz model</text>
@@ -155,7 +155,7 @@ Her satır bir pipeline adımı, her sütun bir eksen; sayılar bu sitenin logla
     <path d="M394 111 H408" class="farrow" marker-end="url(#kp-l)" />
     <path d="M590 111 H604" class="farrow" marker-end="url(#kp-l)" />
     <path d="M786 111 H800" class="farrow" marker-end="url(#kp-l)" />
-    <text x="500" y="206" text-anchor="middle" class="fsub" data-q="const">model: beş seferde de gemma3:4b, aynı ağırlıklar</text>
+    <text x="500" y="206" text-anchor="middle" class="fsub" data-q="const">model: beş seferde de gemma3:4b</text>
   </svg>
 </Figure>
 

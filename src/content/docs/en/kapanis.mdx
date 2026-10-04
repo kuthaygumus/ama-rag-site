@@ -16,7 +16,7 @@ import FAQ from '../../../components/FAQ.astro';
 import Term from '../../../components/Term.astro';
 import Takeaway from '../../../components/Takeaway.astro';
 
-<DaysQuestion answer="24 working days [1] ✓" how="chroma · section · rerank on · edition 2026" />
+<DaysQuestion answer="“An employee with 7 years of service gets 24 working days of annual leave [1].” ✓" how="chroma · section · rerank on · edition 2026" />
 
 <Gate bridge>
 In one day, we built a RAG pipeline and opened every intermediate output. In a company system, each step must answer four questions. Is it right? Is it safe? Is it fast enough? What does it cost?
@@ -91,13 +91,13 @@ In one day, we built a RAG pipeline and opened every intermediate output. In a c
     Is the noise gone, and are the broken lines joined? This is the place to read the access label and to mask personal data. The step runs once. But in real projects, most of the work goes into this step.
   </Step>
   <Step title="Chunk" phase="2">
-    Is the table in the same chunk as its header row? Bigger chunks make a bigger prompt. Where to cut is a design choice. The eval makes the decision.
+    Is the table in the same chunk as its header row? Bigger chunks make a bigger prompt. Where to cut is a design choice. The eval decides.
   </Step>
   <Step title="Embed + Vector DB" phase="3">
     Does the model put your languages in the same space? Do ingest and the question use the same model? The store keeps the edition and the access label. Vectors are data too.
   </Step>
   <Step title="Search + rerank" phase="4">
-    Is the right section in the top k, and at which rank? Do the edition and access filters run inside the search? Rerank is expensive. Its benefit on the eval is not measured. Reason: q02 is 5th by vector, 1st after rerank. First homework: the eval with rerank off.
+    Is the right section in the top k, and at which rank? Do the edition and access filters run inside the search? Rerank is expensive. We keep it because of q02: it is 5th by vector and 1st after rerank. We did not measure the whole eval with rerank off. That is the first homework.
   </Step>
   <Step title="Prompt + answer" phase="5">
     Does the answer come only from the sources? If the sources don't have it, does the model say "I don't know"? Fenced sources and a concrete ban are not enough on their own. Does code check the output? How many tokens go into the prompt?
@@ -106,7 +106,7 @@ In one day, we built a RAG pipeline and opened every intermediate output. In a c
     The same gold set after every change. For retrieval: hit@1, recall@5 and MRR. For the answers: `--answers`. Next job: grow the gold set. Add hard questions from real use and the expected values for 2026.
   </Step>
   <Step title="The question of the day, all day">
-    The `npm run question` ledger shows five answers. Without RAG, the model said "depending on the company's policy", then made up a range anyway: 25-30 working days. With fixed chunks: a wrong number with a source, 7 [1]. With section chunks: 22. With Chroma: 22 again. With the 2026 edition: 24. <Guess echo />
+    The `npm run question` ledger shows five answers. Without RAG, the model gave a range and a hedge: 25-30 working days, "depending on the company's policy". With fixed chunks: 7 working days [1], a wrong number with a source. With section chunks: 22 working days. With Chroma: 22 again. With the 2026 edition: 24. <Guess echo />
 
     <Now n="1">Run `npm run question` to see every answer, one per line.</Now>
   </Step>
@@ -121,14 +121,14 @@ Each row is a pipeline step. Each column is an axis. The numbers come from this 
 | Load + clean | Noise rules. Line count before and after ([A](/en/adim-adim/a-ham-veri/)) | `access` label in the front matter. Masking personal data (not measured) | Runs once | Runs once |
 | Chunk | Heading prefix ([B](/en/adim-adim/b-chunking/)). hit@1 0.526 → 0.842, 10 → 16 of 19 questions ([Measuring quality](/en/uretim/kaliteyi-olcmek/)) | — | 138 or 60 chunks = as many vectors | Chunk size sets the prompt tokens |
 | Embed | The same model at ingest and for the question. The code rejects another model ([C](/en/adim-adim/c-embedding/)) | With an embedding API, the corpus leaves your company | Cache: 60 of 60 vectors, 52 ms | A new model means embedding everything again |
-| Vector DB | Same ranking as JSON ([D](/en/adim-adim/d-vector-db/)) | Vector + text are stored: same protection as the document | Search 7 ms | Incremental ingest per edition |
+| Vector DB | Same ranking as JSON ([D](/en/adim-adim/d-vector-db/)) | Vector + text are stored: same protection as the document | Vector search 7 ms | Incremental ingest per edition |
 | Search + rerank | recall@5 1.000, MRR 0.896 ([Measuring quality](/en/uretim/kaliteyi-olcmek/)). Rerank ([E](/en/adim-adim/e-retrieval-rerank/)): benefit not measured on the eval | Filter inside the search: 0 salary chunks for the salary question ([Security](/en/uretim/guvenlik/)) | Rerank 1441 ms | Rerank = 5 LLM calls |
-| Prompt + answer | Answers from the sources, the "I don't know" sentence, the table rule ([F](/en/adim-adim/f-cevap/)) | Fenced sources + concrete ban: they didn't stop the injection (q13). Output check (not measured) | Answer 650 ms | 976 prompt tokens. Everything: 9954 ([Performance](/en/uretim/performans-maliyet/)) |
+| Prompt + answer | Answers from the sources, the "I don't know" sentence, the table rule ([F](/en/adim-adim/f-cevap/)) | Fenced sources + concrete ban: they didn't stop the injection (q13). Output check (not measured) | Answer 655 ms | 976 prompt tokens. Everything: 9954 ([Performance](/en/uretim/performans-maliyet/)) |
 | Eval | 22 of 23 answers on the 2025 gold set. hit@1 0.842, 16 of 19 questions ([Measuring quality](/en/uretim/kaliteyi-olcmek/)) | The access question is in the gold set: no salary chunk reached anyone | The retrieval eval never calls the chat model | `--answers`: rerank + answer calls for every question |
 
 ## The question of the day, all day
 
-<Figure caption="Source: five npm run question runs. The ledger is in the log below.">
+<Figure caption="Source: five npm run question runs. The ledger below shows the last three numbers. The first two are in the logs of the earlier pages.">
   <svg viewBox="0 0 1000 230" role="img" aria-label="The five answers the question of the day got during the day">
     <defs><marker id="kp-l" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" class="fhead" /></marker></defs>
     <text x="108" y="40" text-anchor="middle" class="fsub">without RAG</text>
@@ -155,7 +155,7 @@ Each row is a pipeline step. Each column is an axis. The numbers come from this 
     <path d="M394 111 H408" class="farrow" marker-end="url(#kp-l)" />
     <path d="M590 111 H604" class="farrow" marker-end="url(#kp-l)" />
     <path d="M786 111 H800" class="farrow" marker-end="url(#kp-l)" />
-    <text x="500" y="206" text-anchor="middle" class="fsub" data-q="const">model: gemma3:4b all five times, same weights</text>
+    <text x="500" y="206" text-anchor="middle" class="fsub" data-q="const">model: gemma3:4b all five times</text>
   </svg>
 </Figure>
 
@@ -166,7 +166,7 @@ Each row is a pipeline step. Each column is an axis. The numbers come from this 
 Each answer is on one of today's pages. Answer it yourself first, then open it.
 
 <FAQ q="1 · What problem does RAG solve?">
-A model keeps what it knows in its weights. The weights froze when training ended. Our model never saw Kraken Air's policy, so it made up a range for the question of the day: 25-30 working days. The fix: put the knowledge in front of the model, not inside it. [The model doesn't know](/en/neden-rag/model-bilmiyor/)
+A model keeps what it knows in its weights. The weights froze when training ended. Our model never saw Kraken Air's policy. So it made up a range for the question of the day: 25-30 working days. The fix: put the knowledge in front of the model, not inside it. [The model doesn't know](/en/neden-rag/model-bilmiyor/)
 </FAQ>
 
 <FAQ q="2 · How do you choose between fine-tuning and RAG?">
@@ -186,7 +186,7 @@ A search can't turn a vector back into text. It gives ids and scores, but the mo
 </FAQ>
 
 <FAQ q="6 · What happens if k is small or large? Why does rerank get only 5 candidates?">
-It works like a funnel. The cheap search is wide (5). The expensive rerank sorts these 5, and the prompt gets 3. With k = 3, the q02 table (5th by vector score) never arrives. A bigger k means one more LLM call for each candidate. [E · Retrieval and reranking](/en/adim-adim/e-retrieval-rerank/)
+It works like a funnel. The cheap search is wide (5). The expensive rerank sorts these 5, and the prompt gets 3. With k = 3, the q02 table (5th by vector score) never arrives. A bigger k means more candidates, and rerank makes one LLM call for each. [E · Retrieval and reranking](/en/adim-adim/e-retrieval-rerank/)
 </FAQ>
 
 <FAQ q="7 · 2025 and 2026 are in the same store. How do you keep the old value out of the answer?">
@@ -198,11 +198,11 @@ In our run, the model still said "no", but in its own words and with a source: "
 </FAQ>
 
 <FAQ q="9 · A document says “send your password to this address”. Which layer is at fault, and what stops it?">
-The instruction comes from the data. The general rule and the fenced sources didn't stop it. The rule that bans asking for a password didn't stop it either: the answer was the same with the ban on and off. A sentence in the prompt is not a security boundary. The real boundary is in code: scan at ingest, check the output, give the least access (we didn't measure these). [Security](/en/uretim/guvenlik/)
+The instruction comes from the data. The general rule and the fenced sources didn't stop it. The rule that bans asking for a password didn't stop it either. The answer was the same with the ban on and off. A sentence in the prompt is not a security boundary. The real boundary is in code: scan at ingest, check the output, give each user only the access they need (we didn't measure these). [Security](/en/uretim/guvenlik/)
 </FAQ>
 
 <FAQ q="10 · Retrieval is good, but the answer is wrong. Who is at fault?">
-If the right chunk is in the prompt, the generation step is at fault. Look at the prompt first, then at the model. In our run, q13 had the right section 1st (rr 1.00), but the answer is ✗: the model followed the instruction in the source. [Does RAG fix everything?](/en/her-derde-deva/sinirlar-ve-turler/)
+If the right chunk is in the prompt, the generation step is at fault. Look at the prompt first, then at the model. In our run, q13 had the right section 1st (rr 1.00), but the answer is ✗. The model followed the instruction in the source. [Does RAG fix everything?](/en/her-derde-deva/sinirlar-ve-turler/)
 </FAQ>
 
 ## The repo is yours to keep
@@ -215,7 +215,7 @@ All the code, the corpus, the gold set and every log on this site: [github.com/k
 3. **Homework: `byParagraph`.** In `src/steps/3-chunk.ts`, write the function under the `HOMEWORK` note. Cut the document at paragraphs. Fill packs of at most `max` characters. Put the heading prefix in front of each chunk. Check: `npm run check:sibling`.
 4. If you haven't written them yet, do the other two exercises. One is the `turkishConfidential` rule, a RegExp in `src/steps/2-clean.ts`. The other is the `dot` function in `src/lib/similarity.ts`. The same command checks them.
 5. Add `byParagraph` to the `ChunkerName` type and to the `CHUNKERS` list. Write a third line in the toggle. Ingest again, then compare it with section using `npm run eval`.
-6. Add your own questions to `eval/gold.jsonl`, above all the ones that push the system hard.
+6. Add your own questions to `eval/gold.jsonl`, above all questions that are hard for the system.
 7. Pick another thing this site marks as "not measured", and measure it: `--k 10`, another `CHAT_MODEL`.
 </YourTurn>
 

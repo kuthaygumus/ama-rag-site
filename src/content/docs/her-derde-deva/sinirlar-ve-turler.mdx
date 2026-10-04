@@ -75,7 +75,7 @@ Günün sorusu çözüldü. Her şey yolunda mı? Gün boyunca pipeline'ın dör
     Fixed chunker her 300 karakterde keser: `| 7 | 22 |` satırı tablonun başlığından ayrı bir chunk'a düştü. O chunk prompt'a girmedi. Model §4'teki bir izin sınırını cevap sandı: "An employee with 7 years of service gets at most 7 working days [1]." Yanlış sayı, üstelik kaynaklı.
   </Step>
   <Step title="LLM: bilmiyorum demesi gerekirken" phase="3">
-    Maaş sorusunda filtre maaş chunk'ını dışarıda tuttu; doğrusu buydu. Ama model "bilmiyorum" demek yerine harcırah tablosundan bir otel limiti yazdı. Kaynaklı ama yanlış: "The hotel upper limit for a senior specialist is 4,000 TRY per night [2].
+    Maaş sorusunda filtre maaş chunk'ını dışarıda tuttu; doğrusu buydu. Ama model "bilmiyorum" demek yerine harcırah tablosundan bir otel limiti yazdı. Kaynaklı ama yanlış: "The hotel upper limit for a senior specialist is 4,000 TRY per night [2]."
   </Step>
   <Step title="Context: bedel" phase="4">
     Dördüncüsü bir çarpan değil, bedel: el kitabının tamamı 9954 token, RAG'in 3 chunk'ı 976. Büyük <Term id="context">context</Term>'in bedeli her soruda ödenir. Yanlış cevapta ilk soru: prompt'ta ne vardı? `--prompt` bunun için.

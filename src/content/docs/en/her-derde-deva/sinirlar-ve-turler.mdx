@@ -72,7 +72,7 @@ The question of the day is solved. Is everything fine now? Today we saw the pipe
     RAG's success is a product: retriever × chunk × LLM. If one factor is zero, the result is zero. "How much holiday do I get?" (q02) doesn't use the document's words. By vector score, the leave table ranks 5th. It gets into the top 3 only with <Term id="rerank">rerank</Term>: rerank moves it to 1st.
   </Step>
   <Step title="Chunk: the row that lost its header" phase="2">
-    The fixed chunker cuts every 300 characters. The row `| 7 | 22 |` landed in a different chunk from the table's header row. That chunk didn't get into the prompt. The model took a leave limit from §4 as the answer: "An employee with 7 years of service gets at most 7 working days [1]." A wrong number, with a source.
+    The fixed chunker cuts every 300 characters. The row `| 7 | 22 |` landed in a different chunk from the table's header row. That chunk didn't get into the prompt. The model took a leave limit from §4 as the answer. It wrote: "An employee with 7 years of service gets at most 7 working days [1]." A wrong number, with a source.
   </Step>
   <Step title="LLM: the right answer was “I don't know”" phase="3">
     On the salary question, the filter kept the salary chunk out. That was right. But the model didn't say "I don't know". It wrote a hotel limit from the per diem table instead. The answer has a source, but it is wrong: "The hotel upper limit for a senior specialist is 4,000 TRY per night [2]."
@@ -89,7 +89,7 @@ The logs of all four failures are on this site. Retriever: [Measuring quality](/
 1. The leave table has one row for each year of service: `| 7 | 22 |`.
 2. The source marker holds only the document name. It has no ids and no section numbers.
 3. The prompt has a rule for tables: "If the answer comes from a table, first write the row you used word for word. Then give the answer in one sentence."
-4. The model doesn't follow the first half of this rule. Its answer to the question of the day doesn't write the row first: "An employee with 7 years of service gets 22 working days of annual leave [1]." A rule in the prompt doesn't mean the model follows it.
+4. The model doesn't follow the first half of this rule. Its answer to the question of the day doesn't write the row first: "An employee with 7 years of service gets 22 working days of annual leave [1]." A rule in the prompt does not make the model follow it.
 5. In today's logs, the table questions are right. A small model is fragile when it reads tables. Shape the data and the prompt for it, and measure anyway.
 
 ## Is there only one RAG?
@@ -209,7 +209,7 @@ We didn't measure any of them here. Each one fixes a specific failure, and each 
 | <Term id="hyde">HyDE</Term> | The question and the document use different words: "holiday" ↔ "annual paid leave". In the eval, the right section for this question ranks 5th. | One LLM call per question. The model first writes a guessed answer, and the search uses that answer. A made-up number in that answer can send the search the wrong way. |
 | <Term id="parentchild">Parent-child</Term> | A small chunk is easy to find but hard to read (the table row that lost its header). | Chunks in two sizes, and the link between them. The search uses the small one, and the big one goes into the prompt. The prompt grows. |
 | <Term id="agentic">Agentic RAG</Term> | Questions with several parts, spread over several documents | The model splits the question, searches for each part, and asks "is this enough?". Many calls instead of one. The time multiplies with the number of rounds. Two runs can give different results. |
-| <Term id="graphrag">GraphRAG</Term> | Questions whose answer is in a link between documents (the announcement updates the amount in benefits §2). Also "summarize everything" questions. | At ingest, the whole corpus goes through the model. We extract an entity–relationship graph and keep it up to date. The most expensive variant. |
+| <Term id="graphrag">GraphRAG</Term> | Questions whose answer is in a link between documents (the announcement updates the amount in benefits §2). Also "summarize everything" questions. | At ingest, the whole corpus goes through the model. We extract a graph of the things in the documents and how they link, and keep it up to date. The most expensive variant. |
 
 The story of when and in which order we add these variants: [The first 90 days](/en/her-derde-deva/ilk-90-gun/).
 
