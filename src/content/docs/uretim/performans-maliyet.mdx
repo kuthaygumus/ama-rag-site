@@ -55,21 +55,21 @@ Cevap doğru ve kaynaklı. Peki bir soru kaç saniye sürüyor, API'li bir model
     </svg>
   </DeckFigure>
   <Step title="Hepsini prompt'a koysak?" phase="1">
-    8 dokümanın tamamı (40709 karakter) tek prompt'ta: 9954 prompt <Term id="token">token</Term>. RAG'de 3 chunk, 976 token: yaklaşık 10 kat az (rerank hariç). 9954, num_ctx ayarımız olan 8192'lik <Term id="context">pencereye</Term> sığmaz; bu ölçüm için 32768'e açtık.
+    8 dokümanın tamamı (40709 karakter) tek prompt'ta: 9954 prompt <Term id="token">token</Term>. RAG 3 chunk gönderir: 976 token, yaklaşık 10 kat az (rerank hariç). 9954 token, 8192'lik <Term id="context">penceremize</Term> (num_ctx) sığmaz; bu tek koşu için 32768'e açtık.
   </Step>
   <Step title="…ve maaş tablosu herkese" phase="1">
-    Cevap doğru (22). Ama 8 dokümanın biri hr-only maaş tablosu: retrieval yoksa erişim filtresi de yok, maaşlar her çalışanın prompt'una girer. Cevap 27149 ms sürdü; RAG koşularında 674–3462 ms. Kat olarak karşılaştırmıyoruz: tek koşu.
+    Cevap doğru: 22. Ama 8 dokümanın biri hr-only maaş tablosu. Retrieval yok, erişim filtresi yok: maaşlar herkese gider. 27149 ms sürdü; RAG cevapları 674–3462 ms. Tek koşudan kat hesaplamıyoruz.
   </Step>
   <Step title="Bir sorunun süresi nereye gidiyor?" phase="2">
-    Günün sorusu, tek koşu: arama 22 ms (aramanın kendisi 8 ms), <Term id="rerank">rerank</Term> 1500 ms, cevap 678 ms. Rerank toplamın (2200 ms) yaklaşık %68'i: 5 chunk için 5 ayrı LLM çağrısı. Başka sorularda rerank 3,8 ile 4,5 saniye sürdü; sizde süreler farklı olur.
+    Günün sorusu: arama 22 ms (vector DB 8 ms). <Term id="rerank">Rerank</Term> 1500 ms, cevap 678 ms. Rerank toplamın (2200 ms) yaklaşık %68'i: 5 LLM çağrısı, her chunk için bir tane. Sizde süreler farklı olur.
 
     <Now n="1">`npm run ask -- "I am going to Frankfurt for a two-day meeting. I am a specialist. How much is my daily per diem?"`: arama, rerank ve cevap sürelerini not edin.</Now>
   </Step>
   <Step title="Ingest'te: cache ve artımlı yükleme" phase="3">
-    Her embedding, model + metin hash'iyle `.cache/` altına yazılır; yeniden çalıştırınca 60 vektörün 60'ı cache'ten geldi, adım 4 55 ms sürdü. 2026 sürümü eklenince depo yalnızca 2026'nın 60 kaydını yazdı; 2025 yerinde kaldı.
+    Her embedding `.cache/` altına yazılır; anahtar, model ve metnin hash'i. İkinci koşu: 60 vektörün 60'ı cache'ten, adım 4 55 ms. 2026'yı eklemek yalnızca onun 60 kaydını yazdı; 2025 yerinde kaldı.
   </Step>
   <Step title="Süreyi ve faturayı ne büyütür?">
-    Modele kaç kez gittiğiniz ve her seferinde ne kadar metin gönderdiğiniz. Bir soru 6 çağrı: 5 rerank, 1 cevap; N kişi aynı anda sorarsa N × 6. Aşağıdaki ayarlar bu sayıları, çoğu doğruluğu da değiştirir. Her ayardan sonra eval'ı koşun.
+    Modele yapılan çağrı sayısı ve her çağrıdaki metin. Bir soru 6 çağrı: 5 rerank, 1 cevap. N kişi aynı anda: N × 6. Aşağıdaki ayarlar süreyi değiştirir; çoğu doğruluğu da. Sonra eval'ı koşun.
 
     <Now n="2">Aynı soruyu `--k 10` ile sorun: rerank kaç chunk puanladı, süre nasıl değişti?</Now>
 
@@ -96,7 +96,7 @@ Günün sorusu için arama, rerank ve cevap; süreler her logun `TIME` satırın
 | cevap süresi | 678 ms | 27149 ms |
 | cevap | 22 iş günü ✓ | 22 iş günü ✓ |
 
-Fark, her soruda ödenen bedelde; el kitabı büyüdükçe bu yol kapanır. Olası bir yeniden yüklemenin 27149 ms içindeki payını ölçmedik; asıl maliyet 9954 token'ı okumak.
+Fark, her soruda ödenen bedelde; el kitabı büyüdükçe bu yol kapanır. Daha büyük pencere için Ollama modeli yeniden yükleyebilir; bunun 27149 ms'nin ne kadarı olduğunu ölçmedik; asıl maliyet 9954 token'ı okumak.
 </Example>
 
 <Log name="stuff-everything" title="her doküman tek prompt'ta (retrieval yok)" />
@@ -128,7 +128,7 @@ Depo sürüm başına yazar (`replaceEdition`):
 | Chunk boyu | section: ortalama 695 karakter, 60 chunk · fixed: 300 karakter, 138 chunk | prompt'a giren token artar, vektör sayısı azalır | Evet: hit@1 fixed ile 0.526 (19 sorunun 10'u), section ile 0.842 (16'sı) ([Kaliteyi ölçmek](/uretim/kaliteyi-olcmek/)) |
 | k (retriever'ın getirdiği aday) | 5 | rerank'ta her aday bir LLM çağrısı daha; prompt'a yine 3 chunk girer | Hayır: `--k 10` ile siz deneyin |
 | Prompt'a giren chunk | 3 | prompt token artar | 3 chunk = 976 prompt token (günün sorusu) |
-| Rerank | açık | kapatınca 5 çağrı gider, sıra vektör skoruna kalır | Kısmen: günün sorusunda cevap iki durumda da 22; q02'de doğru bölüm vektör sırasında 5.; rerank açıkken cevap doğru, kapalıyken ölçmedik |
+| Rerank | açık | kapatınca 5 çağrı gider, sıra vektör skoruna kalır | Kısmen: günün sorusunda cevap iki durumda da 22; q02'de doğru bölüm vektör sırasında 5.; rerank açıkken cevap doğru, kapalıyken burada ölçmedik. [Kapanış sayfasındaki](/kapanis/) ilk ödev bu. |
 | Model boyu | gemma3:4b | RAM ve süre artar | Hayır: süreyi yalnızca gemma3:4b ile ölçtük |
 | Embedding cache | açık | — | Evet: 60 vektörün 60'ı cache'ten, adım 4 = 55 ms |
 | Artımlı ingest | sürüm başına `replaceEdition` | — | Evet: 2026 eklendi, depoda 120 kayıt, 2025'e dokunulmadı |
@@ -157,11 +157,11 @@ Bu ölçümde vector DB araması 8 ms; rerank ile cevap birlikte 2178 ms (1500 +
 </FAQ>
 
 <FAQ q="Rerank'ı kapatıp süreyi kısaltalım mı?">
-Süre ve doğruluk aynı ayara bağlı (yukarıdaki tabloda Rerank satırı); kararı eval verir. Daha hızlı bir seçenek, bu iş için eğitilmiş küçük bir reranker modeli (cross-encoder); onu ölçmedik.
+Yalnızca eval öyle derse. Kapanış sayfasındaki ilk ödev tam bunu ölçer. Süre ve doğruluk aynı ayara bağlı (yukarıdaki tabloda Rerank satırı). Daha hızlı bir seçenek, bu iş için eğitilmiş küçük bir reranker modeli (cross-encoder); onu ölçmedik.
 </FAQ>
 
 <FAQ q="Cevapları da cache'lesek?">
-Aynı soru, aynı kaynaklar, temperature 0 ve sabit seed ile aynı makinede aynı cevap gelir; cevabı saklamak mümkün. Anahtar üç parçalı olmalı: soru + sürüm + erişim kapsamı. Kapsam anahtarda yoksa İK'nın aldığı maaş cevabı önbellekten bir çalışana gider. Yeni bir sürüm ingest edilince o sürümün cache'i silinir. Bu repoda cevap cache'i yok.
+Evet. Temperature 0 ve sabit seed ile aynı soru ve kaynaklar aynı cevabı verir. Bu, aynı makinede geçerli. Cevabı saklamak mümkün. Anahtar üç parçalı olmalı: soru + sürüm + erişim kapsamı. Kapsam anahtarda yoksa İK'nın aldığı maaş cevabı önbellekten bir çalışana gider. Yeni bir sürüm ingest edilince o sürümün cache'i silinir. Bu repoda cevap cache'i yok.
 </FAQ>
 
 <FAQ q="Daha büyük bir model daha mı iyi?">

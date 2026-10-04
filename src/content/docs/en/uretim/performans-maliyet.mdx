@@ -55,21 +55,21 @@ The answer is right, and it cites its source. But how many seconds does one ques
     </svg>
   </DeckFigure>
   <Step title="What if we put everything in the prompt?" phase="1">
-    All 8 documents (40709 characters) in one prompt: 9954 prompt <Term id="token">tokens</Term>. RAG sends 3 chunks, 976 tokens. That is about 10 times fewer, not counting rerank. 9954 tokens don't fit in the 8192-token <Term id="context">window</Term> of our num_ctx setting. For this one measurement, we opened it to 32768.
+    All 8 documents (40709 characters) in one prompt: 9954 prompt <Term id="token">tokens</Term>. RAG sends 3 chunks: 976 tokens, about 10 times fewer, not counting rerank. 9954 don't fit our 8192-token <Term id="context">window</Term> (num_ctx). We opened it to 32768 for this run.
   </Step>
   <Step title="…and the salary table goes to everyone" phase="1">
-    Right answer: 22. But the 8 documents include the hr-only salary table. No retrieval, no access filter: every employee's prompt gets the salaries. The answer took 27149 ms. RAG answers took from 674 to 3462 ms. We don't compute a factor from one run.
+    Right answer: 22. But the 8 documents include the hr-only salary table. No retrieval, no access filter: everyone gets the salaries. It took 27149 ms, RAG answers 674 to 3462 ms. We don't compute a factor from one run.
   </Step>
   <Step title="Where does the time of one question go?" phase="2">
-    Question of the day, one run. Search: 22 ms. The search itself took 8 ms of that. <Term id="rerank">Rerank</Term>: 1500 ms. Answer: 678 ms. Rerank is about 68% of the total (2200 ms). That is 5 LLM calls for 5 chunks. Other questions: rerank took 3.8 to 4.5 seconds. Your times will differ.
+    Question of the day: search 22 ms (vector DB 8 ms). <Term id="rerank">Rerank</Term> 1500 ms, answer 678 ms. Rerank is about 68% of the total (2200 ms). It is 5 LLM calls, one per chunk. Your times will differ.
 
     <Now n="1">Run `npm run ask -- "I am going to Frankfurt for a two-day meeting. I am a specialist. How much is my daily per diem?"`. Note the search, rerank and answer times.</Now>
   </Step>
   <Step title="At ingest: cache and incremental ingest" phase="3">
-    Each embedding goes into `.cache/`. The key is a hash of the model and the text. On a second run, 60 of 60 vectors came from the cache. Step 4 took 55 ms. Adding the 2026 edition wrote only the 60 records of 2026. 2025 stayed untouched.
+    Each embedding goes into `.cache/`. The key is a hash of model and text. Second run: 60 of 60 vectors from the cache, step 4 in 55 ms. Adding 2026 wrote only its 60 records. 2025 stayed untouched.
   </Step>
   <Step title="What makes the time and the bill grow?">
-    How often you call the model, and how much text you send each time. One question is 6 calls: 5 rerank, 1 answer. If N people ask at once: N times 6 calls. The settings below change these numbers. Most also change accuracy. Run the eval after each change.
+    The number of model calls, and the text in each. One question: 6 calls, 5 rerank and 1 answer. N people at once: N times 6. The settings below change time. Most change accuracy too. Then run the eval.
 
     <Now n="2">Ask the same question with `--k 10`. How many chunks did rerank score? How did the time change?</Now>
 
@@ -96,7 +96,7 @@ Search, rerank and answer for the question of the day. Each log shows its time o
 | answer time | 678 ms | 27149 ms |
 | answer | 22 working days ✓ | 22 working days ✓ |
 
-You pay the difference on every question. As the handbook grows, this approach stops working. We didn't measure how much of the 27149 ms a reload might take. The real cost is reading 9954 tokens.
+You pay the difference on every question. As the handbook grows, this approach stops working. The bigger window may make Ollama load the model again. We didn't measure how much of the 27149 ms that took. The real cost is reading 9954 tokens.
 </Example>
 
 <Log name="stuff-everything" title="every document in one prompt (no retrieval)" />
@@ -128,7 +128,7 @@ The store writes one edition at a time (`replaceEdition`):
 | Chunk size | section: 695 characters on average, 60 chunks · fixed: 300 characters, 138 chunks | more tokens in the prompt, fewer vectors | Yes: hit@1 is 0.526 with fixed (10 of 19 questions) and 0.842 with section (16) ([Measuring quality](/en/uretim/kaliteyi-olcmek/)) |
 | k (candidates the retriever returns) | 5 | one more LLM call per candidate in rerank; the prompt still gets 3 chunks | No: try it yourself with `--k 10` |
 | Chunks in the prompt | 3 | more prompt tokens | 3 chunks = 976 prompt tokens (question of the day) |
-| Rerank | on | turn it off: the 5 calls go away, and the vector score sets the order | Partly: for the question of the day, the answer is 22 both ways. For q02, the right section is at rank 5 by vector score. With rerank on, the answer is right. With rerank off, we didn't measure it. |
+| Rerank | on | turn it off: the 5 calls go away, and the vector score sets the order | Partly: for the question of the day, the answer is 22 both ways. For q02, the right section is at rank 5 by vector score. With rerank on, the answer is right. With rerank off, we didn't measure it here. It is the first homework on the [wrap-up page](/en/kapanis/). |
 | Model size | gemma3:4b | more RAM and more time | No: we measured time only with gemma3:4b |
 | Embedding cache | on | none | Yes: 60 of 60 vectors from the cache, step 4 = 55 ms |
 | Incremental ingest | `replaceEdition` per edition | none | Yes: 2026 added, 120 records in the store, 2025 untouched |
@@ -157,11 +157,11 @@ Not for this. In this run the vector DB search took 8 ms. Rerank and answer toge
 </FAQ>
 
 <FAQ q="Should we turn rerank off to save time?">
-Only if the eval says so. Time and accuracy depend on the same setting: see the Rerank row in the table above. A faster option is a small reranker model trained for this job, a cross-encoder. We didn't measure it.
+Only if the eval says so. The first homework on the wrap-up page measures exactly this. Time and accuracy depend on the same setting: see the Rerank row in the table above. A faster option is a small reranker model trained for this job, a cross-encoder. We didn't measure it.
 </FAQ>
 
 <FAQ q="Can we cache the answers too?">
-Yes. The same question, the same sources, temperature 0 and a fixed seed give the same answer on the same machine. So you can store the answer. The key needs three parts: question + edition + access scope. Without the scope in the key, the cache can give an employee the salary answer that HR got. When you ingest a new edition, delete the cache for that edition. This repo has no answer cache.
+Yes. With temperature 0 and a fixed seed, the same question and sources give the same answer. This holds on the same machine. So you can store the answer. The key needs three parts: question + edition + access scope. Without the scope in the key, the cache can give an employee the salary answer that HR got. When you ingest a new edition, delete the cache for that edition. This repo has no answer cache.
 </FAQ>
 
 <FAQ q="Is a bigger model better?">

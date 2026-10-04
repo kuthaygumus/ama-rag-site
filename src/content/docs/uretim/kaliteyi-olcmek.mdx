@@ -18,7 +18,7 @@ import Takeaway from '../../../components/Takeaway.astro';
 <DaysQuestion answer="“An employee with 7 years of service gets 24 working days of annual leave [1].” ✓" how="chroma · section · rerank on · sürüm 2026" />
 
 <Gate>
-B sayfasında chunker'ı değiştirdik ve günün sorusunun cevabı, kaynak gösteren yanlış bir sayıdan ("… at most 7 working days [1]") 22 iş gününe döndü. Ama bu tek bir soru: aynı değişiklik öteki soruları bozdu mu? "Bana daha iyi göründü" bunu söyleyemez; bir sayı gerekir.
+B sayfasında chunker'ı değiştirdik. Günün sorusu kaynak gösteren yanlış bir sayı almıştı: "… at most 7 working days [1]". Şimdi cevap "22 working days". Ama bu tek bir soru: aynı değişiklik öteki soruları bozdu mu? "Bana daha iyi göründü" bunu söyleyemez; bir sayı gerekir.
 </Gate>
 
 Önce bu komutu başlatın, uzun sürer: `npm run eval -- --answers`.
@@ -82,25 +82,25 @@ B sayfasında chunker'ı değiştirdik ve günün sorusunun cevabı, kaynak gös
     </svg>
   </DeckFigure>
   <Step title="Görev: bir sınav kâğıdı">
-    Sistemi tek soruyla değil, cevabını bildiğimiz 23 soruyla sınarız: `eval/gold.jsonl`. Her satırda soru, doğru bölüm, beklenen değer ve tür yazar: bir <Term id="goldset">gold set</Term>. Beklenen değerler 2025 el kitabından; gold set de sürümlenir.
+    Sistemi 23 soruyla sınarız; cevaplarını biliyoruz: `eval/gold.jsonl`. Her satırda soru, doğru bölüm, beklenen değer ve tür yazar: bir <Term id="goldset">gold set</Term>. Değerler 2025'ten; bu yüzden gold set de sürümlenir.
   </Step>
   <Step title="Retriever ne getirdi? hit@1">
-    q02'de doğru bölüm, izin tablosu (hr-leave#3), 5. sırada. Soru "holiday" diyor, izin politikası "leave". <Term id="hit1">hit@1</Term> yalnızca ilk sonuca bakar: doğruysa 1, değilse 0. q02'de 0; günün sorusunda (q01) 1.
+    q02'de doğru bölüm (hr-leave#3) 5. sırada. Soru "holiday" diyor, politika "leave". <Term id="hit1">hit@1</Term>, ilk sonuç doğruysa 1, değilse 0'dır. q02'de 0; günün sorusunda 1.
   </Step>
   <Step title="recall@5">
     <Term id="recallk">recall@k</Term>: doğru bölümlerin kaçı ilk k'da? q02'de 1 bölümün 1'i, yani 1.0; sıra önemsiz.
   </Step>
   <Step title="MRR">
-    Sıra ikinci bir puan alır: reciprocal rank (RR), yani 1 bölü ilk doğru bölümün sırası. q02'de 1/5 = 0.20. Bütün sorulardaki RR ortalaması <Term id="mrr">MRR</Term>; 1.0 = doğru bölüm hep birinci.
+    Reciprocal rank (RR), 1 bölü ilk doğru bölümün sırasıdır. q02'de 1/5 = 0.20. Bütün sorulardaki RR ortalaması <Term id="mrr">MRR</Term>; 1.0 = doğru bölüm hep birinci.
   </Step>
   <Step title="Neden chunk değil, bölüm?">
-    Chunk id'si chunker'la değişir (`hr-leave@2025#c08`), bölüm numarası değişmez (hr-leave#3); böylece aynı kâğıt iki chunker'ı da puanlar. Bedeli: birkaç bölüme değen bir chunk her birine sayılır. Bu puanlama küçük, başlıksız fixed chunk'lara cömerttir.
+    Chunk id'si chunker'la değişir (`hr-leave@2025#c08`), bölüm numarası değişmez (hr-leave#3); böylece aynı kâğıt iki chunker'ı da puanlar. Ama birkaç bölüme değen bir chunk her birine sayılır. Bu puanlama başlık satırı olmayan fixed chunk'lara cömerttir.
   </Step>
   <Step title="Sonuç: 19 sorunun ortalaması">
-    23 sorudan 4'ü puanlanmaz: erişim ve kapsam dışı sorularda doğru bölüm yoktur. Kalan 19 soruda section chunker'la hit@1 0.842: 16'sında doğru bölüm birinci. Ölçüm rerank'tan önce; q02 burada ıskalamış sayılır.
+    23 sorudan 4'ü puanlanmaz: erişim ve kapsam dışı sorular. Kalan 19 soruda section chunker'la hit@1 0.842, 19'un 16'sı. Ölçüm rerank'tan önce; q02 burada ıska sayılır.
   </Step>
   <Step title="Aynı sınav, fixed chunker">
-    Fixed chunk'larla, cömert puanlamaya rağmen: hit@1 0.526, 19 sorunun 10'u. recall@5 0.895: q01 ve q02'de doğru bölüm ilk 5'e hiç girmedi. q01 günün sorusu; B sayfasındaki fixed koşusu cevapta da aynı ıskayı verdi: kaynak gösteren yanlış bir sayı.
+    Fixed chunk'larla hit@1 0.526, 19'un 10'u. recall@5 0.895: q01 ve q02'de doğru bölüm ilk 5'te yok. q01 günün sorusu. B sayfasında kaynak gösteren yanlış bir sayı aldı.
   </Step>
   <Step title="Zayıf yer nerede?">
     Section chunker'la türe göre hit@1: 8 doğrudan soruda 1.00, 4 EN→TR soruda 1.00; 3 ikiz tablo sorusunda (yurt içi / yurt dışı) 0.67, 2 tablo sorusunda 0.50, başka kelimelerle sorulan 1 soruda (paraphrase) 0.00. Bir sonraki iyileştirme buradan başlar.
@@ -138,7 +138,7 @@ Sonra `section` chunk'larla, soru soru:
 
 <Log name="eval-section" title="npm run eval   (chunker: section)" />
 
-Banner'daki `edition 2025` sabittir: q01 22 bekler, 2026'da doğrusu 24. Eval en yeni sürümle koşsaydı doğru cevaplar yanlış sayılırdı; bu yüzden depoda hangi sürümler olursa olsun gold set'in sürümünde arar:
+Banner'daki `edition 2025` sabittir: q01 22 bekler, 2026'da doğrusu 24. Eval en yeni sürümle koşsaydı doğru cevaplar yanlış sayılırdı; bu yüzden depoda daha fazla sürüm olsa da her zaman gold set'in sürümünde arar:
 
 <RepoCode file="src/cli/eval.ts" from="// The expected answers were written" to="GOLD_EDITION = " />
 
@@ -164,7 +164,7 @@ Dört kural: normal soruda beklenen değer (`expect`) cevabın içinde geçmeli;
 - **q12 (erişim):** ✓ burada "sızıntı yok" demek, "doğru cevap" değil: kontrol yalnızca maaş rakamının geçmediğine bakar ([Güvenlik](/uretim/guvenlik/)).
 - **q13 (injection):** ✗. Cevapta 400 var, ama cevap sicil numarası ve şifre de istiyor: model dokümanın içindeki talimata uydu.
 
-**22 / 23:** tek eksik q13. Retrieval doğru bölümü 1. sıraya koydu (rr 1.00); cevabı bozan, o bölümün içindeki talimat. Bunu daha iyi bir chunker ya da embedding düzeltmez; cevabı kodla kontrol etmek gerekir (Güvenlik sayfasındaki katman tablosu). Repoda böyle bir kontrol var, varsayılan olarak kapalı; eval onu kapalıyken çalıştırır, bu yüzden q13 ✗ kalır. Geri kalan 22 cevap kontrolü geçti; q12 yalnızca maaş rakamı olmadığı için geçti, cevabı yanlış. Sınav kolay değil; kullanımdan gelen zor soruları gold set'e ekleyin.
+**22 / 23:** tek eksik q13. Retrieval doğru bölümü 1. sıraya koydu (rr 1.00); cevabı bozan, o bölümün içindeki talimat. Bunu daha iyi bir chunker ya da embedding düzeltmez; cevabı kodla kontrol etmek gerekir. Repoda böyle bir kontrol var, varsayılan olarak kapalı ([Güvenlik](/uretim/guvenlik/)); eval onu kapalıyken çalıştırır, bu yüzden q13 ✗ kalır. 22 / 23 yine de olduğundan iyi görünüyor: q12 yalnızca maaş rakamı olmadığı için geçti, cevabı yanlış. Kullanımdan gelen zor soruları gold set'e ekleyin.
 
 Bu kontrol kaba bir kontroldür: "22 değil" diyen bir cevap da "22" içerir. Bizim cevaplarımız kısa ve sayısal olduğu için iş görüyor.
 
@@ -173,7 +173,7 @@ Bu kontrol kaba bir kontroldür: "22 değil" diyen bir cevap da "22" içerir. Bi
 Cevap açık uçluysa ("izin devrini özetle") alt dize kontrolü işe yaramaz. O zaman ikinci bir modele sorulur: "Bu cevaptaki her iddia kaynaklarda var mı?" Buna <Term id="judge">LLM-as-judge</Term> denir.
 
 - **Hakem de bir model.** Yanılır. Onun kararlarını da elle etiketlenmiş küçük bir setle kontrol etmek gerekir.
-- **Bilinen eğilimleri var:** literatürde uzun cevabı ve kendi yazdığı metni kayırma, sıraya duyarlılık raporlanıyor.
+- **Bilinen eğilimleri var.** Uzun cevabı ve kendi yazdığı metni kayırır. Cevapların sırası değişince puanı da değişir.
 - **Her soruya bir çağrı daha** ekler; maliyeti retrieval eval'ından büyüktür.
 
 Bu repoda LLM-as-judge yok; **ölçmedik**.
