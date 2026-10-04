@@ -1,6 +1,6 @@
 ---
 title: A · Raw data and cleaning
-description: Reading the files, reading what each document says about itself (metadata), and removing the noise the PDF left behind — steps 1 and 2.
+description: Steps 1 and 2: read the files and what each one says about itself (metadata). Then remove the noise the PDF left behind.
 ---
 import WhereAmI from '../../../../components/WhereAmI.astro';
 import DaysQuestion from '../../../../components/DaysQuestion.astro';
@@ -177,24 +177,24 @@ The model never saw these files. And even if it did, the raw files are dirty. If
     A company's knowledge lives in PDF, Word or HTML files. We call the text taken from these files **raw data**. Its content is right. But it carries traces of the file: page headers, page numbers, menus.
   </Step>
   <Step title="Our raw data: hr-leave.md" stage="a">
-    We skip the text extraction in this workshop. We wrote each file in the `corpus/` folder to look like text from a PDF. We added the page headers, page numbers and broken lines on purpose. So there is something real to clean.
+    We skip the text extraction in this workshop. Each file in `corpus/` looks like text from a PDF. We added page headers, page numbers and broken lines on purpose. So there is something real to clean.
   </Step>
   <Step title="Two steps, no model" stage="a">
     Step 1 reads the file. It separates the block of labels at the top from the main text. Step 2 cleans the text. No model runs in either step, only our own code.
   </Step>
   <Step title="The block at the top: metadata" stage="b" phase="1">
-    Between two `---` lines at the top, the document describes itself. It gives its name (`id`), edition (`edition`) and department. It says who may read it (`access`) and its language (`lang`). We call this <Term id="metadata">metadata</Term>. Step 1 stores each field.
+    Between two `---` lines, the document describes itself. It gives its `id`, `edition` and department. It says who may read it (`access`) and its language (`lang`). We call this <Term id="metadata">metadata</Term>. Step 1 stores it.
 
     <Now n="1">Run `npm run step -- 1`, then open `data/1-docs.json`. Which field shows that only HR may read `hr-salary-bands`?</Now>
   </Step>
   <Step title="Does a real PDF have this block?" stage="b" phase="1">
-    No. In a real project, another system keeps the edition and read access. It is the system that holds the document: SharePoint, Confluence or an archive. We wrote them at the top of the file to keep everything in one file.
+    No. In a real project, another system keeps the edition and read access. It is the system that holds the document: SharePoint, Confluence or an archive. We wrote them at the top to keep everything in one file.
   </Step>
   <Step title="Metadata becomes a filter later" stage="b" phase="1">
-    The `hr-salary-bands` document has `access: hr-only`. Only HR may read it. We read the label now. We check it when a question comes in (page E). If the record has no label from the start, there is nothing to filter later.
+    `hr-salary-bands` has `access: hr-only`. Only HR may read it. We read the label now. We check it when a question comes in (page E). If the record has no label from the start, there is nothing to filter later.
   </Step>
   <Step title="The text below: traces of the PDF" stage="b" phase="2">
-    The hr-leave file looks like text from a 4-page PDF. Each page starts with the same header and a confidentiality line. Each page ends with a number like `Page 1 of 4`. These lines have nothing to do with the content. We call them noise.
+    hr-leave looks like text from a 4-page PDF. Each page starts with the same header and a confidentiality line. Each page ends with a number like `Page 1 of 4`. These lines are not content. We call them noise.
   </Step>
   <Step title="Why is noise a problem?" stage="b" phase="2">
     The header line repeats on every page. When we split the text, it lands in many chunks. Then many chunks share this line, so they look more alike. That can make them harder to tell apart.
@@ -203,7 +203,7 @@ The model never saw these files. And even if it did, the raw files are dirty. If
     The page width also broke sentences apart. "special" ends one line, and "leave" starts the next. A person reads this fine. But a program that works line by line sees two separate parts.
   </Step>
   <Step title="Cleaning: 4 rules and a line joiner" stage="b">
-    Step 2 drops the noise with 4 rules (regex). The rules catch the page header and the English confidentiality line. They also catch page numbers in English and in Turkish. Then the step joins the broken lines of plain text. Headings, tables and blank lines stay as they are.
+    Step 2 drops the noise with 4 rules (regex). They catch the page header and the English confidentiality line. They also catch page numbers in English and Turkish. Then it joins the broken lines. Headings, tables and blank lines stay.
 
     <Now n="2">In `src/steps/2-clean.ts`, comment out the first rule of the `NOISE` list. Run `npm run step -- 2`. The `hr-leave` line should show −8 noise lines.</Now>
   </Step>
@@ -264,7 +264,7 @@ The noise rules are in a list. Lines marked `// default` are on by default. The 
 
 ## Where does the leftover noise go?
 
-The Turkish document (`it-security`) has the line `GİZLİ – Yalnızca şirket içi kullanım içindir` on every page. In English, it means: confidential, for internal use only. No rule removes this line. In the log, `it-security` shows −8. Its 4 page headers and 4 page numbers are gone. Its 4 confidentiality lines stay. The leftover noise doesn't go away. With the split method of page B, it becomes a chunk named `it-security@2025#0`. That chunk holds only the document title and this line. It gets embedded and stored, and it competes in the search.
+The Turkish document (`it-security`) has the line `GİZLİ – Yalnızca şirket içi kullanım içindir` on every page. In English, it means: confidential, for internal use only. No rule removes this line. In the log, `it-security` shows −8. Its 4 page headers and 4 page numbers are gone. Its 4 confidentiality lines stay. The leftover noise doesn't go away. With the split method of page B, it becomes a chunk named `it-security@2025#0`. That chunk holds only the document title and this line. It has no real content. But it gets a vector and a place in the store, like any other chunk. This is the problem from "Why is noise a problem?", in one chunk.
 
 <YourTurn>
 **1 · Look at the raw data.** Open `corpus/2025/hr-leave.md`. Find the `---` block, the page header and the `Page 1 of 4` line. Then run `npm run step -- 1` and open `data/1-docs.json`. Look at the `access` and `lang` fields of each document. Which field shows that only HR may read `hr-salary-bands`?

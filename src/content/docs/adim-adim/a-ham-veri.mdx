@@ -1,6 +1,6 @@
 ---
 title: A · Ham veri ve temizlik
-description: Dosyaları okumak, her dokümanın kendisi hakkındaki bilgileri (metadata) okumak ve PDF'ten kalma gürültüyü atmak — adım 1 ve 2.
+description: Adım 1 ve 2: dosyaları ve her birinin kendisi hakkında söylediklerini (metadata) okumak. Sonra PDF'ten kalma gürültüyü atmak.
 ---
 import WhereAmI from '../../../components/WhereAmI.astro';
 import DaysQuestion from '../../../components/DaysQuestion.astro';
@@ -177,7 +177,7 @@ Model bu dosyaları hiç görmedi; görse de ham hâlleri kirli. Bu metni olduğ
     Şirketin bilgisi PDF, Word ya da HTML dosyalarında durur. Bu dosyalardan çıkarılan metne **ham veri** diyoruz. İçeriği doğrudur ama dosyanın izlerini taşır: sayfa başlıkları, sayfa numaraları, menüler.
   </Step>
   <Step title="Bizim ham verimiz: hr-leave.md" stage="a">
-    Atölyede metni çıkarma işini atladık: `corpus/` klasöründeki her dosya PDF'ten çıkmış metin gibi yazıldı. Sayfa başlıkları, numaralar ve bölünmüş satırlar, temizlenecek gerçek bir şey olsun diye bilerek eklendi.
+    Atölyede metni çıkarma işini atlıyoruz. `corpus/` içindeki her dosya PDF'ten çıkmış metin gibi görünüyor. Sayfa başlıklarını, numaraları ve bölünmüş satırları bilerek ekledik; temizlenecek gerçek bir şey olsun diye.
   </Step>
   <Step title="İki adım, model yok" stage="a">
     Adım 1 dosyayı okur ve üstteki etiket bloğunu asıl metinden ayırır. Adım 2 metni temizler. İkisinde de model çalışmıyor, yalnızca bizim kodumuz.
@@ -194,7 +194,7 @@ Model bu dosyaları hiç görmedi; görse de ham hâlleri kirli. Bu metni olduğ
     `hr-salary-bands` dokümanı `access: hr-only` taşıyor: yalnızca İK okuyabilir. Etiketi şimdi okuyoruz, soru anında kontrol ediyoruz (E sayfası). Etiket en baştan kayıtta olmazsa sonra filtrelenecek bir şey kalmaz.
   </Step>
   <Step title="Alttaki metin: PDF'in izleri" stage="b" phase="2">
-    hr-leave 4 sayfalık bir PDF'ten çıkmış gibi: her sayfanın başında aynı başlık ve gizlilik satırı, sonunda `Page 1 of 4` gibi bir numara. İçerikle ilgisi olmayan bu satırlara gürültü diyoruz.
+    hr-leave 4 sayfalık bir PDF'ten çıkmış gibi: her sayfanın başında aynı başlık ve gizlilik satırı, sonunda `Page 1 of 4` gibi bir numara. Bu satırlar içerik değil; onlara gürültü diyoruz.
   </Step>
   <Step title="Gürültü neden sorun?" stage="b" phase="2">
     Başlık satırı her sayfada tekrar eder; metni bölünce birçok parçanın içine girer. Bu ortak satır parçaları birbirine daha çok benzetir ve aramanın onları ayırt etmesini zorlaştırabilir.
@@ -203,7 +203,7 @@ Model bu dosyaları hiç görmedi; görse de ham hâlleri kirli. Bu metni olduğ
     Sayfa genişliği cümleleri de bölmüş: "special" bir satırın sonunda, "leave" sonrakinin başında. İnsan için sorun yok; satır satır işleyen bir program için bunlar iki ayrı parça.
   </Step>
   <Step title="Temizlik: 4 kural ve bir birleştirici" stage="b">
-    Adım 2 gürültüyü 4 kuralla (regex) atar: sayfa başlığı, İngilizce gizlilik satırı, İngilizce ve Türkçe sayfa numarası. Sonra bölünmüş düz yazı satırlarını birleştirir; başlık, tablo ve boş satırlar olduğu gibi kalır.
+    Adım 2 gürültüyü 4 kuralla (regex) atar: sayfa başlığı, İngilizce gizlilik satırı, İngilizce ve Türkçe sayfa numarası. Sonra bölünmüş satırları birleştirir; başlık, tablo ve boş satırlar kalır.
 
     <Now n="2">`src/steps/2-clean.ts` içinde `NOISE` listesinin ilk kuralını kapatın, `npm run step -- 2`: `hr-leave` −8 gürültü satırı göstermeli.</Now>
   </Step>
@@ -264,14 +264,14 @@ Gürültü kuralları bir listede; `// default` işaretli satırlar varsayılan 
 
 ## Kaçan gürültü nereye gider?
 
-Türkçe doküman (`it-security`) her sayfada `GİZLİ – Yalnızca şirket içi kullanım içindir` satırını taşıyor ve onu atan kural yok. Log'da `it-security` yanında −8 var: 4 sayfa başlığı ve 4 sayfa numarası gitti, 4 gizlilik satırı kaldı. Kalan gürültü kaybolmaz: B sayfasının bölme yöntemiyle `it-security@2025#0` adlı bir chunk olur ve içinde doküman başlığıyla bu satırdan başka bir şey yoktur. Embed edilir, saklanır, aramada yarışır.
+Türkçe doküman (`it-security`) her sayfada `GİZLİ – Yalnızca şirket içi kullanım içindir` satırını taşıyor ve onu atan kural yok. Log'da `it-security` yanında −8 var: 4 sayfa başlığı ve 4 sayfa numarası gitti, 4 gizlilik satırı kaldı. Kalan gürültü kaybolmaz: B sayfasının bölme yöntemiyle `it-security@2025#0` adlı bir chunk olur ve içinde doküman başlığıyla bu satırdan başka bir şey yoktur. Gerçek bir içeriği yok; ama her chunk gibi bir vektör alır ve depoda yer tutar. "Gürültü neden sorun?" adımındaki sorun, tek bir chunk'ta.
 
 <YourTurn>
 **1 · Ham veriye bakın.** `corpus/2025/hr-leave.md` dosyasını açın: `---` bloğunu, sayfa başlığını ve `Page 1 of 4` satırını bulun. Sonra `npm run step -- 1` ve `data/1-docs.json`: her dokümanın `access` ve `lang` alanlarına bakın. `hr-salary-bands` dokümanını yalnızca İK'nın okuyabildiğini hangi alan gösteriyor?
 
 **2 · Bir kuralı kapatın.** `src/steps/2-clean.ts` içinde `NOISE` listesinin ilk satırını (sayfa başlığı kuralı) başına `//` koyarak kapatın ve `npm run step -- 2` çalıştırın. Log'da `hr-leave` satırı −12 yerine −8 gürültü satırı göstermeli. `data/2-clean.json` içinde `Edition 2025` arayın: başlık metne geri döndü. Satırı geri açıp adım 2'yi yeniden çalıştırın.
 
-**3 · Benzerini yazın.** Aynı dosyada `turkishConfidential` boş. İngilizce kural `/^CONFIDENTIAL – .+$/` gibi, Türkçe gizlilik satırı için yazın. İpucu: tire uzun tire (–), `İ` harfi noktalı; satırı dosyadan kopyalayın, `GIZLI` yazmayın. Sonra:
+**3 · Benzerini yazın.** Aynı dosyada `turkishConfidential` boş. İngilizce satırın kuralı `/^CONFIDENTIAL – .+$/` şeklinde. Türkçe gizlilik satırı için aynı türden bir kural yazın. İpucu: tire uzun tire (–), `İ` harfi noktalı; satırı dosyadan kopyalayın, `GIZLI` yazmayın. Sonra:
 
 - `npm run step -- 2` → `it-security` satırı −8 yerine −12 gürültü satırı göstermeli.
 - `npm run check:sibling` → `step 2 · turkishConfidential` testi yeşil olmalı. `dot` ve `byParagraph` testleri şimdilik kırmızı kalır; onlar C sayfasında ve B sayfasının ev ödevinde.

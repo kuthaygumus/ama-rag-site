@@ -1,6 +1,6 @@
 ---
 title: B · Chunking
-description: Splitting documents into chunks — every 300 characters, or at the document's own headings? Step 3 and the first good answer to the question of the day.
+description: Step 3: split the documents into chunks. Cut every 300 characters, or at the document's own headings? Here the question of the day gets its first good answer.
 ---
 import WhereAmI from '../../../../components/WhereAmI.astro';
 import DaysQuestion from '../../../../components/DaysQuestion.astro';
@@ -133,7 +133,7 @@ The answer to the question of the day is one table row in hr-leave: `| 7 | 22 |`
     </svg>
   </DeckFigure>
   <Step title="Why do we split?" stage="a">
-    Sending all 8 documents with every question is expensive and noisy. So we split the documents into pieces. The search picks only the few pieces closest to the question. These pieces are called <Term id="chunk">chunks</Term>.
+    Sending all 8 documents with every question costs a lot. Most of it is not about the question. So we split them into pieces. The search picks the few pieces closest to the question. These pieces are called <Term id="chunk">chunks</Term>.
   </Step>
   <Step title="First way: cut every 300 characters" stage="b">
     `fixedSize(doc, 300)` cuts every 300 characters. It doesn't look at the content. It doesn't see headings, tables or even words. The code is a short function, and everyone starts with this one. 300 is our choice, not a rule.
@@ -141,7 +141,7 @@ The answer to the question of the day is one table row in hr-leave: `| 7 | 22 |`
     <Now n="1">In `src/steps/3-chunk.ts`, set the chunker to `fixed`. Then run `npm run step -- 3`.</Now>
   </Step>
   <Step title="The cut lands in the table" stage="b">
-    c06 cuts the section heading in the middle of a word: "Ann". c07 ends the row for year 5 with "| 5 | 2". c08 starts with "2 |".
+    c06 cuts the heading word "Annual" in two: "Ann" in c06, "ual" in c07. c07 ends the row for year 5 with "| 5 | 2". c08 starts with "2 |".
 
     <Now n="2">Open `data/3-chunks.json`. Find `hr-leave@2025#c07` and `hr-leave@2025#c08`. Which one has the table header row?</Now>
   </Step>
@@ -149,11 +149,11 @@ The answer to the question of the day is one table row in hr-leave: `| 7 | 22 |`
     The answer row `| 7 | 22 |` is in c08. Its header row stayed in c07. So c08 does not say what 7 and 22 count. The word "annual" is not there either.
   </Step>
   <Step title="The model answers anyway" stage="b">
-    c08 is not one of the 3 sources in the prompt. The model writes this answer:
+    c08 is not among the 3 sources. The model answers:
 
     "An employee with 7 years of service gets at most 7 working days [1]."
 
-    Source [1] is c11, from section 4. There, 7 working days is the limit for one block of leave in the peak season. A source, but a wrong number.
+    Source [1] is c11. It starts with "at most 7 working days." That sentence starts in c10: "one block of leave can be". The cut hid what the 7 counts. A source, but a wrong number.
 
     <Now n="3">Run `npm run question`.</Now>
   </Step>
@@ -166,7 +166,7 @@ The answer to the question of the day is one table row in hr-leave: `| 7 | 22 |`
     <Now n="4">Switch the chunker back to `section`. Run `npm run step -- 3`, then `npm run question` again.</Now>
   </Step>
   <Step title="The cost: bigger chunks, a shared prefix" stage="b">
-    Section: 60 chunks, 695 characters on average. Fixed: 138 chunks, 294 on average. Bigger chunks take more room in the prompt. The `[Document › Section]` prefix looks like the page header we removed in A. But it carries meaning. The cost: chunks of one document move closer together (page E).
+    Section: 60 chunks, 695 characters on average. Fixed: 138 chunks, 294 on average. Bigger chunks fill the prompt faster. The `[Document › Section]` prefix is like page A's header, but it carries meaning. Chunks of one document look more alike (page E).
   </Step>
 </Deck>
 
@@ -195,9 +195,9 @@ Both ways to split, and the switch between them, are in `src/steps/3-chunk.ts`:
 <YourTurn>
 **1 · See the cut yourself.** In `src/steps/3-chunk.ts`, find the `TOGGLE chunker` block. Put `//` before the `"section"; // default` line. Remove the `//` from the `"fixed"; // alternative` line. Run `npm run step -- 3`. The log finds the chunk with the `| 7 |` row (`hr-leave@2025#c08`) and shows the whole chunk.
 
-**2 · Open the chunks.** In `data/3-chunks.json`, find `hr-leave@2025#c07` and `hr-leave@2025#c08`. Which one has the table header row? Which one has `| 7 | 22 |`? What does the `sections` field say?
+**2 · Open the chunks.** In `data/3-chunks.json`, find `hr-leave@2025#c07` and `hr-leave@2025#c08`. Which one has the table header row? Which one has `| 7 | 22 |`? What does the `sections` field say? Then find `hr-leave@2025#c11`, the source of the wrong answer. Read its first words.
 
-**3 · Ask the question.** `npm run question` → "An employee with 7 years of service gets at most 7 working days [1]." It gives a source, but the number is wrong. The first run takes longer. The black box embeds the chunks at that moment.
+**3 · Ask the question.** `npm run question` → "An employee with 7 years of service gets at most 7 working days [1]." It gives a source, but the number is wrong. The words "at most 7 working days" come from c11, not from the question. The first run takes longer. The black box embeds the chunks at that moment.
 
 **4 · Switch back.** Switch the toggle back to `section`. Run `npm run step -- 3`, then `npm run question` again → 22 working days, source `[1] hr-leave@2025#3`.
 

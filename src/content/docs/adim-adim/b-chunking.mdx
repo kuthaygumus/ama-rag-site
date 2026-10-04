@@ -1,6 +1,6 @@
 ---
 title: B · Chunking
-description: Dokümanları parçalara bölmek — her 300 karakterde bir mi, dokümanın kendi başlıklarından mı? Adım 3 ve günün sorusunun ilk düzgün cevabı.
+description: Adım 3: dokümanları parçalara bölmek. Her 300 karakterde bir mi kesmeli, dokümanın kendi başlıklarından mı? Günün sorusu ilk düzgün cevabını burada alıyor.
 ---
 import WhereAmI from '../../../components/WhereAmI.astro';
 import DaysQuestion from '../../../components/DaysQuestion.astro';
@@ -133,7 +133,7 @@ Günün sorusunun cevabı hr-leave'in 198 satırından tek bir tablo satırında
     </svg>
   </DeckFigure>
   <Step title="Neden bölüyoruz?" stage="a">
-    Her soruda 8 dokümanın hepsini modele vermek pahalı ve gürültülü. Dokümanları parçalara böleriz; arama yalnızca soruya en yakın birkaç parçayı seçer. Bu parçaların adı <Term id="chunk">chunk</Term>.
+    Her soruda 8 dokümanın hepsini modele vermek pahalı; metnin çoğunun soruyla ilgisi yok. Dokümanları parçalara böleriz; arama yalnızca soruya en yakın birkaç parçayı seçer. Bu parçaların adı <Term id="chunk">chunk</Term>.
   </Step>
   <Step title="Birinci yol: her 300 karakterde bir kes" stage="b">
     `fixedSize(doc, 300)`: içeriğe bakmadan her 300 karakterde bir makas; başlık, tablo, kelime tanımaz. Kod kısa bir fonksiyon. Herkes işe bununla başlar. 300 bizim seçimimiz, bir kural değil.
@@ -141,7 +141,7 @@ Günün sorusunun cevabı hr-leave'in 198 satırından tek bir tablo satırında
     <Now n="1">`src/steps/3-chunk.ts` içinde chunker'ı `fixed` yapın ve `npm run step -- 3` çalıştırın.</Now>
   </Step>
   <Step title="Makas tabloya denk geliyor" stage="b">
-    c06, bölüm başlığını bir kelimenin ortasında kesiyor: "Ann". c07, 5. yılın satırını "| 5 | 2" diye bitiriyor; c08 "2 |" ile başlıyor.
+    c06, başlıktaki "Annual" kelimesini ikiye bölüyor: "Ann" c06'da, "ual" c07'de. c07, 5. yılın satırını "| 5 | 2" diye bitiriyor; c08 "2 |" ile başlıyor.
 
     <Now n="2">`data/3-chunks.json` içinde `hr-leave@2025#c07` ve `hr-leave@2025#c08` kayıtlarını bulun: tablo başlığı hangisinde?</Now>
   </Step>
@@ -153,7 +153,7 @@ Günün sorusunun cevabı hr-leave'in 198 satırından tek bir tablo satırında
 
     "An employee with 7 years of service gets at most 7 working days [1]."
 
-    Gösterdiği kaynak [1], 4. bölümdeki c11. Orada 7 iş günü, yoğun sezonda tek bir izin bloğu için üst sınır. Kaynak var ama sayı yanlış.
+    Kaynak [1] c11 ve "at most 7 working days." diye başlıyor. Cümlenin başı c10'da kaldı: "one block of leave can be" (tek bir izin bloğu … olabilir). Makas, 7'nin neyi saydığını gizledi. Kaynak var ama sayı yanlış.
 
     <Now n="3">`npm run question` çalıştırın.</Now>
   </Step>
@@ -166,7 +166,7 @@ Günün sorusunun cevabı hr-leave'in 198 satırından tek bir tablo satırında
     <Now n="4">Chunker'ı `section`'a döndürün, `npm run step -- 3` ve yeniden `npm run question`.</Now>
   </Step>
   <Step title="Bedeli: büyük parça, ortak ön ek" stage="b">
-    Section: 60 chunk, ortalama 695 karakter (fixed: 138, ortalama 294); büyük parça prompt'ta daha çok yer kaplar. `[Doküman › Bölüm]` ön eki A'da attığımız sayfa başlığına benziyor ama bilgi taşıyor. Bedeli: aynı dokümanın chunk'ları birbirine yaklaşır (E sayfası).
+    Section: 60 chunk, ortalama 695 karakter (fixed: 138, ortalama 294); büyük parça prompt'u daha çabuk doldurur. `[Doküman › Bölüm]` ön eki A'daki sayfa başlığına benziyor ama bilgi taşıyor. Bedeli: aynı dokümanın chunk'ları birbirine daha çok benzer (E sayfası).
   </Step>
 </Deck>
 
@@ -195,9 +195,9 @@ Aynı adım, chunker `section`:
 <YourTurn>
 **1 · Makası kendiniz görün.** `src/steps/3-chunk.ts` içinde `TOGGLE chunker` bloğunda `"section"; // default` satırının başına `//` koyun, `"fixed"; // alternative` satırındaki `//` işaretini kaldırın. `npm run step -- 3` çalıştırın: log, `| 7 |` satırını taşıyan parçayı (`hr-leave@2025#c08`) bulur ve parçanın tamamını gösterir.
 
-**2 · Parçaları açın.** `data/3-chunks.json` içinde `hr-leave@2025#c07` ve `hr-leave@2025#c08` kayıtlarını bulun. Tablo başlığı hangisinde, `| 7 | 22 |` hangisinde? `sections` alanı ne diyor?
+**2 · Parçaları açın.** `data/3-chunks.json` içinde `hr-leave@2025#c07` ve `hr-leave@2025#c08` kayıtlarını bulun. Tablo başlığı hangisinde, `| 7 | 22 |` hangisinde? `sections` alanı ne diyor? Sonra yanlış cevabın kaynağı `hr-leave@2025#c11` kaydını bulun ve ilk kelimelerini okuyun.
 
-**3 · Cevabı sorun.** `npm run question` → "An employee with 7 years of service gets at most 7 working days [1]." Kaynak gösteriyor ama sayı yanlış. İlk çalıştırmada biraz sürer: kara kutu chunk'ları o an embed ediyor.
+**3 · Cevabı sorun.** `npm run question` → "An employee with 7 years of service gets at most 7 working days [1]." Kaynak gösteriyor ama sayı yanlış. "at most 7 working days" sözleri sorudan değil, c11'den geliyor. İlk çalıştırmada biraz sürer: kara kutu chunk'ları o an embed ediyor.
 
 **4 · Geri alın.** Toggle'ı `section`'a döndürün, `npm run step -- 3` ve yeniden `npm run question` → 22 iş günü, kaynak `[1] hr-leave@2025#3`.
 
