@@ -207,17 +207,17 @@ So far, the "database" was a JSON file. For every question, we compared the ques
     <Now n="2">Run `npm run step -- 5 --store json`, then open `data/store.json`.</Now>
   </Step>
   <Step title="Vector DB: check the neighbors" stage="a">
-    Chroma builds an index called <Term id="hnsw">HNSW</Term>. It links the vectors in a graph of neighbors. A search starts at an entry point. It jumps from neighbor to neighbor toward the question. The search visits only the nearby part of the graph.
+    Chroma builds a graph index called <Term id="hnsw">HNSW</Term>. It links each vector to its neighbors. A search starts at one point. It jumps from neighbor to neighbor toward the question. It visits only a small part of the graph.
 
     <Now n="3">Run `npm run step -- 5`.</Now>
   </Step>
   <Step title="The cost: approximate" stage="a">
-    This kind of search is called <Term id="ann">ANN</Term>: approximate nearest neighbor. It almost always finds the closest ones, but there's no guarantee. You give up a little exactness to get speed. The index settings decide this balance.
+    This kind of search is called <Term id="ann">ANN</Term>: approximate nearest neighbor. It almost always finds the closest ones, but there's no guarantee. You lose a little accuracy and gain speed. The index settings set this balance.
 
     <Now n="4">In Bruno, pick the `local` environment. Send the requests in the `01-chroma` folder in the order the box lists. Find the `hnsw` settings in `collections`.</Now>
   </Step>
   <Step title="Did our ranking change?" stage="a">
-    Same question, two stores. JSON and Chroma return the same top 5 ids, in the same order. With 60 records, the approximation doesn't show.
+    Same question, two stores. JSON and Chroma return the same top 5 ids, in the same order. With 60 records, the approximation doesn't show. The speed gain doesn't show yet either. Both show with millions of records.
 
     <Now n="5">Run `podman compose down`, then `podman compose up -d`. In Bruno, send `collections` first, then `count`.</Now>
 
@@ -226,7 +226,7 @@ So far, the "database" was a JSON file. For every question, we compared the ques
 </Deck>
 
 <Example>
-After step 5 writes to Chroma, it also asks the JSON store the question of the day. Then it puts the top 5 of both stores side by side.
+After step 5 writes to Chroma, it also asks the JSON store the question of the day. Then it puts the top 5 of both stores side by side. The TIME lines measure the whole step, writing included. They are not a search race.
 </Example>
 
 <Log name="05-store-json" title="npm run step -- 5 --store json" />
@@ -285,7 +285,7 @@ The `01-chroma` folder in Bruno makes the same HTTP calls as our code, by hand. 
 - `peek at three records` → `ids`, `documents`, `metadatas`. Add `"embeddings"` to the `include` list and send it again. Now the 1024 numbers come back too.
 - `filter on metadata` → put `{ "access": "hr-only" }` in `where`. The salary bands come back. Who should be allowed to send this request? (Security page.)
 
-**5 · Persistence.** Run `podman compose down`, then `podman compose up -d`. In Bruno, send `collections` first, then `count`. The records are in the volume, so the count should not change.
+**5 · Does the data stay?** Run `podman compose down`, then `podman compose up -d`. In Bruno, send `collections` first, then `count`. The records are in the volume, so the count should not change.
 
 **6 · The question of the day.** Run `npm run question`. The HOW line now says `chroma store`. Is the answer still 22, as with section chunks? Your ledger gets one more line.
 
@@ -295,7 +295,7 @@ Are you behind? Run `npm run catchup -- 5`.
 ## Common questions
 
 <FAQ q="Chroma, pgvector or Qdrant?">
-All three store the same three things: the vector, the text and the metadata. The differences are in operations. If you already use Postgres, pgvector adds no new system. They differ in scale, in how well they filter, in hybrid search and in managed hosting. We chose Chroma because it is one container, and Bruno can read its HTTP API.
+All three store the same three things: the vector, the text and the metadata. The differences are in how you run them. If you already use Postgres, pgvector adds no new system. They differ in scale, in how well they filter, in hybrid search and in managed hosting. We chose Chroma because it is one container, and Bruno can read its HTTP API.
 </FAQ>
 
 <FAQ q="Can't Chroma do the embedding itself?">

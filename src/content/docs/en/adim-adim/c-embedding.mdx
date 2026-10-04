@@ -22,7 +22,7 @@ import Term from '../../../../components/Term.astro';
 <DaysQuestion answer="“An employee with 7 years of service gets 22 working days of annual leave [1].” ✓" how="chunker section · in-memory search (black box). We open the box on this page." />
 
 <Gate>
-Here are two sentences. "How much holiday do I get?" "Annual paid leave depends on the length of service." They are about the same topic. But they share no word, so a keyword search can't match them. The black box on page B still found the right section.
+Here are two sentences. "How much holiday do I get?" "Annual paid leave depends on the length of service." They are about the same topic. But they share no word, so a keyword search can't match them. Can a model match them? On this page, we turn text into numbers and measure.
 </Gate>
 
 <Deck>
@@ -78,17 +78,17 @@ Here are two sentences. "How much holiday do I get?" "Annual paid leave depends 
       </g>
       <g class="ph ph1">
         <text x="480" y="80" class="flbl">cosine</text>
-        <text x="480" y="108" class="fsub">a·b / (|a|·|b|) — the angle between</text>
+        <text x="480" y="108" class="fsub">a·b / (|a|·|b|): the angle between</text>
         <text x="480" y="134" class="fsub" data-q="const">−1 to 1 · 1 = same direction · unrelated ≠ 0</text>
       </g>
       <g class="ph ph2">
         <text x="480" y="190" class="flbl fbad-t" data-q="const">L2</text>
-        <text x="480" y="218" class="fsub">√Σ (a[i] − b[i])² — distance between tips</text>
+        <text x="480" y="218" class="fsub">√Σ (a[i] − b[i])²: distance between tips</text>
         <text x="480" y="244" class="fsub">small = close: reversed scale</text>
       </g>
       <g class="ph ph3">
         <text x="480" y="300" class="flbl fgate-t">dot</text>
-        <text x="480" y="328" class="fsub">Σ a[i]·b[i] — doesn’t divide by length</text>
+        <text x="480" y="328" class="fsub">Σ a[i]·b[i]: doesn’t divide by length</text>
         <text x="480" y="354" class="fsub" data-q="log:04-embed">our vectors have length 1.000 → ?</text>
       </g>
       <defs>
@@ -124,7 +124,7 @@ Here are two sentences. "How much holiday do I get?" "Annual paid leave depends 
 </Deck>
 
 <Example>
-In the log, look at the first 6 numbers of the first chunk (an announcement). Look at the vector's length too. None of the 60 chunks was computed again. The vectors came from the `.cache/` folder.
+In the log, look at the first 6 numbers of the first chunk (an announcement). Look at the vector's length too. None of the 60 chunks was computed again. `npm run question` on page B already embedded them. It saved the vectors in the `.cache/` folder.
 </Example>
 
 <Log name="04-embed" title="npm run step -- 4" />
@@ -292,24 +292,24 @@ Cosine and its distance version, L2, take a few lines in `src/lib/similarity.ts`
     English question, Turkish rule: 0.752. No shared word, not even the same language. The model looked at the meaning and put them close. The unrelated pair got 0.503. Even "unrelated" is not 0. Scores are relative, not absolute.
   </Step>
   <Step title="Surprising: the paraphrase scores low" stage="p" phase="2">
-    Look at the pair "How much holiday do I get?" and "Annual paid leave depends on the length of service." The model put it closer than the unrelated pair. But the gap is small. 0.599 is only 0.096 above the unrelated pair (0.503).
+    "How much holiday do I get?" and "Annual paid leave …": same idea, other words, a paraphrase. Score 0.599, only 0.096 above the unrelated pair. The model matches them, but not by much. On page E, a holiday question puts the leave table 5th. Rerank fixes that.
   </Step>
   <Step title="Trap: negation" stage="p" phase="3">
-    "… can work remotely" and "… cannot work remotely": 0.853. Opposite meaning, close vectors. An embedding sees the topic. It can miss whether the text says yes or no. The model that writes the answer must spot the difference by reading the text.
+    "… can work remotely" and "… cannot work remotely": 0.853. Opposite meaning, close vectors. An embedding sees the topic. It can miss the yes or the no. The answer model must read the text to see the difference.
 
     <Now n="4">Run `npm run similar -- "How much holiday do I get?" "How many days of annual leave do I get?"`. Then try your own negation pair.</Now>
   </Step>
   <Step title="Twin tables" stage="p" phase="4">
-    The domestic and the international per diem questions: 0.860. Different table, different numbers, but almost the same vectors. The question set on the Measuring quality page has 3 questions of this type. In one of them, the right table ranks only 2nd.
+    Domestic and international per diem questions: 0.860, the highest of the five. Different tables and numbers, almost the same vectors. The Measuring quality page has 3 such questions. In one, the right table ranks only 2nd.
   </Step>
   <Step title="From 1024 dimensions down to 2" stage="map">
-    `npm run map` uses <Term id="pca">PCA</Term> to project the 60 chunks onto a flat surface. The horizontal direction keeps 12.3% of the spread. The vertical one keeps 8.8%. About 79% is not in this picture. Each point is a chunk, and its marker shows the document.
+    `npm run map` uses <Term id="pca">PCA</Term> to draw the 60 chunks on a flat map. PCA keeps the two directions where the chunks differ most. Across: 12.3% of the spread. Up and down: 8.8%. About 79% is not on this map.
   </Step>
   <Step title="What do we see?" stage="map">
-    The Turkish document sits apart, on the left. The "Purpose and Scope" sections of the 6 English policies sit side by side at the top. They come from different documents, but they are the same kind of text. The other English sections are mixed together on the right.
+    The Turkish document sits apart. Why, if language is no barrier? It is the only Turkish and the only IT document. The map can't say which one. At the top, the six "Purpose and Scope" sections sit together: same kind of text.
   </Step>
   <Step title="The star: the question of the day" stage="map">
-    On the map, the question lands among travel-expenses and benefits chunks. The answer chunk, hr-leave §3, is farther away. In two dimensions, the distances are not accurate. Step 6 measures in all 1024 dimensions. Its top 5 holds only hr-leave chunks. The map gives intuition. It doesn't make the decision.
+    The star lands next to travel-expenses and benefits. The answer, hr-leave §3, is far away. A flat map can't keep real distances. In all 1024 dimensions, step 6 ranks §3 first. The map helps you see. It doesn't decide.
 
     <Now n="5">Run `npm run map -- "How often should I change my password?"`, then open `data/map.html`.</Now>
   </Step>
@@ -342,7 +342,7 @@ Are you behind? Run `npm run catchup -- 4`.
 ## Common questions
 
 <FAQ q="Why does dot give the same result as cosine?">
-Because bge-m3 vectors have length 1.000. Cosine divides the dot result by the lengths of the two vectors. Dividing by 1 changes nothing. That is why many vector DBs offer dot as a "fast cosine" for normalized vectors.
+Because bge-m3 vectors have length 1.000. Cosine divides the dot result by the lengths of the two vectors. Dividing by 1 changes nothing. So many vector DBs offer dot as a "fast cosine" for vectors of length 1.
 </FAQ>
 
 <FAQ q="What do dense and sparse mean?">

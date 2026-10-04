@@ -22,7 +22,7 @@ import Term from '../../../components/Term.astro';
 <DaysQuestion answer="“An employee with 7 years of service gets 22 working days of annual leave [1].” ✓" how="chunker section · in-memory search (black box) — bu sayfada kutuyu açıyoruz" />
 
 <Gate>
-"How much holiday do I get?" ve "Annual paid leave depends on the length of service." cümleleri aynı konudan söz ediyor ama tek bir ortak kelimeleri yok; anahtar kelime araması bu ikisini eşleştiremez. B sayfasındaki kara kutu ise doğru bölümü buldu.
+"How much holiday do I get?" ve "Annual paid leave depends on the length of service." cümleleri aynı konudan söz ediyor ama tek bir ortak kelimeleri yok; anahtar kelime araması bu ikisini eşleştiremez. Peki bir model eşleştirebilir mi? Bu sayfada metni sayılara çevirip ölçüyoruz.
 </Gate>
 
 <Deck>
@@ -78,17 +78,17 @@ import Term from '../../../components/Term.astro';
       </g>
       <g class="ph ph1">
         <text x="480" y="80" class="flbl">cosine</text>
-        <text x="480" y="108" class="fsub">a·b / (|a|·|b|) — aradaki açı</text>
+        <text x="480" y="108" class="fsub">a·b / (|a|·|b|): aradaki açı</text>
         <text x="480" y="134" class="fsub" data-q="const">−1 ile 1 arası · 1 = aynı yön · ilgisiz ≠ 0</text>
       </g>
       <g class="ph ph2">
         <text x="480" y="190" class="flbl fbad-t" data-q="const">L2</text>
-        <text x="480" y="218" class="fsub">√Σ (a[i] − b[i])² — uçlar arası mesafe</text>
-        <text x="480" y="244" class="fsub">küçük = yakın: yön ters</text>
+        <text x="480" y="218" class="fsub">√Σ (a[i] − b[i])²: uçlar arası mesafe</text>
+        <text x="480" y="244" class="fsub">küçük = yakın: ters ölçek</text>
       </g>
       <g class="ph ph3">
         <text x="480" y="300" class="flbl fgate-t">dot</text>
-        <text x="480" y="328" class="fsub">Σ a[i]·b[i] — uzunluklara bölmez</text>
+        <text x="480" y="328" class="fsub">Σ a[i]·b[i]: uzunluklara bölmez</text>
         <text x="480" y="354" class="fsub" data-q="log:04-embed">bizim vektörlerin uzunluğu 1.000 → ?</text>
       </g>
       <defs>
@@ -114,7 +114,7 @@ import Term from '../../../components/Term.astro';
     İki vektör arasındaki açı. Uzunluğa bakmaz, yöne bakar; sonuç −1 ile 1 arasında, 1 = aynı yön. Retriever'ımız da Chroma koleksiyonumuz da bunu kullanıyor: <Term id="cosine">cosine benzerliği</Term>.
   </Step>
   <Step title="L2: uçlar arası mesafe" stage="m" phase="2">
-    İki noktanın düz çizgi uzaklığı. Dikkat, yönü ters: küçük sayı = yakın.
+    İki noktanın düz çizgi uzaklığı. Dikkat, ölçek ters: küçük sayı = yakın.
   </Step>
   <Step title="Dot: çarp ve topla" stage="m" phase="3">
     Karşılıklı sayıları çarpıp toplar; cosine'in aksine uzunluklara bölmez. Adım 4'ün log'u vektörün uzunluğunu 1.000 yazdı. O zaman bizim vektörlerde dot ile cosine arasında ne fark kalır?
@@ -124,7 +124,7 @@ import Term from '../../../components/Term.astro';
 </Deck>
 
 <Example>
-Log'da ilk chunk'ın (bir duyuru) ilk 6 sayısına ve vektörün uzunluğuna bakın. 60 chunk'ın hiçbiri yeniden hesaplanmadı: vektörler `.cache/` klasöründen geldi.
+Log'da ilk chunk'ın (bir duyuru) ilk 6 sayısına ve vektörün uzunluğuna bakın. 60 chunk'ın hiçbiri yeniden hesaplanmadı. B sayfasındaki `npm run question` onları zaten embed etti ve vektörleri `.cache/` klasörüne kaydetti.
 </Example>
 
 <Log name="04-embed" title="npm run step -- 4" />
@@ -292,24 +292,24 @@ Cosine ve mesafe karşılığı L2, `src/lib/similarity.ts` içinde birkaç sat�
     İngilizce soru, Türkçe kural: 0.752. Ortak kelime yok, dil bile farklı; model anlama bakarak yakın koydu. İlgisiz çift 0.503 aldı: "ilgisiz" bile 0 değil. Skorlar mutlak değil, görelidir.
   </Step>
   <Step title="Şaşırtan: paraphrase düşük kaldı" stage="p" phase="2">
-    "How much holiday do I get?" ile "Annual paid leave depends on the length of service." çiftine bakın: model bu çifti ilgisiz çiftten yakın koydu, ama fark küçük. 0.599, ilgisiz çiftin (0.503) yalnızca 0.096 üstünde.
+    "How much holiday do I get?" ve "Annual paid leave …": aynı fikir, başka kelimeler: buna paraphrase denir. Skor 0.599, ilgisiz çiftin yalnızca 0.096 üstünde. Model eşleştiriyor ama kıl payı. E sayfasında bir "holiday" sorusunda izin tablosu ancak 5. sıraya çıkıyor; rerank bunu düzeltiyor.
   </Step>
   <Step title="Tuzak: olumsuzluk" stage="p" phase="3">
-    "… can work remotely" ile "… cannot work remotely": 0.853. Zıt anlam, çok yakın vektör. Embedding konuyu yakalar, evet mi hayır mı olduğunu kaçırabilir; bu ayrımı cevabı yazan model metni okuyarak yapmalı.
+    "… can work remotely" ile "… cannot work remotely": 0.853. Zıt anlam, çok yakın vektör. Embedding konuyu yakalar, evet mi hayır mı olduğunu kaçırabilir. Farkı, cevabı yazan model metni okuyarak görmeli.
 
     <Now n="4">`npm run similar -- "How much holiday do I get?" "How many days of annual leave do I get?"`, sonra kendi olumsuzluk çiftinizi deneyin.</Now>
   </Step>
   <Step title="İkiz tablolar" stage="p" phase="4">
-    Yurt içi ("domestic") ve yurt dışı ("international") harcırah soruları: 0.860. Farklı tablo, farklı sayı; vektörler neredeyse aynı. Kaliteyi ölçmek sayfasındaki soru setinde bu türden 3 soru var; birinde doğru tablo ancak 2. sıraya çıktı.
+    Yurt içi ("domestic") ve yurt dışı ("international") harcırah soruları: 0.860, beşinin en yükseği. Farklı tablo, farklı sayı; vektörler neredeyse aynı. Kaliteyi ölçmek sayfasında bu türden 3 soru var; birinde doğru tablo ancak 2. sıraya çıkıyor.
   </Step>
   <Step title="1024 boyutu 2'ye indirmek" stage="map">
-    `npm run map`, <Term id="pca">PCA</Term> ile 60 chunk'ı düzleme yansıtır. Yatay yön yayılımın %12,3'ünü, dikey yön %8,8'ini açıklıyor; geri kalan yaklaşık %79 bu resimde yok. Her nokta bir chunk, işaret dokümanı gösteriyor.
+    `npm run map`, <Term id="pca">PCA</Term> ile 60 chunk'ı düz bir haritaya çizer. PCA, chunk'ların en çok ayrıştığı iki yönü tutar. Yatay yön yayılımın %12,3'ünü, dikey yön %8,8'ini tutuyor. Yaklaşık %79 bu haritada yok.
   </Step>
   <Step title="Ne görüyoruz?" stage="map">
-    Türkçe doküman solda, ayrı duruyor. 6 İngilizce politikanın "Purpose and Scope" bölümleri üstte yan yana: farklı dokümanlardan ama aynı türde metinler. Geri kalan İngilizce bölümler sağda iç içe.
+    Türkçe doküman ayrı duruyor. Dil engel değilse neden? Tek Türkçe doküman o, tek BT dokümanı da o. Harita hangisinin onu ayırdığını söyleyemez. Üstte altı "Purpose and Scope" bölümü yan yana: aynı türde metinler.
   </Step>
   <Step title="Yıldız: günün sorusu" stage="map">
-    Soru haritada travel-expenses ve benefits parçalarının arasına düştü. Cevabın parçası hr-leave §3 daha uzakta. İki boyutta mesafeler bozulur. Adım 6 1024 boyutun hepsinde ölçüyor ve ilk 5'e yalnızca hr-leave koyuyor. Harita sezgi verir, karar vermez.
+    Yıldız, travel-expenses ve benefits chunk'larının yanına düştü. Cevap olan hr-leave §3 uzakta. Düz bir harita gerçek mesafeleri koruyamaz. 1024 boyutun hepsinde ölçen adım 6, §3'ü birinci sıraya koyuyor. Harita görmeye yardım eder, karar vermez.
 
     <Now n="5">`npm run map -- "How often should I change my password?"`, sonra `data/map.html`.</Now>
   </Step>
@@ -342,7 +342,7 @@ Geride kaldıysanız: `npm run catchup -- 4`.
 ## Sık sorulan
 
 <FAQ q="Dot neden cosine ile aynı çıktı?">
-Cosine, dot sonucunu iki vektörün uzunluğuna böler. bge-m3 vektörlerinin uzunluğu 1.000: bölme 1'e bölmek demek, sonuç değişmez. Pek çok vector DB bu yüzden normalize edilmiş vektörlerde dot'u "hızlı cosine" olarak sunar.
+Cosine, dot sonucunu iki vektörün uzunluğuna böler. bge-m3 vektörlerinin uzunluğu 1.000: bölme 1'e bölmek demek, sonuç değişmez. Pek çok vector DB bu yüzden uzunluğu 1 olan vektörlerde dot'u "hızlı cosine" olarak sunar.
 </FAQ>
 
 <FAQ q="Dense ve sparse ne demek?">

@@ -193,7 +193,7 @@ import Term from '../../../components/Term.astro';
     <Now n="1">`podman compose ps` → `healthy` olmalı. Değilse `podman compose up -d`.</Now>
   </Step>
   <Step title="Vektör: aramak için" stage="r" phase="1">
-    Soru vektörüne en yakın kayıtları bulmanın tek yolu. Vektörler adım 4'ten hazır gelir.
+    Arama vektörle yapılır: soru vektörüne en yakın kayıtları bulur. Vektörler adım 4'ten hazır gelir.
   </Step>
   <Step title="Metin: modele vermek için" stage="r" phase="2">
     1024 sayıdan cümle geri çıkmaz. Arama vektörle yapılır, prompt'a metin girer. Bu yüzden kayıt ikisini birlikte taşır: vektör bulur, metin anlatır.
@@ -207,7 +207,7 @@ import Term from '../../../components/Term.astro';
     <Now n="2">`npm run step -- 5 --store json`, sonra `data/store.json` dosyasını açın.</Now>
   </Step>
   <Step title="Vector DB: komşulara bak" stage="a">
-    Chroma bir indeks kurar: <Term id="hnsw">HNSW</Term>, vektörleri komşuluk grafiğine bağlar. Arama bir giriş noktasından başlar, soruya doğru komşudan komşuya atlar ve yalnızca yakın mahalleyi gezer.
+    Chroma <Term id="hnsw">HNSW</Term> adlı bir grafik indeksi kurar ve her vektörü komşularına bağlar. Arama bir noktadan başlar, soruya doğru komşudan komşuya atlar ve grafiğin yalnızca küçük bir kısmını gezer.
 
     <Now n="3">`npm run step -- 5` çalıştırın.</Now>
   </Step>
@@ -217,7 +217,7 @@ import Term from '../../../components/Term.astro';
     <Now n="4">Bruno'da `local` ortamını seçin, `01-chroma` klasöründeki istekleri kutudaki sırayla gönderin; `collections` içinde `hnsw` ayarlarını bulun.</Now>
   </Step>
   <Step title="Bizde sıralama değişti mi?" stage="a">
-    Aynı soru, iki depo: JSON'un ve Chroma'nın ilk 5 id'si aynı, aynı sırada. 60 kayıtta yaklaşıklık görünmüyor.
+    Aynı soru, iki depo: JSON'un ve Chroma'nın ilk 5 id'si aynı, aynı sırada. 60 kayıtta yaklaşıklık görünmüyor. Hız kazancı da henüz görünmüyor; ikisi de milyonlarca kayıtta ortaya çıkar.
 
     <Now n="5">`podman compose down`, sonra `podman compose up -d`; Bruno'da önce `collections`, sonra `count`.</Now>
 
@@ -226,7 +226,7 @@ import Term from '../../../components/Term.astro';
 </Deck>
 
 <Example>
-Adım 5, Chroma'ya yazdıktan sonra günün sorusunu JSON deposuna da soruyor ve iki deponun ilk 5'ini yan yana koyuyor.
+Adım 5, Chroma'ya yazdıktan sonra günün sorusunu JSON deposuna da soruyor ve iki deponun ilk 5'ini yan yana koyuyor. TIME satırları adımın tamamını ölçer, yazma da dahil. Bir arama yarışı değil.
 </Example>
 
 <Log name="05-store-json" title="npm run step -- 5 --store json" />
@@ -280,12 +280,12 @@ Bruno'daki `01-chroma` klasörü, kodumuzun yaptığı HTTP çağrılarının ay
 **4 · Bruno ile içeri bakın** (`local` ortamını seçin, `01-chroma` klasörü, sırayla):
 
 - `heartbeat` → bir sayı dönüyorsa Chroma ayakta.
-- `collections` → `kraken-policies`; `configuration` içinde `hnsw` ve `space: cosine`. Koleksiyonun id'sini de hatırlar; `count` bu id'yi kullanır.
+- `collections` → `kraken-policies`; `configuration` içinde `hnsw` ve `space: cosine`. Koleksiyonun id'sini de kaydeder; `count` bu id'yi kullanır.
 - `count` → 60 (A'daki Türkçe gizlilik kuralını yazdıysanız 59). Catchup ya da sıfırlamadan sonra id değişir; önce `collections`'ı yeniden gönderin.
 - `peek at three records` → `ids`, `documents`, `metadatas`. `include` listesine `"embeddings"` ekleyip tekrar gönderin: 1024 sayı da gelir.
 - `filter on metadata` → `where` içine `{ "access": "hr-only" }` yazın. Maaş bantları geliyor. Bu isteği kim gönderebilmeli? (Güvenlik sayfası.)
 
-**5 · Kalıcılık.** `podman compose down`, sonra `podman compose up -d` ve Bruno'da önce `collections`, sonra `count`: kayıtlar volume'da, sayı değişmemeli.
+**5 · Veri kalıyor mu?** `podman compose down`, sonra `podman compose up -d` ve Bruno'da önce `collections`, sonra `count`: kayıtlar volume'da, sayı değişmemeli.
 
 **6 · Günün sorusu.** `npm run question`: HOW satırında artık `chroma store` yazıyor. Cevap, section chunk'lardaki gibi yine 22 mi? Deftere bir satır daha eklenir.
 
@@ -295,7 +295,7 @@ Geride kaldıysanız: `npm run catchup -- 5`.
 ## Sık sorulan
 
 <FAQ q="Chroma mı, pgvector mı, Qdrant mı?">
-Hepsi aynı üç şeyi saklar: vektör, metin, metadata. Farklar operasyonda: zaten Postgres kullanıyorsanız pgvector yeni bir sistem getirmez; ölçekte, ne kadar iyi filtrelediklerinde, hybrid aramada ve yönetilen servis seçeneklerinde ayrışırlar. Chroma'yı tek container ve Bruno'dan okunabilen HTTP API'si için seçtik.
+Hepsi aynı üç şeyi saklar: vektör, metin, metadata. Farklar, onları nasıl işlettiğinizde: zaten Postgres kullanıyorsanız pgvector yeni bir sistem getirmez; ölçekte, ne kadar iyi filtrelediklerinde, hybrid aramada ve yönetilen servis seçeneklerinde ayrışırlar. Chroma'yı tek container ve Bruno'dan okunabilen HTTP API'si için seçtik.
 </FAQ>
 
 <FAQ q="Chroma embedding'i kendisi yapamaz mı?">
