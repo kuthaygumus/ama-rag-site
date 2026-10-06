@@ -24,7 +24,7 @@ B sayfasında chunker'ı değiştirdik. Günün sorusu kaynak gösteren yanlış
 
 <Deck>
   <DeckFigure slot="figure">
-    <svg viewBox="0 0 1000 610" role="img" aria-label="Bir soru için retriever'ın getirdiği beş bölüm, üç metrik ve iki chunker'ın sonucu" data-draw="eval-question" data-qid="q02">
+    <svg viewBox="0 0 1000 644" role="img" aria-label="Bir soru için retriever'ın getirdiği beş bölüm, üç metrik ve iki chunker'ın sonucu" data-draw="eval-question" data-qid="q02">
       <text x="20" y="34" class="flbl" data-q="code:eval/gold.jsonl">q02 · "How much holiday do I get? I started here 4 years ago."</text>
       <rect x="20" y="52" width="460" height="68" rx="10" class="fbox fbox-gate" />
       <text x="40" y="82" class="flbl" data-q="code:eval/gold.jsonl">doğru bölüm: hr-leave#3</text>
@@ -64,47 +64,112 @@ B sayfasında chunker'ı değiştirdik. Günün sorusu kaynak gösteren yanlış
         <text x="545" y="380" class="fsub" data-gen="rank-note">ilk doğru bölüm 5. sırada;</text>
         <text x="545" y="404" class="fsub" data-q="const">1. sırada olsaydı 1.00 olurdu</text>
       </g>
-      <g data-from="5">
+      <g data-from="8">
         <text x="20" y="462" class="fsub">bölüm = doküman#başlık numarası: chunker değişse de aynı kalır</text>
       </g>
-      <g data-from="6">
-        <text x="20" y="508" class="flbl">section</text>
-        <text x="130" y="508" class="flbl fnum" data-gen="metrics-section">hit@1 0.842 (16/19) · recall@5 1.000 · MRR 0.896</text>
+      <g data-from="9">
+        <text x="20" y="502" class="fsub" data-q="log:eval-section">19 retrieval sorusunun ortalaması, chunker'a göre</text>
+        <text x="20" y="542" class="flbl">section</text>
+        <text x="130" y="542" class="flbl fnum" data-gen="metrics-section">hit@1 0.842 (16/19) · recall@5 1.000 · MRR 0.896</text>
       </g>
-      <g data-from="7">
-        <text x="20" y="550" class="flbl">fixed</text>
-        <text x="130" y="550" class="flbl fbad-t" data-gen="metrics-fixed">hit@1 0.526 (10/19) · recall@5 0.895 · MRR 0.689</text>
+      <g data-from="10">
+        <text x="20" y="584" class="flbl">fixed</text>
+        <text x="130" y="584" class="flbl fbad-t" data-gen="metrics-fixed">hit@1 0.526 (10/19) · recall@5 0.895 · MRR 0.689</text>
       </g>
-      <g data-from="8">
-        <text x="20" y="592" class="fsub" data-gen="weak" data-names="paraphrase=paraphrase|table=tablo|twin-table=ikiz tablo">section'da zayıf: paraphrase 0.00 · tablo 0.50 · ikiz tablo 0.67</text>
+      <g data-from="11">
+        <text x="20" y="626" class="fsub" data-gen="weak" data-names="paraphrase=paraphrase|table=tablo|twin-table=ikiz tablo">section'da zayıf: paraphrase 0.00 · tablo 0.50 · ikiz tablo 0.67</text>
       </g>
     </svg>
   </DeckFigure>
   <Step title="Görev: bir sınav kâğıdı">
-    Sistemi 23 soruyla sınarız; cevaplarını biliyoruz: `eval/gold.jsonl`. Her satırda soru, doğru bölüm, beklenen değer ve tür yazar: bir <Term id="goldset">gold set</Term>. Değerler 2025'ten; bu yüzden gold set de sürümlenir.
+    Sistemi 23 soruyla sınarız.\
+    Cevaplarını biliyoruz: `eval/gold.jsonl`.\
+    Her satırda soru, doğru bölüm, beklenen değer ve tür yazar.\
+    Buna <Term id="goldset">gold set</Term> denir.\
+    Değerler 2025'ten, bu yüzden gold set de sürümlenir.
 
     <Now n="1">`npm run eval -- --answers` komutunu şimdi başlatın. Biz konuşurken çalışır.</Now>
   </Step>
   <Step title="Retriever ne getirdi? hit@1">
-    q02'de doğru bölüm (hr-leave#3) 5. sırada. Soru "holiday" diyor, politika "leave". <Term id="hit1">hit@1</Term>, ilk sonuç doğruysa 1, değilse 0'dır. q02'de 0; günün sorusunda 1.
+    <Term id="hit1">hit@1</Term> tek bir şey sorar: ilk sonuç doğru bölüm mü?\
+    Evetse 1, hayırsa 0.\
+    q02'de doğru bölüm hr-leave#3.\
+    Retriever onu 5. sıraya koyuyor.\
+    Soru "holiday" diyor, politika ise "leave".\
+    Bu yüzden q02'nin puanı 0.\
+    Günün sorusunun puanı 1.
+
+    <Now n="1">Eval çıktınızda q02 satırını bulun. `rr` değerinden sonraki id'ler bölümdür. İlk sırada hangisi var?</Now>
   </Step>
   <Step title="recall@5">
-    <Term id="recallk">recall@k</Term>: doğru bölümlerin kaçı ilk k'da? q02'de 1 bölümün 1'i, yani 1.0; sıra önemsiz.
+    <Term id="recallk">recall@k</Term> şunu sorar: doğru bölümlerin kaçı ilk k'da?\
+    q02'de 1 bölümün 1'i ilk 5'te.\
+    Yani recall@5 = 1.0.\
+    Burada sıra önemli değil.
   </Step>
   <Step title="MRR">
-    Reciprocal rank (RR), 1 bölü ilk doğru bölümün sırasıdır. q02'de 1/5 = 0.20. Bütün sorulardaki RR ortalaması <Term id="mrr">MRR</Term>; 1.0 = doğru bölüm hep birinci.
+    Reciprocal rank (RR), 1 bölü ilk doğru bölümün sırasıdır.\
+    q02'de 1/5 = 0.20.\
+    Bütün soruların RR ortalamasına <Term id="mrr">MRR</Term> denir.\
+    1.0 ise doğru bölüm hep birinci demektir.
+  </Step>
+  <Step title="Bir satırı okuyun: işaret">
+    q ile başlayan her satır bir soru.\
+    Soru türünden sonra bir işaret gelir.\
+    `✓`: doğru bölüm ilk sırada.\
+    `·`: ilk 5'te, ama ilk sırada değil.\
+    `✗`: ilk 5'te yok.\
+    `–`: retrieval puanı yok.\
+    Bunlar erişim ve kapsam dışı sorular.
+  </Step>
+  <Step title="Bir satırı okuyun: rr ve bölümler">
+    Sonra `rr` gelir: 1 bölü sıra.\
+    q02'de `rr 0.20` yazıyor, yani doğru bölüm 5. sırada.\
+    Ardından retriever'ın bulduğu ilk üç bölüm gelir.\
+    Yalnızca üçü yazılır.\
+    Bu yüzden q02'nin doğru bölümünü satırında görmezsiniz.
+  </Step>
+  <Step title="Bir satırı okuyun: cevap">
+    `answer ✓`, cevabın kontrolden geçtiği anlamına gelir.\
+    Çoğu soruda kontrol şu: cevapta beklenen değer var mı?\
+    `–` satırları ve q13 başka kontroller kullanır.\
+    q13'te `answer ✗` var.\
+    Bu kontrollere sayfanın devamında bakacağız.
   </Step>
   <Step title="Neden chunk değil, bölüm?">
-    Chunk id'si chunker'la değişir (`hr-leave@2025#c08`), bölüm numarası değişmez (hr-leave#3); böylece aynı kâğıt iki chunker'ı da puanlar. Ama birkaç bölüme değen bir chunk her birine sayılır. Bu puanlama başlık satırı olmayan fixed chunk'lara cömerttir.
+    Chunk id'si chunker'la değişir: `hr-leave@2025#c08`.\
+    Bölüm numarası değişmez: hr-leave#3.\
+    Böylece aynı kâğıt iki chunker'ı da puanlar.\
+    Ama birkaç bölüme değen bir chunk her birine sayılır.\
+    Bu yüzden başlık satırı olmayan fixed chunk'lar biraz fazladan puan alır.
   </Step>
   <Step title="Sonuç: 19 sorunun ortalaması">
-    23 sorudan 4'ü puanlanmaz: erişim ve kapsam dışı sorular. Kalan 19 soruda section chunker'la hit@1 0.842, 19'un 16'sı. Ölçüm rerank'tan önce; q02 burada ıska sayılır.
+    `OUT` satırı son sorudan sonra gelir.\
+    Bu satır ortalamadır.\
+    23 sorudan 4'ü retrieval'da puanlanmaz: `–` olan satırlar.\
+    Kalan 19 soruda section chunker'la hit@1 0.842, yani 19'un 16'sı.\
+    Ölçüm rerank'tan önce, bu yüzden q02 burada ıska sayılır.
   </Step>
   <Step title="Aynı sınav, fixed chunker">
-    Fixed chunk'larla hit@1 0.526, 19'un 10'u. recall@5 0.895: q01 ve q02'de doğru bölüm ilk 5'te yok. q01 günün sorusu. B sayfasında kaynak gösteren yanlış bir sayı aldı.
+    Şimdi aynı sınav, fixed chunk'larla.\
+    Bu koşu ekranınızda yok.\
+    hit@1 0.526, 19'un 10'u.\
+    recall@5 0.895.\
+    q01 ve q02'de doğru bölüm ilk 5'te yok.\
+    İkisinin de işareti `✗`.\
+    q01 günün sorusu.\
+    B sayfasında kaynak gösteren yanlış bir sayı aldı.
   </Step>
   <Step title="Zayıf yer nerede?">
-    Section chunker'la türe göre hit@1: 8 doğrudan soruda 1.00, 4 EN→TR soruda 1.00; 3 ikiz tablo sorusunda (yurt içi / yurt dışı) 0.67, 2 tablo sorusunda 0.50, başka kelimelerle sorulan 1 soruda (paraphrase) 0.00. Bir sonraki iyileştirme buradan başlar.
+    Çıktıda `OUT` satırının altında türe göre hit@1 var.\
+    Section chunker'la:\
+    8 doğrudan soru: 1.00.\
+    4 EN→TR soru: 1.00.\
+    1 injection sorusu: 1.00.\
+    3 ikiz tablo sorusu (yurt içi / yurt dışı): 0.67.\
+    2 tablo sorusu: 0.50.\
+    Başka kelimelerle sorulan 1 soru (paraphrase): 0.00.\
+    Bir sonraki iyileştirme buradan başlar.
   </Step>
 </Deck>
 
@@ -246,6 +311,11 @@ Dört kural: normal soruda beklenen değer (`expect`) cevabın içinde geçmeli;
 
 <Log name="eval-answers" title="npm run eval -- --answers" from={2} to={36} />
 
+`TIME` satırının üstündeki iki satır:
+
+- `answers correct: 22 / 23`, `answer ✓` alan satırları sayar.
+- `hr-only chunks reached nobody ✓` bir güvenlik kontrolüdür. Hiçbir sorunun ilk 5'ine hr-only bir chunk gelmedi. Erişim filtresi çalıştı.
+
 Üç satırı ayrıca okuyun:
 
 - **q02 (paraphrase):** retrieval'da RR 0.20, ama cevap ✓. Doğru bölüm vektör sırasında 5.; aynı soruyu `npm run ask` ile sorduğumuz koşuda rerank onu 1. sıraya çıkardı. Rerank olmasa 5. sıra ilk 3'ün dışında kalır; model onu görmez ([E](/adim-adim/e-retrieval-rerank/)).
@@ -267,7 +337,7 @@ Cevap açık uçluysa ("izin devrini özetle") alt dize kontrolü işe yaramaz. 
 Bu repoda LLM-as-judge yok; **ölçmedik**.
 
 <YourTurn optional>
-1. `npm run eval -- --answers` bitince `data/eval.json` dosyasını açın. q02'nin cevabı hangi satırı kullandı? q12'nin cevabı neyi anlatıyor?
+1. `npm run eval -- --answers` komutunu başlatın. Çalışırken q02 satırını bulun. İlk sırada hangi bölüm var, `rr` değeri kaç? Bitince `data/eval.json` dosyasını açın. q02'nin cevabı hangi satırı kullandı? q12'nin cevabı neyi anlatıyor?
 2. `src/steps/3-chunk.ts` içindeki `TOGGLE chunker` bloğunda `fixed` satırını açın, `section` satırını yoruma alın. Sonra `npm run ingest -- --reset` ve `npm run eval`. Hangi soru tipleri düştü? Chroma <Term id="ann">yaklaşık arar</Term>; fixed deposunda sayılarınız bu sayfadakinden bir-iki soru farklı çıkabilir.
 3. Toggle'ı geri alın, sonra `npm run ingest -- --reset` ve `npm run ingest -- --edition 2026`: depo yine iki sürümlü olur.
 4. `eval/gold.jsonl` dosyasına bu sayfadaki sorulara benzemeyen bir soru ekleyin ve eval'ı tekrar koşun.
