@@ -16,6 +16,7 @@ import YourTurn from '../../../../components/YourTurn.astro';
 import FAQ from '../../../../components/FAQ.astro';
 import Takeaway from '../../../../components/Takeaway.astro';
 import Term from '../../../../components/Term.astro';
+import { Badge } from '@astrojs/starlight/components';
 
 <WhereAmI at="chunk" />
 
@@ -192,20 +193,18 @@ Both ways to split, and the switch between them, are in `src/steps/3-chunk.ts`. 
 
 <RepoCode file="src/steps/3-chunk.ts" from="export function bySection" />
 
-<RepoCode file="src/steps/3-chunk.ts" from="── YOUR TURN" />
-
 <Deck>
   <DeckFigure slot="figure">
 
 | Way to cut | How it cuts | Good for | Watch out | In our repo |
 |---|---|---|---|---|
-| Fixed size | Every N characters | A quick start, any text | Cuts tables, sentences, even words | Yes: `fixed` |
-| By section | At the document's own headings | Documents with clear headings | A long section makes a big chunk | Yes: `section` |
-| By paragraph | At blank lines, packed up to a size | Text with few headings | A piece can lose its heading | Yes: `paragraph`, you write it |
-| Recursive splitter | Big separators first, smaller ones only when a piece is too long | Mixed documents | You choose the separators and the size | No |
-| By sentence | At the end of each sentence | Short facts, FAQ pages | One sentence alone often says too little | No |
-| Semantic | Where the meaning changes between sentences | Long text with no structure | An embedding for every sentence, hard to predict | No |
-| Parent-child | Search small chunks, give the model the big chunk around them | Exact search and full context | Two sizes to store and link, a longer prompt | No |
+| <Badge text="Fixed size" variant="success" size="medium" /> | Every N characters | A quick start, any text | Cuts tables, sentences, even words | Yes: `fixed` |
+| <Badge text="By section" variant="success" size="medium" /> | At the document's own headings | Documents with clear headings | A long section makes a big chunk | Yes: `section` |
+| <Badge text="By paragraph" variant="success" size="medium" /> | At blank lines, packed up to a size | Text with few headings | A piece can lose its heading | Yes: `paragraph`, you write it |
+| <Badge text="Recursive splitter" variant="note" size="medium" /> | Big separators first, smaller ones only when a piece is too long | Mixed documents | You choose the separators and the size | No |
+| <Badge text="By sentence" variant="note" size="medium" /> | At the end of each sentence | Short facts, FAQ pages | One sentence alone often says too little | No |
+| <Badge text="Semantic" variant="note" size="medium" /> | Where the meaning changes between sentences | Long text with no structure | An embedding for every sentence, hard to predict | No |
+| <Badge text="Parent-child" variant="note" size="medium" /> | Search small chunks, give the model the big chunk around them | Exact search and full context | Two sizes to store and link, a longer prompt | No |
 
   </DeckFigure>
   <Step title="Many ways to cut">
@@ -221,11 +220,15 @@ Both ways to split, and the switch between them, are in `src/steps/3-chunk.ts`. 
     <Term id="parentchild">Parent-child</Term> keeps chunks in two sizes. The search uses the small ones, so it can find one exact row. The model gets the big one around it, so it sees the heading too. We don't build it today.
   </Step>
   <Step title="Which way is best?">
-    It depends on your documents and your questions. So don't guess. Measure with `npm run eval`, the same exam for every way. Now you write the third way, and we measure it.
+    It depends on your documents and your questions. So don't guess. Measure. Every way gets the same exam. First build the store with `npm run ingest`. Then run `npm run eval`. Now you write the third way, and we measure it.
 
     <Now n="5">Write `byParagraph` in `src/steps/3-chunk.ts`. Check it with `npm run check:sibling`.</Now>
   </Step>
 </Deck>
+
+At the bottom of the file, `byParagraph` is still empty. You write it now:
+
+<RepoCode file="src/steps/3-chunk.ts" from="── YOUR TURN" />
 
 <YourTurn>
 **1 · See the cut yourself.** In `src/steps/3-chunk.ts`, find the `TOGGLE chunker` block. Put `//` before the `"section"; // default` line. Remove the `//` from the `"fixed"; // alternative` line. Run `npm run step -- 3`. The log finds the chunk with the `| 7 |` row (`hr-leave@2025#c08`) and shows the whole chunk.
@@ -258,12 +261,15 @@ Are you behind? Run `npm run catchup -- 3`.
 <Deck>
   <DeckFigure slot="figure" stage="s">
     <svg viewBox="0 0 1000 330" role="img" aria-label="The same exam with three chunkers. Paragraph chunks keep recall@5 at 1.000, like section. But hit@1 falls to 0.474 and MRR to 0.715, below section's 0.842 and 0.896">
-      <text x="40" y="44" class="flbl">chunker</text>
-      <text x="420" y="44" text-anchor="middle" class="flbl">chunks</text>
-      <text x="580" y="44" text-anchor="middle" class="flbl" data-q="log:eval-paragraph">hit@1</text>
-      <text x="750" y="44" text-anchor="middle" class="flbl" data-q="log:eval-paragraph">recall@5</text>
-      <text x="910" y="44" text-anchor="middle" class="flbl">MRR</text>
-      <path d="M30 64 H970" class="faxis" />
+      <text x="40" y="38" class="flbl">chunker</text>
+      <text x="420" y="38" text-anchor="middle" class="flbl">chunks</text>
+      <text x="580" y="38" text-anchor="middle" class="flbl" data-q="log:eval-paragraph">hit@1</text>
+      <text x="750" y="38" text-anchor="middle" class="flbl" data-q="log:eval-paragraph">recall@5</text>
+      <text x="910" y="38" text-anchor="middle" class="flbl">MRR</text>
+      <text x="580" y="64" text-anchor="middle" class="fsub">(right one first)</text>
+      <text x="750" y="64" text-anchor="middle" class="fsub" data-q="log:eval-paragraph">(in the top 5)</text>
+      <text x="910" y="64" text-anchor="middle" class="fsub" data-q="const">(1 = always first)</text>
+      <path d="M30 78 H970" class="faxis" />
       <text x="40" y="106" class="fsub">fixed</text>
       <text x="420" y="106" text-anchor="middle" class="fsub" data-q="log:03-chunk-fixed">138</text>
       <text x="580" y="106" text-anchor="middle" class="fsub" data-q="log:eval-fixed">0.526</text>
@@ -304,8 +310,11 @@ Are you behind? Run `npm run catchup -- 3`.
       </g>
     </svg>
   </DeckFigure>
+  <Step title="Three scores from eval" stage="s">
+    Eval scores the same 19 questions, from 0 to 1. Higher is better. <Term id="hit1">hit@1</Term>: how often the right section comes first. <Term id="recallk">recall@5</Term>: how often it is in the top 5. <Term id="mrr">MRR</Term>: how high it ranks on average. 1 means always first. Not times, not similarity.
+  </Step>
   <Step title="Did paragraph chunks help?" stage="s">
-    On our documents, no. recall@5 stays 1.000: the right section is always in the top 5. But hit@1 falls from 0.842 to 0.474. So the right section comes first in less than half of the questions.
+    On our documents, no. recall@5 (right section in the top 5) stays 1.000. But hit@1 (right section first) falls from 0.842 to 0.474. So it comes first in less than half of the questions. MRR (how high it ranks) falls too, from 0.896 to 0.715.
   </Step>
   <Step title="A rule split in two" stage="c">
     Section 7 of hr-leave has two dates. 31 March is for the days you carried over. 30 June is for extra days a manager put off. Section keeps both in one chunk. Paragraph puts them in two chunks.

@@ -16,6 +16,7 @@ import YourTurn from '../../../components/YourTurn.astro';
 import FAQ from '../../../components/FAQ.astro';
 import Takeaway from '../../../components/Takeaway.astro';
 import Term from '../../../components/Term.astro';
+import { Badge } from '@astrojs/starlight/components';
 
 <WhereAmI at="chunk" />
 
@@ -192,20 +193,18 @@ Aynı adım, chunker `section`:
 
 <RepoCode file="src/steps/3-chunk.ts" from="export function bySection" />
 
-<RepoCode file="src/steps/3-chunk.ts" from="── YOUR TURN" />
-
 <Deck>
   <DeckFigure slot="figure">
 
 | Bölme yolu | Nereden keser | Ne için iyi | Dikkat | Repoda |
 |---|---|---|---|---|
-| Sabit boyut | Her N karakterde bir | Hızlı başlangıç, her metin | Tabloyu, cümleyi, kelimeyi bile böler | Var: `fixed` |
-| Bölüm (section) | Dokümanın kendi başlıklarından | Başlıkları belli dokümanlar | Uzun bölüm büyük bir parça olur | Var: `section` |
-| Paragraf | Boş satırlardan; paragraflar bir sınıra kadar toplanır | Başlığı az olan metinler | Parça başlığını kaybedebilir | Var: `paragraph`, siz yazıyorsunuz |
-| Recursive splitter | Önce büyük ayraçlar; parça uzunsa daha küçükleri | Karışık dokümanlar | Ayraçları ve boyutu siz seçersiniz | Yok |
-| Cümle | Her cümlenin sonundan | Kısa bilgiler, SSS sayfaları | Tek cümle çoğu zaman az şey söyler | Yok |
-| Semantic | Cümleler arasında anlamın değiştiği yerden | Yapısı olmayan uzun metinler | Her cümleye bir embedding; sonucu kestirmek zor | Yok |
-| Parent-child | Küçük parçalarla ara, modele onları içeren büyük parçayı ver | Hem isabetli arama hem tam bağlam | İki boyut saklanır ve bağlanır; prompt uzar | Yok |
+| <Badge text="Sabit boyut" variant="success" size="medium" /> | Her N karakterde bir | Hızlı başlangıç, her metin | Tabloyu, cümleyi, kelimeyi bile böler | Var: `fixed` |
+| <Badge text="Bölüm (section)" variant="success" size="medium" /> | Dokümanın kendi başlıklarından | Başlıkları belli dokümanlar | Uzun bölüm büyük bir parça olur | Var: `section` |
+| <Badge text="Paragraf" variant="success" size="medium" /> | Boş satırlardan; paragraflar bir sınıra kadar toplanır | Başlığı az olan metinler | Parça başlığını kaybedebilir | Var: `paragraph`, siz yazıyorsunuz |
+| <Badge text="Recursive splitter" variant="note" size="medium" /> | Önce büyük ayraçlar; parça uzunsa daha küçükleri | Karışık dokümanlar | Ayraçları ve boyutu siz seçersiniz | Yok |
+| <Badge text="Cümle" variant="note" size="medium" /> | Her cümlenin sonundan | Kısa bilgiler, SSS sayfaları | Tek cümle çoğu zaman az şey söyler | Yok |
+| <Badge text="Semantic" variant="note" size="medium" /> | Cümleler arasında anlamın değiştiği yerden | Yapısı olmayan uzun metinler | Her cümleye bir embedding; sonucu kestirmek zor | Yok |
+| <Badge text="Parent-child" variant="note" size="medium" /> | Küçük parçalarla ara, modele onları içeren büyük parçayı ver | Hem isabetli arama hem tam bağlam | İki boyut saklanır ve bağlanır; prompt uzar | Yok |
 
   </DeckFigure>
   <Step title="Kesmenin birçok yolu var">
@@ -221,11 +220,15 @@ Aynı adım, chunker `section`:
     <Term id="parentchild">Parent-child</Term> parçaları iki boyutta saklar. Arama küçükleri kullanır; böylece tek bir satırı bile bulabilir. Model onu içeren büyük parçayı alır ve başlığı da görür. Bugün bunu kurmuyoruz.
   </Step>
   <Step title="Hangi yol en iyisi?">
-    Dokümanlarınıza ve sorularınıza bağlı. O yüzden tahmin etmeyin: her yolu aynı sınavla, `npm run eval` ile ölçün. Şimdi üçüncü yolu siz yazıyorsunuz, sonra ölçüyoruz.
+    Dokümanlarınıza ve sorularınıza bağlı. O yüzden tahmin etmeyin, ölçün. Her yol aynı sınava girer. Önce `npm run ingest` ile depoyu kurun, sonra `npm run eval` çalıştırın. Şimdi üçüncü yolu siz yazıyorsunuz, sonra ölçüyoruz.
 
     <Now n="5">`src/steps/3-chunk.ts` içinde `byParagraph`'ı yazın ve `npm run check:sibling` ile kontrol edin.</Now>
   </Step>
 </Deck>
+
+Dosyanın en altında `byParagraph` hâlâ boş. Şimdi onu siz yazıyorsunuz:
+
+<RepoCode file="src/steps/3-chunk.ts" from="── YOUR TURN" />
 
 <YourTurn>
 **1 · Makası kendiniz görün.** `src/steps/3-chunk.ts` içinde `TOGGLE chunker` bloğunda `"section"; // default` satırının başına `//` koyun, `"fixed"; // alternative` satırındaki `//` işaretini kaldırın. `npm run step -- 3` çalıştırın: log, `| 7 |` satırını taşıyan parçayı (`hr-leave@2025#c08`) bulur ve parçanın tamamını gösterir.
@@ -258,12 +261,15 @@ Geride kaldıysanız: `npm run catchup -- 3`.
 <Deck>
   <DeckFigure slot="figure" stage="s">
     <svg viewBox="0 0 1000 330" role="img" aria-label="Aynı sınav, üç chunker. Paragraf chunk'larında recall@5, section'daki gibi 1.000. Ama hit@1 0.474'e, MRR 0.715'e düşüyor; section'da bunlar 0.842 ve 0.896">
-      <text x="40" y="44" class="flbl">chunker</text>
-      <text x="420" y="44" text-anchor="middle" class="flbl">chunk</text>
-      <text x="580" y="44" text-anchor="middle" class="flbl" data-q="log:eval-paragraph">hit@1</text>
-      <text x="750" y="44" text-anchor="middle" class="flbl" data-q="log:eval-paragraph">recall@5</text>
-      <text x="910" y="44" text-anchor="middle" class="flbl">MRR</text>
-      <path d="M30 64 H970" class="faxis" />
+      <text x="40" y="38" class="flbl">chunker</text>
+      <text x="420" y="38" text-anchor="middle" class="flbl">chunk</text>
+      <text x="580" y="38" text-anchor="middle" class="flbl" data-q="log:eval-paragraph">hit@1</text>
+      <text x="750" y="38" text-anchor="middle" class="flbl" data-q="log:eval-paragraph">recall@5</text>
+      <text x="910" y="38" text-anchor="middle" class="flbl">MRR</text>
+      <text x="580" y="64" text-anchor="middle" class="fsub">(ilk sırada mı)</text>
+      <text x="750" y="64" text-anchor="middle" class="fsub" data-q="log:eval-paragraph">(ilk 5'te mi)</text>
+      <text x="910" y="64" text-anchor="middle" class="fsub" data-q="const">(1 = hep birinci)</text>
+      <path d="M30 78 H970" class="faxis" />
       <text x="40" y="106" class="fsub">fixed</text>
       <text x="420" y="106" text-anchor="middle" class="fsub" data-q="log:03-chunk-fixed">138</text>
       <text x="580" y="106" text-anchor="middle" class="fsub" data-q="log:eval-fixed">0.526</text>
@@ -304,8 +310,11 @@ Geride kaldıysanız: `npm run catchup -- 3`.
       </g>
     </svg>
   </DeckFigure>
+  <Step title="Eval'in üç puanı" stage="s">
+    Eval aynı 19 soruyu 0 ile 1 arasında puanlıyor; yüksek olan iyi. <Term id="hit1">hit@1</Term>: doğru bölüm soruların ne kadarında ilk sırada. <Term id="recallk">recall@5</Term>: ne kadarında ilk 5'te. <Term id="mrr">MRR</Term>: doğru bölüm ortalamada ne kadar üstte; 1 = hep birinci. Bunlar süre ya da benzerlik değil.
+  </Step>
   <Step title="Paragraf chunk'ları işe yaradı mı?" stage="s">
-    Bizim dokümanlarda hayır. recall@5 yine 1.000: doğru bölüm her soruda ilk 5'te. Ama hit@1 0.842'den 0.474'e düşüyor. Yani doğru bölüm soruların yarısından azında ilk sıraya çıkıyor.
+    Bizim dokümanlarda hayır. recall@5 (doğru bölüm ilk 5'te) yine 1.000. Ama hit@1 (doğru bölüm ilk sırada) 0.842'den 0.474'e düşüyor. Yani doğru bölüm soruların yarısından azında ilk sırada. MRR (ortalamada ne kadar üstte) de 0.896'dan 0.715'e düşüyor.
   </Step>
   <Step title="İkiye bölünen kural" stage="c">
     hr-leave'in 7. bölümünde iki tarih var. 31 Mart, devrettiğiniz günler için. 30 Haziran, yöneticinin ertelediği ek günler için. Section ikisini tek chunk'ta tutuyor; paragraf iki ayrı chunk'a bölüyor.

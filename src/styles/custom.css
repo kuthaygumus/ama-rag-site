@@ -268,6 +268,8 @@
 .deck[data-ready] .deck-stage { grid-template-columns: minmax(0, 1fr); }
 .deck-figure { min-width: 0; }
 .deck-figure > table { width: 100%; margin: 0; }
+/* A Badge names a row (page B's ways to cut): keep the name on one line, never split inside a word. */
+.deck-figure > table .sl-badge { white-space: nowrap; overflow-wrap: normal; }
 
 .deck-list {
   margin: 0;
