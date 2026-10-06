@@ -22,7 +22,7 @@ import Term from '../../../../components/Term.astro';
 <DaysQuestion answer="“An employee with 7 years of service gets 22 working days of annual leave [1].” ✓" how="chroma store · chunker section · rerank on · filter edition 2025, access all" />
 
 <Gate>
-The right chunk is first in the prompt. But that is not the right answer yet. The model must answer from the source. If the source doesn't have the answer, the model must say so. It must not follow instructions written inside the source.
+The search is done. The right chunk is first in the prompt. But a right chunk is not yet a right answer. The model must answer from the source. If the source doesn't have the answer, the model must say so. It must not follow instructions written inside the source.
 </Gate>
 
 <Deck>
@@ -90,7 +90,7 @@ The right chunk is first in the prompt. But that is not the right answer yet. Th
       <text x="20" y="186" class="fsub">rule on</text>
       <text x="216" y="186" class="fsub" data-q="log:ask-out-of-corpus" data-q-mode="quote">“This is not in the policies.”</text>
       <text x="892" y="186" text-anchor="middle" class="fsub fgood-t">ABSTAINED ✓</text>
-      <g data-from="5">
+      <g data-from="6">
         <rect x="412" y="74" width="176" height="56" rx="8" class="fbox-gate" />
         <rect x="804" y="74" width="176" height="56" rx="8" class="fbox-bad" />
         <text x="20" y="246" class="fsub">rule off</text>
@@ -117,20 +117,20 @@ The right chunk is first in the prompt. But that is not the right answer yet. Th
       <rect x="804" y="114" width="176" height="56" rx="8" class="fbox-gate" />
       <text x="892" y="140" text-anchor="middle" class="fsub">check in code</text>
       <text x="892" y="162" text-anchor="middle" class="fsub fgate-t">off by default</text>
-      <g data-from="7">
+      <g data-from="8">
         <rect x="412" y="114" width="176" height="56" rx="8" class="fbox-bad" />
         <text x="20" y="222" class="fsub">ban on</text>
         <text x="190" y="222" class="fsub" data-q="log:ask-injection" data-q-mode="quote">“… 400 TRY … [1]. … 330 TRY … [2]. … employee number and password …”</text>
         <text x="980" y="222" text-anchor="end" class="fsub fbad-t">obeyed ✗</text>
       </g>
-      <g data-from="7">
+      <g data-from="8">
         <rect x="608" y="114" width="176" height="56" rx="8" class="fbox-bad" />
         <text x="20" y="272" class="fsub">ban off</text>
         <text x="190" y="272" class="fsub" data-q="log:ask-injection-rule-off" data-q-mode="quote">“… 400 TRY … [1]. … 330 TRY … [2]. … employee number and password …”</text>
         <text x="190" y="296" class="fsub fbad-t">the same answer, word for word</text>
         <text x="980" y="272" text-anchor="end" class="fsub fbad-t">obeyed ✗</text>
       </g>
-      <g data-from="8">
+      <g data-from="9">
         <text x="500" y="330" text-anchor="middle" class="fsub fgate-t">a sentence in the prompt is not a security boundary</text>
       </g>
     </svg>
@@ -143,8 +143,13 @@ The right chunk is first in the prompt. But that is not the right answer yet. Th
   <Step title="Sources: numbered and fenced" stage="p" phase="2">
     Each chunk starts with `<<<SOURCE 1: Annual Leave Policy>>>` and ends with `<<<END SOURCE 1>>>`. The number lets the answer cite the source as [1]. The start and end markers show where untrusted text starts and ends.
   </Step>
-  <Step title="Question and answer: only some rules followed" stage="p" phase="3">
-    The question comes last. The model writes: "An employee with 7 years of service gets 22 working days of annual leave [1]." You can check [1]: `hr-leave@2025#3`. But rule 7 asks for the table row first. The model skips the `| 7 | 22 |` row. A rule in the prompt is a request, not a guarantee.
+  <Step title="Question and answer" stage="p" phase="3">
+    The question comes last. The answer is printed under the prompt. You can check [1]: `hr-leave@2025#3`. Rule 7 asks for two things. First the table row, word for word. Then one sentence.
+
+    <Now n="1">Read the answer at the end of the `npm run step -- 8 --prompt` output. Did the model write the `| 7 | 22 |` row before its sentence?</Now>
+  </Step>
+  <Step title="Rule 7: only half followed" stage="p" phase="3">
+    No. The model goes straight to the sentence. The 22 comes from that row. But the row itself is not in the answer. A rule in the prompt is a request, not a guarantee.
   </Step>
   <Step title="Not in the sources: abstain" stage="ab">
     We ask a question the corpus can't answer. The rule gives one sentence for this: "This is not in the policies." The model writes it. The code (`isAbstain`) knows it and marks the answer `ABSTAINED`. Saying "I don't know" on purpose is called <Term id="abstain">abstain</Term>.
@@ -200,7 +205,7 @@ Both answers also give the old amount, 330 TRY, from [2] (`benefits@2025#2`). Tw
 The prompt did not stop the request. A check in code, after the model, does. It drops every sentence without a source number. It is off by default. [Security](/en/uretim/guvenlik/) turns it on and shows the log.
 
 <YourTurn>
-**1 · Read the prompt.** Run `npm run step -- 6`, `npm run step -- 7`, then `npm run step -- 8 --prompt`. `6-retrieve.ts` and `7-rerank.ts` bring back the question of the day. How many sources are there, and which one is [1]? Then open `data/8-answer.json` and find the fields `system`, `prompt`, `answer`, `sources` and `promptTokens`.
+**1 · Read the prompt and the answer.** Run `npm run step -- 6`, `npm run step -- 7`, then `npm run step -- 8 --prompt`. `6-retrieve.ts` and `7-rerank.ts` bring back the question of the day. How many sources are there, and which one is [1]? At the end of the output, read the answer. Did the model write the table row first, as rule 7 asks? Then open `data/8-answer.json` and find the fields `system`, `prompt`, `answer`, `sources` and `promptTokens`.
 
 **2 · When it doesn't know.** Run `npm run ask -- "Do employees get stock options?"`. The OUT line should say `ABSTAINED`.
 
