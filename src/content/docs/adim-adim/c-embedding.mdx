@@ -341,6 +341,10 @@ Geride kaldıysanız: `npm run catchup -- 4`.
 
 ## Sık sorulan
 
+<FAQ q="similar.ts ne işe yarıyor?">
+Pipeline'ın bir adımı değil, bakmak için bir araç. İki metni embedding modeline gönderir ve vektörlerinin ne kadar yakın olduğunu yazar. Hazır beş çift var; biri tuzak. Çiftler modele hiçbir şey öğretmez: model sabittir ve başka hiçbir adım bu çiftleri okumaz. Tuzak bugün yanılıyorsa yarın da yanılır. Bunu ancak başka bir model ya da rerank gibi sonraki bir kontrol değiştirir.
+</FAQ>
+
 <FAQ q="Dot neden cosine ile aynı çıktı?">
 Cosine, dot sonucunu iki vektörün uzunluğuna böler. bge-m3 vektörlerinin uzunluğu 1.000: bölme 1'e bölmek demek, sonuç değişmez. Pek çok vector DB bu yüzden uzunluğu 1 olan vektörlerde dot'u "hızlı cosine" olarak sunar.
 </FAQ>

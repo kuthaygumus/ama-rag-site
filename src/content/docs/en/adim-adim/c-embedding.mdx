@@ -341,6 +341,10 @@ Are you behind? Run `npm run catchup -- 4`.
 
 ## Common questions
 
+<FAQ q="What does similar.ts do?">
+It is a tool for looking, not a step of the pipeline. It sends two texts to the embedding model. Then it prints how close their vectors are. It has five ready pairs, and one of them is a trap. The pairs teach the model nothing. The model is fixed, and no other step reads these pairs. If the trap fails today, it fails tomorrow too. Only a different model, or a later check like rerank, changes that.
+</FAQ>
+
 <FAQ q="Why does dot give the same result as cosine?">
 Because bge-m3 vectors have length 1.000. Cosine divides the dot result by the lengths of the two vectors. Dividing by 1 changes nothing. So many vector DBs offer dot as a "fast cosine" for vectors of length 1.
 </FAQ>
