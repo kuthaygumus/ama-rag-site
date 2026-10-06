@@ -280,7 +280,7 @@ Bruno'daki `01-chroma` klasörü, kodumuzun yaptığı HTTP çağrılarının ay
 **4 · Bruno ile içeri bakın** (`local` ortamını seçin, `01-chroma` klasörü, sırayla):
 
 - `heartbeat` → bir sayı dönüyorsa Chroma ayakta.
-- `collections` → `kraken-policies`; `configuration` içinde `hnsw` ve `space: cosine`. Koleksiyonun id'sini de kaydeder; `count` bu id'yi kullanır.
+- `collections` → `kraken-policies`; `configuration_json` içinde `hnsw`: `space: cosine`, `max_neighbors` ve `ef_search`. Altındaki uzun `schema` bloğunu geçin. Koleksiyonun id'sini de kaydeder; `count` bu id'yi kullanır.
 - `count` → 60 (A'daki Türkçe gizlilik kuralını yazdıysanız 59). Catchup ya da sıfırlamadan sonra id değişir; önce `collections`'ı yeniden gönderin.
 - `peek at three records` → `ids`, `documents`, `metadatas`. `include` listesine `"embeddings"` ekleyip tekrar gönderin: 1024 sayı da gelir.
 - `filter on metadata` → `where` içine `{ "access": "hr-only" }` yazın. Maaş bantları geliyor. Bu isteği kim gönderebilmeli? (Güvenlik sayfası.)
@@ -307,7 +307,7 @@ Evet. Cosine uzayında mesafe = 1 − cosine benzerliği. Kodumuz `score: 1 - di
 </FAQ>
 
 <FAQ q="HNSW'nin ayarları neyi değiştirir?">
-Her düğümün kaç komşuya bağlandığı ve aramanın kaç aday gezdiği: daha çok = daha isabetli ve daha yavaş. Bugün varsayılanları kullanıyoruz; farklı ayarları ölçmedik.
+Her düğümün kaç komşuya bağlandığı (`max_neighbors`) ve aramanın kaç aday gezdiği (`ef_search`): daha çok = daha isabetli ve daha yavaş. Bugün varsayılanları kullanıyoruz; farklı ayarları ölçmedik.
 </FAQ>
 
 <Takeaway>Embedding anlamı koordinata çevirir; vector DB o koordinatlarda hızlı arar.</Takeaway>

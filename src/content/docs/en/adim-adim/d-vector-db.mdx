@@ -280,7 +280,7 @@ The `01-chroma` folder in Bruno makes the same HTTP calls as our code, by hand. 
 **4 · Look inside with Bruno** (pick the `local` environment, then the `01-chroma` folder, in order):
 
 - `heartbeat` → if you get a number back, Chroma is up.
-- `collections` → `kraken-policies`. Inside `configuration`, find `hnsw` and `space: cosine`. This request also saves the collection's id, and `count` uses that id.
+- `collections` → `kraken-policies`. Inside `configuration_json`, find `hnsw`: `space: cosine`, `max_neighbors` and `ef_search`. Skip the long `schema` block under it. This request also saves the collection's id, and `count` uses that id.
 - `count` → 60. If you wrote the rule for the Turkish confidentiality line on page A, you get 59. After a catchup or a reset, the id changes. Send `collections` again first.
 - `peek at three records` → `ids`, `documents`, `metadatas`. Add `"embeddings"` to the `include` list and send it again. Now the 1024 numbers come back too.
 - `filter on metadata` → put `{ "access": "hr-only" }` in `where`. The salary bands come back. Who should be allowed to send this request? (Security page.)
@@ -307,7 +307,7 @@ Yes. In cosine space, distance = 1 − cosine similarity. Our code turns it back
 </FAQ>
 
 <FAQ q="What do the HNSW settings change?">
-Two things: how many neighbors each node links to, and how many candidates a search visits. More means more accurate and slower. Today we use the defaults. We didn't measure other settings.
+Two things. One is how many neighbors each node links to (`max_neighbors`). The other is how many candidates a search visits (`ef_search`). More means more accurate and slower. Today we use the defaults. We didn't measure other settings.
 </FAQ>
 
 <Takeaway>Embedding turns meaning into coordinates. A vector DB searches those coordinates fast.</Takeaway>
