@@ -149,6 +149,93 @@ Metriklerin kodu kısa. Bir soru için üç sayı:
 
 <RepoCode file="src/lib/metrics.ts" from="export function score" />
 
+## Üçüncü chunker: paragraf
+
+B sayfasında `byParagraph`'ı yazdınız ve onunla tek bir soru sordunuz. Burada o da fixed ve section'la aynı sınava giriyor.
+
+<Deck>
+  <DeckFigure slot="figure" stage="s">
+    <svg viewBox="0 0 1000 330" role="img" aria-label="Aynı sınav, üç chunker. Paragraf chunk'larında recall@5, section'daki gibi 1.000. Ama hit@1 0.474'e, MRR 0.715'e düşüyor; section'da bunlar 0.842 ve 0.896">
+      <text x="40" y="38" class="flbl">chunker</text>
+      <text x="420" y="38" text-anchor="middle" class="flbl">chunk</text>
+      <text x="580" y="38" text-anchor="middle" class="flbl" data-q="log:eval-paragraph">hit@1</text>
+      <text x="750" y="38" text-anchor="middle" class="flbl" data-q="log:eval-paragraph">recall@5</text>
+      <text x="910" y="38" text-anchor="middle" class="flbl">MRR</text>
+      <text x="580" y="64" text-anchor="middle" class="fsub">(ilk sırada mı)</text>
+      <text x="750" y="64" text-anchor="middle" class="fsub" data-q="log:eval-paragraph">(ilk 5'te mi)</text>
+      <text x="910" y="64" text-anchor="middle" class="fsub" data-q="const">(1 = hep birinci)</text>
+      <path d="M30 78 H970" class="faxis" />
+      <text x="40" y="106" class="fsub">fixed</text>
+      <text x="420" y="106" text-anchor="middle" class="fsub" data-q="log:03-chunk-fixed">138</text>
+      <text x="580" y="106" text-anchor="middle" class="fsub" data-q="log:eval-fixed">0.526</text>
+      <text x="750" y="106" text-anchor="middle" class="fsub" data-q="log:eval-fixed">0.895</text>
+      <text x="910" y="106" text-anchor="middle" class="fsub" data-q="log:eval-fixed">0.689</text>
+      <text x="40" y="166" class="fsub fnum">section</text>
+      <text x="420" y="166" text-anchor="middle" class="fsub fnum" data-q="log:03-chunk-section">60</text>
+      <text x="580" y="166" text-anchor="middle" class="fsub fnum" data-q="log:eval-section">0.842</text>
+      <text x="750" y="166" text-anchor="middle" class="fsub fnum" data-q="log:eval-section">1.000</text>
+      <text x="910" y="166" text-anchor="middle" class="fsub fnum" data-q="log:eval-section">0.896</text>
+      <rect x="24" y="192" width="952" height="52" rx="8" class="fbox-on" />
+      <text x="40" y="226" class="fsub">paragraph</text>
+      <text x="420" y="226" text-anchor="middle" class="fsub" data-q="log:03-chunk-paragraph">85</text>
+      <text x="580" y="226" text-anchor="middle" class="fsub fbad-t" data-q="log:eval-paragraph">0.474</text>
+      <text x="750" y="226" text-anchor="middle" class="fsub" data-q="log:eval-paragraph">1.000</text>
+      <text x="910" y="226" text-anchor="middle" class="fsub fbad-t" data-q="log:eval-paragraph">0.715</text>
+      <text x="500" y="300" text-anchor="middle" class="fsub" data-q="log:eval-paragraph">aynı sınav: 19 arama sorusu, ilk 5 chunk (k = 5)</text>
+    </svg>
+  </DeckFigure>
+  <DeckFigure slot="figure" stage="c">
+    <svg viewBox="0 0 1000 400" role="img" aria-label="hr-leave'in 7. bölümünde iki tarih var. Section ikisini 7 numaralı chunk'ta tutuyor ve model 31 Mart diyor. Paragraf onları p12 ve p13'e bölüyor; p13 önce geliyor ve model 30 Haziran diyor">
+      <text x="250" y="34" text-anchor="middle" class="flbl" data-q="log:ask-carryover-section">section · §7 tek chunk'ta</text>
+      <rect x="20" y="56" width="460" height="196" rx="8" class="fbox-on" />
+      <text x="36" y="90" class="fsub fnum" data-q="log:ask-carryover-section">hr-leave@2025#7 · 1. sıra</text>
+      <text x="36" y="150" class="fsub" data-q="corpus:2025/hr-leave.md">devredilen en çok 5 gün → 31 Mart</text>
+      <text x="36" y="200" class="fsub" data-q="corpus:2025/hr-leave.md">yöneticinin ertelediği en çok 10 gün → 30 Haziran</text>
+      <text x="750" y="34" text-anchor="middle" class="flbl" data-q="log:ask-carryover-paragraph corpus:2025/hr-leave.md">paragraph · §7 iki chunk'ta</text>
+      <rect x="520" y="56" width="460" height="88" rx="8" class="fbox-bad" />
+      <text x="536" y="90" class="fsub" data-q="log:ask-carryover-paragraph">hr-leave@2025#p13 · 1. sıra</text>
+      <text x="536" y="126" class="fsub" data-q="corpus:2025/hr-leave.md">yöneticinin ertelediği en çok 10 gün → 30 Haziran</text>
+      <rect x="520" y="164" width="460" height="88" rx="8" class="fbox" />
+      <text x="536" y="198" class="fsub" data-q="log:ask-carryover-paragraph">hr-leave@2025#p12 · 2. sıra</text>
+      <text x="536" y="234" class="fsub" data-q="corpus:2025/hr-leave.md">devredilen en çok 5 gün → 31 Mart</text>
+      <g data-from="3">
+        <text x="250" y="310" text-anchor="middle" class="fsub fgood-t" data-q="log:ask-carryover-section">“… by 31 March of the next year [1].” ✓</text>
+        <text x="750" y="310" text-anchor="middle" class="fsub fbad-t" data-q="log:ask-carryover-paragraph">“These days must be used by 30 June [1].” ✗</text>
+        <text x="500" y="370" text-anchor="middle" class="fsub">soru: geçen yıldan devrettiğim izni ne zamana kadar kullanmalıyım?</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="Paragraf chunk'ları işe yaradı mı?" stage="s">
+    Bizim dokümanlarda hayır. recall@5 (doğru bölüm ilk 5'te) yine 1.000. Ama hit@1 (doğru bölüm ilk sırada) 0.842'den 0.474'e düşüyor. Yani doğru bölüm soruların yarısından azında ilk sırada. MRR (ortalamada ne kadar üstte) de 0.896'dan 0.715'e düşüyor.
+  </Step>
+  <Step title="İkiye bölünen kural" stage="c">
+    hr-leave'in 7. bölümünde iki tarih var. 31 Mart, devrettiğiniz günler için. 30 Haziran, yöneticinin ertelediği ek günler için. Section ikisini tek chunk'ta tutuyor; paragraf iki ayrı chunk'a bölüyor.
+  </Step>
+  <Step title="Yanlış chunk önce geliyor" stage="c">
+    Devir sorusunu sorduk. Paragraf chunk'larında p13 önce geliyor ve onda yalnızca 30 Haziran var. Model "30 June" diyor. Section chunk'larıyla cevap "31 March": doğru tarih.
+  </Step>
+  <Step title="Paragraf ne zaman kazanır?" stage="s">
+    Paragraf chunk'ları, başlığı olmayan dokümanlarda işe yarar; bölümler çok uzunsa da. Bizim dokümanlarda numaralı, belirgin başlıklar var. O yüzden onlara section daha iyi oturuyor. Paragraf chunk'ı ayrıca öndeki bölüm adını kaybediyor.
+  </Step>
+  <Step title="İhtiyaca göre seç, sonra ölç" stage="s">
+    Başka bir korpusta kazanan başka olabilir. Yolu kendi dokümanlarınıza ve sorularınıza göre seçin. Sonra aynı sınavı `npm run eval` ile koşun. Kararı tahmin değil, sayılar verir.
+  </Step>
+</Deck>
+
+İki koşunun sonuç satırları:
+
+<Log name="eval-paragraph" title="npm run eval   (chunker: paragraph) · result" from={27} to={34} />
+
+<Log name="eval-section" title="npm run eval   (chunker: section) · result" from={27} to={34} />
+
+Devir sorusu, paragraf chunk'larıyla:
+
+<Log name="ask-carryover-paragraph" title="npm run ask   (chunker: paragraph)" />
+
+Aynı soru section chunk'larıyla; yalnızca cevap:
+
+<Log name="ask-carryover-section" title="npm run ask   (chunker: section) · answer" from={29} />
+
 ## Cevabı ölçmek: `--answers`
 
 Başta başlattığınız komut bu. Buraya kadar retriever'ı ölçtük; `--answers` her soruyu rerank ve cevap adımlarından da geçirip cevabı kontrol eder:
@@ -184,6 +271,7 @@ Bu repoda LLM-as-judge yok; **ölçmedik**.
 2. `src/steps/3-chunk.ts` içindeki `TOGGLE chunker` bloğunda `fixed` satırını açın, `section` satırını yoruma alın. Sonra `npm run ingest -- --reset` ve `npm run eval`. Hangi soru tipleri düştü? Chroma <Term id="ann">yaklaşık arar</Term>; fixed deposunda sayılarınız bu sayfadakinden bir-iki soru farklı çıkabilir.
 3. Toggle'ı geri alın, sonra `npm run ingest -- --reset` ve `npm run ingest -- --edition 2026`: depo yine iki sürümlü olur.
 4. `eval/gold.jsonl` dosyasına bu sayfadaki sorulara benzemeyen bir soru ekleyin ve eval'ı tekrar koşun.
+5. B sayfasında yazdığınız `byParagraph`'ı ölçün. `TOGGLE chunker` bloğunda `paragraph` satırını açın. `npm run ingest`, sonra `npm run eval` çalıştırın ve sonucu section'la karşılaştırın. Sonra `section`'a dönün ve `npm run ingest`'i yeniden çalıştırın. `--reset` olmadan `npm run ingest` yalnızca 2025'i değiştirir; 2026 yerinde kalır.
 
 `--reset` depoyu boşaltır ve yalnızca 2025'i yazar; 3. madde 2026'yı geri ekler.
 </YourTurn>

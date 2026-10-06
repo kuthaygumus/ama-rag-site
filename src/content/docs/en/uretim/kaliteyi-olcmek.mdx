@@ -149,6 +149,93 @@ The code for the metrics is short. Three numbers for one question:
 
 <RepoCode file="src/lib/metrics.ts" from="export function score" />
 
+## A third chunker: paragraph
+
+On page B you wrote `byParagraph` and asked one question with it. Here it takes the same exam as fixed and section.
+
+<Deck>
+  <DeckFigure slot="figure" stage="s">
+    <svg viewBox="0 0 1000 330" role="img" aria-label="The same exam with three chunkers. Paragraph chunks keep recall@5 at 1.000, like section. But hit@1 falls to 0.474 and MRR to 0.715, below section's 0.842 and 0.896">
+      <text x="40" y="38" class="flbl">chunker</text>
+      <text x="420" y="38" text-anchor="middle" class="flbl">chunks</text>
+      <text x="580" y="38" text-anchor="middle" class="flbl" data-q="log:eval-paragraph">hit@1</text>
+      <text x="750" y="38" text-anchor="middle" class="flbl" data-q="log:eval-paragraph">recall@5</text>
+      <text x="910" y="38" text-anchor="middle" class="flbl">MRR</text>
+      <text x="580" y="64" text-anchor="middle" class="fsub">(right one first)</text>
+      <text x="750" y="64" text-anchor="middle" class="fsub" data-q="log:eval-paragraph">(in the top 5)</text>
+      <text x="910" y="64" text-anchor="middle" class="fsub" data-q="const">(1 = always first)</text>
+      <path d="M30 78 H970" class="faxis" />
+      <text x="40" y="106" class="fsub">fixed</text>
+      <text x="420" y="106" text-anchor="middle" class="fsub" data-q="log:03-chunk-fixed">138</text>
+      <text x="580" y="106" text-anchor="middle" class="fsub" data-q="log:eval-fixed">0.526</text>
+      <text x="750" y="106" text-anchor="middle" class="fsub" data-q="log:eval-fixed">0.895</text>
+      <text x="910" y="106" text-anchor="middle" class="fsub" data-q="log:eval-fixed">0.689</text>
+      <text x="40" y="166" class="fsub fnum">section</text>
+      <text x="420" y="166" text-anchor="middle" class="fsub fnum" data-q="log:03-chunk-section">60</text>
+      <text x="580" y="166" text-anchor="middle" class="fsub fnum" data-q="log:eval-section">0.842</text>
+      <text x="750" y="166" text-anchor="middle" class="fsub fnum" data-q="log:eval-section">1.000</text>
+      <text x="910" y="166" text-anchor="middle" class="fsub fnum" data-q="log:eval-section">0.896</text>
+      <rect x="24" y="192" width="952" height="52" rx="8" class="fbox-on" />
+      <text x="40" y="226" class="fsub">paragraph</text>
+      <text x="420" y="226" text-anchor="middle" class="fsub" data-q="log:03-chunk-paragraph">85</text>
+      <text x="580" y="226" text-anchor="middle" class="fsub fbad-t" data-q="log:eval-paragraph">0.474</text>
+      <text x="750" y="226" text-anchor="middle" class="fsub" data-q="log:eval-paragraph">1.000</text>
+      <text x="910" y="226" text-anchor="middle" class="fsub fbad-t" data-q="log:eval-paragraph">0.715</text>
+      <text x="500" y="300" text-anchor="middle" class="fsub" data-q="log:eval-paragraph">the same exam: 19 retrieval questions, top 5 chunks (k = 5)</text>
+    </svg>
+  </DeckFigure>
+  <DeckFigure slot="figure" stage="c">
+    <svg viewBox="0 0 1000 400" role="img" aria-label="Section 7 of hr-leave has two dates. Section keeps both in chunk 7, and the model answers 31 March. Paragraph puts them in p12 and p13. p13 comes first, and the model answers 30 June">
+      <text x="250" y="34" text-anchor="middle" class="flbl" data-q="log:ask-carryover-section">section · §7 in one chunk</text>
+      <rect x="20" y="56" width="460" height="196" rx="8" class="fbox-on" />
+      <text x="36" y="90" class="fsub fnum" data-q="log:ask-carryover-section">hr-leave@2025#7 · rank 1</text>
+      <text x="36" y="150" class="fsub" data-q="corpus:2025/hr-leave.md">up to 5 carried-over days → by 31 March</text>
+      <text x="36" y="200" class="fsub" data-q="corpus:2025/hr-leave.md">up to 10 days a manager put off → by 30 June</text>
+      <text x="750" y="34" text-anchor="middle" class="flbl" data-q="log:ask-carryover-paragraph corpus:2025/hr-leave.md">paragraph · §7 in two chunks</text>
+      <rect x="520" y="56" width="460" height="88" rx="8" class="fbox-bad" />
+      <text x="536" y="90" class="fsub" data-q="log:ask-carryover-paragraph">hr-leave@2025#p13 · rank 1</text>
+      <text x="536" y="126" class="fsub" data-q="corpus:2025/hr-leave.md">up to 10 days a manager put off → by 30 June</text>
+      <rect x="520" y="164" width="460" height="88" rx="8" class="fbox" />
+      <text x="536" y="198" class="fsub" data-q="log:ask-carryover-paragraph">hr-leave@2025#p12 · rank 2</text>
+      <text x="536" y="234" class="fsub" data-q="corpus:2025/hr-leave.md">up to 5 carried-over days → by 31 March</text>
+      <g data-from="3">
+        <text x="250" y="310" text-anchor="middle" class="fsub fgood-t" data-q="log:ask-carryover-section">“… by 31 March of the next year [1].” ✓</text>
+        <text x="750" y="310" text-anchor="middle" class="fsub fbad-t" data-q="log:ask-carryover-paragraph">“These days must be used by 30 June [1].” ✗</text>
+        <text x="500" y="370" text-anchor="middle" class="fsub">the question: by what date must I use the days I carried over?</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="Did paragraph chunks help?" stage="s">
+    On our documents, no. recall@5 (right section in the top 5) stays 1.000. But hit@1 (right section first) falls from 0.842 to 0.474. So it comes first in less than half of the questions. MRR (how high it ranks) falls too, from 0.896 to 0.715.
+  </Step>
+  <Step title="A rule split in two" stage="c">
+    Section 7 of hr-leave has two dates. 31 March is for the days you carried over. 30 June is for extra days a manager put off. Section keeps both in one chunk. Paragraph puts them in two chunks.
+  </Step>
+  <Step title="The wrong chunk comes first" stage="c">
+    We asked the carry-over question. With paragraph chunks, p13 comes first, and it holds only 30 June. The model answers "30 June". With section chunks, it answers "31 March", the right date.
+  </Step>
+  <Step title="When does paragraph win?" stage="s">
+    Paragraph chunks help when documents have no headings. They also help when sections are too long. Our documents have clear, numbered headings. So section fits them best. A paragraph chunk also loses the section name in front.
+  </Step>
+  <Step title="Choose by need, then measure" stage="s">
+    Another corpus can give another winner. So choose a way for your documents and your questions. Then run the same exam with `npm run eval`. The numbers decide, not a guess.
+  </Step>
+</Deck>
+
+The result lines of the two runs:
+
+<Log name="eval-paragraph" title="npm run eval   (chunker: paragraph) · result" from={27} to={34} />
+
+<Log name="eval-section" title="npm run eval   (chunker: section) · result" from={27} to={34} />
+
+The carry-over question, with paragraph chunks:
+
+<Log name="ask-carryover-paragraph" title="npm run ask   (chunker: paragraph)" />
+
+The same question, with section chunks, only the answer:
+
+<Log name="ask-carryover-section" title="npm run ask   (chunker: section) · answer" from={29} />
+
 ## Measuring the answer: `--answers`
 
 This is the command you started at the top. So far we measured the retriever. `--answers` also sends each question through the rerank and answer steps, then checks the answer:
@@ -184,6 +271,7 @@ This repo has no LLM-as-judge. **We didn't measure it.**
 2. In `src/steps/3-chunk.ts`, find the `TOGGLE chunker` block. Uncomment the `fixed` line and comment out the `section` line. Then run `npm run ingest -- --reset` and `npm run eval`. Which question types dropped? Chroma's search is <Term id="ann">approximate</Term>. With the fixed store, your numbers can differ from this page by one or two questions.
 3. Undo the toggle. Then run `npm run ingest -- --reset` and `npm run ingest -- --edition 2026`. The store has two editions again.
 4. Add a question to `eval/gold.jsonl` that is not like the questions on this page. Run the eval again.
+5. Measure your own `byParagraph` from page B. In the `TOGGLE chunker` block, use the `paragraph` line. Run `npm run ingest`, then `npm run eval`. Compare the result with section. Then switch back to `section` and run `npm run ingest` again. Without `--reset`, `npm run ingest` replaces only 2025, so 2026 stays.
 
 `--reset` empties the store and writes only 2025. Item 3 adds 2026 back.
 </YourTurn>
