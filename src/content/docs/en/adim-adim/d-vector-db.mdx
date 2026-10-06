@@ -222,6 +222,8 @@ So far, the "database" was a JSON file. For every question, we compared the ques
     <Now n="5">Run `podman compose down`, then `podman compose up -d`. In Bruno, send `collections` first, then `count`.</Now>
 
     <Now n="6">Run `npm run question`. The HOW line now says `chroma store`. Is the answer still 22?</Now>
+
+    *(We stopped the database and started it again. The records are still there. The data lives on disk, in a volume. So a restart doesn't mean embedding everything again.)*
   </Step>
 </Deck>
 
