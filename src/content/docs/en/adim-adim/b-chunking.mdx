@@ -222,7 +222,7 @@ Both ways to split, and the switch between them, are in `src/steps/3-chunk.ts`. 
   <Step title="Which way is best?">
     It depends on your documents and your questions. So don't guess. Every way gets the same exam: `npm run eval`. We run it on the Measuring quality page. Now you write the third way and try it on the question of the day.
 
-    <Now n="5">Write `byParagraph` in `src/steps/3-chunk.ts`. Check it with `npm run check:sibling -- -t byParagraph`.</Now>
+    <Now n="5">Write `byParagraph` in `src/steps/3-chunk.ts`. Switch the chunker to `paragraph` and run `npm run step -- 3`. The `OUT` line should show 85 chunks.</Now>
   </Step>
 </Deck>
 
@@ -246,7 +246,7 @@ At the bottom of the file, `byParagraph` is still empty. You write it now:
 - Give each chunk the sections it touches. Call `sectionsIn()` on the text you cut, with the start and the end of the piece. `fixedSize` does the same.
 - Give each chunk an id like `hr-leave@2025#p03`. `base()` fills the other fields.
 
-Check: `npm run check:sibling -- -t byParagraph`. The filter runs only the `step 3 · byParagraph (your turn)` tests. They must be green. Then try it on the question of the day:
+Now check it and try it on the question of the day:
 
 - In the `TOGGLE chunker` block, put `//` before the `"section"; // default` line. Remove the `//` from the `"paragraph"; // alternative` line.
 - `npm run step -- 3` → look at the `OUT` line: 85 chunks. The chunk with the `| 7 |` row is `hr-leave@2025#p05`.

@@ -216,7 +216,7 @@ Model bu dosyaları hiç görmedi; görse de ham hâlleri kirli. Bu metni olduğ
   <Step title="Adım 2 kodda: 1-docs.json → 2-clean.json" stage="c" phase="2">
     Adım 2 adım 1'i çağırmaz; onun yazdığı `data/1-docs.json` dosyasını okur. Temizlenen metin `text` alanına girer, metadata olduğu gibi kopyalanır, sonuç `data/2-clean.json` dosyasına yazılır.
 
-    <Now n="3">Aşağıdaki "Kaçan gürültü nereye gider?" bölümünü okuyup `turkishConfidential` kuralını yazın. Kontrol: `npm run check:sibling`. Yalnızca `turkishConfidential` testinin yeşil olması yeter.</Now>
+    <Now n="3">Aşağıdaki "Kaçan gürültü nereye gider?" bölümünü okuyup `turkishConfidential` kuralını yazın. Kontrol: `npm run step -- 2`. `it-security` satırı −8 yerine −12 gürültü satırı göstermeli.</Now>
   </Step>
 </Deck>
 
@@ -274,7 +274,7 @@ Türkçe doküman (`it-security`) her sayfada `GİZLİ – Yalnızca şirket iç
 **3 · Benzerini yazın.** Aynı dosyada `turkishConfidential` boş. İngilizce satırın kuralı `/^CONFIDENTIAL – .+$/` şeklinde. Türkçe gizlilik satırı için aynı türden bir kural yazın. İpucu: tire uzun tire (–), `İ` harfi noktalı; satırı dosyadan kopyalayın, `GIZLI` yazmayın. Sonra:
 
 - `npm run step -- 2` → `it-security` satırı −8 yerine −12 gürültü satırı göstermeli.
-- `npm run check:sibling` → `step 2 · turkishConfidential` testi yeşil olmalı. `dot` ve `byParagraph` testleri şimdilik kırmızı kalır; `byParagraph`'ı B sayfasında, `dot`'u C sayfasında yazacaksınız.
+- `data/2-clean.json` içinde `GİZLİ` arayın: satır artık yok.
 - İsterseniz `npm run step -- 3` ve `data/3-chunks.json`: `it-security@2025#0` artık yok.
 
 Kural yazılınca adım 2, 74 yerine 78 gürültü satırı atar ve 1078 satır 504 satıra iner. Sonraki sayfaların log'ları kural yazılmadan alındı: log 60 chunk (iki sürümle 120 kayıt) gösterir, sizde 59 chunk (118 kayıt) olur; bu fark beklenen.
@@ -289,7 +289,7 @@ Filtre metinleri karşılaştırır: `"2025"` metni ile `2025` sayısı eşleşm
 </FAQ>
 
 <FAQ q="Bir temizlik kuralı yanlışlıkla içerik silerse?">
-Bu yüzden kurallar satırın başına ve sonuna bağlı (`^` … `$`): yalnızca bütün satır kalıba uyarsa silinir. `check:sibling` testi bunu da kontrol ediyor: `turkishConfidential`, "Gizli veriler şifrelenmelidir." cümlesini silmemeli.
+Bu yüzden kurallar satırın başına ve sonuna bağlı (`^` … `$`): yalnızca bütün satır kalıba uyarsa silinir. `turkishConfidential` kuralınızda da bu bağları koruyun: kural, "Gizli veriler şifrelenmelidir." cümlesini silmemeli.
 </FAQ>
 
 <Takeaway>Kirli metinle iyi arama olmaz.</Takeaway>

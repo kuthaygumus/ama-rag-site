@@ -222,7 +222,7 @@ Aynı adım, chunker `section`:
   <Step title="Hangi yol en iyisi?">
     Dokümanlarınıza ve sorularınıza bağlı. O yüzden tahmin etmeyin. Her yol aynı sınava girer: `npm run eval`. Onu Kaliteyi ölçmek sayfasında koşacağız. Şimdi üçüncü yolu siz yazıyorsunuz ve günün sorusunda deniyorsunuz.
 
-    <Now n="5">`src/steps/3-chunk.ts` içinde `byParagraph`'ı yazın ve `npm run check:sibling -- -t byParagraph` ile kontrol edin.</Now>
+    <Now n="5">`src/steps/3-chunk.ts` içinde `byParagraph`'ı yazın. Chunker'ı `paragraph` yapıp `npm run step -- 3` çalıştırın: `OUT` satırı 85 chunk göstermeli.</Now>
   </Step>
 </Deck>
 
@@ -246,7 +246,7 @@ Dosyanın en altında `byParagraph` hâlâ boş. Şimdi onu siz yazıyorsunuz:
 - Her chunk'a dokunduğu bölümleri yazın: `sectionsIn()`'e kestiğiniz metni, parçanın başladığı ve bittiği yeri verin. `fixedSize` de böyle yapıyor.
 - Her chunk'a `hr-leave@2025#p03` gibi bir id verin. Öteki alanları `base()` doldurur.
 
-Kontrol: `npm run check:sibling -- -t byParagraph`. Bu filtre yalnızca `step 3 · byParagraph (your turn)` testlerini çalıştırır; hepsi yeşil olmalı. Sonra günün sorusunda deneyin:
+Şimdi kontrol edin ve günün sorusunda deneyin:
 
 - `TOGGLE chunker` bloğunda `"section"; // default` satırının başına `//` koyun, `"paragraph"; // alternative` satırındaki `//` işaretini kaldırın.
 - `npm run step -- 3` → `OUT` satırına bakın: 85 chunk. `| 7 |` satırı `hr-leave@2025#p05` chunk'ında.

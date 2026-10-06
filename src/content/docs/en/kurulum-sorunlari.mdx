@@ -80,9 +80,9 @@ Two functions are empty on purpose. Until you write them, they print these messa
 | Message | When |
 |---|---|
 | `dot() is not written yet — see the YOUR TURN note above it in src/lib/similarity.ts` | `npm run similar -- --metric dot`, before you write `dot()` |
-| `byParagraph() is not written yet — see the YOUR TURN note above it in src/steps/3-chunk.ts` | `npm run check:sibling`, or `npm run step -- 3` with the `paragraph` chunker, before you write `byParagraph()` |
+| `byParagraph() is not written yet — see the YOUR TURN note above it in src/steps/3-chunk.ts` | `npm run step -- 3` with the `paragraph` chunker, before you write `byParagraph()` |
 
-`npm run check:sibling` stays red until you write them. There is a third item: the `turkishConfidential` rule in `src/steps/2-clean.ts`. It prints no message. But `npm run check:sibling` needs it too. The finished versions are in the `solutions/` folder.
+The fix: write the function. The YOUR TURN note above it tells you how. There is a third item: the `turkishConfidential` rule in `src/steps/2-clean.ts`. It prints no message. Until you write it, `npm run step -- 2` shows −8 noise lines for `it-security`, not −12. The finished versions are in the `solutions/` folder.
 
 ## Podman
 

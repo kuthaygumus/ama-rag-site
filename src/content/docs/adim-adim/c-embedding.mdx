@@ -122,7 +122,7 @@ import Term from '../../../components/Term.astro';
   <Step title="Resimde dot: gölge" stage="m" phase="3">
     b'nin ucundan a'ya dik bir çizgi çekin. b'nin a üzerindeki gölgesi 2. a'nın uzunluğu çarpı gölge: 3 × 2 = 6, yine aynı sayı. Bizim vektörlerin uzunluğu 1.000 (adım 4'ün log'u). O zaman dot ile cosine arasında ne fark kalır?
 
-    <Now n="2">`src/lib/similarity.ts` içindeki boş `dot()` fonksiyonunu yazın. Kontrol: `npm run check:sibling`. Yalnızca dot testlerinin yeşil olması yeter.</Now>
+    <Now n="2">`src/lib/similarity.ts` içindeki boş `dot()` fonksiyonunu yazın. Kontrol: `npm run similar -- --metric dot`. Her çift için hata değil, bir sayı görünmeli.</Now>
   </Step>
 </Deck>
 
@@ -334,9 +334,9 @@ Boş `dot()`, `similarity.ts` dosyasının sonunda:
 <YourTurn>
 **1 · Vektöre bakın.** `npm run step -- 4`, sonra `data/4-vectors.json`: her chunk'ın `vector` alanında 1024 sayı var, `embedModel` alanında modelin adı. Bruno'da `00-ollama` → `embed one sentence` isteğini gönderin: aynı işi elle yapar. `input` içindeki bir kelimeyi değiştirip tekrar gönderin.
 
-**2 · Benzerini yazın.** `src/lib/similarity.ts` içinde `dot()` boş. `cosine()` içindeki döngüde `dot` zaten hesaplanıyor; uzunluklara bölmeden aynısını yazın. Kontrol: `npm run check:sibling` → `similarity · dot` testleri yeşil olmalı.
+**2 · Benzerini yazın.** `src/lib/similarity.ts` içinde `dot()` boş. `cosine()` içindeki döngüde `dot` zaten hesaplanıyor; uzunluklara bölmeden aynısını yazın. Kontrol: `npm run similar -- --metric dot` → her çift için `dot() is not written yet` hatası değil, bir sayı görünmeli.
 
-**3 · Ölçüleri karşılaştırın.** `npm run similar -- --metric dot` ve `npm run similar -- --metric l2`. Dot çıktısını cosine çıktısıyla (yukarıdaki log) yan yana koyun: neden böyle? İpucu: adım 4'ün log'undaki uzunluk.
+**3 · Ölçüleri karşılaştırın.** Dot çıktınızı cosine çıktısıyla (yukarıdaki log) yan yana koyun. Sonra `npm run similar -- --metric l2` çalıştırın. Neden böyle? İpucu: adım 4'ün log'undaki uzunluk.
 
 **4 · Kendi çiftinizi deneyin.** `npm run similar -- "How much holiday do I get?" "How many days of annual leave do I get?"`. Sonra olumsuzluk tuzağını kendi cümlelerinizle kurun.
 

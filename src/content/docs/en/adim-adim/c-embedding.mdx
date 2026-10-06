@@ -122,7 +122,7 @@ Here are two sentences. "How much holiday do I get?" "Annual paid leave depends 
   <Step title="Dot in the picture: a shadow" stage="m" phase="3">
     Draw a line from the tip of b to a, at a right angle. b's shadow on a is 2. Length of a times the shadow: 3 × 2 = 6 again. Our vectors have length 1.000 (step 4 log). So what difference is left between dot and cosine?
 
-    <Now n="2">Write the empty `dot()` function in `src/lib/similarity.ts`. Check: `npm run check:sibling`. Only the dot tests need to be green.</Now>
+    <Now n="2">Write the empty `dot()` function in `src/lib/similarity.ts`. Check: `npm run similar -- --metric dot`. Each pair should show a number, not an error.</Now>
   </Step>
 </Deck>
 
@@ -334,9 +334,9 @@ The empty `dot()` is at the end of `similarity.ts`:
 <YourTurn>
 **1 · Look at a vector.** Run `npm run step -- 4`, then open `data/4-vectors.json`. Each chunk's `vector` field holds 1024 numbers. The `embedModel` field holds the model's name. In Bruno, send the `00-ollama` → `embed one sentence` request. It does the same job by hand. Change one word in `input` and send it again.
 
-**2 · Write the sibling.** In `src/lib/similarity.ts`, `dot()` is empty. The loop inside `cosine()` already computes `dot`. Write the same thing, but don't divide by the lengths. Check: `npm run check:sibling`. The `similarity · dot` tests should be green.
+**2 · Write the sibling.** In `src/lib/similarity.ts`, `dot()` is empty. The loop inside `cosine()` already computes `dot`. Write the same thing, but don't divide by the lengths. Check: `npm run similar -- --metric dot`. Each pair should show a number, not the `dot() is not written yet` error.
 
-**3 · Compare the measures.** Run `npm run similar -- --metric dot` and `npm run similar -- --metric l2`. Put the dot output next to the cosine output (the log above). Why does it look like this? Hint: the length in the step 4 log.
+**3 · Compare the measures.** Put your dot output next to the cosine output (the log above). Then run `npm run similar -- --metric l2`. Why does it look like this? Hint: the length in the step 4 log.
 
 **4 · Try your own pair.** Run `npm run similar -- "How much holiday do I get?" "How many days of annual leave do I get?"`. Then build the negation trap with your own sentences.
 
