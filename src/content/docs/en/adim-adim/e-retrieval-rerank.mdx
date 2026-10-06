@@ -148,7 +148,7 @@ The store is full, so now we ask questions. For the question of the day, the rig
     5 chunks, all from the Annual Leave Policy. §3, the leave table with the answer, comes first.
   </Step>
   <Step title="The scores are almost equal" stage="list">
-    First: 0.614. Fifth: 0.598. The gap is only 0.016. Every hr-leave chunk starts with `[Annual Leave Policy › …]`. The question also says "annual leave". That may pull all five close. We didn't test this. §3 is first, but only by a little.
+    First: 0.614. Fifth: 0.598. The gap is only 0.016. Every hr-leave chunk starts with `[Annual Leave Policy › …]`. The question also says "annual leave". The model probably makes this link and puts all five close to the question. §3 is first, but only by a little.
   </Step>
   <Step title="The cutoff: k" stage="list">
     Taking the k closest chunks is called <Term id="topk">top-k</Term>. Here k = 5, so benefits §6 in 6th place (0.585) stays out. A small k can miss the right chunk. A large k sends more noise to the next steps.

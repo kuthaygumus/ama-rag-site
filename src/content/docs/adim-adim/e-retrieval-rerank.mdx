@@ -148,7 +148,7 @@ Depo dolu, şimdi soru soruyoruz. Günün sorusunda doğru chunk ilk sırada. Am
     5 chunk, hepsi izin politikasından (`hr-leave`). Cevabı taşıyan §3, yani izin tablosu, ilk sırada.
   </Step>
   <Step title="Skorlar neredeyse eşit" stage="list">
-    Birinci 0.614, beşinci 0.598: fark yalnızca 0.016. Her hr-leave chunk'ı `[Annual Leave Policy › …]` ile başlıyor; soruda da "annual leave" geçiyor. Bu, beşini de soruya yakın tutuyor olabilir; bunu denemedik. §3 birinci, ama çok az farkla.
+    Birinci 0.614, beşinci 0.598: fark yalnızca 0.016. Her hr-leave chunk'ı `[Annual Leave Policy › …]` ile başlıyor; soruda da "annual leave" geçiyor. Model büyük ihtimalle bu ortak ifadeden bağ kurup beşini de soruya yakın buluyor. §3 birinci, ama çok az farkla.
   </Step>
   <Step title="Kesme çizgisi: k" stage="list">
     En yakın k tanesini almaya <Term id="topk">top-k</Term> denir. k = 5: 6. sıradaki benefits §6 (0.585) dışarıda kaldı. k küçükse cevap kaçabilir, büyükse sonraki adımlara gürültü taşınır.
