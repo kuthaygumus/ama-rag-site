@@ -117,7 +117,10 @@ Here are two sentences. "How much holiday do I get?" "Annual paid leave depends 
     The straight-line distance between two points. Careful: the scale runs the other way. A small number means close.
   </Step>
   <Step title="Dot: multiply and add" stage="m" phase="3">
-    Dot multiplies the matching numbers and adds them up. Unlike cosine, it doesn't divide by the lengths. The step 4 log shows a vector length of 1.000. So for our vectors, what difference is left between dot and cosine?
+    Dot multiplies the matching numbers and adds them up. Take a = (3, 0) and b = (2, 2): 3×2 + 0×2 = 6. That is all the code does. Unlike cosine, it doesn't divide by the lengths.
+  </Step>
+  <Step title="Dot in the picture: a shadow" stage="m" phase="3">
+    Draw a line from the tip of b to a, at a right angle. b's shadow on a is 2. Length of a times the shadow: 3 × 2 = 6 again. Our vectors have length 1.000 (step 4 log). So what difference is left between dot and cosine?
 
     <Now n="2">Write the empty `dot()` function in `src/lib/similarity.ts`. Check: `npm run check:sibling`. Only the dot tests need to be green.</Now>
   </Step>
@@ -302,6 +305,9 @@ Cosine and L2 take a few lines each in `src/lib/similarity.ts`:
   <Step title="Twin tables" stage="p" phase="4">
     Domestic and international per diem questions: 0.860, the highest of the five. Different tables and numbers, almost the same vectors. The Measuring quality page has 3 such questions. In one, the right table ranks only 2nd.
   </Step>
+  <Step title="Why draw a map?" stage="map">
+    We can't see 1024 dimensions. A flat map shows what the model did with our chunks. It helps us spot problems. Some text repeats across documents. A document sits alone. A question lands far from its answer. The map is for our eyes. Search never uses it.
+  </Step>
   <Step title="From 1024 dimensions down to 2" stage="map">
     `npm run map` uses <Term id="pca">PCA</Term> to draw the 60 chunks on a flat map. PCA keeps the two directions where the chunks differ most. Across: 12.3% of the spread. Up and down: 8.8%. About 79% is not on this map.
   </Step>
@@ -359,6 +365,10 @@ Check its language support (we need English and Turkish). Check the vector size,
 
 <FAQ q="What happens if I change the model?">
 You re-embed every chunk. The old vectors stay in a different space. The code stops you from mixing them. Step 4 writes the model name into `data/4-vectors.json`. If step 6 sees a different model for the question, it stops. It asks you to run steps 4 and 5 again.
+</FAQ>
+
+<FAQ q="Are cosine, L2 and dot different methods?">
+Yes. They are three ways to measure closeness. Cosine looks at the angle. L2 measures the distance between the tips, so smaller means closer. Dot multiplies the numbers and adds them up. Our vectors all have length 1, so all three give the same order. With vectors of different lengths, they can disagree.
 </FAQ>
 
 <Takeaway>The model decides what is close, not the database.</Takeaway>
