@@ -184,13 +184,48 @@ Aynı adım, chunker `section`:
 
 <Log name="question-2-section" title="npm run question" />
 
-İki bölme yolu ve aralarındaki seçim, `src/steps/3-chunk.ts` içinde:
+İki bölme yolu ve aralarındaki seçim, `src/steps/3-chunk.ts` içinde. Seçimde üçüncü bir satır da var: `paragraph`. Onu aşağıda siz yazıyorsunuz.
 
-<RepoCode file="src/steps/3-chunk.ts" from="// TOGGLE chunker" to="alternative" />
+<RepoCode file="src/steps/3-chunk.ts" from="// TOGGLE chunker" to="paragraph" />
 
 <RepoCode file="src/steps/3-chunk.ts" from="export function fixedSize" />
 
 <RepoCode file="src/steps/3-chunk.ts" from="export function bySection" />
+
+<RepoCode file="src/steps/3-chunk.ts" from="── YOUR TURN" />
+
+<Deck>
+  <DeckFigure slot="figure">
+
+| Bölme yolu | Nereden keser | Ne için iyi | Dikkat | Repoda |
+|---|---|---|---|---|
+| Sabit boyut | Her N karakterde bir | Hızlı başlangıç, her metin | Tabloyu, cümleyi, kelimeyi bile böler | Var: `fixed` |
+| Bölüm (section) | Dokümanın kendi başlıklarından | Başlıkları belli dokümanlar | Uzun bölüm büyük bir parça olur | Var: `section` |
+| Paragraf | Boş satırlardan; paragraflar bir sınıra kadar toplanır | Başlığı az olan metinler | Parça başlığını kaybedebilir | Var: `paragraph`, siz yazıyorsunuz |
+| Recursive splitter | Önce büyük ayraçlar; parça uzunsa daha küçükleri | Karışık dokümanlar | Ayraçları ve boyutu siz seçersiniz | Yok |
+| Cümle | Her cümlenin sonundan | Kısa bilgiler, SSS sayfaları | Tek cümle çoğu zaman az şey söyler | Yok |
+| Semantic | Cümleler arasında anlamın değiştiği yerden | Yapısı olmayan uzun metinler | Her cümleye bir embedding; sonucu kestirmek zor | Yok |
+| Parent-child | Küçük parçalarla ara, modele onları içeren büyük parçayı ver | Hem isabetli arama hem tam bağlam | İki boyut saklanır ve bağlanır; prompt uzar | Yok |
+
+  </DeckFigure>
+  <Step title="Kesmenin birçok yolu var">
+    Fixed ve section, kesmenin iki yolu. Tablo yaygın olanları gösteriyor; üçü bizim repoda var. Üçüncüsü, paragraf, şimdilik boş. Onu bugün siz yazıyorsunuz.
+  </Step>
+  <Step title="Overlap bir yol değil, bir ayar">
+    Overlap bir kesme yolu değil; tablodaki her yola eklenebilen bir ayar. Komşu parçalar birkaç cümleyi paylaşır. Böylece makasın denk geldiği fikrin bütün kalma şansı artar. Bedeli: daha çok parça, tekrar eden metin.
+  </Step>
+  <Step title="Recursive: önce büyük kesimler">
+    Recursive splitter önce büyük ayraçları dener: bölümler, sonra paragraflar, sonra cümleler. Parça hâlâ uzunsa bir küçüğüne iner. Bizim `bySection` bunun küçük bir örneği: önce başlıklardan keser, 1500 karakteri aşan bölümü paragraflarından yeniden böler.
+  </Step>
+  <Step title="Parent-child: küçükle bul, büyükle oku">
+    <Term id="parentchild">Parent-child</Term> parçaları iki boyutta saklar. Arama küçükleri kullanır; böylece tek bir satırı bile bulabilir. Model onu içeren büyük parçayı alır ve başlığı da görür. Bugün bunu kurmuyoruz.
+  </Step>
+  <Step title="Hangi yol en iyisi?">
+    Dokümanlarınıza ve sorularınıza bağlı. O yüzden tahmin etmeyin: her yolu aynı sınavla, `npm run eval` ile ölçün. Şimdi üçüncü yolu siz yazıyorsunuz, sonra ölçüyoruz.
+
+    <Now n="5">`src/steps/3-chunk.ts` içinde `byParagraph`'ı yazın ve `npm run check:sibling` ile kontrol edin.</Now>
+  </Step>
+</Deck>
 
 <YourTurn>
 **1 · Makası kendiniz görün.** `src/steps/3-chunk.ts` içinde `TOGGLE chunker` bloğunda `"section"; // default` satırının başına `//` koyun, `"fixed"; // alternative` satırındaki `//` işaretini kaldırın. `npm run step -- 3` çalıştırın: log, `| 7 |` satırını taşıyan parçayı (`hr-leave@2025#c08`) bulur ve parçanın tamamını gösterir.
@@ -201,10 +236,108 @@ Aynı adım, chunker `section`:
 
 **4 · Geri alın.** Toggle'ı `section`'a döndürün, `npm run step -- 3` ve yeniden `npm run question` → 22 iş günü, kaynak `[1] hr-leave@2025#3`.
 
-**Ev ödevi · Üçüncü yol.** Dosyanın altında `byParagraph` bekliyor: boş satırlardan kes, paragrafları en fazla `max` karakterlik parçalara topla (bunu `packParagraphs()` zaten yapıyor), her parçanın önüne `[${doc.title}]` ekle. Kontrol: `npm run check:sibling` → `step 3 · byParagraph (homework)` yeşil.
+**5 · Üçüncü yol: paragraf.** `src/steps/3-chunk.ts` dosyasının altında `byParagraph` boş duruyor. Onu derste birlikte yazıyoruz. Üstündeki YOUR TURN notu dört adım veriyor:
+
+- `# başlık` satırını çıkarın, kalanı boş satırlardan kesin. `packParagraphs()` paragrafları en fazla `max` karakterlik parçalara toplar.
+- Her parçanın önüne `[${doc.title}]` ekleyin; `bySection` da böyle yapıyor.
+- Her chunk'a dokunduğu bölümleri yazın: `sectionsIn()`'e kestiğiniz metni, parçanın başladığı ve bittiği yeri verin. `fixedSize` de böyle yapıyor.
+- Her chunk'a `hr-leave@2025#p03` gibi bir id verin. Öteki alanları `base()` doldurur.
+
+Kontrol: `npm run check:sibling` → `step 3 · byParagraph (your turn)` testleri yeşil. Sonra ölçün:
+
+- `TOGGLE chunker` bloğunda `"section"; // default` satırının başına `//` koyun, `"paragraph"; // alternative` satırındaki `//` işaretini kaldırın.
+- `npm run step -- 3` → şimdi kaç chunk var? `| 7 |` satırı hangi chunk'ta?
+- `npm run ingest` → depoyu paragraf chunk'larıyla yeniden kurar. 1'den 5'e kadar bütün adımları çalıştırır; 4 ve 5'i C ve D sayfalarında açacağız.
+- `npm run eval` → `OUT` satırını section'ınkiyle karşılaştırın. hit@1, recall@5 ve MRR'ı Kaliteyi ölçmek sayfası anlatıyor.
+- Bir soru daha sorun: `npm run ask -- "By what date must I use the leave days I carried over from last year?"`
+- Toggle'ı `section`'a döndürün ve `npm run ingest`'i yeniden çalıştırın. Sonraki sayfalar section chunk'larının üstüne kuruluyor.
 
 Geride kaldıysanız: `npm run catchup -- 3`.
 </YourTurn>
+
+<Deck>
+  <DeckFigure slot="figure" stage="s">
+    <svg viewBox="0 0 1000 330" role="img" aria-label="Aynı sınav, üç chunker. Paragraf chunk'larında recall@5, section'daki gibi 1.000. Ama hit@1 0.474'e, MRR 0.715'e düşüyor; section'da bunlar 0.842 ve 0.896">
+      <text x="40" y="44" class="flbl">chunker</text>
+      <text x="420" y="44" text-anchor="middle" class="flbl">chunk</text>
+      <text x="580" y="44" text-anchor="middle" class="flbl" data-q="log:eval-paragraph">hit@1</text>
+      <text x="750" y="44" text-anchor="middle" class="flbl" data-q="log:eval-paragraph">recall@5</text>
+      <text x="910" y="44" text-anchor="middle" class="flbl">MRR</text>
+      <path d="M30 64 H970" class="faxis" />
+      <text x="40" y="106" class="fsub">fixed</text>
+      <text x="420" y="106" text-anchor="middle" class="fsub" data-q="log:03-chunk-fixed">138</text>
+      <text x="580" y="106" text-anchor="middle" class="fsub" data-q="log:eval-fixed">0.526</text>
+      <text x="750" y="106" text-anchor="middle" class="fsub" data-q="log:eval-fixed">0.895</text>
+      <text x="910" y="106" text-anchor="middle" class="fsub" data-q="log:eval-fixed">0.689</text>
+      <text x="40" y="166" class="fsub fnum">section</text>
+      <text x="420" y="166" text-anchor="middle" class="fsub fnum" data-q="log:03-chunk-section">60</text>
+      <text x="580" y="166" text-anchor="middle" class="fsub fnum" data-q="log:eval-section">0.842</text>
+      <text x="750" y="166" text-anchor="middle" class="fsub fnum" data-q="log:eval-section">1.000</text>
+      <text x="910" y="166" text-anchor="middle" class="fsub fnum" data-q="log:eval-section">0.896</text>
+      <rect x="24" y="192" width="952" height="52" rx="8" class="fbox-on" />
+      <text x="40" y="226" class="fsub">paragraph</text>
+      <text x="420" y="226" text-anchor="middle" class="fsub" data-q="log:03-chunk-paragraph">85</text>
+      <text x="580" y="226" text-anchor="middle" class="fsub fbad-t" data-q="log:eval-paragraph">0.474</text>
+      <text x="750" y="226" text-anchor="middle" class="fsub" data-q="log:eval-paragraph">1.000</text>
+      <text x="910" y="226" text-anchor="middle" class="fsub fbad-t" data-q="log:eval-paragraph">0.715</text>
+      <text x="500" y="300" text-anchor="middle" class="fsub" data-q="log:eval-paragraph">aynı sınav: 19 arama sorusu, ilk 5 chunk (k = 5)</text>
+    </svg>
+  </DeckFigure>
+  <DeckFigure slot="figure" stage="c">
+    <svg viewBox="0 0 1000 400" role="img" aria-label="hr-leave'in 7. bölümünde iki tarih var. Section ikisini 7 numaralı chunk'ta tutuyor ve model 31 Mart diyor. Paragraf onları p12 ve p13'e bölüyor; p13 önce geliyor ve model 30 Haziran diyor">
+      <text x="250" y="34" text-anchor="middle" class="flbl" data-q="log:ask-carryover-section">section · §7 tek chunk'ta</text>
+      <rect x="20" y="56" width="460" height="196" rx="8" class="fbox-on" />
+      <text x="36" y="90" class="fsub fnum" data-q="log:ask-carryover-section">hr-leave@2025#7 · 1. sıra</text>
+      <text x="36" y="150" class="fsub" data-q="corpus:2025/hr-leave.md">devredilen en çok 5 gün → 31 Mart</text>
+      <text x="36" y="200" class="fsub" data-q="corpus:2025/hr-leave.md">yöneticinin ertelediği en çok 10 gün → 30 Haziran</text>
+      <text x="750" y="34" text-anchor="middle" class="flbl" data-q="log:ask-carryover-paragraph corpus:2025/hr-leave.md">paragraph · §7 iki chunk'ta</text>
+      <rect x="520" y="56" width="460" height="88" rx="8" class="fbox-bad" />
+      <text x="536" y="90" class="fsub" data-q="log:ask-carryover-paragraph">hr-leave@2025#p13 · 1. sıra</text>
+      <text x="536" y="126" class="fsub" data-q="corpus:2025/hr-leave.md">yöneticinin ertelediği en çok 10 gün → 30 Haziran</text>
+      <rect x="520" y="164" width="460" height="88" rx="8" class="fbox" />
+      <text x="536" y="198" class="fsub" data-q="log:ask-carryover-paragraph">hr-leave@2025#p12 · 2. sıra</text>
+      <text x="536" y="234" class="fsub" data-q="corpus:2025/hr-leave.md">devredilen en çok 5 gün → 31 Mart</text>
+      <g data-from="3">
+        <text x="250" y="310" text-anchor="middle" class="fsub fgood-t" data-q="log:ask-carryover-section">“… by 31 March of the next year [1].” ✓</text>
+        <text x="750" y="310" text-anchor="middle" class="fsub fbad-t" data-q="log:ask-carryover-paragraph">“These days must be used by 30 June [1].” ✗</text>
+        <text x="500" y="370" text-anchor="middle" class="fsub">soru: geçen yıldan devrettiğim izni ne zamana kadar kullanmalıyım?</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="Paragraf chunk'ları işe yaradı mı?" stage="s">
+    Bizim dokümanlarda hayır. recall@5 yine 1.000: doğru bölüm her soruda ilk 5'te. Ama hit@1 0.842'den 0.474'e düşüyor. Yani doğru bölüm soruların yarısından azında ilk sıraya çıkıyor.
+  </Step>
+  <Step title="İkiye bölünen kural" stage="c">
+    hr-leave'in 7. bölümünde iki tarih var. 31 Mart, devrettiğiniz günler için. 30 Haziran, yöneticinin ertelediği ek günler için. Section ikisini tek chunk'ta tutuyor; paragraf iki ayrı chunk'a bölüyor.
+  </Step>
+  <Step title="Yanlış chunk önce geliyor" stage="c">
+    Devir sorusunu sorduk. Paragraf chunk'larında p13 önce geliyor ve onda yalnızca 30 Haziran var. Model "30 June" diyor. Section chunk'larıyla cevap "31 March": doğru tarih.
+  </Step>
+  <Step title="Paragraf ne zaman kazanır?" stage="s">
+    Paragraf chunk'ları, başlığı olmayan dokümanlarda işe yarar; bölümler çok uzunsa da. Bizim dokümanlarda numaralı, belirgin başlıklar var. O yüzden onlara section daha iyi oturuyor. Paragraf chunk'ı ayrıca öndeki bölüm adını kaybediyor.
+  </Step>
+  <Step title="İhtiyaca göre seç, sonra ölç" stage="s">
+    Başka bir korpusta kazanan başka olabilir. Yolu kendi dokümanlarınıza ve sorularınıza göre seçin. Sonra aynı sınavı `npm run eval` ile koşun. Kararı tahmin değil, sayılar verir.
+  </Step>
+</Deck>
+
+İki koşunun sonuç satırları:
+
+<Log name="eval-paragraph" title="npm run eval   (chunker: paragraph) · result" from={27} to={34} />
+
+<Log name="eval-section" title="npm run eval   (chunker: section) · result" from={27} to={34} />
+
+Devir sorusu, paragraf chunk'larıyla:
+
+<Log name="ask-carryover-paragraph" title="npm run ask   (chunker: paragraph)" />
+
+Aynı soru section chunk'larıyla; yalnızca cevap:
+
+<Log name="ask-carryover-section" title="npm run ask   (chunker: section) · answer" from={29} />
+
+Paragraf chunker'ıyla 3. adım. `| 7 |` satırını taşıyan chunk doğrudan tabloyla başlıyor; tablonun başlığı, `3. Annual Paid Leave`, içinde yok:
+
+<Log name="03-chunk-paragraph" title="npm run step -- 3   (chunker: paragraph)" />
 
 ## Sık sorulan
 
@@ -217,7 +350,7 @@ Komşu parçaların birkaç yüz karakteri paylaşması yaygın bir yöntem: mak
 </FAQ>
 
 <FAQ q="Dokümanın başlıkları yoksa ne yaparız?">
-Paragraflardan (ev ödevi), cümlelerden ya da anlamın değiştiği yerden (semantic chunking) bölebilirsiniz. Hangisinin kazandığını tahmin etmeyin, ölçün: Kaliteyi ölçmek sayfasındaki `npm run eval` iki chunker'ı aynı soru setinde karşılaştırıyor.
+Paragraflardan (SIRA SENDE 5), cümlelerden ya da anlamın değiştiği yerden (semantic chunking) bölebilirsiniz. Hangisinin kazandığını tahmin etmeyin, ölçün: Kaliteyi ölçmek sayfasındaki `npm run eval` iki chunker'ı aynı soru setinde karşılaştırıyor.
 </FAQ>
 
 <FAQ q="Büyük parça her zaman daha mı iyi?">

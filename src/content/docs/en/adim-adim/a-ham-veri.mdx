@@ -274,7 +274,7 @@ The Turkish document (`it-security`) has the line `GİZLİ – Yalnızca şirket
 **3 · Write a similar rule.** In the same file, `turkishConfidential` is empty. The rule for the English line looks like `/^CONFIDENTIAL – .+$/`. Write the same kind of rule for the Turkish confidentiality line. Hint: the dash is an en dash (–), and the `İ` has a dot. Copy the line from the file. Don't type `GIZLI`. Then:
 
 - `npm run step -- 2` → the `it-security` line should show −12 noise lines, not −8.
-- `npm run check:sibling` → the `step 2 · turkishConfidential` test should be green. The `dot` and `byParagraph` tests stay red for now. They belong to page C and to the homework on page B.
+- `npm run check:sibling` → the `step 2 · turkishConfidential` test should be green. The `dot` and `byParagraph` tests stay red for now. You write `byParagraph` on page B and `dot` on page C.
 - If you like, run `npm run step -- 3` and open `data/3-chunks.json`: `it-security@2025#0` is gone.
 
 With the rule in place, step 2 drops 78 noise lines, not 74. The 1078 lines go down to 504. We captured the logs on the next pages without this rule. So the logs show 60 chunks, or 120 records with both editions. On your machine, you get 59 chunks (118 records). This difference is expected.

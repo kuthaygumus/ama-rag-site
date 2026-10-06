@@ -263,6 +263,11 @@
   max-width: 40rem;
   height: auto;
 }
+/* A table as a deck's drawing: full width. On a phone it scrolls sideways inside the deck
+   (Starlight tables are display: block; overflow: auto) instead of making the deck wider. */
+.deck[data-ready] .deck-stage { grid-template-columns: minmax(0, 1fr); }
+.deck-figure { min-width: 0; }
+.deck-figure > table { width: 100%; margin: 0; }
 
 .deck-list {
   margin: 0;

@@ -184,13 +184,48 @@ The same step with the `section` chunker:
 
 <Log name="question-2-section" title="npm run question" />
 
-Both ways to split, and the switch between them, are in `src/steps/3-chunk.ts`:
+Both ways to split, and the switch between them, are in `src/steps/3-chunk.ts`. The switch has a third line, `paragraph`. You write that one below.
 
-<RepoCode file="src/steps/3-chunk.ts" from="// TOGGLE chunker" to="alternative" />
+<RepoCode file="src/steps/3-chunk.ts" from="// TOGGLE chunker" to="paragraph" />
 
 <RepoCode file="src/steps/3-chunk.ts" from="export function fixedSize" />
 
 <RepoCode file="src/steps/3-chunk.ts" from="export function bySection" />
+
+<RepoCode file="src/steps/3-chunk.ts" from="── YOUR TURN" />
+
+<Deck>
+  <DeckFigure slot="figure">
+
+| Way to cut | How it cuts | Good for | Watch out | In our repo |
+|---|---|---|---|---|
+| Fixed size | Every N characters | A quick start, any text | Cuts tables, sentences, even words | Yes: `fixed` |
+| By section | At the document's own headings | Documents with clear headings | A long section makes a big chunk | Yes: `section` |
+| By paragraph | At blank lines, packed up to a size | Text with few headings | A piece can lose its heading | Yes: `paragraph`, you write it |
+| Recursive splitter | Big separators first, smaller ones only when a piece is too long | Mixed documents | You choose the separators and the size | No |
+| By sentence | At the end of each sentence | Short facts, FAQ pages | One sentence alone often says too little | No |
+| Semantic | Where the meaning changes between sentences | Long text with no structure | An embedding for every sentence, hard to predict | No |
+| Parent-child | Search small chunks, give the model the big chunk around them | Exact search and full context | Two sizes to store and link, a longer prompt | No |
+
+  </DeckFigure>
+  <Step title="Many ways to cut">
+    Fixed and section are two ways to cut. The table shows the common ones. Three of them are in our repo. The third one, by paragraph, is empty. You write it today.
+  </Step>
+  <Step title="Overlap is a setting, not a way">
+    Overlap is not a way to cut. You can add it to any way in the table. Neighbor chunks share a few sentences. So an idea at the cut has a better chance to stay whole. The cost: more chunks and repeated text.
+  </Step>
+  <Step title="Recursive: big cuts first">
+    A recursive splitter tries big separators first: sections, then paragraphs, then sentences. It goes smaller only when a piece is too long. Our `bySection` is a small one. It cuts at headings first. A section over 1500 characters is cut again at its paragraphs.
+  </Step>
+  <Step title="Parent-child: find small, read big">
+    <Term id="parentchild">Parent-child</Term> keeps chunks in two sizes. The search uses the small ones, so it can find one exact row. The model gets the big one around it, so it sees the heading too. We don't build it today.
+  </Step>
+  <Step title="Which way is best?">
+    It depends on your documents and your questions. So don't guess. Measure with `npm run eval`, the same exam for every way. Now you write the third way, and we measure it.
+
+    <Now n="5">Write `byParagraph` in `src/steps/3-chunk.ts`. Check it with `npm run check:sibling`.</Now>
+  </Step>
+</Deck>
 
 <YourTurn>
 **1 · See the cut yourself.** In `src/steps/3-chunk.ts`, find the `TOGGLE chunker` block. Put `//` before the `"section"; // default` line. Remove the `//` from the `"fixed"; // alternative` line. Run `npm run step -- 3`. The log finds the chunk with the `| 7 |` row (`hr-leave@2025#c08`) and shows the whole chunk.
@@ -201,10 +236,108 @@ Both ways to split, and the switch between them, are in `src/steps/3-chunk.ts`:
 
 **4 · Switch back.** Switch the toggle back to `section`. Run `npm run step -- 3`, then `npm run question` again → 22 working days, source `[1] hr-leave@2025#3`.
 
-**Homework · A third way.** At the bottom of the file, `byParagraph` is waiting. Cut at blank lines. Pack the paragraphs into chunks of at most `max` characters (`packParagraphs()` already does this). Put `[${doc.title}]` in front of each chunk. Check: `npm run check:sibling` → `step 3 · byParagraph (homework)` is green.
+**5 · A third way: by paragraph.** At the bottom of `src/steps/3-chunk.ts`, `byParagraph` is empty. We write it together, in class. The YOUR TURN note above it has four parts:
+
+- Remove the `# title` line. Cut the rest at blank lines. `packParagraphs()` packs the paragraphs into pieces of up to `max` characters.
+- Put `[${doc.title}]` in front of each piece, like `bySection` does.
+- Give each chunk the sections it touches. Call `sectionsIn()` on the text you cut, with the start and the end of the piece. `fixedSize` does the same.
+- Give each chunk an id like `hr-leave@2025#p03`. `base()` fills the other fields.
+
+Check: `npm run check:sibling` → the `step 3 · byParagraph (your turn)` tests are green. Then measure it:
+
+- In the `TOGGLE chunker` block, put `//` before the `"section"; // default` line. Remove the `//` from the `"paragraph"; // alternative` line.
+- `npm run step -- 3` → how many chunks now? Which chunk has the `| 7 |` row?
+- `npm run ingest` → it rebuilds the store with paragraph chunks. It runs steps 1 to 5. Pages C and D open steps 4 and 5.
+- `npm run eval` → compare the `OUT` line with section. The Measuring quality page explains hit@1, recall@5 and MRR.
+- Ask one more question: `npm run ask -- "By what date must I use the leave days I carried over from last year?"`
+- Switch the toggle back to `section`. Run `npm run ingest` again. The next pages build on section chunks.
 
 Are you behind? Run `npm run catchup -- 3`.
 </YourTurn>
+
+<Deck>
+  <DeckFigure slot="figure" stage="s">
+    <svg viewBox="0 0 1000 330" role="img" aria-label="The same exam with three chunkers. Paragraph chunks keep recall@5 at 1.000, like section. But hit@1 falls to 0.474 and MRR to 0.715, below section's 0.842 and 0.896">
+      <text x="40" y="44" class="flbl">chunker</text>
+      <text x="420" y="44" text-anchor="middle" class="flbl">chunks</text>
+      <text x="580" y="44" text-anchor="middle" class="flbl" data-q="log:eval-paragraph">hit@1</text>
+      <text x="750" y="44" text-anchor="middle" class="flbl" data-q="log:eval-paragraph">recall@5</text>
+      <text x="910" y="44" text-anchor="middle" class="flbl">MRR</text>
+      <path d="M30 64 H970" class="faxis" />
+      <text x="40" y="106" class="fsub">fixed</text>
+      <text x="420" y="106" text-anchor="middle" class="fsub" data-q="log:03-chunk-fixed">138</text>
+      <text x="580" y="106" text-anchor="middle" class="fsub" data-q="log:eval-fixed">0.526</text>
+      <text x="750" y="106" text-anchor="middle" class="fsub" data-q="log:eval-fixed">0.895</text>
+      <text x="910" y="106" text-anchor="middle" class="fsub" data-q="log:eval-fixed">0.689</text>
+      <text x="40" y="166" class="fsub fnum">section</text>
+      <text x="420" y="166" text-anchor="middle" class="fsub fnum" data-q="log:03-chunk-section">60</text>
+      <text x="580" y="166" text-anchor="middle" class="fsub fnum" data-q="log:eval-section">0.842</text>
+      <text x="750" y="166" text-anchor="middle" class="fsub fnum" data-q="log:eval-section">1.000</text>
+      <text x="910" y="166" text-anchor="middle" class="fsub fnum" data-q="log:eval-section">0.896</text>
+      <rect x="24" y="192" width="952" height="52" rx="8" class="fbox-on" />
+      <text x="40" y="226" class="fsub">paragraph</text>
+      <text x="420" y="226" text-anchor="middle" class="fsub" data-q="log:03-chunk-paragraph">85</text>
+      <text x="580" y="226" text-anchor="middle" class="fsub fbad-t" data-q="log:eval-paragraph">0.474</text>
+      <text x="750" y="226" text-anchor="middle" class="fsub" data-q="log:eval-paragraph">1.000</text>
+      <text x="910" y="226" text-anchor="middle" class="fsub fbad-t" data-q="log:eval-paragraph">0.715</text>
+      <text x="500" y="300" text-anchor="middle" class="fsub" data-q="log:eval-paragraph">the same exam: 19 retrieval questions, top 5 chunks (k = 5)</text>
+    </svg>
+  </DeckFigure>
+  <DeckFigure slot="figure" stage="c">
+    <svg viewBox="0 0 1000 400" role="img" aria-label="Section 7 of hr-leave has two dates. Section keeps both in chunk 7, and the model answers 31 March. Paragraph puts them in p12 and p13. p13 comes first, and the model answers 30 June">
+      <text x="250" y="34" text-anchor="middle" class="flbl" data-q="log:ask-carryover-section">section · §7 in one chunk</text>
+      <rect x="20" y="56" width="460" height="196" rx="8" class="fbox-on" />
+      <text x="36" y="90" class="fsub fnum" data-q="log:ask-carryover-section">hr-leave@2025#7 · rank 1</text>
+      <text x="36" y="150" class="fsub" data-q="corpus:2025/hr-leave.md">up to 5 carried-over days → by 31 March</text>
+      <text x="36" y="200" class="fsub" data-q="corpus:2025/hr-leave.md">up to 10 days a manager put off → by 30 June</text>
+      <text x="750" y="34" text-anchor="middle" class="flbl" data-q="log:ask-carryover-paragraph corpus:2025/hr-leave.md">paragraph · §7 in two chunks</text>
+      <rect x="520" y="56" width="460" height="88" rx="8" class="fbox-bad" />
+      <text x="536" y="90" class="fsub" data-q="log:ask-carryover-paragraph">hr-leave@2025#p13 · rank 1</text>
+      <text x="536" y="126" class="fsub" data-q="corpus:2025/hr-leave.md">up to 10 days a manager put off → by 30 June</text>
+      <rect x="520" y="164" width="460" height="88" rx="8" class="fbox" />
+      <text x="536" y="198" class="fsub" data-q="log:ask-carryover-paragraph">hr-leave@2025#p12 · rank 2</text>
+      <text x="536" y="234" class="fsub" data-q="corpus:2025/hr-leave.md">up to 5 carried-over days → by 31 March</text>
+      <g data-from="3">
+        <text x="250" y="310" text-anchor="middle" class="fsub fgood-t" data-q="log:ask-carryover-section">“… by 31 March of the next year [1].” ✓</text>
+        <text x="750" y="310" text-anchor="middle" class="fsub fbad-t" data-q="log:ask-carryover-paragraph">“These days must be used by 30 June [1].” ✗</text>
+        <text x="500" y="370" text-anchor="middle" class="fsub">the question: by what date must I use the days I carried over?</text>
+      </g>
+    </svg>
+  </DeckFigure>
+  <Step title="Did paragraph chunks help?" stage="s">
+    On our documents, no. recall@5 stays 1.000: the right section is always in the top 5. But hit@1 falls from 0.842 to 0.474. So the right section comes first in less than half of the questions.
+  </Step>
+  <Step title="A rule split in two" stage="c">
+    Section 7 of hr-leave has two dates. 31 March is for the days you carried over. 30 June is for extra days a manager put off. Section keeps both in one chunk. Paragraph puts them in two chunks.
+  </Step>
+  <Step title="The wrong chunk comes first" stage="c">
+    We asked the carry-over question. With paragraph chunks, p13 comes first, and it holds only 30 June. The model answers "30 June". With section chunks, it answers "31 March", the right date.
+  </Step>
+  <Step title="When does paragraph win?" stage="s">
+    Paragraph chunks help when documents have no headings. They also help when sections are too long. Our documents have clear, numbered headings. So section fits them best. A paragraph chunk also loses the section name in front.
+  </Step>
+  <Step title="Choose by need, then measure" stage="s">
+    Another corpus can give another winner. So choose a way for your documents and your questions. Then run the same exam with `npm run eval`. The numbers decide, not a guess.
+  </Step>
+</Deck>
+
+The result lines of the two runs:
+
+<Log name="eval-paragraph" title="npm run eval   (chunker: paragraph) · result" from={27} to={34} />
+
+<Log name="eval-section" title="npm run eval   (chunker: section) · result" from={27} to={34} />
+
+The carry-over question, with paragraph chunks:
+
+<Log name="ask-carryover-paragraph" title="npm run ask   (chunker: paragraph)" />
+
+The same question, with section chunks, only the answer:
+
+<Log name="ask-carryover-section" title="npm run ask   (chunker: section) · answer" from={29} />
+
+The paragraph chunker's step 3. The chunk with the `| 7 |` row starts with the table. Its heading, `3. Annual Paid Leave`, is not in it:
+
+<Log name="03-chunk-paragraph" title="npm run step -- 3   (chunker: paragraph)" />
 
 ## Common questions
 
@@ -217,7 +350,7 @@ That's a common method. Neighbor chunks share a few hundred characters. A headin
 </FAQ>
 
 <FAQ q="What if the document has no headings?">
-You can split at paragraphs (the homework), at sentences, or where the meaning changes (semantic chunking). Don't guess which one wins. Measure it: on the Measuring quality page, `npm run eval` compares the two chunkers on the same question set.
+You can split at paragraphs (YOUR TURN 5), at sentences, or where the meaning changes (semantic chunking). Don't guess which one wins. Measure it: on the Measuring quality page, `npm run eval` compares the two chunkers on the same question set.
 </FAQ>
 
 <FAQ q="Is a bigger chunk always better?">

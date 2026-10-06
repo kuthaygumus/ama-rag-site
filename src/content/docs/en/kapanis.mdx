@@ -212,11 +212,10 @@ All the code, the corpus, the gold set and every log on this site: [github.com/k
 <YourTurn>
 1. **Look at your ledger.** Run `npm run question`. Compare the answers to the question of the day since this morning with the log above.
 2. **First homework: measure what rerank brings.** In `src/steps/7-rerank.ts`, find the `TOGGLE rerank` block. Comment out the `true` line and turn on the `false` line. Run `npm run eval -- --answers`. What happened to the answer for q02, and to 22 / 23? Switch the toggle back.
-3. **Homework: `byParagraph`.** In `src/steps/3-chunk.ts`, write the function under the `HOMEWORK` note. Cut the document at paragraphs. Fill packs of at most `max` characters. Put the heading prefix in front of each chunk. Check: `npm run check:sibling`.
+3. **Try another way to cut.** Pick a row of the table on page B that is not in our repo, for example by sentence. Write it next to `byParagraph`. Add it to `ChunkerName`, `CHUNKERS` and the `TOGGLE chunker` block, like `paragraph`. Ingest again, then compare it with section using `npm run eval`.
 4. If you haven't written them yet, do the other two exercises. One is the `turkishConfidential` rule, a RegExp in `src/steps/2-clean.ts`. The other is the `dot` function in `src/lib/similarity.ts`. The same command checks them.
-5. Add `byParagraph` to the `ChunkerName` type and to the `CHUNKERS` list. Write a third line in the toggle. Ingest again, then compare it with section using `npm run eval`.
-6. Add your own questions to `eval/gold.jsonl`, above all questions that are hard for the system.
-7. Pick another thing this site marks as "not measured", and measure it: `--k 10`, another `CHAT_MODEL`.
+5. Add your own questions to `eval/gold.jsonl`, above all questions that are hard for the system.
+6. Pick another thing this site marks as "not measured", and measure it: `--k 10`, another `CHAT_MODEL`.
 </YourTurn>
 
 <Takeaway>The model was the same all day. Everything that changed the answer was in the pipeline.</Takeaway>
