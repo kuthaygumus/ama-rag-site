@@ -1,6 +1,6 @@
 ---
 title: E · Retrieval ve rerank
-description: Retriever ne getirdi, prompt'a ne gitti? Top-k ve kesme çizgisi, metadata filtresi, erişim kontrolü ve rerank. Adım 6 ve 7.
+description: Retriever ne getirdi, prompt'a ne gitti? Top-k ve kesme çizgisi, metadata filtresi, erişim kontrolü ve rerank. 6-retrieve.ts ve 7-rerank.ts.
 ---
 import WhereAmI from '../../../components/WhereAmI.astro';
 import DaysQuestion from '../../../components/DaysQuestion.astro';
@@ -31,7 +31,7 @@ Depo dolu, şimdi soru soruyoruz. Günün sorusunda doğru chunk ilk sırada. Am
       <rect x="20" y="14" width="960" height="44" rx="8" class="fbox" />
       <text x="500" y="43" text-anchor="middle" class="fsub" data-q="log:06-retrieve">soru → bge-m3 → Chroma: en yakın 5 chunk · filtre: edition 2025, access all</text>
       <g data-from="2">
-        <text x="245" y="96" text-anchor="middle" class="flbl" data-q="const">vektör sırası · adım 6</text>
+        <text x="245" y="96" text-anchor="middle" class="flbl" data-q="const">vektör sırası · 6-retrieve.ts</text>
         <rect x="22" y="118" width="446" height="26" rx="4" class="fbox-good" data-gen="v-good" />
         <text x="32" y="136" class="fsub fnum" data-q="const">1</text>
         <text x="62" y="136" class="fsub" data-gen="v-score">0.614</text>
@@ -71,7 +71,7 @@ Depo dolu, şimdi soru soruyoruz. Günün sorusunda doğru chunk ilk sırada. Am
         <text x="466" y="258" text-anchor="end" class="fsub fgate-t" data-q="code:src/lib/config.ts">↑ prompt'a ilk 3</text>
       </g>
       <g data-from="6">
-        <text x="765" y="96" text-anchor="middle" class="flbl" data-q="const">rerank sonrası · adım 7</text>
+        <text x="765" y="96" text-anchor="middle" class="flbl" data-q="const">rerank sonrası · 7-rerank.ts</text>
         <rect x="552" y="118" width="428" height="26" rx="4" class="fbox-good" data-gen="r-good" />
         <text x="562" y="136" class="fsub fnum" data-q="const">1</text>
         <text x="592" y="136" class="fsub" data-gen="r-rel">rel 10</text>
@@ -142,7 +142,7 @@ Depo dolu, şimdi soru soruyoruz. Günün sorusunda doğru chunk ilk sırada. Am
     </svg>
   </DeckFigure>
   <Step title="Soru da vektör olur" stage="list">
-    Adım 6 soruyu embed eder ve Chroma'dan en yakın 5 chunk'ı ister. Filtre aramanın içinde: yalnızca 2025 sürümü, yalnızca herkese açık dokümanlar.
+    `6-retrieve.ts` soruyu embed eder ve Chroma'dan en yakın 5 chunk'ı ister. Filtre aramanın içinde: yalnızca 2025 sürümü, yalnızca herkese açık dokümanlar.
   </Step>
   <Step title="Retriever ne getirdi?" stage="list">
     5 chunk, hepsi izin politikasından (`hr-leave`). Cevabı taşıyan §3, yani izin tablosu, ilk sırada.
@@ -203,7 +203,7 @@ Reranker'ın sorusu tek bir prompt: chunk'ın en fazla 700 karakterini okur, yal
 
 ## Erişim filtresi: aynı soru, iki çalışan
 
-Maaş bantları dokümanı `access: hr-only`. Adım 6'daki toggle, soran kişinin neyi okuyabileceğini belirliyor:
+Maaş bantları dokümanı `access: hr-only`. `6-retrieve.ts` içindeki toggle, soran kişinin neyi okuyabileceğini belirliyor:
 
 <RepoCode file="src/steps/6-retrieve.ts" from="// TOGGLE access filter" to="alternative" />
 

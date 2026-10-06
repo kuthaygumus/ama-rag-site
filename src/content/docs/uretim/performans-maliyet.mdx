@@ -45,7 +45,7 @@ Cevap doğru ve kaynaklı. Peki bir soru kaç saniye sürüyor, API'li bir model
         <text x="40" y="348" class="fsub" data-gen="search-label">↑ arama adımı 22 ms (vector DB 8 ms · soruyu embed 0 ms, cache'ten)</text>
       </g>
       <g class="ph ph3">
-        <text x="40" y="410" class="flbl" data-q="log:04-embed">Ingest, ikinci kez: 60 vektörün 60'ı cache'ten, adım 4 = 55 ms</text>
+        <text x="40" y="410" class="flbl" data-q="log:04-embed">Ingest, ikinci kez: 60 vektörün 60'ı cache'ten, 4-embed.ts = 55 ms</text>
         <rect x="40" y="428" width="460" height="52" rx="8" class="fbox" />
         <text x="270" y="461" text-anchor="middle" class="flbl" data-q="log:ingest-2026">2025 · 60 kayıt · dokunulmadı</text>
         <rect x="520" y="428" width="460" height="52" rx="8" class="fbox fbox-on" />
@@ -66,7 +66,7 @@ Cevap doğru ve kaynaklı. Peki bir soru kaç saniye sürüyor, API'li bir model
     <Now n="1">`npm run ask -- "I am going to Frankfurt for a two-day meeting. I am a specialist. How much is my daily per diem?"`: arama, rerank ve cevap sürelerini not edin.</Now>
   </Step>
   <Step title="Ingest'te: cache ve artımlı yükleme" phase="3">
-    Her embedding `.cache/` altına yazılır; anahtar, model ve metnin hash'i. İkinci koşu: 60 vektörün 60'ı cache'ten, adım 4 55 ms. 2026'yı eklemek yalnızca onun 60 kaydını yazdı; 2025 yerinde kaldı.
+    Her embedding `.cache/` altına yazılır; anahtar, model ve metnin hash'i. İkinci koşu: 60 vektörün 60'ı cache'ten, `4-embed.ts` 55 ms. 2026'yı eklemek yalnızca onun 60 kaydını yazdı; 2025 yerinde kaldı.
   </Step>
   <Step title="Süreyi ve faturayı ne büyütür?">
     Modele yapılan çağrı sayısı ve her çağrıdaki metin. Bir soru 6 çağrı: 5 rerank, 1 cevap. N kişi aynı anda: N × 6. Aşağıdaki ayarlar süreyi değiştirir; çoğu doğruluğu da. Sonra eval'ı koşun.
@@ -130,7 +130,7 @@ Depo sürüm başına yazar (`replaceEdition`):
 | Prompt'a giren chunk | 3 | prompt token artar | 3 chunk = 976 prompt token (günün sorusu) |
 | Rerank | açık | kapatınca 5 çağrı gider, sıra vektör skoruna kalır | Kısmen: günün sorusunda cevap iki durumda da 22; q02'de doğru bölüm vektör sırasında 5.; rerank açıkken cevap doğru, kapalıyken burada ölçmedik. [Kapanış sayfasındaki](/kapanis/) ilk ödev bu. |
 | Model boyu | gemma3:4b | RAM ve süre artar | Hayır: süreyi yalnızca gemma3:4b ile ölçtük |
-| Embedding cache | açık | — | Evet: 60 vektörün 60'ı cache'ten, adım 4 = 55 ms |
+| Embedding cache | açık | — | Evet: 60 vektörün 60'ı cache'ten, `4-embed.ts` = 55 ms |
 | Artımlı ingest | sürüm başına `replaceEdition` | — | Evet: 2026 eklendi, depoda 120 kayıt, 2025'e dokunulmadı |
 
 ## Fatura: fiyatsız bir formül

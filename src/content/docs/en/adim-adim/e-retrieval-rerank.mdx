@@ -1,6 +1,6 @@
 ---
 title: E · Retrieval and reranking
-description: What did the retriever bring, and what went into the prompt? Top-k and the cutoff, the metadata filter, access control and rerank. Steps 6 and 7.
+description: What did the retriever bring, and what went into the prompt? Top-k and the cutoff, the metadata filter, access control and rerank. 6-retrieve.ts and 7-rerank.ts.
 ---
 import WhereAmI from '../../../../components/WhereAmI.astro';
 import DaysQuestion from '../../../../components/DaysQuestion.astro';
@@ -31,7 +31,7 @@ The store is full, so now we ask questions. For the question of the day, the rig
       <rect x="20" y="14" width="960" height="44" rx="8" class="fbox" />
       <text x="500" y="43" text-anchor="middle" class="fsub" data-q="log:06-retrieve">question → bge-m3 → Chroma: the 5 closest chunks · filter: edition 2025, access all</text>
       <g data-from="2">
-        <text x="245" y="96" text-anchor="middle" class="flbl" data-q="const">vector ranking · step 6</text>
+        <text x="245" y="96" text-anchor="middle" class="flbl" data-q="const">vector ranking · 6-retrieve.ts</text>
         <rect x="22" y="118" width="446" height="26" rx="4" class="fbox-good" data-gen="v-good" />
         <text x="32" y="136" class="fsub fnum" data-q="const">1</text>
         <text x="62" y="136" class="fsub" data-gen="v-score">0.614</text>
@@ -71,7 +71,7 @@ The store is full, so now we ask questions. For the question of the day, the rig
         <text x="466" y="258" text-anchor="end" class="fsub fgate-t" data-q="code:src/lib/config.ts">↑ top 3 into the prompt</text>
       </g>
       <g data-from="6">
-        <text x="765" y="96" text-anchor="middle" class="flbl" data-q="const">after rerank · step 7</text>
+        <text x="765" y="96" text-anchor="middle" class="flbl" data-q="const">after rerank · 7-rerank.ts</text>
         <rect x="552" y="118" width="428" height="26" rx="4" class="fbox-good" data-gen="r-good" />
         <text x="562" y="136" class="fsub fnum" data-q="const">1</text>
         <text x="592" y="136" class="fsub" data-gen="r-rel">rel 10</text>
@@ -142,7 +142,7 @@ The store is full, so now we ask questions. For the question of the day, the rig
     </svg>
   </DeckFigure>
   <Step title="The question becomes a vector too" stage="list">
-    Step 6 embeds the question and asks Chroma for the 5 closest chunks. The filter runs inside the search: only the 2025 edition, only documents open to everyone.
+    `6-retrieve.ts` embeds the question and asks Chroma for the 5 closest chunks. The filter runs inside the search: only the 2025 edition, only documents open to everyone.
   </Step>
   <Step title="What did the retriever return?" stage="list">
     5 chunks, all from the Annual Leave Policy. §3, the leave table with the answer, comes first.
@@ -203,7 +203,7 @@ The reranker's question is one prompt. It reads at most 700 characters of the ch
 
 ## Access filter: same question, two employees
 
-The salary bands document is `access: hr-only`. The toggle in step 6 decides what the person who asks may read:
+The salary bands document is `access: hr-only`. The toggle in `6-retrieve.ts` decides what the person who asks may read:
 
 <RepoCode file="src/steps/6-retrieve.ts" from="// TOGGLE access filter" to="alternative" />
 

@@ -66,12 +66,12 @@ import Term from '../../../components/Term.astro';
     `corpus/2026/`: aynı 8 doküman, `edition: "2026"`. İzin tablosunda 5–9. yıllar 22'den 24 iş gününe, 10–14. yıllar 25'ten 26'ya çıktı.
   </Step>
   <Step title="Yeniden eğitim yok, yeniden ingest var">
-    Ingest yalnızca yeni dosyaları adım 1–5'ten geçirir. Depoda artık 120 kayıt var: 2025'in 60'ı ve 2026'nın 60'ı yan yana.
+    Ingest yalnızca yeni dosyaları `1-load.ts` ile `5-store.ts` arasındaki beş adımdan geçirir. Depoda artık 120 kayıt var: 2025'in 60'ı ve 2026'nın 60'ı yan yana.
 
     <Now n="1">`npm run ingest -- --edition 2026`: log'un sonlarına doğru `120 in the store` yazmalı.</Now>
   </Step>
   <Step title="Hangi sürüm cevap verecek?">
-    Adım 6'daki <Term id="metadata">metadata</Term> filtresi (`EDITION_FILTER`) varsayılan olarak "latest": depodaki en yeni sürüm. Filtre aramanın içinde; 2025 kayıtları yarışa hiç girmiyor.
+    `6-retrieve.ts` içindeki <Term id="metadata">metadata</Term> filtresi (`EDITION_FILTER`) varsayılan olarak "latest": depodaki en yeni sürüm. Filtre aramanın içinde; 2025 kayıtları yarışa hiç girmiyor.
   </Step>
   <Step title="Cevap değişti">
     Cevap: "An employee with 7 years of service gets 24 working days of annual leave [1]." Kaynak artık `hr-leave@2026#3`.
@@ -93,14 +93,14 @@ import Term from '../../../components/Term.astro';
 </Deck>
 
 <Example>
-Adım 3'te izin tablosunun 2026 hâline, adım 5'te kayıt sayısına ve sürümlere bakın.
+`3-chunk.ts` çıktısında izin tablosunun 2026 hâline, `5-store.ts` çıktısında kayıt sayısına ve sürümlere bakın.
 </Example>
 
 <Log name="ingest-2026" title="npm run ingest -- --edition 2026   (adım 3'ün çıktısı)" from={47} to={68} />
 
 <Log name="ingest-2026" title="… aynı komut, adım 4 ve 5" from={74} />
 
-Adım 4 burada hiçbir vektörü yeniden hesaplamadı: bu makine bu metinleri daha önce embed etmişti, vektörler `.cache/` klasöründen geldi. Sizin ilk çalıştırmanızda `3 computed, 57 from cache` görürsünüz. Metni değişen yalnızca 3 chunk var: izin tablosu, şifre kuralı ve seyahat tablosu.
+`4-embed.ts` burada hiçbir vektörü yeniden hesaplamadı: bu makine bu metinleri daha önce embed etmişti, vektörler `.cache/` klasöründen geldi. Sizin ilk çalıştırmanızda `3 computed, 57 from cache` görürsünüz. Metni değişen yalnızca 3 chunk var: izin tablosu, şifre kuralı ve seyahat tablosu.
 
 <Log name="question-4-2026" title="npm run question" />
 
@@ -108,7 +108,7 @@ Filtreyi kapatınca ikisi birden geliyor:
 
 <Log name="edition-all" title='npm run question   (toggle: sürüm filtresi EDITION_FILTER = "all")' />
 
-Sürüm filtresi adım 6'daki toggle'da. `.env` dosyasındaki `EDITION` ise başka bir şey: adım 1'in hangi `corpus/` klasörünü okuyacağını seçer.
+Sürüm filtresi `6-retrieve.ts` içindeki toggle'da. `.env` dosyasındaki `EDITION` ise başka bir şey: `1-load.ts` dosyasının hangi `corpus/` klasörünü okuyacağını seçer.
 
 <RepoCode file="src/steps/6-retrieve.ts" from="// TOGGLE edition filter" to="alternative" />
 

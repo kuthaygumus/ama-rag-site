@@ -1,6 +1,6 @@
 ---
 title: D · Vector DB
-description: Vektörleri bir JSON dosyasından Chroma'ya taşımak — bir kayıtta ne saklanır, ANN araması neyi değiştirir, neyi değiştirmez. Adım 5.
+description: Vektörleri bir JSON dosyasından Chroma'ya taşımak — bir kayıtta ne saklanır, ANN araması neyi değiştirir, neyi değiştirmez. 5-store.ts.
 ---
 import WhereAmI from '../../../components/WhereAmI.astro';
 import DaysQuestion from '../../../components/DaysQuestion.astro';
@@ -188,18 +188,18 @@ import Term from '../../../components/Term.astro';
     </svg>
   </DeckFigure>
   <Step title="Bir kayıtta ne var?" stage="r">
-    Adım 5 her chunk'ı Chroma'ya bir kayıt olarak yazar: id, embedding (vektör), document (metin) ve metadata.
+    `5-store.ts` her chunk'ı Chroma'ya bir kayıt olarak yazar: id, embedding (vektör), document (metin) ve metadata.
 
     <Now n="1">`podman compose ps` → `healthy` olmalı. Değilse `podman compose up -d`.</Now>
   </Step>
   <Step title="Vektör: aramak için" stage="r" phase="1">
-    Arama vektörle yapılır: soru vektörüne en yakın kayıtları bulur. Vektörler adım 4'ten hazır gelir.
+    Arama vektörle yapılır: soru vektörüne en yakın kayıtları bulur. Vektörler hazır gelir; onları `4-embed.ts` hesaplar.
   </Step>
   <Step title="Metin: modele vermek için" stage="r" phase="2">
     1024 sayıdan cümle geri çıkmaz. Arama vektörle yapılır, prompt'a metin girer. Bu yüzden kayıt ikisini birlikte taşır: vektör bulur, metin anlatır.
   </Step>
   <Step title="Metadata: filtre için" stage="r" phase="3">
-    edition, access, docId …: A sayfasında okuduğumuz etiketler. Adım 6 "yalnızca 2025, yalnızca herkese açık" der; Chroma bunu aramanın içinde uygular.
+    edition, access, docId …: A sayfasında okuduğumuz etiketler. `6-retrieve.ts` "yalnızca 2025, yalnızca herkese açık" der; Chroma bunu aramanın içinde uygular.
   </Step>
   <Step title="Brute force: hepsine bak" stage="a">
     JSON deposu her soruda bütün vektörlerle cosine hesaplar ve sıralar. Sonuç kesin, ama iş chunk sayısıyla birlikte büyür. Bu yöntemin adı <Term id="bruteforce">brute force</Term>.
@@ -228,7 +228,7 @@ import Term from '../../../components/Term.astro';
 </Deck>
 
 <Example>
-Adım 5, Chroma'ya yazdıktan sonra günün sorusunu JSON deposuna da soruyor ve iki deponun ilk 5'ini yan yana koyuyor. TIME satırları adımın tamamını ölçer, yazma da dahil. Bir arama yarışı değil.
+`5-store.ts`, Chroma'ya yazdıktan sonra günün sorusunu JSON deposuna da soruyor ve iki deponun ilk 5'ini yan yana koyuyor. TIME satırları adımın tamamını ölçer, yazma da dahil. Bir arama yarışı değil.
 </Example>
 
 <Log name="05-store-json" title="npm run step -- 5 --store json" />
@@ -249,7 +249,7 @@ Kaydın dört parçası tek çağrıda gidiyor: `ids`, `embeddings`, `documents`
 
 ## Vector DB'nin dört işi
 
-- **Ekle / güncelle.** Aynı id'ye yazmak (upsert) eski kaydın yerini alır. Bizde `replaceEdition` önce o sürümün kayıtlarını siler, sonra yenilerini ekler; adım 5'i ikinci kez çalıştırmak çift kayıt üretmez.
+- **Ekle / güncelle.** Aynı id'ye yazmak (upsert) eski kaydın yerini alır. Bizde `replaceEdition` önce o sürümün kayıtlarını siler, sonra yenilerini ekler; `5-store.ts` dosyasını ikinci kez çalıştırmak çift kayıt üretmez.
 - **Sil.** `where` koşuluyla: bizde `{ edition }`.
 - **Filtrele.** Yine `where` ile; `toWhere()` filtremizi Chroma'nın diline çeviriyor (E sayfası).
 - **Sakla.** Container durunca veri kaybolmaz: `compose.yaml` onu bir volume'a yazıyor.

@@ -173,7 +173,7 @@ Prompt'un kuralları. 5. satır genel kural, 6. satır somut yasak:
 
 ## Modelden sonra kodla kontrol
 
-Prompt isteği durdurmadı. O zaman cevabı modelden sonra kodla kontrol ederiz. Kontrol 8. adımda, bir `TOGGLE` bloğunda. Varsayılan olarak kapalı; bu yüzden sitedeki öbür loglar değişmez:
+Prompt isteği durdurmadı. O zaman cevabı modelden sonra kodla kontrol ederiz. Kontrol `8-answer.ts` içinde, bir `TOGGLE` bloğunda. Varsayılan olarak kapalı; bu yüzden sitedeki öbür loglar değişmez:
 
 <RepoCode file="src/steps/8-answer.ts" from="// TOGGLE answer check" to="alternative" />
 
@@ -193,10 +193,10 @@ Güvenlik katmanları kodda ve veride kurulur:
 
 | Katman | Nerede | Bu repoda |
 |---|---|---|
-| Dokümanı ingest'te tara (asistana hitap eden, "password" isteyen satırlar) | adım 2, temizlik | yok — ölçmedik |
-| Cevabı kodla kontrol et (her cümlenin kaynak numarası var mı) | adım 8'den sonra | var, varsayılan olarak kapalı (`CHECK_ANSWER`) — yukarıda ölçtük: isteği sildi |
-| En az yetki: kullanıcı yalnızca okuyabildiğini arar | adım 6, filtre | var — yukarıda ölçtük |
-| Prompt kuralları + işaretli kaynaklar | adım 8 | var — bu saldırıyı durdurmadı |
+| Dokümanı ingest'te tara (asistana hitap eden, "password" isteyen satırlar) | `2-clean.ts` | yok — ölçmedik |
+| Cevabı kodla kontrol et (her cümlenin kaynak numarası var mı) | `8-answer.ts`, modelden sonra | var, varsayılan olarak kapalı (`CHECK_ANSWER`) — yukarıda ölçtük: isteği sildi |
+| En az yetki: kullanıcı yalnızca okuyabildiğini arar | `6-retrieve.ts`, filtre | var — yukarıda ölçtük |
+| Prompt kuralları + işaretli kaynaklar | `8-answer.ts` | var — bu saldırıyı durdurmadı |
 
 ## Canlıya çıkmadan: üç soru daha
 

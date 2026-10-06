@@ -1,6 +1,6 @@
 ---
 title: F · Generating the answer
-description: 'The full text the model gets: rules, numbered and fenced sources, and the question. Citing sources, saying "I don''t know", and an instruction hidden in a document. Step 8.'
+description: 'The full text the model gets: rules, numbered and fenced sources, and the question. Citing sources, saying "I don''t know", and an instruction hidden in a document. 8-answer.ts.'
 ---
 import WhereAmI from '../../../../components/WhereAmI.astro';
 import DaysQuestion from '../../../../components/DaysQuestion.astro';
@@ -200,7 +200,7 @@ Both answers also give the old amount, 330 TRY, from [2] (`benefits@2025#2`). Tw
 The prompt did not stop the request. A check in code, after the model, does. It drops every sentence without a source number. It is off by default. [Security](/en/uretim/guvenlik/) turns it on and shows the log.
 
 <YourTurn>
-**1 · Read the prompt.** Run `npm run step -- 6`, `npm run step -- 7`, then `npm run step -- 8 --prompt`. Steps 6 and 7 bring back the question of the day. How many sources are there, and which one is [1]? Then open `data/8-answer.json` and find the fields `system`, `prompt`, `answer`, `sources` and `promptTokens`.
+**1 · Read the prompt.** Run `npm run step -- 6`, `npm run step -- 7`, then `npm run step -- 8 --prompt`. `6-retrieve.ts` and `7-rerank.ts` bring back the question of the day. How many sources are there, and which one is [1]? Then open `data/8-answer.json` and find the fields `system`, `prompt`, `answer`, `sources` and `promptTokens`.
 
 **2 · When it doesn't know.** Run `npm run ask -- "Do employees get stock options?"`. The OUT line should say `ABSTAINED`.
 

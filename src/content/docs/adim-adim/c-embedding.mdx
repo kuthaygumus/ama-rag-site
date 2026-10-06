@@ -1,6 +1,6 @@
 ---
 title: C · Embedding
-description: Metni 1024 sayıya çevirmek, yakınlığı ölçmek (cosine, dot, L2) ve modelin neleri yakın koyduğunu görmek. Adım 4 ve 4b.
+description: Metni 1024 sayıya çevirmek, yakınlığı ölçmek (cosine, dot, L2) ve modelin neleri yakın koyduğunu görmek. 4-embed.ts, similar.ts ve map.ts.
 ---
 import WhereAmI from '../../../components/WhereAmI.astro';
 import DaysQuestion from '../../../components/DaysQuestion.astro';
@@ -97,7 +97,7 @@ import Term from '../../../components/Term.astro';
     </svg>
   </DeckFigure>
   <Step title="Metin girer, 1024 sayı çıkar" stage="v">
-    Adım 4 her chunk'ı bge-m3 modeline gönderir; geri 1024 sayılık bir liste, yani bir <Term id="vektor">vektör</Term> gelir. Bu, metnin <Term id="embedding">embedding</Term>'i.
+    `4-embed.ts` her chunk'ı bge-m3 modeline gönderir; geri 1024 sayılık bir liste, yani bir <Term id="vektor">vektör</Term> gelir. Bu, metnin <Term id="embedding">embedding</Term>'i.
 
     <Now n="1">`npm run step -- 4`, sonra `data/4-vectors.json` dosyasını açın.</Now>
   </Step>
@@ -120,7 +120,7 @@ import Term from '../../../components/Term.astro';
     Karşılıklı sayıları çarpıp toplar. a = (3, 0) ve b = (2, 2) için: 3×2 + 0×2 = 6. Kodun yaptığı bu kadar. Cosine'in aksine uzunluklara bölmez.
   </Step>
   <Step title="Resimde dot: gölge" stage="m" phase="3">
-    b'nin ucundan a'ya dik bir çizgi çekin. b'nin a üzerindeki gölgesi 2. a'nın uzunluğu çarpı gölge: 3 × 2 = 6, yine aynı sayı. Bizim vektörlerin uzunluğu 1.000 (adım 4'ün log'u). O zaman dot ile cosine arasında ne fark kalır?
+    b'nin ucundan a'ya dik bir çizgi çekin. b'nin a üzerindeki gölgesi 2. a'nın uzunluğu çarpı gölge: 3 × 2 = 6, yine aynı sayı. Bizim vektörlerin uzunluğu 1.000 (`4-embed.ts` log'u). O zaman dot ile cosine arasında ne fark kalır?
 
     <Now n="2">`src/lib/similarity.ts` içindeki boş `dot()` fonksiyonunu yazın. Kontrol: `npm run similar -- --metric dot`. Her çift için hata değil, bir sayı görünmeli.</Now>
   </Step>
@@ -315,7 +315,7 @@ Cosine ve L2, `src/lib/similarity.ts` içinde birkaçar satır:
     Türkçe doküman ayrı duruyor. Dil engel değilse neden? Tek Türkçe doküman o, tek BT dokümanı da o. Harita hangisinin onu ayırdığını söyleyemez. Üstte altı "Purpose and Scope" bölümü yan yana: aynı türde metinler.
   </Step>
   <Step title="Yıldız: günün sorusu" stage="map">
-    Yıldız, travel-expenses ve benefits chunk'larının yanına düştü. Cevap olan hr-leave §3 uzakta. Düz bir harita gerçek mesafeleri koruyamaz. 1024 boyutun hepsinde ölçen adım 6, §3'ü birinci sıraya koyuyor. Harita görmeye yardım eder, karar vermez.
+    Yıldız, travel-expenses ve benefits chunk'larının yanına düştü. Cevap olan hr-leave §3 uzakta. Düz bir harita gerçek mesafeleri koruyamaz. 1024 boyutun hepsinde ölçen `6-retrieve.ts`, §3'ü birinci sıraya koyuyor. Harita görmeye yardım eder, karar vermez.
 
     <Now n="5">`npm run map -- "How often should I change my password?"`, sonra `data/map.html`.</Now>
   </Step>
@@ -336,7 +336,7 @@ Boş `dot()`, `similarity.ts` dosyasının sonunda:
 
 **2 · Benzerini yazın.** `src/lib/similarity.ts` içinde `dot()` boş. `cosine()` içindeki döngüde `dot` zaten hesaplanıyor; uzunluklara bölmeden aynısını yazın. Kontrol: `npm run similar -- --metric dot` → her çift için `dot() is not written yet` hatası değil, bir sayı görünmeli.
 
-**3 · Ölçüleri karşılaştırın.** Dot çıktınızı cosine çıktısıyla (yukarıdaki log) yan yana koyun. Sonra `npm run similar -- --metric l2` çalıştırın. Neden böyle? İpucu: adım 4'ün log'undaki uzunluk.
+**3 · Ölçüleri karşılaştırın.** Dot çıktınızı cosine çıktısıyla (yukarıdaki log) yan yana koyun. Sonra `npm run similar -- --metric l2` çalıştırın. Neden böyle? İpucu: `4-embed.ts` log'undaki uzunluk.
 
 **4 · Kendi çiftinizi deneyin.** `npm run similar -- "How much holiday do I get?" "How many days of annual leave do I get?"`. Sonra olumsuzluk tuzağını kendi cümlelerinizle kurun.
 
@@ -364,7 +364,7 @@ Dil desteğine (bizde İngilizce ve Türkçe), vektör boyutuna (her chunk için
 </FAQ>
 
 <FAQ q="Modeli değiştirirsem ne olur?">
-Bütün chunk'lar yeniden embed edilir; eski vektörler başka bir uzayda kalır. Kod bunu engelliyor: adım 4 hangi modeli kullandığını `data/4-vectors.json` içine yazar, adım 6 soru için başka bir model görürse durur ve adım 4 ile 5'i yeniden çalıştırmanızı ister.
+Bütün chunk'lar yeniden embed edilir; eski vektörler başka bir uzayda kalır. Kod bunu engelliyor: `4-embed.ts` hangi modeli kullandığını `data/4-vectors.json` içine yazar, `6-retrieve.ts` soru için başka bir model görürse durur ve `4-embed.ts` ile `5-store.ts` dosyalarını yeniden çalıştırmanızı ister.
 </FAQ>
 
 <FAQ q="Cosine, L2 ve dot ayrı yöntemler mi?">

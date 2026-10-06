@@ -173,7 +173,7 @@ The two answers are the same, word for word. With the concrete ban on, the model
 
 ## A check in code, after the model
 
-The prompt did not stop the request. So we check the answer in code, after the model. The check is in step 8, in a `TOGGLE` block. It is off by default, so every other log on this site stays the same:
+The prompt did not stop the request. So we check the answer in code, after the model. The check is in `8-answer.ts`, in a `TOGGLE` block. It is off by default, so every other log on this site stays the same:
 
 <RepoCode file="src/steps/8-answer.ts" from="// TOGGLE answer check" to="alternative" />
 
@@ -193,10 +193,10 @@ We build the security layers in code and in data:
 
 | Layer | Where | In this repo |
 |---|---|---|
-| Scan documents at ingest (lines that speak to an assistant or ask for a "password") | step 2, cleaning | Not in this repo. Not measured. |
-| Check the answer in code (does each sentence have a source number?) | after step 8 | In this repo, off by default (`CHECK_ANSWER`). Measured above: it removed the request. |
-| Least access: users search only what they may read | step 6, filter | In this repo. Measured above. |
-| Prompt rules + fenced sources | step 8 | In this repo. It did not stop this attack. |
+| Scan documents at ingest (lines that speak to an assistant or ask for a "password") | `2-clean.ts` | Not in this repo. Not measured. |
+| Check the answer in code (does each sentence have a source number?) | `8-answer.ts`, after the model | In this repo, off by default (`CHECK_ANSWER`). Measured above: it removed the request. |
+| Least access: users search only what they may read | `6-retrieve.ts`, filter | In this repo. Measured above. |
+| Prompt rules + fenced sources | `8-answer.ts` | In this repo. It did not stop this attack. |
 
 ## Before you go live: three more questions
 

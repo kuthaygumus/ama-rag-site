@@ -417,6 +417,7 @@
 .flbl { font-size: 24px; font-weight: 700; }
 /* A label in a tight grid of boxes: one step smaller, still well above .fsub. */
 .flbl.tight { font-size: 22px; }
+.fsub.tight { font-size: 17px; }
 .fsub { font-size: 19px; fill: var(--sl-color-gray-2) !important; }
 .fmono { font-family: var(--sl-font-system-mono) !important; font-size: 15px; }
 .fnum { fill: var(--rag-accent) !important; font-weight: 700; }

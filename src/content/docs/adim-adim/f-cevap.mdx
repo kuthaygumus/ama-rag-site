@@ -1,6 +1,6 @@
 ---
 title: F · Cevap üretimi
-description: 'Modele giden metnin tamamı: kurallar, numaralı ve işaretli kaynaklar, soru. Kaynak göstermek, "bilmiyorum" demek ve dokümanın içine gizlenmiş bir talimat. Adım 8.'
+description: 'Modele giden metnin tamamı: kurallar, numaralı ve işaretli kaynaklar, soru. Kaynak göstermek, "bilmiyorum" demek ve dokümanın içine gizlenmiş bir talimat. 8-answer.ts.'
 ---
 import WhereAmI from '../../../components/WhereAmI.astro';
 import DaysQuestion from '../../../components/DaysQuestion.astro';
@@ -200,7 +200,7 @@ Kurallar bir listede, her satır bir toggle: birini `//` ile kapatıp aynı soru
 Prompt isteği durdurmadı; modelden sonra çalışan bir kod kontrolü durdurur. Kaynak numarası olmayan her cümleyi siler. Varsayılan olarak kapalı. [Güvenlik](/uretim/guvenlik/) sayfası onu açıyor ve logunu gösteriyor.
 
 <YourTurn>
-**1 · Prompt'u okuyun.** `npm run step -- 6`, `npm run step -- 7`, sonra `npm run step -- 8 --prompt`. Adım 6 ve 7 günün sorusunu geri getirir. Kaç kaynak var, [1] hangisi? Sonra `data/8-answer.json`: `system`, `prompt`, `answer`, `sources` ve `promptTokens` alanları.
+**1 · Prompt'u okuyun.** `npm run step -- 6`, `npm run step -- 7`, sonra `npm run step -- 8 --prompt`. `6-retrieve.ts` ve `7-rerank.ts` günün sorusunu geri getirir. Kaç kaynak var, [1] hangisi? Sonra `data/8-answer.json`: `system`, `prompt`, `answer`, `sources` ve `promptTokens` alanları.
 
 **2 · Bilmiyorsa.** `npm run ask -- "Do employees get stock options?"` → OUT satırında `ABSTAINED` yazmalı.
 

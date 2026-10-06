@@ -178,7 +178,7 @@ Reading the whole handbook for every question is expensive. The answer is in a f
 </FAQ>
 
 <FAQ q="4 · What happens if you use bge-m3 at ingest and another embedding model for the question?">
-Each model builds its own space. You can't compare the vectors of two models. In our code, step 6 stops with an error. If the model changes, the whole corpus gets embedded again. [C · Embedding](/en/adim-adim/c-embedding/)
+Each model builds its own space. You can't compare the vectors of two models. In our code, `6-retrieve.ts` stops with an error. If the model changes, the whole corpus gets embedded again. [C · Embedding](/en/adim-adim/c-embedding/)
 </FAQ>
 
 <FAQ q="5 · Why do we store the chunk's text next to the vector?">

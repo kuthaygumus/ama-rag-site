@@ -1,6 +1,6 @@
 ---
 title: C · Embedding
-description: Turn text into 1024 numbers, measure closeness (cosine, dot, L2), and see what the model puts close together. Steps 4 and 4b.
+description: Turn text into 1024 numbers, measure closeness (cosine, dot, L2), and see what the model puts close together. 4-embed.ts, similar.ts and map.ts.
 ---
 import WhereAmI from '../../../../components/WhereAmI.astro';
 import DaysQuestion from '../../../../components/DaysQuestion.astro';
@@ -97,7 +97,7 @@ Here are two sentences. "How much holiday do I get?" "Annual paid leave depends 
     </svg>
   </DeckFigure>
   <Step title="Text goes in, 1024 numbers come out" stage="v">
-    Step 4 sends each chunk to the bge-m3 model. It gets back a list of 1024 numbers, a <Term id="vektor">vector</Term>. This vector is the text's <Term id="embedding">embedding</Term>.
+    `4-embed.ts` sends each chunk to the bge-m3 model. It gets back a list of 1024 numbers, a <Term id="vektor">vector</Term>. This vector is the text's <Term id="embedding">embedding</Term>.
 
     <Now n="1">Run `npm run step -- 4`, then open `data/4-vectors.json`.</Now>
   </Step>
@@ -120,7 +120,7 @@ Here are two sentences. "How much holiday do I get?" "Annual paid leave depends 
     Dot multiplies the matching numbers and adds them up. Take a = (3, 0) and b = (2, 2): 3×2 + 0×2 = 6. That is all the code does. Unlike cosine, it doesn't divide by the lengths.
   </Step>
   <Step title="Dot in the picture: a shadow" stage="m" phase="3">
-    Draw a line from the tip of b to a, at a right angle. b's shadow on a is 2. Length of a times the shadow: 3 × 2 = 6 again. Our vectors have length 1.000 (step 4 log). So what difference is left between dot and cosine?
+    Draw a line from the tip of b to a, at a right angle. b's shadow on a is 2. Length of a times the shadow: 3 × 2 = 6 again. Our vectors have length 1.000 (`4-embed.ts` log). So what difference is left between dot and cosine?
 
     <Now n="2">Write the empty `dot()` function in `src/lib/similarity.ts`. Check: `npm run similar -- --metric dot`. Each pair should show a number, not an error.</Now>
   </Step>
@@ -315,7 +315,7 @@ Cosine and L2 take a few lines each in `src/lib/similarity.ts`:
     The Turkish document sits apart. Why, if language is no barrier? It is the only Turkish and the only IT document. The map can't say which one. At the top, the six "Purpose and Scope" sections sit together: same kind of text.
   </Step>
   <Step title="The star: the question of the day" stage="map">
-    The star lands next to travel-expenses and benefits. The answer, hr-leave §3, is far away. A flat map can't keep real distances. In all 1024 dimensions, step 6 ranks §3 first. The map helps you see. It doesn't decide.
+    The star lands next to travel-expenses and benefits. The answer, hr-leave §3, is far away. A flat map can't keep real distances. In all 1024 dimensions, `6-retrieve.ts` ranks §3 first. The map helps you see. It doesn't decide.
 
     <Now n="5">Run `npm run map -- "How often should I change my password?"`, then open `data/map.html`.</Now>
   </Step>
@@ -336,7 +336,7 @@ The empty `dot()` is at the end of `similarity.ts`:
 
 **2 · Write the sibling.** In `src/lib/similarity.ts`, `dot()` is empty. The loop inside `cosine()` already computes `dot`. Write the same thing, but don't divide by the lengths. Check: `npm run similar -- --metric dot`. Each pair should show a number, not the `dot() is not written yet` error.
 
-**3 · Compare the measures.** Put your dot output next to the cosine output (the log above). Then run `npm run similar -- --metric l2`. Why does it look like this? Hint: the length in the step 4 log.
+**3 · Compare the measures.** Put your dot output next to the cosine output (the log above). Then run `npm run similar -- --metric l2`. Why does it look like this? Hint: the length in the `4-embed.ts` log.
 
 **4 · Try your own pair.** Run `npm run similar -- "How much holiday do I get?" "How many days of annual leave do I get?"`. Then build the negation trap with your own sentences.
 
@@ -364,7 +364,7 @@ Check its language support (we need English and Turkish). Check the vector size,
 </FAQ>
 
 <FAQ q="What happens if I change the model?">
-You re-embed every chunk. The old vectors stay in a different space. The code stops you from mixing them. Step 4 writes the model name into `data/4-vectors.json`. If step 6 sees a different model for the question, it stops. It asks you to run steps 4 and 5 again.
+You re-embed every chunk. The old vectors stay in a different space. The code stops you from mixing them. `4-embed.ts` writes the model name into `data/4-vectors.json`. If `6-retrieve.ts` sees a different model for the question, it stops. It asks you to run `4-embed.ts` and `5-store.ts` again.
 </FAQ>
 
 <FAQ q="Are cosine, L2 and dot different methods?">

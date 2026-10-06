@@ -1,6 +1,6 @@
 ---
 title: B · Chunking
-description: 'Step 3: split the documents into chunks. Cut every 300 characters, or at the document''s own headings? Here the question of the day gets its first good answer.'
+description: '3-chunk.ts: split the documents into chunks. Cut every 300 characters, or at the document''s own headings? Here the question of the day gets its first good answer.'
 ---
 import WhereAmI from '../../../../components/WhereAmI.astro';
 import DaysQuestion from '../../../../components/DaysQuestion.astro';
@@ -257,7 +257,7 @@ Now check it and try it on the question of the day:
 Are you behind? Run `npm run catchup -- 3`.
 </YourTurn>
 
-The paragraph chunker's step 3. The chunk with the `| 7 |` row starts with the table. Its heading, `3. Annual Paid Leave`, is not in it:
+`3-chunk.ts` with the paragraph chunker. The chunk with the `| 7 |` row starts with the table. Its heading, `3. Annual Paid Leave`, is not in it:
 
 <Log name="03-chunk-paragraph" title="npm run step -- 3   (chunker: paragraph)" />
 

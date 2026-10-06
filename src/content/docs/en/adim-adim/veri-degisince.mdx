@@ -66,12 +66,12 @@ HR published the 2026 edition of the leave policy. The answer to the question of
     The folder `corpus/2026/` holds the same 8 documents, with `edition: "2026"`. In the leave table, years 5 to 9 go from 22 to 24 working days. Years 10 to 14 go from 25 to 26.
   </Step>
   <Step title="No retraining, only a new ingest">
-    Ingest sends only the new files through steps 1 to 5. The store now has 120 records. There are 60 from 2025 and 60 from 2026, side by side.
+    Ingest sends only the new files through `1-load.ts` to `5-store.ts`. The store now has 120 records. There are 60 from 2025 and 60 from 2026, side by side.
 
     <Now n="1">Run `npm run ingest -- --edition 2026`. Near the end, the log should say `120 in the store`.</Now>
   </Step>
   <Step title="Which edition answers?">
-    Step 6 has a <Term id="metadata">metadata</Term> filter, `EDITION_FILTER`. By default it is "latest": the newest edition in the store. The filter runs inside the search, so the 2025 records never compete.
+    `6-retrieve.ts` has a <Term id="metadata">metadata</Term> filter, `EDITION_FILTER`. By default it is "latest": the newest edition in the store. The filter runs inside the search, so the 2025 records never compete.
   </Step>
   <Step title="The answer changed">
     The answer: "An employee with 7 years of service gets 24 working days of annual leave [1]." The source is now `hr-leave@2026#3`.
@@ -93,14 +93,14 @@ HR published the 2026 edition of the leave policy. The answer to the question of
 </Deck>
 
 <Example>
-In pipeline step 3, look at the 2026 leave table. In step 5, look at the record count and the editions.
+In the `3-chunk.ts` output, look at the 2026 leave table. In the `5-store.ts` output, look at the record count and the editions.
 </Example>
 
 <Log name="ingest-2026" title="npm run ingest -- --edition 2026   (output of step 3)" from={47} to={68} />
 
 <Log name="ingest-2026" title="… same command, steps 4 and 5" from={74} />
 
-Step 4 computed no new vectors here. This machine had embedded these texts before, so they came from `.cache/`. On your first run you see `3 computed, 57 from cache`. Only 3 chunks changed their text: the leave table, the password rule and the travel table.
+`4-embed.ts` computed no new vectors here. This machine had embedded these texts before, so they came from `.cache/`. On your first run you see `3 computed, 57 from cache`. Only 3 chunks changed their text: the leave table, the password rule and the travel table.
 
 <Log name="question-4-2026" title="npm run question" />
 
@@ -108,7 +108,7 @@ With the filter off, both editions come back:
 
 <Log name="edition-all" title='npm run question   (toggle: edition filter EDITION_FILTER = "all")' />
 
-The edition filter is the toggle in step 6. `EDITION` in the `.env` file is something else. It picks which `corpus/` folder step 1 reads.
+The edition filter is the toggle in `6-retrieve.ts`. `EDITION` in the `.env` file is something else. It picks which `corpus/` folder `1-load.ts` reads.
 
 <RepoCode file="src/steps/6-retrieve.ts" from="// TOGGLE edition filter" to="alternative" />
 

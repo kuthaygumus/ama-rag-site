@@ -1,6 +1,6 @@
 ---
 title: D · Vector DB
-description: Moving the vectors from a JSON file to Chroma. What one record stores, and what ANN search changes and what it doesn't. Step 5.
+description: Moving the vectors from a JSON file to Chroma. What one record stores, and what ANN search changes and what it doesn't. 5-store.ts.
 ---
 import WhereAmI from '../../../../components/WhereAmI.astro';
 import DaysQuestion from '../../../../components/DaysQuestion.astro';
@@ -188,18 +188,18 @@ So far, the "database" was a JSON file. For every question, we compared the ques
     </svg>
   </DeckFigure>
   <Step title="What is in a record?" stage="r">
-    Step 5 writes each chunk to Chroma as one record. A record has an id, an embedding (the vector), a document (the text) and metadata.
+    `5-store.ts` writes each chunk to Chroma as one record. A record has an id, an embedding (the vector), a document (the text) and metadata.
 
     <Now n="1">`podman compose ps` should say `healthy`. If not, run `podman compose up -d`.</Now>
   </Step>
   <Step title="The vector: for search" stage="r" phase="1">
-    Search works on the vector. It finds the records closest to the question. The vectors come from step 4, already computed.
+    Search works on the vector. It finds the records closest to the question. The vectors come from `4-embed.ts`, already computed.
   </Step>
   <Step title="The text: for the model" stage="r" phase="2">
     You can't get a sentence back from 1024 numbers. The search uses the vector, but the prompt gets the text. So the record carries both. The vector finds, and the text tells.
   </Step>
   <Step title="Metadata: for filters" stage="r" phase="3">
-    Metadata holds labels like `edition`, `access` and `docId`. We read these labels on page A. Step 6 says: only edition 2025, only documents open to all. Chroma applies this filter inside the search.
+    Metadata holds labels like `edition`, `access` and `docId`. We read these labels on page A. `6-retrieve.ts` says: only edition 2025, only documents open to all. Chroma applies this filter inside the search.
   </Step>
   <Step title="Brute force: check them all" stage="a">
     For every question, the JSON store computes the cosine with every vector. Then it sorts them. The result is exact, but the work grows with the number of chunks. This method is called <Term id="bruteforce">brute force</Term>.
@@ -228,7 +228,7 @@ So far, the "database" was a JSON file. For every question, we compared the ques
 </Deck>
 
 <Example>
-After step 5 writes to Chroma, it also asks the JSON store the question of the day. Then it puts the top 5 of both stores side by side. The TIME lines measure the whole step, writing included. They are not a search race.
+After `5-store.ts` writes to Chroma, it also asks the JSON store the question of the day. Then it puts the top 5 of both stores side by side. The TIME lines measure the whole step, writing included. They are not a search race.
 </Example>
 
 <Log name="05-store-json" title="npm run step -- 5 --store json" />
@@ -249,7 +249,7 @@ The four parts of a record go in one call: `ids`, `embeddings`, `documents`, `me
 
 ## The four jobs of a vector DB
 
-- **Add / update.** Writing to the same id (upsert) replaces the old record. Our `replaceEdition` first deletes the records of that edition, then adds the new ones. So running step 5 twice doesn't create duplicate records.
+- **Add / update.** Writing to the same id (upsert) replaces the old record. Our `replaceEdition` first deletes the records of that edition, then adds the new ones. So running `5-store.ts` twice doesn't create duplicate records.
 - **Delete.** With a `where` condition. Ours is `{ edition }`.
 - **Filter.** Also with `where`. `toWhere()` turns our filter into Chroma's format (page E).
 - **Keep.** The data survives when the container stops. `compose.yaml` writes it to a volume.

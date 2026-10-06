@@ -15,7 +15,7 @@ The model says "I don't know" on purpose when the answer isn't in the sources. T
 
 <h3 id="access">Access filter</h3>
 
-A filter inside the search. Each chunk carries the `access` label of its document. The search returns only the chunks the asker may read. In this repo, the asker's access list is a toggle in step 6. It protects the data, not the answer.
+A filter inside the search. Each chunk carries the `access` label of its document. The search returns only the chunks the asker may read. In this repo, the asker's access list is a toggle in `6-retrieve.ts`. It protects the data, not the answer.
 
 <h3 id="agentic">Agentic RAG</h3>
 
@@ -27,7 +27,7 @@ A search that uses an index and visits only the nearby vectors, not every vector
 
 <h3 id="answer-check">Answer check</h3>
 
-Code that reads the answer after the model writes it. It drops every sentence that has no source number [n]. The sentence "This is not in the policies." stays. In this repo, it is the `CHECK_ANSWER` toggle in step 8. It is off by default.
+Code that reads the answer after the model writes it. It drops every sentence that has no source number [n]. The sentence "This is not in the policies." stays. In this repo, it is the `CHECK_ANSWER` toggle in `8-answer.ts`. It is off by default.
 
 ## B
 
@@ -209,7 +209,7 @@ The model rewrites one question in a few different ways. Each rewrite gets its o
 
 <h3 id="norm">Norm (vector length)</h3>
 
-The length of a vector. bge-m3's vectors have length 1. The log of step 4 prints it.
+The length of a vector. bge-m3's vectors have length 1. `4-embed.ts` prints it in its log.
 
 ## O
 

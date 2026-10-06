@@ -53,8 +53,8 @@ Bir adım bilinen bir sorunla karşılaşınca tek satır yazar: `✗` ve mesaj.
 |---|---|
 | `data/<n>-<ad>.json does not exist yet. Run: npm run step -- <n>` | Önceki adım hiç çalışmamış. Satırdaki komutu çalıştırın ya da `npm run catchup -- <n>`. |
 | `data/<n>-<ad>.json was made from an older data/<m>-<ad>.json. Run it again: npm run step -- <n>` | Önceki adımı yeniden çalıştırdınız, bu adımı değil. Satırdaki adımı ve ondan sonrakileri sırayla yeniden çalıştırın. |
-| `corpus/<sürüm>/ changed after step 1 ran. Run it again: npm run step -- 1` | Corpus dosyaları değişti. Adım 1'den başlayın. |
-| `The store was filled with <model> vectors, but questions would be embedded with <model>. Vectors from two models live in different spaces — run steps 4 and 5 again.` | `EMBED_MODEL` değişti. Adım 4 ve 5'i yeniden çalıştırın. |
+| `corpus/<sürüm>/ changed after step 1 ran. Run it again: npm run step -- 1` | Corpus dosyaları değişti. `1-load.ts` dosyasından yeniden başlayın. |
+| `The store was filled with <model> vectors, but questions would be embedded with <model>. Vectors from two models live in different spaces — run steps 4 and 5 again.` | `EMBED_MODEL` değişti. `4-embed.ts` ve `5-store.ts` dosyalarını yeniden çalıştırın. |
 
 **Corpus ve ayarlar**
 
@@ -133,7 +133,7 @@ yönetici yetkisi ister. Yetki alınamazsa `STORE=json`; yalnızca Chroma'nın i
   `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
 - **Bir bayrak işlemiyor gibiyse** (`--store json` yok sayılıyorsa): aynı ayarı `.env` dosyasına yazın. `.env`
   kabuktan bağımsızdır; PowerShell'de, cmd'de ve zsh'de aynı çalışır.
-- **Satır sonları** sorun değil: repo `.gitattributes` ile LF kullanır, adım 1 de `\r\n`'i `\n`'e çevirir.
+- **Satır sonları** sorun değil: repo `.gitattributes` ile LF kullanır, `1-load.ts` de `\r\n`'i `\n`'e çevirir.
 
 ## Şirket ağı
 
@@ -189,7 +189,7 @@ npm run catchup -- 0
 
 ## Geride kaldıysanız: `npm run catchup -- N`
 
-Takıldınız ya da kodu bozdunuz; örneğin 5. adımın sonundan devam etmek için:
+Takıldınız ya da kodu bozdunuz; örneğin `5-store.ts` bittikten sonra devam etmek için:
 
 ```sh
 npm run catchup -- 5

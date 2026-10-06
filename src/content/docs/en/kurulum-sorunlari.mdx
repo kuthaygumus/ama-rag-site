@@ -53,8 +53,8 @@ stack trace. In that case, read the first line of the trace.
 |---|---|
 | `data/<n>-<name>.json does not exist yet. Run: npm run step -- <n>` | The step before never ran. Run the command from the line, or `npm run catchup -- <n>`. |
 | `data/<n>-<name>.json was made from an older data/<m>-<name>.json. Run it again: npm run step -- <n>` | You ran the step before again, but not this one. Run the step from the line again, then the steps after it, in order. |
-| `corpus/<edition>/ changed after step 1 ran. Run it again: npm run step -- 1` | The corpus files changed. Start again from step 1. |
-| `The store was filled with <model> vectors, but questions would be embedded with <model>. Vectors from two models live in different spaces — run steps 4 and 5 again.` | `EMBED_MODEL` changed. Run steps 4 and 5 again. |
+| `corpus/<edition>/ changed after step 1 ran. Run it again: npm run step -- 1` | The corpus files changed. Start again from `1-load.ts`. |
+| `The store was filled with <model> vectors, but questions would be embedded with <model>. Vectors from two models live in different spaces — run steps 4 and 5 again.` | `EMBED_MODEL` changed. Run `4-embed.ts` and `5-store.ts` again. |
 
 **Corpus and settings**
 
@@ -133,7 +133,7 @@ once. If you can't get admin rights, use `STORE=json`. Only the parts that look 
   `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
 - **If a flag seems to do nothing**, write the same setting in the `.env` file. For example, `--store json` may be
   ignored. `.env` doesn't depend on the shell. It works the same in PowerShell, cmd and zsh.
-- **Line endings** are not a problem. The repo uses LF through `.gitattributes`, and step 1 also turns `\r\n` into `\n`.
+- **Line endings** are not a problem. The repo uses LF through `.gitattributes`, and `1-load.ts` also turns `\r\n` into `\n`.
 
 ## Company network
 
@@ -189,7 +189,7 @@ Delete `.cache/question-ledger.jsonl`. Then run `npm run doctor`. The corpus lin
 
 ## Are you behind? `npm run catchup -- N`
 
-Stuck, or broke the code? For example, to go on from the end of step 5:
+Stuck, or broke the code? For example, to go on after `5-store.ts`:
 
 ```sh
 npm run catchup -- 5

@@ -45,7 +45,7 @@ The answer is right, and it cites its source. But how many seconds does one ques
         <text x="40" y="348" class="fsub" data-gen="search-label">↑ search step 22 ms (vector DB 8 ms · question embed 0 ms, from the cache)</text>
       </g>
       <g class="ph ph3">
-        <text x="40" y="410" class="flbl" data-q="log:04-embed">Ingest, second time: 60 of 60 vectors from the cache, step 4 = 55 ms</text>
+        <text x="40" y="410" class="flbl" data-q="log:04-embed">Ingest, second time: 60 of 60 vectors from the cache, 4-embed.ts = 55 ms</text>
         <rect x="40" y="428" width="460" height="52" rx="8" class="fbox" />
         <text x="270" y="461" text-anchor="middle" class="flbl" data-q="log:ingest-2026">2025 · 60 records · untouched</text>
         <rect x="520" y="428" width="460" height="52" rx="8" class="fbox fbox-on" />
@@ -66,7 +66,7 @@ The answer is right, and it cites its source. But how many seconds does one ques
     <Now n="1">Run `npm run ask -- "I am going to Frankfurt for a two-day meeting. I am a specialist. How much is my daily per diem?"`. Note the search, rerank and answer times.</Now>
   </Step>
   <Step title="At ingest: cache and incremental ingest" phase="3">
-    Each embedding goes into `.cache/`. The key is a hash of model and text. Second run: 60 of 60 vectors from the cache, step 4 in 55 ms. Adding 2026 wrote only its 60 records. 2025 stayed untouched.
+    Each embedding goes into `.cache/`. The key is a hash of model and text. Second run: 60 of 60 vectors from the cache, `4-embed.ts` in 55 ms. Adding 2026 wrote only its 60 records. 2025 stayed untouched.
   </Step>
   <Step title="What makes the time and the bill grow?">
     The number of model calls, and the text in each. One question: 6 calls, 5 rerank and 1 answer. N people at once: N times 6. The settings below change time. Most change accuracy too. Then run the eval.
@@ -130,7 +130,7 @@ The store writes one edition at a time (`replaceEdition`):
 | Chunks in the prompt | 3 | more prompt tokens | 3 chunks = 976 prompt tokens (question of the day) |
 | Rerank | on | turn it off: the 5 calls go away, and the vector score sets the order | Partly: for the question of the day, the answer is 22 both ways. For q02, the right section is at rank 5 by vector score. With rerank on, the answer is right. With rerank off, we didn't measure it here. It is the first homework on the [wrap-up page](/en/kapanis/). |
 | Model size | gemma3:4b | more RAM and more time | No: we measured time only with gemma3:4b |
-| Embedding cache | on | none | Yes: 60 of 60 vectors from the cache, step 4 = 55 ms |
+| Embedding cache | on | none | Yes: 60 of 60 vectors from the cache, `4-embed.ts` = 55 ms |
 | Incremental ingest | `replaceEdition` per edition | none | Yes: 2026 added, 120 records in the store, 2025 untouched |
 
 ## The bill: a formula without prices

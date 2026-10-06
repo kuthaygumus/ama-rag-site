@@ -1,6 +1,6 @@
 ---
 title: A · Raw data and cleaning
-description: 'Steps 1 and 2: read the files and what each one says about itself (metadata). Then remove the noise the PDF left behind.'
+description: '1-load.ts and 2-clean.ts: read the files and what each one says about itself (metadata). Then remove the noise the PDF left behind.'
 ---
 import WhereAmI from '../../../../components/WhereAmI.astro';
 import DaysQuestion from '../../../../components/DaysQuestion.astro';
@@ -27,7 +27,7 @@ The model never saw these files. And even if it did, the raw files are dirty. If
 
 <Deck>
   <DeckFigure slot="figure" stage="a">
-    <svg viewBox="0 0 1000 290" role="img" aria-label="In a real project, you first extract the text from a PDF, Word or HTML file. The workshop starts with this raw data, corpus/2025/hr-leave.md. Step 1 reads it, and step 2 cleans it">
+    <svg viewBox="0 0 1000 290" role="img" aria-label="In a real project, you first extract the text from a PDF, Word or HTML file. The workshop starts with this raw data, corpus/2025/hr-leave.md. 1-load.ts reads it, and 2-clean.ts cleans it">
       <text x="102" y="36" text-anchor="middle" class="fsub">a real project</text>
       <text x="102" y="60" text-anchor="middle" class="fsub">starts here</text>
       <rect x="12" y="76" width="180" height="124" rx="10" class="fbox" />
@@ -49,14 +49,14 @@ The model never saw these files. And even if it did, the raw files are dirty. If
         <text x="140" y="258" text-anchor="middle" class="fsub">the text is ready</text>
       </g>
       <g data-from="3">
-        <text x="499" y="116" text-anchor="middle" class="fsub" data-q="const">step 1</text>
+        <text x="499" y="116" text-anchor="middle" class="fsub tight" data-q="const">1-load.ts</text>
         <text x="499" y="138" text-anchor="middle" class="fsub">read</text>
         <path d="M462 150 H535" class="farrow-on" marker-end="url(#ah-b)" />
         <rect x="542" y="76" width="180" height="124" rx="10" class="fbox" />
         <text x="632" y="120" text-anchor="middle" class="flbl">metadata</text>
         <text x="632" y="148" text-anchor="middle" class="fsub">+ text</text>
         <text x="632" y="180" text-anchor="middle" class="fmono" data-q="const">data/1-docs.json</text>
-        <text x="764" y="116" text-anchor="middle" class="fsub" data-q="const">step 2</text>
+        <text x="764" y="116" text-anchor="middle" class="fsub tight" data-q="const">2-clean.ts</text>
         <text x="764" y="138" text-anchor="middle" class="fsub">clean</text>
         <path d="M727 150 H800" class="farrow-on" marker-end="url(#ah-b)" />
         <rect x="807" y="76" width="180" height="124" rx="10" class="fbox-good" />
@@ -124,7 +124,7 @@ The model never saw these files. And even if it did, the raw files are dirty. If
     </svg>
   </DeckFigure>
   <DeckFigure slot="figure" stage="c">
-    <svg viewBox="0 0 1000 440" role="img" aria-label="Step 1: the 8 files in the corpus/2025 folder go through src/steps/1-load.ts and become data/1-docs.json. Step 2: data/1-docs.json goes through src/steps/2-clean.ts and becomes data/2-clean.json">
+    <svg viewBox="0 0 1000 440" role="img" aria-label="The 8 files in the corpus/2025 folder go through src/steps/1-load.ts and become data/1-docs.json. Then data/1-docs.json goes through src/steps/2-clean.ts and becomes data/2-clean.json">
       <g class="ph ph1">
         <rect x="10" y="62" width="210" height="120" rx="10" class="fbox" />
         <text x="115" y="100" text-anchor="middle" class="flbl">raw data</text>
@@ -147,7 +147,7 @@ The model never saw these files. And even if it did, the raw files are dirty. If
       </g>
       <g class="ph ph2">
         <path d="M885 186 V234 H115 V268" class="farrow" marker-end="url(#ch-a)" />
-        <text x="500" y="226" text-anchor="middle" class="fsub" data-q="const">step 1's output is step 2's input</text>
+        <text x="500" y="226" text-anchor="middle" class="fsub" data-q="const">1-load.ts writes what 2-clean.ts reads</text>
         <rect x="10" y="277" width="210" height="120" rx="10" class="fbox" />
         <text x="115" y="315" text-anchor="middle" class="fmono" data-q="const">data/1-docs.json</text>
         <text x="115" y="347" text-anchor="middle" class="fsub" data-q="const">8 records (Doc)</text>
@@ -180,10 +180,10 @@ The model never saw these files. And even if it did, the raw files are dirty. If
     We skip the text extraction in this workshop. Each file in `corpus/` looks like text from a PDF. We added page headers, page numbers and broken lines on purpose. So there is something real to clean.
   </Step>
   <Step title="Two steps, no model" stage="a">
-    Step 1 reads the file. It separates the block of labels at the top from the main text. Step 2 cleans the text. No model runs in either step, only our own code.
+    `1-load.ts` reads the file. It separates the block of labels at the top from the main text. `2-clean.ts` cleans the text. No model runs in either step, only our own code.
   </Step>
   <Step title="The block at the top: metadata" stage="b" phase="1">
-    Between two `---` lines, the document describes itself. It gives its `id`, `edition` and department. It says who may read it (`access`) and its language (`lang`). We call this <Term id="metadata">metadata</Term>. Step 1 stores it.
+    Between two `---` lines, the document describes itself. It gives its `id`, `edition` and department. It says who may read it (`access`) and its language (`lang`). We call this <Term id="metadata">metadata</Term>. `1-load.ts` stores it.
 
     <Now n="1">Run `npm run step -- 1`, then open `data/1-docs.json`. Which field shows that only HR may read `hr-salary-bands`?</Now>
   </Step>
@@ -203,18 +203,18 @@ The model never saw these files. And even if it did, the raw files are dirty. If
     The page width also broke sentences apart. "special" ends one line, and "leave" starts the next. A person reads this fine. But a program that works line by line sees two separate parts.
   </Step>
   <Step title="Cleaning: 4 rules and a line joiner" stage="b">
-    Step 2 drops the noise with 4 rules (regex). They catch the page header and the English confidentiality line. They also catch page numbers in English and Turkish. Then it joins the broken lines. Headings, tables and blank lines stay.
+    `2-clean.ts` drops the noise with 4 rules (regex). They catch the page header and the English confidentiality line. They also catch page numbers in English and Turkish. Then it joins the broken lines. Headings, tables and blank lines stay.
 
     <Now n="2">In `src/steps/2-clean.ts`, comment out the first rule of the `NOISE` list. Run `npm run step -- 2`. The `hr-leave` line should show −8 noise lines. Then turn the rule back on and run `npm run step -- 2` again.</Now>
   </Step>
   <Step title="Result: raw data in, clean text out" stage="b">
     In the 8 documents, 1078 lines went down to 512. Of the 566 removed lines, 74 are noise. The rest are joined lines and extra blank lines that the cleaning deleted. Both steps took a few milliseconds.
   </Step>
-  <Step title="Step 1 in code: corpus → 1-docs.json" stage="c" phase="1">
+  <Step title="Inside 1-load.ts: corpus → 1-docs.json" stage="c" phase="1">
     No classes. Each step is one file, written with plain functions. `npm run step -- 1` runs `src/steps/1-load.ts`. It reads 8 files and writes 8 records to `data/1-docs.json`.
   </Step>
-  <Step title="Step 2 in code: 1-docs.json → 2-clean.json" stage="c" phase="2">
-    Step 2 doesn't run step 1. It reads that step's output, `data/1-docs.json`. It puts the clean text into the `text` field. It copies the metadata as it is and writes the result to `data/2-clean.json`.
+  <Step title="Inside 2-clean.ts: 1-docs.json → 2-clean.json" stage="c" phase="2">
+    `2-clean.ts` doesn't run `1-load.ts`. It reads what `1-load.ts` wrote: `data/1-docs.json`. It puts the clean text into the `text` field. It copies the metadata as it is and writes the result to `data/2-clean.json`.
 
     <Now n="3">Read the section "Where does the leftover noise go?" below. Then write the `turkishConfidential` rule. Check: `npm run step -- 2`. The `it-security` line should show −12 noise lines, not −8.</Now>
   </Step>
@@ -226,7 +226,7 @@ The answer to the question of the day is in §3. In the raw file, the first para
 
 <RepoCode file="corpus/2025/hr-leave.md" from="## 3. Annual Paid Leave" to="^\| 2 \|" title="corpus/2025/hr-leave.md — raw text" />
 
-## Step 1 · corpus/ → data/1-docs.json
+## 1-load.ts · corpus/ → data/1-docs.json
 
 `run()` hands the work to `loadCorpus()`. It reads each `.md` file, splits it in two with `parseFrontMatter()` and returns one record per file. If a metadata field is missing, the error comes up here:
 
@@ -240,11 +240,11 @@ Each record it returns is a `Doc`. That is a TypeScript interface in `src/lib/ty
 
 <RepoCode file="src/lib/types.ts" from="Step 1 output" />
 
-`writeStep()` writes the 8 records into the `data` array of `data/1-docs.json`. The `hash` and `inputHash` fields at the top stop step 2 from running on an old file.
+`writeStep()` writes the 8 records into the `data` array of `data/1-docs.json`. The `hash` and `inputHash` fields at the top stop `2-clean.ts` from running on an old file.
 
 <Log name="01-load" title="npm run step -- 1" />
 
-## Step 2 · data/1-docs.json → data/2-clean.json
+## 2-clean.ts · data/1-docs.json → data/2-clean.json
 
 `run()` in `src/steps/2-clean.ts` reads `data/1-docs.json` with `readStep()`. Every record goes through this line:
 
@@ -269,7 +269,7 @@ The Turkish document (`it-security`) has the line `GİZLİ – Yalnızca şirket
 <YourTurn>
 **1 · Look at the raw data.** Open `corpus/2025/hr-leave.md`. Find the `---` block, the page header and the `Page 1 of 4` line. Then run `npm run step -- 1` and open `data/1-docs.json`. Look at the `access` and `lang` fields of each document. Which field shows that only HR may read `hr-salary-bands`?
 
-**2 · Comment out a rule.** In `src/steps/2-clean.ts`, find the first line of the `NOISE` list: the page header rule. Put `//` before it and run `npm run step -- 2`. In the log, the `hr-leave` line should show −8 noise lines, not −12. Search `data/2-clean.json` for `Edition 2025`: the page header is back in the text. Uncomment the line and run step 2 again.
+**2 · Comment out a rule.** In `src/steps/2-clean.ts`, find the first line of the `NOISE` list: the page header rule. Put `//` before it and run `npm run step -- 2`. In the log, the `hr-leave` line should show −8 noise lines, not −12. Search `data/2-clean.json` for `Edition 2025`: the page header is back in the text. Uncomment the line and run `npm run step -- 2` again.
 
 **3 · Write a similar rule.** In the same file, `turkishConfidential` is empty. The rule for the English line looks like `/^CONFIDENTIAL – .+$/`. Write the same kind of rule for the Turkish confidentiality line. Hint: the dash is an en dash (–), and the `İ` has a dot. Copy the line from the file. Don't type `GIZLI`. Then:
 
@@ -277,7 +277,7 @@ The Turkish document (`it-security`) has the line `GİZLİ – Yalnızca şirket
 - Search `data/2-clean.json` for `GİZLİ`: the line is gone.
 - If you like, run `npm run step -- 3` and open `data/3-chunks.json`: `it-security@2025#0` is gone.
 
-With the rule in place, step 2 drops 78 noise lines, not 74. The 1078 lines go down to 504. We captured the logs on the next pages without this rule. So the logs show 60 chunks, or 120 records with both editions. On your machine, you get 59 chunks (118 records). This difference is expected.
+With the rule in place, `2-clean.ts` drops 78 noise lines, not 74. The 1078 lines go down to 504. We captured the logs on the next pages without this rule. So the logs show 60 chunks, or 120 records with both editions. On your machine, you get 59 chunks (118 records). This difference is expected.
 
 Are you behind? Run `npm run catchup -- 2`.
 </YourTurn>

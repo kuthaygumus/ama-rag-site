@@ -55,7 +55,7 @@ Soruyu depodaki her vektörle tek tek karşılaştırmak. Sonuç kesindir, ama i
 
 <h3 id="answer-check">Cevap kontrolü (answer check)</h3>
 
-Cevabı, model yazdıktan sonra okuyan kod. Kaynak numarası [n] olmayan her cümleyi siler. "This is not in the policies." cümlesi kalır. Bu repoda 8. adımdaki `CHECK_ANSWER` toggle'ı. Varsayılan olarak kapalı.
+Cevabı, model yazdıktan sonra okuyan kod. Kaynak numarası [n] olmayan her cümleyi siler. "This is not in the policies." cümlesi kalır. Bu repoda `8-answer.ts` içindeki `CHECK_ANSWER` toggle'ı. Varsayılan olarak kapalı.
 
 <h3 id="chroma">Chroma</h3>
 
@@ -103,7 +103,7 @@ Bir metnin sayı listesi (vektör) hâli. Anlamı yakın metinlerin sayıları d
 
 <h3 id="access">Erişim filtresi (access filter)</h3>
 
-Aramanın içindeki bir filtre. Her chunk, dokümanının `access` etiketini taşır. Arama yalnızca soran kişinin okuyabileceği chunk'ları döndürür. Bu repoda soranın erişim listesi 6. adımdaki bir toggle. Veriyi korur, cevabı değil.
+Aramanın içindeki bir filtre. Her chunk, dokümanının `access` etiketini taşır. Arama yalnızca soran kişinin okuyabileceği chunk'ları döndürür. Bu repoda soranın erişim listesi `6-retrieve.ts` içindeki bir toggle. Veriyi korur, cevabı değil.
 
 <h3 id="eval">Eval</h3>
 
@@ -219,7 +219,7 @@ Model bir soruyu birkaç farklı biçimde yeniden yazar; her biriyle ayrı arama
 
 <h3 id="norm">Norm (vektör uzunluğu)</h3>
 
-Bir vektörün uzunluğu. bge-m3'ün vektörlerinin uzunluğu 1'dir; adım 4'ün logu bunu yazar.
+Bir vektörün uzunluğu. bge-m3'ün vektörlerinin uzunluğu 1'dir; `4-embed.ts` bunu logunda yazar.
 
 ## O
 
